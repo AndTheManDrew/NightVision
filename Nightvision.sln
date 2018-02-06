@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATMD Nightvision", "ATMD Nightvision\ATMD Nightvision.csproj", "{EB253018-4E17-43AA-9868-16AC468F406A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nightvision", "Nightvision\Nightvision.csproj", "{EB253018-4E17-43AA-9868-16AC468F406A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +20,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {F8F340A4-81A3-48DF-B0F9-A0FB0CA251A3}
+		SolutionGuid = {E55A9DED-D027-4EBF-8C50-469F81858116}
 	EndGlobalSection
 EndGlobal
