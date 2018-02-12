@@ -5,13 +5,13 @@ using System.Text;
 using RimWorld;
 using Verse;
 
-namespace Nightvision
+namespace NightVision
 {
     public class CompProperties_NightVision : CompProperties
     {
-        public bool seeindark = false;
-        public bool photosensitive = false;
-        public bool shadedeyes = false;
+        public Pawn parentPawnInt;
+        public int numOfEyesWithNightVision = 0;
+        public int numOfEyesWithPhotoSensitivity = 0;
 
         public CompProperties_NightVision()
         {

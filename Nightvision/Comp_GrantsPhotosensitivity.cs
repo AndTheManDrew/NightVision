@@ -5,7 +5,7 @@ using System.Text;
 using RimWorld;
 using Verse;
 
-namespace Nightvision
+namespace NightVision
 {
     /// <summary>
     /// Because apparently Hediffs can't have tags and I can't be bothered to track down an alternative way...therefore

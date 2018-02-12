@@ -8,7 +8,7 @@ using Verse;
 using Harmony;
 using System.Diagnostics;
 
-namespace Nightvision
+namespace NightVision
 {
 
     /// <summary>
@@ -103,14 +103,15 @@ namespace Nightvision
 
             //Could be useful to determine glow grid result -- also consider the explanation part which has glow grid in percent
             float factorfromglow = val / __state;
-            Log.Message("Factor from glow was: " + factorfromglow.ToString());
 
             //Shouldn't need to check req.HasThing -- for now
             Pawn pawn = req.Thing as Pawn;
+            Log.Message("Factor from glow was: " + factorfromglow.ToString() + " for the pawn: " + pawn.Label);
             //This next check might catch req with no Thing??
             if (pawn != null && pawn.RaceProps.Humanlike)
             {
                 int num_NV_eyes = NightVisionChecker.AmountOfNightVision(pawn);
+
                 //Derived from y = mx + c  ==> out = numNV * (pre - post)/2 + post
                 val = val + (__state - val) * num_NV_eyes / 2;
             }

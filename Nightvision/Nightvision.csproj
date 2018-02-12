@@ -7,8 +7,8 @@
     <ProjectGuid>{EB253018-4E17-43AA-9868-16AC468F406A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nightvision</RootNamespace>
-    <AssemblyName>Nightvision</AssemblyName>
+    <RootNamespace>NightVision</RootNamespace>
+    <AssemblyName>NightVision</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -20,6 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -51,11 +53,32 @@
   <ItemGroup>
     <Compile Include="Comp_GrantsPhotosensitivity.cs" />
     <Compile Include="Comp_NightVision.cs" />
+    <Compile Include="Comp_NightVisionApparel.cs" />
     <Compile Include="NightVisionChecker.cs" />
     <Compile Include="Harmony_Patches.cs" />
     <Compile Include="CompProperties_NightVision.cs" />
+    <Compile Include="NightVisionGrantersDatabase.cs" />
     <Compile Include="NightVisionMod.cs" />
-    <Compile Include="Properties\ATMDNightvision.cs" />
+    <Compile Include="Properties\NightVision.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Xml_Defs\NightVision_Apparel.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Xml_Patches\Patches_ForTestingOnly.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+if not exist  "$(ProjectDir)$(OutDir)..\Defs\" md  "$(ProjectDir)$(OutDir)..\Defs"
+if not exist  "$(ProjectDir)$(OutDir)..\Patches\" md  "$(ProjectDir)$(OutDir)..\Patches"
+
+copy "$(ProjectDir)Xml_Defs\*.xml" "$(ProjectDir)$(OutDir)..\Defs\"
+copy "$(ProjectDir)Xml_Patches\*.xml" "$(ProjectDir)$(OutDir)..\Patches\"
+
+C:\Users\AD\Desktop\ModTest.lnk</PostBuildEvent>
+  </PropertyGroup>
 </Project>
