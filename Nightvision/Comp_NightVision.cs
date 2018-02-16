@@ -174,10 +174,15 @@ namespace NightVision
                 }
 
             }
-            //Update the fields of the comp
-            numOfEyesWithNightVision = num_NVeyes;
-            numOfEyesWithPhotoSensitivity = num_PSeyes;
-            totalnumOfEyesNotMissing = total_num_eyes;
+            ////Update the fields of the comp
+            //numOfEyesWithNightVision = num_NVeyes;
+            //numOfEyesWithPhotoSensitivity = num_PSeyes;
+            //totalnumOfEyesNotMissing = total_num_eyes;
+
+            //This should update the pawns simple curve
+            int numNormaleyes = total_num_eyes - (num_NVeyes + num_PSeyes);
+            float pawnglowfactorFullLight = NightVisionMod.Instance.
+            
         }
         #endregion
 
