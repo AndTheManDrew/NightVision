@@ -21,9 +21,12 @@ namespace NightVision
     /// </summary>
 
 
+
     [StaticConstructorOnStartup]
     static class HarmonyPatches
     {
+        //public static SimpleCurve vanillaGlowCurve;
+
         #region Applying Harmony Patches
         static HarmonyPatches()
         {
@@ -32,7 +35,7 @@ namespace NightVision
             var harmony = HarmonyInstance.Create("atmd.nightvision.for.rimworld");
 
             {
-                //Both Patches hit StatPart_Glow methods
+                //All harmony stuff hits StatPart_Glow methods
                 Type type = typeof(StatPart_Glow);
 
                 //Vanilla method:
@@ -55,26 +58,6 @@ namespace NightVision
         }
         #endregion
 
-        //#region Debugger?
-        ////Directly copied from DoctorVanGogh on Discord
-        //[HarmonyPatch(typeof(ATMD_Nightvision.HarmonyPatches), nameof(Has_NightVision))]
-        //class Foo
-        //{
-
-        //    public static void Prefix(out object __state)
-        //    {
-        //        __state = Stopwatch.StartNew();
-        //    }
-
-        //    public static void Postfix(object __state, object __instance)
-        //    {
-        //        Stopwatch sw = (Stopwatch)__state;
-
-        //        sw.Stop();
-        //        Log.Message($"{__instance.GetType()}: {sw.ElapsedMilliseconds} ms");
-        //    }
-        //}
-        //#endregion
 
         #region Transfrom_Value Patches
         /* 		public override void TransformValue(StatRequest req, ref float val)
@@ -94,26 +77,30 @@ namespace NightVision
 
         public static void TransformValue_Postfix(float __state, ref float val, ref StatRequest req)
         {
-            //If the factor from glow was 1, and left the initial val unchanged, then do nothing
-            //This should catch if req.HasThing is false, but if implementing photosensitivity then will need to include check
-            if (__state == val)
+            //float factorfromglow = val / __state;
+            
+            if (req.HasThing)
             {
-                return;
-            }
+                Log.Message("HP_1");
+                if (req.Thing is Pawn pawn && pawn.RaceProps.Humanlike)
+                {
+                    //Potentially pass __state to NightVisionChecker to save calculating glowfactorforNormal ?
+                    float? NV_factorfromGlow = NightVisionChecker.NightVisionFactor(pawn);
 
-            //Could be useful to determine glow grid result -- also consider the explanation part which has glow grid in percent
-            float factorfromglow = val / __state;
+                    if (!NV_factorfromGlow.HasValue)
+                    {
+                        Log.Message("HP_1A");
+                        return;
+                    }
 
-            //Shouldn't need to check req.HasThing -- for now
-            Pawn pawn = req.Thing as Pawn;
-            Log.Message("Factor from glow was: " + factorfromglow.ToString() + " for the pawn: " + pawn.Label);
-            //This next check might catch req with no Thing??
-            if (pawn != null && pawn.RaceProps.Humanlike)
-            {
-                int num_NV_eyes = NightVisionChecker.AmountOfNightVision(pawn);
+                    val = __state * NV_factorfromGlow.Value;
+                    return;
 
-                //Derived from y = mx + c  ==> out = numNV * (pre - post)/2 + post
-                val = val + (__state - val) * num_NV_eyes / 2;
+
+                    //Depreciated:
+                    //Derived from y = mx + c  ==> out = numNV * (pre - post)/2 + post
+                    //val = val + (__state - val) * num_NV_eyes / 2;
+                }
             }
             return;
         }
@@ -143,32 +130,30 @@ namespace NightVision
             //Log.Message("ExplanationPartPatch passed null check");
             //read string and extract the glow factor, then use that as base for calculations
             Pawn pawn = req.Thing as Pawn;
-            //Log.Message("ExplanationPartPatch being called for: " + pawn.ToString());
+            //Not sure this next check is necessary, so adding an else clause which prints to Log
             if (pawn != null && pawn.RaceProps.Humanlike)
             {
-                int num_NV_eyes = NightVisionChecker.AmountOfNightVision(pawn);
-
-                if (num_NV_eyes == 0)
-                {
-                    return;
-                }
-
                 string[] tempArray = __result.Split(':');
                 char[] charsToTrim = { '%', ' ', 'x' };
                 tempArray[1] = tempArray[1].Trim(charsToTrim);
 
                 float.TryParse(tempArray[1], out float temp);
 
-                //Log.Message("Parsed Glow Factor from explanationpart: " + temp.ToString());
+                // temp == 0 implies TryParse failed (or grabbed wrong thing) as lower limit of glowfactor == 80
+                if ( temp == 0f) { Log.Message("NightVision: TryParse failed in explanationpart postfix");  return; }
 
-                // temp == 0 implies TryParse failed as lower limit of glowfactor == 80
-                //temp == 100, nothing for this to do
-                if (temp == 0f || temp == 100f) { return; }
+                float? NV_factorfromGlow = NightVisionChecker.NightVisionFactor(pawn);
 
-                temp = (temp + num_NV_eyes*0.5f*(100f - temp));
+                if (!NV_factorfromGlow.HasValue)
+                {
+                    return;
+                }
+
+                temp = 100f * NV_factorfromGlow.Value;
 
                 //Should probably add a translate function here, and think of a better way of expressing it
-                __result = tempArray[0] + ": x" + temp.ToString() + "% with night vision.";
+                string resultString = $"{tempArray[0]}: x{temp.ToString()}% with night vision from: \n TESTESTESTEST";
+                __result = resultString;
                 return;
                 
 
@@ -177,7 +162,6 @@ namespace NightVision
         }
 
         #endregion
-
-
+        
     }
 }

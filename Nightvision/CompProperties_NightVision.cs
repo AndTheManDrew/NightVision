@@ -9,9 +9,8 @@ namespace NightVision
 {
     public class CompProperties_NightVision : CompProperties
     {
-        public Pawn parentPawnInt;
-        public int numOfEyesWithNightVision = 0;
-        public int numOfEyesWithPhotoSensitivity = 0;
+        public SimpleCurve naturalGlowCurve = null;
+        public bool naturalNightVision = false;
 
         public CompProperties_NightVision()
         {
