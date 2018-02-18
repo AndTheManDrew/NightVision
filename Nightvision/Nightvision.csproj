@@ -51,7 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Comp_NightVisionHediff.cs" />
+    <Compile Include="HediffComp_NightVision.cs" />
     <Compile Include="Comp_NightVision.cs" />
     <Compile Include="Comp_NightVisionApparel.cs" />
     <Compile Include="NightVisionChecker.cs" />
@@ -69,6 +69,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Xml_Patches\Patches_ForTestingOnly.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Xml_Patches\PawnPatches.xml">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>

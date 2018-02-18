@@ -10,20 +10,21 @@ namespace NightVision
     /// <summary>
     /// More comps and props and comps and props and comps and props
     /// </summary>
-    public class Comp_NightVisionHediff : HediffComp
+    public class HediffComp_NightVision : HediffComp
     {
-        public CompProperties_NightVisionHediff Props => (CompProperties_NightVisionHediff)props;
-
+        public HediffCompProperties_NightVision Props => (HediffCompProperties_NightVision)props;
+        public bool grantsNightVision;
+        public bool grantsPhotosensitivity;
     }
 
-    public class CompProperties_NightVisionHediff : HediffCompProperties
+    public class HediffCompProperties_NightVision : HediffCompProperties
     {
         public bool grantsNightVision = false;
         public bool grantsPhotosensitivity = false;
         public SimpleCurve nightVisionCurve = null;
-        public CompProperties_NightVisionHediff()
+        public HediffCompProperties_NightVision()
         {
-            compClass = typeof(Comp_NightVisionHediff);
+            compClass = typeof(HediffComp_NightVision);
         }
     }
 }

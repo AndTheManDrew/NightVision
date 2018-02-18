@@ -6,7 +6,7 @@
     <label>An implanted tapetum lucidum: improves work speed and move speed in low light but penalises them in bright light.</label>
     <labelNoun>Tapetum Lucidum Implant</labelNoun>
     <comps>
-      <li Class="CompProperties_NightVisionHediff">
+      <li Class="NightVision.HediffCompProperties_NightVision">
         <grantsPhotosensitivity>true</grantsPhotosensitivity>
       </li>
     </comps>

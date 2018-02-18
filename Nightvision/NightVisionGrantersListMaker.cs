@@ -44,13 +44,13 @@ namespace NightVision
                 foreach (HediffDef hediffdef in AppropriateHediffs)
                 {
                     if((hediffdef.addedPartProps?.isBionic ?? false)
-                    || (hediffdef.CompProps<CompProperties_NightVisionHediff>()?.grantsNightVision ?? false))
+                    || (hediffdef.CompProps<HediffCompProperties_NightVision>()?.grantsNightVision ?? false))
                     {
                         Log.Message($"Adding {hediffdef} to list of NV Hediff Defs");
                         NightVisionMod.Instance.ListofNightVisionHediffDefs.Add(hediffdef);
                     }
 
-                    else if (hediffdef.CompProps<CompProperties_NightVisionHediff>()?.grantsPhotosensitivity ?? false)
+                    else if (hediffdef.CompProps<HediffCompProperties_NightVision>()?.grantsPhotosensitivity ?? false)
                     {
                         Log.Message($"Adding {hediffdef} to list of PS Hediff Defs");
                         NightVisionMod.Instance.ListofPhotosensitiveHediffDefs.Add(hediffdef);

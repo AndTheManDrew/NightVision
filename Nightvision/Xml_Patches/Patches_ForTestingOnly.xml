@@ -6,6 +6,7 @@
       <li Class="ScenPart_StartingThing_Defined">
           <def>StartingThing_Defined</def>
           <thingDef>NightVision_Goggles</thingDef>
+        <stuff>Cloth</stuff>
         </li>
     </value>
   </Operation>

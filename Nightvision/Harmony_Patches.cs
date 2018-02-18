@@ -20,6 +20,7 @@ namespace NightVision
     ///^ To not punish players from lighting their base as normal -- as in both photosensitive&normal&nightvision pawns should have == work speed in 50% light
     /// </summary>
 
+        // TODO Add a patch to apparel changed and hediff added to call nightvision update on those events CE has similar methods
 
 
     [StaticConstructorOnStartup]
@@ -81,25 +82,13 @@ namespace NightVision
             
             if (req.HasThing)
             {
-                Log.Message("HP_1");
                 if (req.Thing is Pawn pawn && pawn.RaceProps.Humanlike)
                 {
-                    //Potentially pass __state to NightVisionChecker to save calculating glowfactorforNormal ?
-                    float? NV_factorfromGlow = NightVisionChecker.NightVisionFactor(pawn);
+                    float glowat = pawn.Map.glowGrid.GameGlowAt(pawn.Position, false);
 
-                    if (!NV_factorfromGlow.HasValue)
-                    {
-                        Log.Message("HP_1A");
-                        return;
-                    }
-
-                    val = __state * NV_factorfromGlow.Value;
+                    val = __state * pawn.GetComp<Comp_NightVision>()?.PawnsGlowCurve.Evaluate(glowat) ?? val;
                     return;
-
-
-                    //Depreciated:
-                    //Derived from y = mx + c  ==> out = numNV * (pre - post)/2 + post
-                    //val = val + (__state - val) * num_NV_eyes / 2;
+                    
                 }
             }
             return;
@@ -142,18 +131,17 @@ namespace NightVision
                 // temp == 0 implies TryParse failed (or grabbed wrong thing) as lower limit of glowfactor == 80
                 if ( temp == 0f) { Log.Message("NightVision: TryParse failed in explanationpart postfix");  return; }
 
-                float? NV_factorfromGlow = NightVisionChecker.NightVisionFactor(pawn);
+                float glowat = pawn.Map.glowGrid.GameGlowAt(pawn.Position, false);
 
-                if (!NV_factorfromGlow.HasValue)
+                if (pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
                 {
-                    return;
+                    temp = 100f * comp.PawnsGlowCurve.Evaluate(glowat);
+
+                    //Should probably add a translate function here, and think of a better way of expressing it
+                    string resultString = $"{tempArray[0]}: x{temp.ToString()}% with night vision from: \n {comp.NV_hediffs}";
+                    __result = resultString;
                 }
-
-                temp = 100f * NV_factorfromGlow.Value;
-
-                //Should probably add a translate function here, and think of a better way of expressing it
-                string resultString = $"{tempArray[0]}: x{temp.ToString()}% with night vision from: \n TESTESTESTEST";
-                __result = resultString;
+                
                 return;
                 
 

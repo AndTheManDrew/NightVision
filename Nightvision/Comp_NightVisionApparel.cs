@@ -15,7 +15,7 @@ namespace NightVision
 
     public class CompProperties_NightVisionApparel : CompProperties
     {
-        public bool nullifiesPhotoSensitivity = false;
+        public bool nullifiesPhotosensitivity = false;
         public bool grantsNightVision = false;
         public SimpleCurve nightVisionCurve = null;
         public CompProperties_NightVisionApparel()
