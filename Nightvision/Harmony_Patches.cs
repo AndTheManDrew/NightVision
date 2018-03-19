@@ -20,8 +20,7 @@ namespace NightVision
     ///^ To not punish players from lighting their base as normal -- as in both photosensitive&normal&nightvision pawns should have == work speed in 50% light
     /// </summary>
 
-        // TODO Add a patch to apparel changed and hediff added to call nightvision update on those events CE has similar methods
-
+ 
 
     [StaticConstructorOnStartup]
     static class HarmonyPatches
@@ -50,12 +49,7 @@ namespace NightVision
                 harmony.Patch(explanation_part_vanilla_method, null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("ExplanationPart_Postfix")));
 
             }
-
-            var methods = harmony.GetPatchedMethods();
-            foreach (var method in methods)
-            {
-                Log.Message(method.ToString());
-            }
+            
         }
         #endregion
 
@@ -78,15 +72,12 @@ namespace NightVision
 
         public static void TransformValue_Postfix(float __state, ref float val, ref StatRequest req)
         {
-            //float factorfromglow = val / __state;
-            
             if (req.HasThing)
             {
                 if (req.Thing is Pawn pawn && pawn.RaceProps.Humanlike)
                 {
                     float glowat = pawn.Map.glowGrid.GameGlowAt(pawn.Position, false);
-
-                    val = __state * pawn.GetComp<Comp_NightVision>()?.PawnsGlowCurve.Evaluate(glowat) ?? val;
+                    val = __state * pawn.GetComp<Comp_NightVision>()?.FactorFromGlow(glowat) ?? val;
                     return;
                     
                 }
@@ -116,29 +107,26 @@ namespace NightVision
             if (__result == null){
                 return;
             }
-            //Log.Message("ExplanationPartPatch passed null check");
-            //read string and extract the glow factor, then use that as base for calculations
+
             Pawn pawn = req.Thing as Pawn;
-            //Not sure this next check is necessary, so adding an else clause which prints to Log
+            // TODO Not sure this next check is necessary, so adding an else clause which prints to Log
             if (pawn != null && pawn.RaceProps.Humanlike)
             {
-                string[] tempArray = __result.Split(':');
-                char[] charsToTrim = { '%', ' ', 'x' };
-                tempArray[1] = tempArray[1].Trim(charsToTrim);
-
-                float.TryParse(tempArray[1], out float temp);
-
-                // temp == 0 implies TryParse failed (or grabbed wrong thing) as lower limit of glowfactor == 80
-                if ( temp == 0f) { Log.Message("NightVision: TryParse failed in explanationpart postfix");  return; }
-
                 float glowat = pawn.Map.glowGrid.GameGlowAt(pawn.Position, false);
+                //If glow is outside NV range, do nothing
+                if (glowat > 0.3f & glowat < 0.7f)
+                {
+                    return;
+                }
 
                 if (pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
                 {
-                    temp = 100f * comp.PawnsGlowCurve.Evaluate(glowat);
+                    string[] tempArray = __result.Split(':');
+                    
+                    float temp = 100f * comp.FactorFromGlow(glowat);
 
                     //Should probably add a translate function here, and think of a better way of expressing it
-                    string resultString = $"{tempArray[0]}: x{temp.ToString()}% with night vision from: \n {comp.NV_hediffs}";
+                    string resultString = $"{tempArray[0]}: x{temp.ToString()}% with night vision from: \n" + comp.NVEffectorsAsListStr.ToStringSafeEnumerable();
                     __result = resultString;
                 }
                 
@@ -147,9 +135,13 @@ namespace NightVision
 
                     
             }
+            Log.Message("NV: Exp.Patch: Pawn was null or not humanlike but vanilla explanation part was not null");
         }
 
         #endregion
         
+        //TODO Add patch for Psych Glow
+
+        //TODO Add patch for Combat Extended ShiftVecReportFor
     }
 }

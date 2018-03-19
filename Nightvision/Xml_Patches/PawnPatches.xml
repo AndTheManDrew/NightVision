@@ -18,6 +18,7 @@
         <xpath>/Defs/ThingDef[defName = "Human"]/comps</xpath>
         <value>
           <li Class = "NightVision.CompProperties_NightVision">
+            <zeroLightFactor>150</zeroLightFactor>
           </li>
         </value>
       </li>

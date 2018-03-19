@@ -168,7 +168,7 @@
 //            }
 
 
-//            //Nightvision Factor calculations:
+//            //NightVision Factor calculations:
 //            //Doesn't penalise for missing eyes; leaving that to Rimworld's sight capacity 
 //            nightVisionFactor = numBionicEyes * glowfactorforBionic
 //                                    + numPhotosensEyes * glowfactorforPhotosens
