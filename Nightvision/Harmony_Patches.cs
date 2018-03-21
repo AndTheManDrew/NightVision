@@ -108,9 +108,8 @@ namespace NightVision
                 return;
             }
 
-            Pawn pawn = req.Thing as Pawn;
             // TODO Not sure this next check is necessary, so adding an else clause which prints to Log
-            if (pawn != null && pawn.RaceProps.Humanlike)
+            if (req.Thing is Pawn pawn && pawn.RaceProps.Humanlike)
             {
                 float glowat = pawn.Map.glowGrid.GameGlowAt(pawn.Position, false);
                 //If glow is outside NV range, do nothing
@@ -122,18 +121,18 @@ namespace NightVision
                 if (pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
                 {
                     string[] tempArray = __result.Split(':');
-                    
+
                     float temp = 100f * comp.FactorFromGlow(glowat);
 
                     //Should probably add a translate function here, and think of a better way of expressing it
                     string resultString = $"{tempArray[0]}: x{temp.ToString()}% with night vision from: \n" + comp.NVEffectorsAsListStr.ToStringSafeEnumerable();
                     __result = resultString;
                 }
-                
-                return;
-                
 
-                    
+                return;
+
+
+
             }
             Log.Message("NV: Exp.Patch: Pawn was null or not humanlike but vanilla explanation part was not null");
         }

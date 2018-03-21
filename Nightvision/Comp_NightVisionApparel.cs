@@ -17,7 +17,6 @@ namespace NightVision
     {
         public bool nullifiesPhotosensitivity = false;
         public bool grantsNightVision = false;
-        public SimpleCurve nightVisionCurve = null;
         public CompProperties_NightVisionApparel()
         {
             compClass = typeof(Comp_NightVisionApparel);

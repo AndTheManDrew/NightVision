@@ -81,10 +81,9 @@ namespace NightVision
         {
             get
             {
-                // TODO add a setdirty thing: for when settings are changed mid-game
                 if (naturalGlowMods.Length == 0 || GlowModIsDirty)
                 {
-                    IntRange temp = NightVisionMod.Settings.DictOfRaceNightVision[this.ParentPawn.def];
+                    IntRange temp = NightVisionSettings.RaceNightVisionFactors[this.ParentPawn.def];
                     naturalGlowMods[0] = CalcModifierFromFactor(temp.min);
                     naturalGlowMods[1] = CalcModifierFromFactor(temp.max);
                 }
@@ -186,13 +185,14 @@ namespace NightVision
             
             List<Hediff> hedifflist = PawnHediffSet.hediffs;
             
-            if (hedifflist == null)
+            if (hedifflist.NullOrEmpty())
             {
                 if (zeroLightFactor == 0f || fullLightFactor == 0f || UpdateIsDirty)
                 {
-                    zeroLightFactor = NightVisionMod.Settings.DictOfRaceNightVision[this.ParentPawn.def].min;
-                    fullLightFactor = NightVisionMod.Settings.DictOfRaceNightVision[this.ParentPawn.def].max;
+                    zeroLightFactor = NightVisionSettings.RaceNightVisionFactors[this.ParentPawn.def].min;
+                    fullLightFactor = NightVisionSettings.RaceNightVisionFactors[this.ParentPawn.def].max;
                 }
+                //TODO Does this need to check Photosensitivity?
                 NVApparelCheck(true, true);
                 return;
             }
@@ -208,19 +208,19 @@ namespace NightVision
                     total_num_eyes--;
                 }
                 //Check if the eye has nightvision
-                else if (NightVisionMod.Settings.ListofNightVisionHediffDefs.Contains(hediff.def))
+                else if (NightVisionSettings.NightVisionHediffDefs.Contains(hediff.def))
                 {
                     NVEffectorsAsListStr.Add(hediff.Label);
                     num_NVeyes++;
 
                 }
                 //Check if the eye is photosensitive
-                else if (NightVisionMod.Settings.ListofPhotosensitiveHediffDefs.Contains(hediff.def))
+                else if (NightVisionSettings.PhotosensitiveHediffDefs.Contains(hediff.def))
                 {
                     NVEffectorsAsListStr.Add(hediff.Label);
                     num_PSeyes++;
                 }
-                //Check if the eye has been replaced by something that is not an implant
+                //Check if the eye has been replaced by something that is not a solid bionic
                 else if (hediff is Hediff_AddedPart && (hediff.def.addedPartProps?.isSolid ?? false))
                 {
                     total_num_eyes--;
@@ -238,14 +238,14 @@ namespace NightVision
             //have lead to the odd situation of a pawn with only one eye that was bionic having better nightvision
             //than a pawn with two eyes, one normal and one bionic
 
-            ZeroLightFactor = 0.8f + (num_PSeyes* CalcModifierFromFactor(NightVisionMod.Settings.PhotosensitiveLightFactors.min)
-                                                + num_NVeyes*CalcModifierFromFactor(NightVisionMod.Settings.BionicLightFactors.min)     
+            ZeroLightFactor = 0.8f + (num_PSeyes* CalcModifierFromFactor(Controller.Settings.PhotosensitiveLightFactors.min)
+                                                + num_NVeyes*CalcModifierFromFactor(Controller.Settings.BionicLightFactors.min)     
                                                 + num_NaturalEyes * NaturalGlowModsPerEye[0]);
 
             //Calc the multiplier for max light
             
             //Start from 1f, same as above, except we ignore NightVision eyes (i.e. bionics)
-            FullLightFactor = 1f + (num_PSeyes * CalcModifierFromFactor(NightVisionMod.Settings.PhotosensitiveLightFactors.max)
+            FullLightFactor = 1f + (num_PSeyes * CalcModifierFromFactor(Controller.Settings.PhotosensitiveLightFactors.max)
                                                 + num_NaturalEyes * NaturalGlowModsPerEye[1]);
 
 
@@ -278,28 +278,26 @@ namespace NightVision
             if (ParentPawn.apparel != null && ParentPawn.apparel.WornApparelCount > 0)
             {
                 bool hasNVApparel = false;
-                foreach (Apparel apparel in ParentPawn.apparel.WornApparel)
+                foreach (KeyValuePair<ThingDef, ApparelSetting> kvp in ParentPawn.apparel.WornApparel.Where(app => NightVisionSettings.NVApparel.ContainsKey(app.def))
+                    .Select(app => { return new KeyValuePair<ThingDef, ApparelSetting>(app.def, NightVisionSettings.NVApparel[app.def]); }))
                 {
-                    if (apparel.GetComp<Comp_NightVisionApparel>() is Comp_NightVisionApparel comp)
+                    if (checkNV && kvp.Value.GrantsNV)
                     {
-                        if (checkNV && comp.Props.grantsNightVision)
+                        NVEffectorsAsListStr.Add(kvp.Key.LabelCap);
+                        if (ZeroLightFactor < 1f )
                         {
-                            NVEffectorsAsListStr.Add(apparel.Label);
-                            if (ZeroLightFactor < 1f )
-                            {
-                                ZeroLightFactor = 1f;
-                                hasNVApparel = true;
-                            }
+                            ZeroLightFactor = 1f;
+                            hasNVApparel = true;
                         }
-                        if (checkPS && comp.Props.nullifiesPhotosensitivity)
-                        {
-                            NVEffectorsAsListStr.Add(apparel.Label);
+                    }
+                    if (checkPS && kvp.Value.NullifiesPS)
+                    {
+                        NVEffectorsAsListStr.Add(kvp.Key.LabelCap);
 
-                            if (FullLightFactor < 1f)
-                            {
-                                FullLightFactor = 1f;
-                                hasNVApparel = true;
-                            }
+                        if (FullLightFactor < 1f)
+                        {
+                            FullLightFactor = 1f;
+                            hasNVApparel = true;
                         }
                     }
                 }

@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\RimWorld_MODTEST\Mods\Nightvision\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -59,11 +59,10 @@
     <Compile Include="HediffComp_NightVision.cs" />
     <Compile Include="Comp_NightVision.cs" />
     <Compile Include="Comp_NightVisionApparel.cs" />
-    <Compile Include="NightVisionChecker.cs" />
     <Compile Include="Harmony_Patches.cs" />
     <Compile Include="CompProperties_NightVision.cs" />
-    <Compile Include="NightVisionStatic.cs" />
-    <Compile Include="NightVisionMod.cs" />
+    <Compile Include="Storage.cs" />
+    <Compile Include="Controller.cs" />
     <Compile Include="Properties\NightVision.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
