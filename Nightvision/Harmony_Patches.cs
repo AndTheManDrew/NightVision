@@ -129,8 +129,8 @@ namespace NightVision
         public static void AddHediff_Postfix(Hediff hediff, BodyPartRecord part, Pawn_HealthTracker __instance)
         {
 
-            Pawn pawn = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>();
-            Log.Message("AddHediff_Postfix: " + pawn.Label + " - " + hediff.Label + " - " + part.def.defName);
+            Pawn pawn = Traverse.Create(__instance).Field("pawn")?.GetValue<Pawn>();
+            Log.Message("AddHediff_Postfix: " + pawn?.Label + " - " + hediff.Label + " - " + part?.def.defName);
             if (pawn != null && part != null && hediff is Hediff_MissingPart && pawn.RaceProps.Humanlike && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
                 Log.Message("NightVision: AddHediff_Postfix: " + pawn.NameStringShort + " - " + hediff.def.defName);
