@@ -5,9 +5,18 @@
     <value>
       <li Class="ScenPart_StartingThing_Defined">
           <def>StartingThing_Defined</def>
-          <thingDef>NightVision_Goggles</thingDef>
+          <thingDef>simpleNVGoggles</thingDef>
         <stuff>Cloth</stuff>
         </li>
+      <li Class="ScenPart_StartingThing_Defined">
+        <def>StartingThing_Defined</def>
+        <thingDef>tintedgoggles</thingDef>
+        <stuff>Cloth</stuff>
+      </li>
+      <li Class="ScenPart_StartingThing_Defined">
+        <def>StartingThing_Defined</def>
+        <thingDef>advNVgear</thingDef>
+      </li>
     </value>
   </Operation>
 </Patch>

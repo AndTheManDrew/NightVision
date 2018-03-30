@@ -10,6 +10,7 @@ namespace NightVision
 {
     class NightVisionSettings : ModSettings
     {
+        #region GUI And Settings Fields
         private enum Tab
         {
             General,
@@ -19,71 +20,91 @@ namespace NightVision
         }
         private Tab tab;
         private static List<TabRecord> tabsList = new List<TabRecord>();
-
-        public static readonly IntRange DefaultPhotosensitiveGlFactors = new IntRange ( 120, 80 );
-        public static readonly IntRange DefaultLightFactors = new IntRange ( 80, 100 );
-        private static readonly FloatRange DefaultEyeMods = new FloatRange(-0.1f, 0f);
-        
         private Vector2 scrollPosition = Vector2.zero;
-        private FloatRange intBionicEyeMods = new FloatRange(-1, -1);
-        private FloatRange intPhotoSensEyeMods = new FloatRange(-1, -1);
-
-        public static NightVisionSettings Instance;
         private List<ThingDef> RacesWithChangedSettings = new List<ThingDef>();
-        private bool PhotoSensSettingsChanged = false;
-        private bool BionicSettingsChanged = false;
-        public IntRange BionicLightFactors = new IntRange(100, 100);
-        public IntRange PhotosensitiveLightFactors = new IntRange(120, 80);
-        public FloatRange BionicEyeMods
+
+        #endregion
+
+        #region Constants & Static Struct
+
+        internal const float DefaultZeroLightMultiplier = 0.8f;
+        internal const float DefaultFullLightMultiplier = 1f;
+
+        internal static readonly FloatRange DefaultNightVisionMultipliers = FloatRange.One;
+        internal static readonly FloatRange DefaultModifiers = FloatRange.Zero;
+        internal static readonly FloatRange DefaultPhotosensitiveMultipliers = new FloatRange(1.2f, 0.8f);
+
+        #endregion
+
+        
+        public static NightVisionSettings Instance;
+
+        #region Def lists
+
+        internal static List<HediffDef> AllRelevantEyeBrainOrBodyHediffs = new List<HediffDef>();
+        internal static List<ThingDef> AllEyeCoveringHeadgearDefs = new List<ThingDef>();
+
+        #endregion
+
+        #region SavedSettings
+
+        public static Dictionary<ThingDef, FloatRange> RaceNVMultipliers = new Dictionary<ThingDef, FloatRange>();
+        public static Dictionary<ThingDef, ApparelSetting> NVApparel = new Dictionary<ThingDef, ApparelSetting>();
+        public static Dictionary<HediffDef, FloatRange> NVHediffs = new Dictionary<HediffDef, FloatRange>();
+
+        private static FloatRange nightVisionMultipliers;
+        private static FloatRange photosensitiveMultipliers;
+
+        public static FloatRange MultiplierCaps = new FloatRange(0.8f, 1.2f);
+
+        #endregion
+
+        private static Dictionary<ThingDef, FloatRange> raceNightVisionModsCached = new Dictionary<ThingDef, FloatRange>();
+
+        public static FloatRange NightVisionMultipliers
         {
             get
             {
-                if (intBionicEyeMods == null)
+                if (nightVisionMultipliers == null)
                 {
-                    ConvertFactorToMod(BionicLightFactors, out intBionicEyeMods);
+                    Log.Message("nightVisionMultipliers was null");
+                    nightVisionMultipliers = DefaultNightVisionMultipliers;
                 }
-                return intBionicEyeMods;
+                return nightVisionMultipliers;
             }
-            set => intBionicEyeMods = value;
         }
-        public FloatRange PhotosensEyeMods
+        public static FloatRange PhotosensitiveMultipliers
         {
             get
             {
-                if (intPhotoSensEyeMods.min == -1 && intPhotoSensEyeMods.max == -1)
+                if (photosensitiveMultipliers == null)
                 {
-                    ConvertFactorToMod(PhotosensitiveLightFactors, out intPhotoSensEyeMods);
+                    Log.Message("nightVisionMultipliers was null");
+                    photosensitiveMultipliers = DefaultPhotosensitiveMultipliers;
                 }
-                return intPhotoSensEyeMods;
+                return photosensitiveMultipliers;
             }
-            set => intPhotoSensEyeMods = value;
         }
 
-        private static Dictionary<ThingDef, FloatRange> intRaceNightVisionMods = new Dictionary<ThingDef, FloatRange>();
-        public FloatRange GetRaceNightVisionMod(ThingDef race)
+        /// <returns>TOTAL decimal modifiers (0.8f + min, 1f + max)</returns>
+        internal static FloatRange GetRaceNightVisionMod(ThingDef race)
         {
-            if (!intRaceNightVisionMods.ContainsKey(race))
+            if (!raceNightVisionModsCached.ContainsKey(race))
             {
-                if (RaceNightVisionFactors.ContainsKey(race))
+                if (RaceNVMultipliers.TryGetValue(race, out FloatRange raceNVMultiplier))
                 {
-                    FloatRange floatRange;
-                    ConvertFactorToMod(RaceNightVisionFactors[race], out floatRange);
-                    intRaceNightVisionMods[race] = floatRange;
+                    raceNightVisionModsCached[race] = new FloatRange(raceNVMultiplier.min - DefaultZeroLightMultiplier, raceNVMultiplier.max - DefaultFullLightMultiplier);
                 }
                 else
                 {
-                    intRaceNightVisionMods[race] = DefaultEyeMods;
-                    Log.Message("Night Vision: Could not find entry for " + race.LabelCap + ", setting to default.");
+                    raceNightVisionModsCached[race] = DefaultModifiers;
                 }
             }
-            return intRaceNightVisionMods[race];
+            return raceNightVisionModsCached[race];
         }
 
-        public static Dictionary<ThingDef, IntRange> RaceNightVisionFactors = new Dictionary<ThingDef, IntRange>();
-        public static List<HediffDef> NightVisionHediffDefs = new List<HediffDef>();
-        public static List<HediffDef> PhotosensitiveHediffDefs = new List<HediffDef>();
-        public static Dictionary<ThingDef, ApparelSetting> NVApparel = new Dictionary<ThingDef, ApparelSetting>();
-        public static List<ThingDef> AllHeadgearDefs = new List<ThingDef>();
+
+
 
 
 
@@ -95,9 +116,9 @@ namespace NightVision
         
         public void DoSettingsWindowContents(Rect inRect)
         {
-
+            
             Text.Font = GameFont.Small;
-            Text.Anchor = TextAnchor.UpperLeft;
+            Text.Anchor = TextAnchor.MiddleCenter;
 
             tabsList.Clear();
             tabsList.Add(new TabRecord("General", delegate{tab = Tab.General;}, tab == Tab.General));
@@ -108,36 +129,35 @@ namespace NightVision
             inRect.yMin += 32f;
             Widgets.DrawMenuSection(inRect);
             TabDrawer.DrawTabs(inRect, tabsList);
+            //inRect = inRect.ContractedBy(17f);
             inRect = inRect.ContractedBy(17f);
             GUI.BeginGroup(inRect);
-            Rect firstinRect = inRect.ContractedBy(20f);
-            if (tab == Tab.General)
+            switch (tab)
             {
-                DrawGeneralTab(firstinRect);
-            }
-            else if (tab == Tab.Races)
-            {
-                DrawRaceTab(firstinRect);
-            }
-            else if (tab == Tab.Apparel)
-            {
-                if (AllHeadgearDefs.Count() == 0)
-                {
-                    AllHeadgearDefs = DefDatabase<ThingDef>.AllDefs.Where(adef =>
-                    adef.IsApparel && adef.thingCategories.Contains(ThingCategoryDef.Named("Headgear"))).ToList();
-                    // Move the defs that already have NV settings to the top of the list -- aesthetic sensibilities
+                case Tab.General:
+                    DrawGeneralTab(inRect);
+                    break;
+                case Tab.Races:
+                    DrawRaceTab(inRect);
+                    break;
+                case Tab.Apparel:
                     foreach (ThingDef appareldef in NVApparel.Keys)
                     {
-                        int appindex = AllHeadgearDefs.IndexOf(appareldef);
+                        int appindex = AllEyeCoveringHeadgearDefs.IndexOf(appareldef);
                         if (appindex >= 0)
                         {
-                            AllHeadgearDefs.RemoveAt(appindex);
-                            AllHeadgearDefs.Insert(0, appareldef);
+                            AllEyeCoveringHeadgearDefs.RemoveAt(appindex);
+                            AllEyeCoveringHeadgearDefs.Insert(0, appareldef);
                         }
                     }
-                    Log.Message("Made the ApparelDefs list.");
-                }
-                DrawApparelTab(firstinRect);
+
+                    DrawApparelTab(inRect);
+                    break;
+                case Tab.Bionics:
+                    DrawHediffTab(inRect);
+                    break;
+                default:
+                    break;
             }
             GUI.EndGroup();
            
@@ -146,40 +166,50 @@ namespace NightVision
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref PhotosensitiveLightFactors.min, "PhotosensitiveLightFactorsZeroLight", 120);
-            Scribe_Values.Look(ref PhotosensitiveLightFactors.max, "PhotosensitiveLightFactorsFullLight", 80);
+            Scribe_Values.Look(ref MultiplierCaps.min, "LowerLimit", 0.8f);
+            Scribe_Values.Look(ref MultiplierCaps.max, "UpperLimit", 1.2f);
+
+            Scribe_Values.Look(ref photosensitiveMultipliers.min, "PhotosensZeroLightMultiplier", 1.2f);
+            Scribe_Values.Look(ref photosensitiveMultipliers.max, "PhotosensFullLightMultiplier", 0.8f);
 
             if (Scribe.mode == LoadSaveMode.Saving)
             {
-                RaceNightVisionFactors.RemoveAll(kvp => kvp.Key == null);
-                NVApparel.RemoveAll(appset => appset.Key == null || !(appset.Value.NullifiesPS || appset.Value.GrantsNV));
+                RaceNVMultipliers.RemoveAll(kvp => kvp.Key == null);
+                NVApparel.RemoveAll(appset => appset.Key == null || appset.Value.IsRedundant());
             }
 
-            Scribe_Collections.Look(ref RaceNightVisionFactors, "Race", LookMode.Def, LookMode.Undefined);
+            Scribe_Collections.Look(ref RaceNVMultipliers, "Race", LookMode.Def, LookMode.Value);
             Scribe_Collections.Look(ref NVApparel, "Apparel", LookMode.Def, LookMode.Deep);
+            Scribe_Collections.Look(ref NVHediffs, "Hediffs", LookMode.Def, LookMode.Value);
 
             if (Scribe.mode == LoadSaveMode.LoadingVars)
             {
-                int numOfRemoved = RaceNightVisionFactors.RemoveAll(kvp => kvp.Key == null);
+                int numOfRemoved = RaceNVMultipliers.RemoveAll(kvp => kvp.Key == null);
                 if (numOfRemoved > 0)
                 {
                     Log.Message("Night Vision: Removed " + numOfRemoved + " null defs from race dictionary." +
                         " This is to be expected if you have removed a race mod.");
                 }
-                numOfRemoved = NVApparel.RemoveAll(appset => appset.Key == null || !(appset.Value.NullifiesPS || appset.Value.GrantsNV));
+                numOfRemoved = NVApparel.RemoveAll(appset => appset.Key == null || appset.Value.IsRedundant());
                 if (numOfRemoved > 0)
                 {
                     Log.Message("Night Vision: Removed " + numOfRemoved + " null defs and redundant settings from apparel list." +
-                        " This is to be expected if you have removed a clothing mod or changed the mod settings.");
+                        " This is to be expected if you have removed a mod or changed Night Vision mod settings.");
+                }
+                numOfRemoved = NVHediffs.RemoveAll(entry => entry.Key == null || (Mathf.Approximately(entry.Value.min, 0f) && Mathf.Approximately(entry.Value.max, 0f)));
+                if (numOfRemoved > 0)
+                {
+                    Log.Message("Night Vision: Removed " + numOfRemoved + " null hediffDefs and redundant settings from hediffdef list" +
+                        " This is to be expected if you have removed a mod or changed Night Vision mod settings.");
                 }
             }
 
         }
-        
+
         /// <summary>
         /// So that the comps will update with the new settings, sets all the comps dirty
         /// </summary>
-        public void SetDirtyAllComps()
+        internal void SetDirtyAllComps()
         {
             foreach(Pawn pawn in PawnsFinder.AllMapsCaravansAndTravelingTransportPods.Where(pwn => pwn.RaceProps.Humanlike))
             {
@@ -192,53 +222,47 @@ namespace NightVision
 
         private void DrawGeneralTab(Rect inRect)
         {
-            //TODO Add reset defaults and thought settings
-            string settingsPSFullLightBuffer = PhotosensitiveLightFactors.max.ToString();
-            string settingsPSZeroLightBuffer = PhotosensitiveLightFactors.min.ToString();
-
-            Listing_Standard list = new Listing_Standard(GameFont.Small){ verticalSpacing = 17f };
-
-            list.Begin(inRect);
-            IntRange flag1 = PhotosensitiveLightFactors;
-            list.Label("Work and Move Speed Factor for pawns with two photosensitive eyes:");
-            list.Label("Full light:");
-            list.TextFieldNumeric(ref PhotosensitiveLightFactors.max, ref settingsPSFullLightBuffer, 0, 200);
-
-            list.Label("Zero light:");
-            list.TextFieldNumeric(ref PhotosensitiveLightFactors.min, ref settingsPSZeroLightBuffer, 0, 200);
-            list.Gap();
-            if (flag1 != PhotosensitiveLightFactors)
+            //TODO DrawGeneralTab: Add reset defaults and thought settings
+            //TODO DrawGeneralTab: Add general settings for NV and Photosensitivity?
+            float minAsPercent = MultiplierCaps.min * 100;
+            float maxAsPercent = MultiplierCaps.max * 100;
+            string minBuffer = minAsPercent.ToString() + "%";
+            string maxBuffer = maxAsPercent.ToString() + "%";
+            Rect rowRect = inRect.AtZero().TopPart(0.2f);
+            minAsPercent = Widgets.HorizontalSlider(rowRect.TopHalf(), minAsPercent, 10f, 80f, false, minBuffer, "10%", "80%", 1);
+            maxAsPercent = Widgets.HorizontalSlider(rowRect.BottomHalf(), maxAsPercent, 100f, 200f, false, maxBuffer, "100%", "200%", 1);
+            if (Math.Abs(minAsPercent / 100f - MultiplierCaps.min) > 0.001f || Math.Abs(maxAsPercent / 100f - MultiplierCaps.max) > 0.001f)
             {
-                PhotoSensSettingsChanged = true;
+                Log.Message("Night Vision: DrawGeneralTab: float comparison false: " + minAsPercent / 100f + " != " + MultiplierCaps.min + " or " + maxAsPercent / 100f + " != " + MultiplierCaps.max);
+                MultiplierCaps = new FloatRange(minAsPercent / 100f, maxAsPercent / 100f);
             }
-            list.End();
         }
 
         private void DrawRaceTab(Rect inRect)
         {
-            // TODO Add labels and stuff
-            int raceCount = RaceNightVisionFactors.Count;
-            Rect viewRect = new Rect(0f, 0f, inRect.width / 10 * 9, raceCount * 32f);
+            // TODO DrawRaceTab: Add headers
+            //  TODO DrawRaceTab: Try and fix not letting the user input due to min max settings; Sliders?
+            int raceCount = RaceNVMultipliers.Count;
+            Rect viewRect = new Rect(0f, 0f, inRect.width, raceCount * 32f);
             float num = 3f;
             Widgets.BeginScrollView(inRect.AtZero(), ref this.scrollPosition, viewRect);
-            foreach (ThingDef key in RaceNightVisionFactors.Keys.ToList())
+            foreach (ThingDef key in RaceNVMultipliers.Keys.ToList())
             {
-                int zeroLightFactor = RaceNightVisionFactors[key].min;
-                int fullLightFactor = RaceNightVisionFactors[key].max;
-                string zeroLightFactorBuffer = zeroLightFactor.ToString();
-                string fullLightFactorBuffer = fullLightFactor.ToString();
+                float zeroLightMultiplier = RaceNVMultipliers[key].min;
+                float fullLightMultiplier = RaceNVMultipliers[key].max;
+                string zeroLightMultiplierBuffer = (zeroLightMultiplier * 100).ToString();
+                string fullLightMultiplierBuffer = (fullLightMultiplier * 100).ToString();
 
-                Rect rowRect = new Rect(5, num, inRect.width - 6, 30);
+                Rect rowRect = new Rect(12, num, inRect.width - 12, 30);
                 Rect leftRect = rowRect.LeftPart(0.3f);
                 Rect rightRect = rowRect.RightPart(0.6f);
                 Widgets.Label(leftRect, key.LabelCap);
-                Widgets.TextFieldNumeric(rightRect.LeftPart(0.4f), ref zeroLightFactor, ref zeroLightFactorBuffer);
-                Widgets.TextFieldNumeric(rightRect.RightPart(0.4f), ref fullLightFactor, ref fullLightFactorBuffer);
-                if (zeroLightFactor != RaceNightVisionFactors[key].min || fullLightFactor != RaceNightVisionFactors[key].max)
+                Widgets.TextFieldPercent(rightRect.LeftPart(0.4f), ref zeroLightMultiplier, ref zeroLightMultiplierBuffer, MultiplierCaps.min, MultiplierCaps.max );
+                Widgets.TextFieldPercent(rightRect.RightPart(0.4f), ref fullLightMultiplier, ref fullLightMultiplierBuffer, MultiplierCaps.min, MultiplierCaps.max);
+                if (Math.Abs(zeroLightMultiplier - RaceNVMultipliers[key].min) > 0.001f || Math.Abs(fullLightMultiplier - RaceNVMultipliers[key].max) > 0.001f)
                 {
-                    RaceNightVisionFactors[key] = new IntRange(zeroLightFactor, fullLightFactor);
-                    zeroLightFactorBuffer = zeroLightFactor.ToString();
-                    fullLightFactorBuffer = fullLightFactor.ToString();
+                    Log.Message("Night Vision: DrawRaceTab: float comparison false: " + zeroLightMultiplier + " != " + RaceNVMultipliers[key].min + " or " + fullLightMultiplier + " != " + RaceNVMultipliers[key].max);
+                    RaceNVMultipliers[key] = new FloatRange(zeroLightMultiplier, fullLightMultiplier);
                     RacesWithChangedSettings.Add(key);
                 }
                 num += 32f;
@@ -247,28 +271,44 @@ namespace NightVision
         }
         private void DrawApparelTab(Rect inRect)
         {
-            // TODO Add labels and stuff
-            int apparelCount = AllHeadgearDefs.Count;
-            
-            Rect viewRect = new Rect(0f, 0f, inRect.width / 10 * 9, apparelCount * 32f);
-            float num = 3f;
-            Widgets.BeginScrollView(inRect.AtZero(), ref this.scrollPosition, viewRect);
-            foreach (ThingDef appareldef in AllHeadgearDefs)
-            {
-                
-                // TODO Rework these labels, move them to the top of the box
-                string nullPSLabel = "Nullify Photosensitivity";
-                string giveNVLabel = "Give NightVision";
-                ApparelSetting apparelSetting;
+            Text.Anchor = TextAnchor.LowerCenter;
+            int apparelCount = AllEyeCoveringHeadgearDefs.Count;
+            Rect headerRect = new Rect(24f, 0f, inRect.width - 64f, 36f);
+            Rect leftRect = headerRect.LeftPart(0.4f);
+            Rect midRect = headerRect.RightPart(0.6f).LeftHalf().RightPart(0.8f);
+            Rect rightRect = headerRect.RightPart(0.6f).RightHalf().LeftPart(0.8f);
+            Widgets.Label(leftRect, "Apparel");
+            Widgets.Label(midRect, "Nullifies Photosensitivity");
+            Widgets.Label(rightRect, "Gives NightVision");
 
-                Rect rowRect = new Rect(5, num, inRect.width - 6, 30);
-                Rect leftRect = rowRect.LeftPart(0.3f);
-                Rect rightRect = rowRect.RightPart(0.6f);
-                Widgets.Label(leftRect, appareldef.LabelCap);
+            Widgets.DrawLineHorizontal(headerRect.x + 12f, headerRect.yMax + 4f, headerRect.xMax - 64f);
+
+            Text.Anchor = TextAnchor.MiddleCenter;
+            Rect viewRect = new Rect(32f, 48f, inRect.width - 64f, apparelCount * 48f);
+            Rect scrollRect = new Rect(12f, 48f, inRect.width - 12f, inRect.height - 48f);
+
+            float checkboxSize = 20f;
+            float leftBoxX = midRect.center.x + 20f;
+            float rightBoxX = rightRect.center.x + 20f;
+
+            float num = 48f;
+            Widgets.BeginScrollView(scrollRect, ref this.scrollPosition, viewRect);
+            foreach (ThingDef appareldef in AllEyeCoveringHeadgearDefs)
+            {
+
+                ApparelSetting apparelSetting;
+                Rect rowRect = new Rect(scrollRect.x + 12f, num, scrollRect.width - 24f, 40);
+                Widgets.DrawAltRect(rowRect);
+                
+                GUIContent gUIContent = new GUIContent(appareldef.LabelCap, appareldef.uiIcon, appareldef.description);
+                
+                Widgets.Label(rowRect.LeftPart(0.4f), gUIContent);
+                Vector2 leftBoxPos = new Vector2(leftBoxX, rowRect.center.y - (checkboxSize / 2));
+                Vector2 rightBoxPos = new Vector2(rightBoxX, rowRect.center.y - (checkboxSize / 2));
                 if (NVApparel.TryGetValue(appareldef, out apparelSetting))
                 {
-                    Widgets.CheckboxLabeled(rightRect.LeftPart(0.4f), nullPSLabel, ref apparelSetting.NullifiesPS);
-                    Widgets.CheckboxLabeled(rightRect.RightPart(0.4f), giveNVLabel, ref apparelSetting.GrantsNV);
+                    Widgets.Checkbox(leftBoxPos, ref apparelSetting.NullifiesPS, 20f);
+                    Widgets.Checkbox(rightBoxPos, ref apparelSetting.GrantsNV, 20f);
                     if (!apparelSetting.Equals(NVApparel[appareldef]))
                     {
                         if (apparelSetting.IsRedundant())
@@ -285,47 +325,103 @@ namespace NightVision
                 {
                     bool nullPS = false;
                     bool giveNV = false;
-                    Widgets.CheckboxLabeled(rightRect.LeftPart(0.4f), nullPSLabel, ref nullPS);
-                    Widgets.CheckboxLabeled(rightRect.RightPart(0.4f), giveNVLabel, ref giveNV);
+                    Widgets.Checkbox(leftBoxPos, ref nullPS);
+                    Widgets.Checkbox(rightBoxPos, ref giveNV);
                     if (nullPS || giveNV)
                     {
-                        apparelSetting = new ApparelSetting(nullPS, giveNV);
+                        apparelSetting = new ApparelSetting( nullPS,  giveNV );
                         NVApparel[appareldef] = apparelSetting;
+                    }
+                }
+                num += 48f;
+            }
+            Widgets.EndScrollView();
+            Text.Anchor = TextAnchor.UpperLeft;
+        }
+
+        private void DrawHediffTab(Rect inRect)
+        {
+            // TODO DrawHediffTab: Add headers
+            // TODO DrawHediffTab: Add Use General Values
+            int hediffcount = AllRelevantEyeBrainOrBodyHediffs.Count;
+
+            Rect viewRect = new Rect(0f, 0f, inRect.width / 10 * 9, hediffcount * 32f);
+            float num = 3f;
+            Widgets.BeginScrollView(inRect.AtZero(), ref this.scrollPosition, viewRect);
+            foreach (HediffDef hediffdef in AllRelevantEyeBrainOrBodyHediffs)
+            {
+                
+
+                Rect rowRect = new Rect(5, num, inRect.width - 6, 30);
+                Rect leftRect = rowRect.LeftPart(0.3f);
+                Rect rightRect = rowRect.RightPart(0.6f);
+                Widgets.Label(leftRect, hediffdef.LabelCap);
+                if (NVHediffs.TryGetValue(hediffdef, out FloatRange hediffmods))
+                {
+                    string zerolightmodbuffer = (hediffmods.min * 100).ToString();
+                    string fulllightmodbuffer = (hediffmods.max * 100).ToString();
+                    Widgets.TextFieldPercent(rightRect.LeftPart(0.4f), ref hediffmods.min, ref zerolightmodbuffer, -0.45f, +0.45f);
+                    Widgets.TextFieldPercent(rightRect.RightPart(0.4f), ref hediffmods.max, ref fulllightmodbuffer, -0.45f, +0.45f);
+                    if (Math.Abs(hediffmods.min - NVHediffs[hediffdef].min) > 0.001f || Math.Abs(hediffmods.max - NVHediffs[hediffdef].max) > 0.001f)
+                    {
+                        Log.Message("Night Vision: DrawHediffTab: float comparison false: " + hediffmods.min + " != " + NVHediffs[hediffdef].min + " or " + hediffmods.max + " != " + NVHediffs[hediffdef].max);
+
+                        if (Math.Abs(hediffmods.min) < 0.001f || Math.Abs(hediffmods.max) < 0.001f)
+                        {
+                            Log.Message("Night Vision: DrawHediffTab: hediffmod set to Zero: " + hediffmods.min + " and " + hediffmods.max + "...Removing");
+                            NVHediffs.Remove(hediffdef);
+                        }
+                        else
+                        {
+                            NVHediffs[hediffdef] = hediffmods;
+                        }
+                    }
+                }
+                else
+                {
+                    float zeroMod = DefaultModifiers.min;
+                    float fullMod = DefaultModifiers.max;
+                    string zeroModBuffer = (zeroMod*100).ToString();
+                    string fullModBuffer = (fullMod*100).ToString();
+                    Widgets.TextFieldPercent(rightRect.LeftPart(0.4f), ref zeroMod, ref zeroModBuffer, -0.45f, +0.45f);
+                    Widgets.TextFieldPercent(rightRect.RightPart(0.4f), ref fullMod, ref fullModBuffer, -0.45f, +0.45f);
+                    if (Math.Abs(hediffmods.min) > 0.001f || Math.Abs(hediffmods.max) > 0.001f)
+                    {
+                        Log.Message("Night Vision: DrawHediffTab: new hediffmod != Zero: " + hediffmods.min + " and " + hediffmods.max + "...adding");
+                        NVHediffs[hediffdef] = new FloatRange(zeroMod, fullMod);
                     }
                 }
                 num += 32f;
             }
             Widgets.EndScrollView();
         }
-
-        public void ResetDependants()
+        /// <summary>
+        /// Checks to see if any settings changed flags have been activated
+        /// If they have then reset them, in the case of the eyemods, or remove them
+        /// in the case of race settings.
+        /// </summary>
+        internal void ResetDependants()
         {
-            if (BionicSettingsChanged)
-            {
-                intBionicEyeMods.min = -1;
-                intBionicEyeMods.max = -1;
-            }
-            if (PhotoSensSettingsChanged)
-            {
-                intPhotoSensEyeMods.min = -1;
-                intPhotoSensEyeMods.max = -1;
-            }
-            if (RacesWithChangedSettings.Count() > 0)
+            //if (BionicSettingsChanged)
+            //{
+            //    intBionicEyeMods.min = -1;
+            //    intBionicEyeMods.max = -1;
+            //    BionicSettingsChanged = false;
+            //}
+            //if (PhotoSensSettingsChanged)
+            //{
+            //    intPhotoSensEyeMods.min = -1;
+            //    intPhotoSensEyeMods.max = -1;
+            //    PhotoSensSettingsChanged = false;
+            //}
+            if (RacesWithChangedSettings.Count > 0)
             {
                 foreach (ThingDef race in RacesWithChangedSettings)
                 {
-                    intRaceNightVisionMods.Remove(race);
+                    raceNightVisionModsCached.Remove(race);
                 }
                 RacesWithChangedSettings.Clear();
             }
-        }
-        private void ConvertFactorToMod(IntRange intRange, out FloatRange floatRange)
-        {
-            floatRange = new FloatRange
-            {
-                min = (intRange.min - 80) / 20f,
-                max = (intRange.max - 100) / 20f
-            };
         }
     }
 }

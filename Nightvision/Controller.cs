@@ -27,28 +27,23 @@ namespace NightVision
             Settings.DoSettingsWindowContents(inRect);
         }
 
-        /// <summary>
-        /// TODO Change multipliers for races & nv & ps to additives: UX issue could be resolved by converting values here
-        ///     - need to change expose data to account for this? No. Have duplicate dictionaries? Yes, store factor one. The modifier one would have a getter that
-        ///         redirected to the factor dict, cached it, and was cleared when this method was called in Window.PreClose()
-        ///    - performance issues? Setting all comps dirty every time = maybe not best idea?
-        ///    - possibly have a if-else cascade - comparing cached lengths of dicts to new lengths - then comparing dicts
-        ///    
-        /// </summary>
+
         public override void WriteSettings()
         {
             base.WriteSettings();
-            Settings.SetDirtyAllComps();
             Settings.ResetDependants();
-            //TODO Convert all % based glow factors to decimal based modifiers
+            if (Current.ProgramState == ProgramState.Playing)
+            {
+                Settings.SetDirtyAllComps();
+            }
         }
 
         private static void SetSettings()
         {
             Settings = Instance.GetSettings<NightVisionSettings>();
-            NightVisionDatabase.HediffsListMaker();
-            NightVisionDatabase.RaceDictBuilder();
-            NightVisionDatabase.ApparelDictBuilder();
+            NightVisionDatabaseBuilders.MakeHediffsDict();
+            NightVisionDatabaseBuilders.RaceDictBuilder();
+            NightVisionDatabaseBuilders.ApparelDictBuilder();
         }
     }
 }
