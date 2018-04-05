@@ -96,6 +96,7 @@ namespace NightVision
             }
         }
         //public virtual void PostRemoved()
+        //For hediffs that are removed in Pawn_HealthTracker.HealthTick (removes them directly from list, then calls Hediff.PostRemoved)
         public static void Hediff_PostRemoved_Postfix(Hediff __instance)
         {
 
@@ -124,7 +125,6 @@ namespace NightVision
         #endregion
         #region Pawn_HealthTracker Patches
 
-        // I am unsure why this is necessary but the Hediff patches above do not seem to catch Hediff_MissingPart: at least not when added in devmode
         //public void AddHediff(Hediff hediff, BodyPartRecord part = null, DamageInfo? dinfo = null)  
         public static void AddHediff_Postfix(Hediff hediff, BodyPartRecord part, Pawn_HealthTracker __instance)
         {

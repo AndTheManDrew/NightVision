@@ -17,28 +17,35 @@ namespace NightVision
 
         internal static void MakeHediffsDict()
         {
-            //Have to go via recipes as there is nothing in the bionic eye hediff
-            //that actually says it applies to a sightsource; aside from the label/defname
-            //but that would probably cause problems with mods and their janky
-            //cool names for bionic stuff and/or eyes
-            NightVisionSettings.AllRelevantEyeBrainOrBodyHediffs = 
-                DefDatabase<RecipeDef>.AllDefs.Where(rpd =>
-                    rpd.addsHediff != null
-                    && (rpd.targetsBodyPart == false
-                    || (rpd.appliedOnFixedBodyParts != null 
-                    && rpd.appliedOnFixedBodyParts.Exists(bpd => bpd.tags.Contains(eyeTag) || bpd.tags.Contains(brainTag)))))
-                    .Select(rec =>  rec.addsHediff )
+            ////Have to go via recipes as there is nothing in the bionic eye hediff
+            ////that actually says it applies to a sightsource; aside from the label/defname
+            ////but that would probably cause problems with mods and their janky
+            ////cool names for bionic stuff and/or eyes
+            //NightVisionSettings.AllRelevantEyeBrainOrBodyHediffs = 
+            //    DefDatabase<RecipeDef>.AllDefs.Where(rpd =>
+            //        rpd.addsHediff != null
+            //        && (rpd.targetsBodyPart == false
+            //        || (rpd.appliedOnFixedBodyParts != null 
+            //        && rpd.appliedOnFixedBodyParts.Exists(bpd => bpd.tags.Contains(eyeTag) || bpd.tags.Contains(brainTag)))))
+            //        .Select(rec =>  rec.addsHediff )
+            //    .Union(
+            //    DefDatabase<HediffDef>.AllDefs.Where(hdd => hdd.HasComp(typeof(HediffComp_NightVision))))
+            //    .Union(
+            //    DefDatabase<IncidentDef>.AllDefs.Where(idef => idef.diseaseIncident != null).Select(idef => idef.diseaseIncident))
+            //    .Union(
+            //    DefDatabase<ThingDef>.AllDefs
+            //        .Where(def => def.IsIngestible && def.ingestible.outcomeDoers != null)
+            //        .SelectMany(def => def.ingestible.outcomeDoers
+            //        .Where(od => od is IngestionOutcomeDoer_GiveHediff)
+            //        .Select(od => ((IngestionOutcomeDoer_GiveHediff)od).hediffDef)))
+            //    .ToList();
+
+            //Alternative hediff fetcher
+            NightVisionSettings.AllRelevantEyeBrainOrBodyHediffs =
+                DefDatabase<HediffDef>.AllDefsListForReading.FindAll(hediffdef => hediffdef.stages.Exists(stage => stage.capMods.Exists(pcm => pcm.capacity == PawnCapacityDefOf.Sight)))
                 .Union(
-                DefDatabase<HediffDef>.AllDefs.Where(hdd => hdd.HasComp(typeof(HediffComp_NightVision))))
-                .Union(
-                DefDatabase<IncidentDef>.AllDefs.Where(idef => idef.diseaseIncident != null).Select(idef => idef.diseaseIncident))
-                .Union(
-                DefDatabase<ThingDef>.AllDefs
-                    .Where(def => def.IsIngestible && def.ingestible.outcomeDoers != null)
-                    .SelectMany(def => def.ingestible.outcomeDoers
-                    .Where(od => od is IngestionOutcomeDoer_GiveHediff)
-                    .Select(od => ((IngestionOutcomeDoer_GiveHediff)od).hediffDef)))
-                .ToList();
+                    DefDatabase<HediffDef>.AllDefsListForReading.FindAll(hediffdef => hediffdef.HasComp(typeof(HediffComp_NightVision))))
+                        .ToList();
 
 
             if (NightVisionSettings.NVHediffs == null)
