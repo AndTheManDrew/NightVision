@@ -56,16 +56,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SettingClasses.cs" />
     <Compile Include="HediffComp_NightVision.cs" />
     <Compile Include="Comp_NightVision.cs" />
     <Compile Include="Comp_NightVisionApparel.cs" />
     <Compile Include="Harmony_Patches.cs" />
     <Compile Include="CompProperties_NightVision.cs" />
-    <Compile Include="DatabaseBuilders.cs" />
+    <Compile Include="DictionaryBuilders.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Properties\NightVision.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="GlowModsClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Xml_Defs\NightVision_Apparel.xml">
@@ -77,6 +77,7 @@
     <Content Include="Xml_Patches\Patches_ForTestingOnly.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Xml_Patches\ThoughtDef.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

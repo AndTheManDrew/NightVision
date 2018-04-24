@@ -11,14 +11,13 @@ namespace NightVision
 {
     class Controller : Mod
     {
-
         public static Controller Instance;
         public static NightVisionSettings Settings;
 
         public Controller(ModContentPack content) : base(content)
         {
             Instance = this;
-            LongEventHandler.QueueLongEvent(SetSettings, "Loading Night Vision Settings", false, null);
+            LongEventHandler.QueueLongEvent(InitSettings, "Initialising Night Vision Settings", false, null);
         }
 
         public override string SettingsCategory() => "Night Vision";
@@ -27,23 +26,18 @@ namespace NightVision
             Settings.DoSettingsWindowContents(inRect);
         }
 
-
         public override void WriteSettings()
         {
+            Settings.DoPreWriteTasks();
             base.WriteSettings();
-            Settings.ResetDependants();
-            if (Current.ProgramState == ProgramState.Playing)
-            {
-                Settings.SetDirtyAllComps();
-            }
         }
 
-        private static void SetSettings()
+        private static void InitSettings()
         {
             Settings = Instance.GetSettings<NightVisionSettings>();
-            NightVisionDatabaseBuilders.MakeHediffsDict();
-            NightVisionDatabaseBuilders.RaceDictBuilder();
-            NightVisionDatabaseBuilders.ApparelDictBuilder();
+            NightVisionDictionaryBuilders.MakeHediffsDict();
+            NightVisionDictionaryBuilders.RaceDictBuilder();
+            NightVisionDictionaryBuilders.ApparelDictBuilder();
         }
     }
 }
