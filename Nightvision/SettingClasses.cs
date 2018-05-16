@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using RimWorld;
-using Verse;
+using JetBrains.Annotations;
+using NightVision.Comps;
 using UnityEngine;
+using Verse;
 
 namespace NightVision
 {
@@ -19,26 +17,27 @@ namespace NightVision
     {
         #region Fields
         //Current Settings
-        internal bool NullifiesPS = false;
-        internal bool GrantsNV = false;
+        internal bool NullifiesPS;
+        internal bool GrantsNV;
         //Settings in xml defs
-        private bool compNullifiesPS = false;
-        private bool compGrantsNV = false;
+        internal bool compNullifiesPS;
+        internal bool compGrantsNV;
         #endregion
 
         #region Constructors And comp attacher
         /// <summary>
         /// Parameterless Constructor: necessary for RW scribe system
         /// </summary>
+        [UsedImplicitly]
         public ApparelSetting() { }
 
         /// <summary>
         /// Manual Constructor: for when user instantiates new setting in mod settings
         /// </summary>
-        internal ApparelSetting(bool nullPS, bool giveNV)
+        internal ApparelSetting(bool nullPS, bool giveNv)
         {
             NullifiesPS = nullPS;
-            GrantsNV = giveNV;
+            GrantsNV = giveNv;
         }
 
         /// <summary>
@@ -46,8 +45,8 @@ namespace NightVision
         /// </summary>
         internal ApparelSetting(CompProperties_NightVisionApparel compprops)
         {
-            compNullifiesPS = compprops.nullifiesPhotosensitivity;
-            compGrantsNV = compprops.grantsNightVision;
+            compNullifiesPS = compprops.NullifiesPhotosensitivity;
+            compGrantsNV = compprops.GrantsNightVision;
             NullifiesPS = compNullifiesPS;
             GrantsNV = compGrantsNV;
         }
@@ -57,18 +56,18 @@ namespace NightVision
         /// </summary>
         internal void AttachComp(CompProperties_NightVisionApparel compprops)
         {
-            compNullifiesPS = compprops.nullifiesPhotosensitivity;
-            compGrantsNV = compprops.grantsNightVision;
+            compNullifiesPS = compprops.NullifiesPhotosensitivity;
+            compGrantsNV = compprops.GrantsNightVision;
         }
         #endregion
 
         #region Equality, Redundancy, and INVSaveCheck checks
-        internal bool Equals(ApparelSetting other) => this.GrantsNV == other.GrantsNV && this.NullifiesPS == other.NullifiesPS;
+        internal bool Equals(ApparelSetting other) => (GrantsNV == other.GrantsNV) && (NullifiesPS == other.NullifiesPS);
 
         /// <summary>
         /// Check to see if this setting should be removed from the dictionary, i.e. current and def values are all false
         /// </summary>
-        internal bool IsRedundant() => !(this.GrantsNV || this.NullifiesPS) && !(this.compGrantsNV || this.compNullifiesPS);
+        internal bool IsRedundant() => !(GrantsNV || NullifiesPS) && !(compGrantsNV || compNullifiesPS);
         /// <summary>
         /// Check to see if this setting should be saved, i.e. current and def values are all false,
         /// or current values are equal to def values
@@ -76,7 +75,7 @@ namespace NightVision
         /// <returns></returns>
         public bool ShouldBeSaved()
         {
-            return !(IsRedundant() || (this.GrantsNV == this.compGrantsNV && this.NullifiesPS == this.compNullifiesPS));
+            return !(IsRedundant() || ((GrantsNV == compGrantsNV) && (NullifiesPS == compNullifiesPS)));
         }
         #endregion
 
@@ -89,525 +88,618 @@ namespace NightVision
         #endregion
     }
 
-    /// <summary>
-    /// For storing modifiers to work and move speed light multipliers. 
-    /// Used to store settings for: hediffs, races, and individual pawns
-    /// </summary>
-    public class GlowMods : IExposable, INVSaveCheck
-    {
-        #region Default Constants
-        internal const float DefaultNVZero = 0.2f;
-        internal const float DefaultNVFull = 0.0f;
-        internal const float DefaultPSZero = 0.4f;
-        internal const float DefaultPSFull = -0.2f;
-        #endregion
+    ///// <summary>
+    ///// For storing modifiers to work and move speed light multipliers. 
+    ///// Used to store settings for: hediffs, races, and individual pawns
+    ///// </summary>
+    //public class LightModifiers : IExposable, INVSaveCheck
+    //{
+    //    #region Default Constants
+    //    internal const float DefaultNVZero = 0.2f;
+    //    internal const float DefaultNVFull = 0.0f;
+    //    internal const float DefaultPSZero = 0.4f;
+    //    internal const float DefaultPSFull = -0.2f;
+    //    #endregion
 
-        internal enum Options : byte { NVNone = 0, NVNightVision = 1, NVPhotosensitivity = 2, NVCustom = 3}
+    //    public enum Options : byte
+    //        {
+    //            NVNone = 0,
 
-        #region Static Fields
+    //            NVNightVision = 1,
 
-        protected internal static float nvZeroLightMod = DefaultNVZero;
-        protected internal static float nvFullLightMod = DefaultNVFull;
-        protected internal static float psZeroLightMod = DefaultPSZero;
-        protected internal static float psFullLightMod = DefaultPSFull;
+    //            NVPhotosensitivity = 2,
 
-        protected static int NVVersion = 0;
-        protected static int PSVersion = 0;
+    //            NVCustom = 3
+    //        }
 
-        #endregion
+    //    #region Static Fields
 
-        #region Instance Fields
-        protected float? zeroLightMod = null;
-        protected float? fullLightMod = null;
+    //    protected internal static float NvZeroLightMod = DefaultNVZero;
+    //    protected internal static float nvFullLightMod = DefaultNVFull;
+    //    protected internal static float PsZeroLightMod = DefaultPSZero;
+    //    protected internal static float PsFullLightMod = DefaultPSFull;
 
-        internal bool LoadedFromFile = false;
-        internal Options fileSetting = Options.NVNone;
-        internal float DefaultZeroLightMod = 0.0f;
-        internal float DefaultFullLightMod = 0.0f;
+    //    protected static int NVVersion;
+    //    protected static int PSVersion;
 
-        internal Options Setting;
-        #endregion
+    //    #endregion
 
-        #region Get And Set Static Fields
-        //Seperate get and set as get needs to be virtual so EyeGlowMods can override
-        //and set needs to be static so it can be accessed from Settings
-        internal virtual float NVZeroLightMod
-        {
-            get => nvZeroLightMod;
-        }
-        internal static float SetNVZeroLightMod
-        {
-            set { nvZeroLightMod = RoundAndCheck(value, true); NVVersion++; }
-        }
-        internal virtual float NVFullLightMod
-        {
-            get => nvFullLightMod;
-        }
-        internal static float SetNVFullLightMod
-        {
-            set { nvFullLightMod = RoundAndCheck(value, false); NVVersion++; }
-        }
-        internal virtual float PSZeroLightMod
-        {
-            get => psZeroLightMod;
-        }
-        internal static float SetPSZeroLightMod
-        {
-            set { psZeroLightMod = RoundAndCheck(value, true); PSVersion++; }
-        }
-        internal virtual float PSFullLightMod
-        {
-            get => psFullLightMod;
-        }
-        internal static float SetPSFullLightMod
-        {
-            set { psFullLightMod = RoundAndCheck(value, false); PSVersion++; }
-        }
-        #endregion
+    //    #region Instance Fields
+    //    protected float? ZeroLightMod;
+    //    protected float? FullLightMod;
+
+    //    internal bool LoadedFromFile;
+    //    internal Options FileSetting = Options.NVNone;
+    //    private float _defaultZeroMod;
+    //    private float _defaultFullMod;
+    //    internal float DefaultZeroMod
+    //    {
+    //        get
+    //        {
+    //            switch (FileSetting)
+    //            {
+    //                default:
+    //                    return 0f;
+    //                case Options.NVNightVision:
+    //                    return NVZeroLightMod;
+    //                case Options.NVPhotosensitivity:
+    //                    return PSZeroLightMod;
+    //                case Options.NVCustom:
+    //                    return _defaultZeroMod;
+    //            }
+    //        }
+    //        set => _defaultZeroMod = value;
+    //    }
+    //    internal float DefaultFullMod
+    //    {
+    //        get
+    //        {
+    //            switch (FileSetting)
+    //            {
+    //                default:
+    //                    return 0f;
+    //                case Options.NVNightVision:
+    //                    return NVFullLightMod;
+    //                case Options.NVPhotosensitivity:
+    //                    return PSFullLightMod;
+    //                case Options.NVCustom:
+    //                    return _defaultFullMod;
+    //            }
+    //        }
+    //        set => _defaultFullMod = value;
+    //    }
+
+
+    //    internal Options Setting;
+    //    #endregion
+
+    //    #region Get And Set Static Fields
+    //    // Seperate get and set as get needs to be virtual so EyeLightModifiers can override
+    //    // and set needs to be static so it can be accessed from Settings
+    //    internal virtual float NVZeroLightMod
+    //    {
+    //        get => NvZeroLightMod;
+    //    }
+    //    internal static float SetNVZeroLightMod
+    //    {
+    //        set { NvZeroLightMod = RoundAndCheck(value, true); NVVersion++; }
+    //    }
+    //    internal virtual float NVFullLightMod
+    //    {
+    //        get => nvFullLightMod;
+    //    }
+    //    internal static float SetNVFullLightMod
+    //    {
+    //        set { nvFullLightMod = RoundAndCheck(value, false); NVVersion++; }
+    //    }
+    //    internal virtual float PSZeroLightMod
+    //    {
+    //        get => PsZeroLightMod;
+    //    }
+    //    internal static float SetPSZeroLightMod
+    //    {
+    //        set { PsZeroLightMod = RoundAndCheck(value, true); PSVersion++; }
+    //    }
+    //    internal virtual float PSFullLightMod
+    //    {
+    //        get => PsFullLightMod;
+    //    }
+    //    internal static float SetPSFullLightMod
+    //    {
+    //        set { PsFullLightMod = RoundAndCheck(value, false); PSVersion++; }
+    //    }
+    //    #endregion
         
-        #region Get And Set Instance Fields
-        internal float ZeroLight
-        {
-            get
-            {
-                switch (Setting)
-                {
-                    default:
-                    case Options.NVNone:
-                        return DefaultZeroLightMod;
-                    case Options.NVNightVision:
-                        return NVZeroLightMod;
-                    case Options.NVPhotosensitivity:
-                        return PSZeroLightMod;
-                    case Options.NVCustom:
-                        return zeroLightMod ?? DefaultZeroLightMod;
-                }
-            }
-            set
-            {
-                zeroLightMod = RoundAndCheck(value, true);
-                Setting = Options.NVCustom;
-            }
-        }
+    //    #region Get And Set Instance Fields
+    //    internal float ZeroLight
+    //    {
+    //        get
+    //        {
+    //            switch (Setting)
+    //            {
+    //                default:
+    //                    return DefaultZeroMod;
+    //                case Options.NVNightVision:
+    //                    return NVZeroLightMod;
+    //                case Options.NVPhotosensitivity:
+    //                    return PSZeroLightMod;
+    //                case Options.NVCustom:
+    //                    return ZeroLightMod ?? DefaultZeroMod;
+    //            }
+    //        }
+    //        set
+    //        {
+    //            ZeroLightMod = RoundAndCheck(value, true);
+    //            Setting = Options.NVCustom;
+    //        }
+    //    }
 
-        internal float FullLight
-        {
-            get
-            {
-                switch (Setting)
-                {
+    //    internal float FullLight
+    //    {
+    //        get
+    //        {
+    //            switch (Setting)
+    //            {
                     
-                    default:
-                    case Options.NVNone:
-                        return DefaultFullLightMod;
-                    case Options.NVNightVision:
-                        return NVFullLightMod;
-                    case Options.NVPhotosensitivity:
-                        return PSFullLightMod;
-                    case Options.NVCustom:
-                        return fullLightMod ?? DefaultFullLightMod;
-                }
-            }
-            set
-            {
-                fullLightMod = RoundAndCheck(value, false);
-                Setting = Options.NVCustom;
-            }
-        }
+    //                default:
+    //                    return DefaultFullMod;
+    //                case Options.NVNightVision:
+    //                    return NVFullLightMod;
+    //                case Options.NVPhotosensitivity:
+    //                    return PSFullLightMod;
+    //                case Options.NVCustom:
+    //                    return FullLightMod ?? DefaultFullMod;
+    //            }
+    //        }
+    //        set
+    //        {
+    //            FullLightMod = RoundAndCheck(value, false);
+    //            Setting = Options.NVCustom;
+    //        }
+    //    }
 
-        #endregion
+    //    #endregion
 
-        #region Constructors
+    //    #region Constructors
 
-        /// <summary>
-        /// Parameterless constructor
-        /// </summary>
-        public GlowMods()
-        {
-            zeroLightMod = null;
-            fullLightMod = null;
-            Setting = Options.NVNone;
-        }
-        /// <summary>
-        /// Manual Contructor
-        /// </summary>
-        /// <param name="zerolight"></param>
-        /// <param name="fulllight"></param>
-        internal GlowMods(float zerolight, float fulllight)
-        {
-            Setting = Options.NVCustom;
-            zeroLightMod = zerolight;
-            fullLightMod = fulllight;
-        }
-        internal GlowMods(Options setting)
-        {
-            zeroLightMod = null;
-            fullLightMod = null;
-            Setting = setting;
-        }
-        /// <summary>
-        /// Constructor for Races: NOT eye normalised
-        /// </summary>
-        /// <param name="compprops"></param>
-        internal GlowMods(CompProperties_NightVision compprops)
-        {
-            LoadedFromFile = true;
-            if (compprops == null)
-            {
-                LoadedFromFile = false;
-                Setting = Options.NVNone;
-            }
-            else if (compprops.naturalNightVision)
-            {
-                Setting = Options.NVNightVision;
-                fileSetting = Setting;
-            }
-            else if (compprops.naturalPhotosensitivity)
-            {
-                Setting = Options.NVPhotosensitivity;
-                fileSetting = Setting;
-            }
-            else
-            {
-                fileSetting = Options.NVCustom;
-                DefaultZeroLightMod = RoundAndCheck(compprops.zeroLightMultiplier - NightVisionSettings.DefaultZeroLightMultiplier, true);
-                DefaultFullLightMod = RoundAndCheck(compprops.fullLightMultiplier - NightVisionSettings.DefaultFullLightMultiplier, false);
-                Setting = fileSetting;
-                zeroLightMod = DefaultZeroLightMod;
-                fullLightMod = DefaultFullLightMod;
-            }
-        }
-        /// <summary>
-        /// Constructor for Hediffs that are not eye normalised
-        /// </summary>
-        /// <param name="compprops"></param>
-        internal GlowMods(HediffCompProperties_NightVision compprops)
-        {
-            LoadedFromFile = true;
-            if (compprops == null)
-            {
-                LoadedFromFile = false;
-                Setting = Options.NVNone;
-            }
-            else if (compprops.grantsNightVision)
-            {
-                Setting = Options.NVNightVision;
-                fileSetting = Setting;
-            }
-            else if (compprops.grantsPhotosensitivity)
-            {
-                Setting = Options.NVPhotosensitivity;
-                fileSetting = Setting;
-            }
-            else
-            {
-                fileSetting = Options.NVCustom;
-                DefaultZeroLightMod = RoundAndCheck(compprops.zeroLightMod, true);
-                DefaultFullLightMod = RoundAndCheck(compprops.fullLightMod, false);
-                Setting = fileSetting;
-                zeroLightMod = DefaultZeroLightMod;
-                fullLightMod = DefaultFullLightMod;
-            }
-        }
-        #endregion
+    //    /// <summary>
+    //    /// Parameterless constructor
+    //    /// </summary>
+    //    public LightModifiers()
+    //    {
+    //        ZeroLightMod = null;
+    //        FullLightMod = null;
+    //        Setting = Options.NVNone;
+    //    }
+    //    /// <summary>
+    //    /// Manual Contructor
+    //    /// </summary>
+    //    /// <param name="zerolight"></param>
+    //    /// <param name="fulllight"></param>
+    //    internal LightModifiers(float zerolight, float fulllight)
+    //    {
+    //        Setting = Options.NVCustom;
+    //        ZeroLightMod = zerolight;
+    //        FullLightMod = fulllight;
+    //    }
+    //    internal LightModifiers(Options setting)
+    //    {
+    //        ZeroLightMod = null;
+    //        FullLightMod = null;
+    //        Setting = setting;
+    //    }
+    //    /// <summary>
+    //    /// Constructor for Races: NOT eye normalised
+    //    /// </summary>
+    //    /// <param name="compprops"></param>
+    //    internal LightModifiers(CompProperties_NightVision compprops)
+    //    {
+    //        LoadedFromFile = true;
+    //        if (compprops == null)
+    //        {
+    //            LoadedFromFile = false;
+    //            Setting = Options.NVNone;
+    //        }
+    //        else if (compprops.NaturalNightVision)
+    //        {
+    //            Setting = Options.NVNightVision;
+    //            FileSetting = Setting;
+    //        }
+    //        else if (compprops.NaturalPhotosensitivity)
+    //        {
+    //            Setting = Options.NVPhotosensitivity;
+    //            FileSetting = Setting;
+    //        }
+    //        else
+    //        {
+    //            FileSetting = Options.NVCustom;
+    //            DefaultZeroMod = RoundAndCheck(compprops.ZeroLightMultiplier - NightVisionSettings.DefaultZeroLightMultiplier, true);
+    //            DefaultFullMod = RoundAndCheck(compprops.FullLightMultiplier - NightVisionSettings.DefaultFullLightMultiplier, false);
+    //            Setting = FileSetting;
+    //            ZeroLightMod = DefaultZeroMod;
+    //            FullLightMod = DefaultFullMod;
+    //        }
+    //    }
+    //    /// <summary>
+    //    /// Constructor for Hediffs: if eye hediff then this will be called from within the EyeLightModifiers class
+    //    /// - in that case custom settings should NOT be normalised
+    //    /// </summary>
+    //    /// <param name="compprops"></param>
+    //    internal LightModifiers(HediffCompProperties_NightVision compprops)
+    //    {
+    //        LoadedFromFile = true;
+    //        if (compprops == null)
+    //        {
+    //            LoadedFromFile = false;
+    //            Setting = Options.NVNone;
+    //        }
+    //        else if (compprops.GrantsNightVision)
+    //        {
+    //            Setting = Options.NVNightVision;
+    //            FileSetting = Setting;
+    //        }
+    //        else if (compprops.GrantsPhotosensitivity)
+    //        {
+    //            Setting = Options.NVPhotosensitivity;
+    //            FileSetting = Setting;
+    //        }
+    //        else
+    //        {
+    //            FileSetting = Options.NVCustom;
+    //            DefaultZeroMod = RoundAndCheck(compprops.ZeroLightMod, true);
+    //            DefaultFullMod = RoundAndCheck(compprops.FullLightMod, false);
+    //            Setting = FileSetting;
+    //        }
+    //    }
+    //    #endregion
 
-        #region Misc Helpers
-        internal static float RoundAndCheck(float desiredValue, bool forZeroLight, int numNormalise = 1)
-        {
-            float resultingMultiplier = (forZeroLight ? NightVisionSettings.DefaultZeroLightMultiplier : NightVisionSettings.DefaultFullLightMultiplier)
-                                + desiredValue;
-            return (float)Math.Round((resultingMultiplier < 0.01f ? (-1f / numNormalise) + 0.01f : desiredValue / numNormalise), 2);
-        }
+    //    #region Misc Helpers
+    //    internal static float RoundAndCheck(float desiredValue, bool forZeroLight, int numNormalise = 1)
+    //    {
+    //        float resultingMultiplier = (forZeroLight ? NightVisionSettings.DefaultZeroLightMultiplier : NightVisionSettings.DefaultFullLightMultiplier)
+    //                            + desiredValue;
+    //        return (float)Math.Round((resultingMultiplier < 0.01f ? (-1f / numNormalise) + 0.01f : desiredValue / numNormalise), 2);
+    //    }
 
-        internal float GetEffectAtGlow(float glow)
-        {
-            float effect = 0f;
-            if (glow < 0.3f)
-            {
-                effect = ZeroLight * (0.3f - glow) / 0.3f;
-            }
-            else
-            {
-                effect = FullLight * (glow - 0.7f) / 0.3f;
-            }
-            return effect;
-        }
-        #endregion
+    //    internal float GetEffectAtGlow(float glow)
+    //    {
+    //        if (Math.Abs(glow) < 0.01f)
+    //        {
+    //            return ZeroLight;
+    //        }
 
-        #region Change Setting And Attach Comp
-        internal void ChangeSetting(Options newsetting)
-        {
-            if(Setting != newsetting)
-            {
-                if (newsetting == Options.NVCustom && (zeroLightMod == null || fullLightMod == null))
-                {
-                    switch(Setting)
-                    {
-                        case Options.NVNightVision:
-                            zeroLightMod = NVZeroLightMod;
-                            fullLightMod = NVFullLightMod;
-                            break;
-                        case Options.NVPhotosensitivity:
-                            zeroLightMod = PSZeroLightMod;
-                            fullLightMod = PSFullLightMod;
-                            break;
-                        default:
-                        case Options.NVNone:
-                            zeroLightMod = 0f;
-                            fullLightMod = 0f;
-                            break;
-                    }
-                }
+    //        if(Math.Abs(glow - 1f) < 0.01f)
+    //        {
+    //            return FullLight;
+    //        }
+
+    //        if (glow < 0.3f)
+    //        {
+    //            return ZeroLight * (0.3f - glow) / 0.3f;
+    //        }
+
+    //        return FullLight * (glow - 0.7f) / 0.3f;
+    //    }
+
+    //    /// <returns>[maxcap, mincap, nvcap, pscap]</returns>
+    //    internal static float[] GetCapsAtGlow(float glow)
+    //    {
+    //        float mincap;
+    //        float maxcap;
+    //        float nvcap;
+    //        float pscap;
+    //        if (glow < 0.3f)
+    //        {
+    //            mincap = (NightVisionSettings.MultiplierCaps.min - NightVisionSettings.DefaultZeroLightMultiplier)* (0.3f - glow) / 0.3f;
+    //            maxcap = (NightVisionSettings.MultiplierCaps.max - NightVisionSettings.DefaultZeroLightMultiplier) * (0.3f - glow) / 0.3f;
+    //            pscap = PsZeroLightMod * (0.3f - glow) / 0.3f;
+    //            nvcap = NvZeroLightMod * (0.3f - glow) / 0.3f;
+    //        }
+    //        else
+    //        {
+    //            mincap = (NightVisionSettings.MultiplierCaps.min - NightVisionSettings.DefaultFullLightMultiplier) * (glow-0.7f) / 0.3f;
+    //            maxcap = (NightVisionSettings.MultiplierCaps.max - NightVisionSettings.DefaultFullLightMultiplier) * (glow-0.7f) / 0.3f;
+    //            pscap = PsFullLightMod * (glow - 0.7f) / 0.3f;
+    //            nvcap = nvFullLightMod * (glow - 0.7f) / 0.3f;
+    //        }
+    //        return new[] { maxcap, mincap, nvcap, pscap };
+    //    }
+    //    #endregion
+
+    //    #region Change Setting And Attach Comp
+    //    internal void ChangeSetting(Options newsetting)
+    //    {
+    //        if(Setting != newsetting)
+    //        {
+    //            if ((newsetting == Options.NVCustom) && ((ZeroLightMod == null) || (FullLightMod == null)))
+    //            {
+    //                switch(Setting)
+    //                {
+    //                    case Options.NVNightVision:
+    //                        ZeroLightMod = NVZeroLightMod;
+    //                        FullLightMod = NVFullLightMod;
+    //                        break;
+    //                    case Options.NVPhotosensitivity:
+    //                        ZeroLightMod = PSZeroLightMod;
+    //                        FullLightMod = PSFullLightMod;
+    //                        break;
+    //                    default:
+    //                        ZeroLightMod = 0f;
+    //                        FullLightMod = 0f;
+    //                        break;
+    //                }
+    //            }
                 
-                Setting = newsetting;
-            }
-        }
+    //            Setting = newsetting;
+    //        }
+    //    }
+    //    /// <summary>
+    //    /// For attaching xml race settings to existing settings
+    //    /// </summary>
+    //    /// <param name="compprops"></param>
+    //    internal void AttachComp(CompProperties_NightVision compprops)
+    //    {
+    //        LoadedFromFile = true;
+    //        if (compprops == null)
+    //        {
+    //            LoadedFromFile = false;
+    //        }
+    //        else if (compprops.NaturalNightVision)
+    //        {
+    //            FileSetting = Options.NVNightVision;
+    //        }
+    //        else if (compprops.NaturalPhotosensitivity)
+    //        {
+    //            FileSetting = Options.NVPhotosensitivity;
+    //        }
+    //        else
+    //        {
+    //            FileSetting = Options.NVCustom;
+    //            DefaultZeroMod = RoundAndCheck(compprops.ZeroLightMultiplier - NightVisionSettings.DefaultZeroLightMultiplier, true);
+    //            DefaultFullMod = RoundAndCheck(compprops.FullLightMultiplier - NightVisionSettings.DefaultFullLightMultiplier, false);
+    //        }
+    //    }
+    //    /// <summary>
+    //    /// For attaching xml hediff settings to existing settings
+    //    /// </summary>
+    //    /// <param name="compprops"></param>
+    //    internal void AttachComp(HediffCompProperties_NightVision compprops)
+    //    {
+    //        LoadedFromFile = true;
+    //        if (compprops == null)
+    //        {
+    //            LoadedFromFile = false;
+    //        }
+    //        else if (compprops.GrantsNightVision)
+    //        {
+    //            FileSetting = Options.NVNightVision;
+    //        }
+    //        else if (compprops.GrantsPhotosensitivity)
+    //        {
+    //            FileSetting = Options.NVPhotosensitivity;
+    //        }
+    //        else
+    //        {
+    //            FileSetting = Options.NVCustom;
+    //            DefaultZeroMod = RoundAndCheck(compprops.ZeroLightMod, true);
+    //            DefaultFullMod = RoundAndCheck(compprops.FullLightMod, false);
+    //        }
+    //    }
+    //    #endregion
 
-        internal void AttachComp(CompProperties_NightVision compprops)
-        {
-            LoadedFromFile = true;
-            if (compprops == null)
-            {
-                LoadedFromFile = false;
-            }
-            else if (compprops.naturalNightVision)
-            {
-                fileSetting = Options.NVNightVision;
-            }
-            else if (compprops.naturalPhotosensitivity)
-            {
-                fileSetting = Options.NVPhotosensitivity;
-            }
-            else
-            {
-                fileSetting = Options.NVCustom;
-                //No need to normalise  for case when inherited by eyeglowmods as race comps are always glowmods
-                DefaultZeroLightMod = RoundAndCheck(compprops.zeroLightMultiplier - NightVisionSettings.DefaultZeroLightMultiplier, true);
-                DefaultFullLightMod = RoundAndCheck(compprops.fullLightMultiplier - NightVisionSettings.DefaultFullLightMultiplier, false);
-            }
-        }
+    //    #region Simple Checkers
 
-        internal void AttachComp(HediffCompProperties_NightVision compprops)
-        {
-            LoadedFromFile = true;
-            if (compprops == null)
-            {
-                LoadedFromFile = false;
-            }
-            else if (compprops.grantsNightVision)
-            {
-                fileSetting = Options.NVNightVision;
-            }
-            else if (compprops.grantsPhotosensitivity)
-            {
-                fileSetting = Options.NVPhotosensitivity;
-            }
-            else
-            {
-                fileSetting = Options.NVCustom;
-                //Need to normalise for two eyes to ensure installing two of the hediff will not produce a negative multiplier
-                //Note default value for NumOfEyesNormalisedFor is 2 - hopefully won't cause an exception
-                //What about three or more eyed races?? have to limit the actual calculation in comp_NightVision
-                int numNormalise = ((EyeGlowMods)this)?.NumOfEyesNormalisedFor ?? 1;
-                DefaultZeroLightMod = RoundAndCheck(compprops.zeroLightMod, true, numNormalise);
-                DefaultFullLightMod = RoundAndCheck(compprops.fullLightMod, false, numNormalise);
-            }
-        }
-        #endregion
+    //    internal bool IsCustom()
+    //    {
+    //        return Setting == Options.NVCustom;
+    //    }
+    //    internal bool IsNone()
+    //    {
+    //        return Setting == Options.NVNone;
+    //    }
 
-        #region Simple Checkers
-        internal bool NoCustomSettings()
-        {
-            return zeroLightMod == null && fullLightMod == null;
-        }
-        internal bool IsCustom()
-        {
-            return Setting == Options.NVCustom;
-        }
-        internal bool IsNone()
-        {
-            return Setting == Options.NVNone;
-        }
+    //    internal bool IsRedundant()
+    //    {
+    //        return (!LoadedFromFile && (((Setting == Options.NVCustom) && (Math.Abs(ZeroLightMod ?? 0) < 0.001) && (Math.Abs(FullLightMod ?? 0) < 0.001)) || (Setting == Options.NVNone)));
+    //    }
+    //    #endregion
 
-        internal bool IsRedundant()
-        {
-            return (!LoadedFromFile && ((Setting == Options.NVCustom && Math.Abs(zeroLightMod ?? 0) < 0.001 && Math.Abs(fullLightMod ?? 0) < 0.001) || Setting == Options.NVNone));
-        }
-        #endregion
+    //    #region Save and load members
+    //    public bool ShouldBeSaved()
+    //    {
+    //        return !(IsRedundant() || (LoadedFromFile && (Setting == FileSetting) && ((FileSetting != Options.NVCustom) ||
+    //                        (((ZeroLightMod == null) || Mathf.Approximately((float)ZeroLightMod, DefaultZeroMod))
+    //                                && ((FullLightMod == null) || Mathf.Approximately((float)FullLightMod, DefaultFullMod))))));
+    //    }
 
-        #region Save and load members
-        public bool ShouldBeSaved()
-        {
-            return !(IsRedundant() || (LoadedFromFile && Setting == fileSetting && (fileSetting != Options.NVCustom ||
-                            ((zeroLightMod == null || Mathf.Approximately((float)zeroLightMod, DefaultZeroLightMod))
-                                    && (fullLightMod == null || Mathf.Approximately((float)fullLightMod, DefaultFullLightMod))))));
-        }
+    //    public void ExposeData()
+    //    {
+    //        //Only want to save the setting if it is different from the setting on file
+    //        //so that changing the setting on file (i.e. in the mod) changes the setting in game if user has not altered it
+    //        if (Scribe.mode == LoadSaveMode.Saving)
+    //        {
+    //            if(!LoadedFromFile || (LoadedFromFile && (Setting != FileSetting)))
+    //            {
+    //                Scribe_Values.Look(ref Setting, "setting", FileSetting);
+    //            }
+    //        }
+    //        else
+    //        {
+    //            Scribe_Values.Look(ref Setting, "setting", FileSetting);
+    //        }
+    //        if (Setting == Options.NVCustom)
+    //        {
+    //            if (Scribe.mode == LoadSaveMode.Saving)
+    //            {
+    //                if (!LoadedFromFile
+    //                        ||(LoadedFromFile && (FileSetting != Options.NVCustom))
+    //                        || (LoadedFromFile && (FileSetting == Options.NVCustom)
+    //                            && (((ZeroLightMod != null) && !Mathf.Approximately((float)ZeroLightMod, DefaultZeroMod))
+    //                                || ((FullLightMod != null) && !Mathf.Approximately((float)FullLightMod, DefaultFullMod)))))
+    //                {
+    //                    Scribe_Values.Look(ref ZeroLightMod, "zerolight", DefaultZeroMod);
+    //                    Scribe_Values.Look(ref FullLightMod, "fulllight", DefaultFullMod);
+    //                }
+    //            }
+    //            else
+    //            {
+    //                Scribe_Values.Look(ref ZeroLightMod, "zerolight", DefaultZeroMod);
+    //                Scribe_Values.Look(ref FullLightMod, "fulllight", DefaultFullMod);
+    //            }
+    //        }
+    //    }
 
-        public void ExposeData()
-        {
-            //Only want to save the setting if it is different from the setting on file
-            //so that changing the setting on file (i.e. in the mod) changes the setting in game if user has not altered it
-            if (Scribe.mode == LoadSaveMode.Saving)
-            {
-                if(!LoadedFromFile || (LoadedFromFile && Setting != fileSetting))
-                {
-                    Scribe_Values.Look(ref Setting, "setting", fileSetting);
-                }
-            }
-            else
-            {
-                Scribe_Values.Look(ref Setting, "setting", fileSetting);
-            }
-            if (Setting == Options.NVCustom)
-            {
-                if (Scribe.mode == LoadSaveMode.Saving)
-                {
-                    if (!LoadedFromFile
-                            ||(LoadedFromFile && fileSetting != Options.NVCustom)
-                            || (LoadedFromFile && fileSetting == Options.NVCustom
-                                && ((zeroLightMod != null && !Mathf.Approximately((float)zeroLightMod, DefaultZeroLightMod))
-                                    || (fullLightMod != null && !Mathf.Approximately((float)fullLightMod, DefaultFullLightMod)))))
-                    {
-                        Scribe_Values.Look(ref zeroLightMod, "zerolight", DefaultZeroLightMod);
-                        Scribe_Values.Look(ref fullLightMod, "fulllight", DefaultFullLightMod);
-                    }
-                }
-                else
-                {
-                    Scribe_Values.Look(ref zeroLightMod, "zerolight", DefaultZeroLightMod);
-                    Scribe_Values.Look(ref fullLightMod, "fulllight", DefaultFullLightMod);
-                }
-            }
-        }
+    //    internal static void SaveOrLoadSettings()
+    //    {
+    //        if (Scribe.mode == LoadSaveMode.Saving)
+    //        {
+    //            nvFullLightMod = RoundAndCheck(nvFullLightMod, false);
+    //            NvZeroLightMod = RoundAndCheck(NvZeroLightMod, true);
+    //            PsFullLightMod = RoundAndCheck(PsFullLightMod, false);
+    //            PsZeroLightMod = RoundAndCheck(PsZeroLightMod, true);
+    //        }
+    //        Scribe_Values.Look(ref NvZeroLightMod, "NightVisionZeroLightModifier", DefaultNVZero);
+    //        Scribe_Values.Look(ref nvFullLightMod, "NightVisionFullLightModifier", DefaultNVFull);
+    //        Scribe_Values.Look(ref PsZeroLightMod, "PhotosensitivityZeroLightModifier", DefaultPSZero);
+    //        Scribe_Values.Look(ref PsFullLightMod, "PhotosensitivityFullLightModifier", DefaultPSFull);
 
-        internal static void SaveOrLoadSettings()
-        {
-            if (Scribe.mode == LoadSaveMode.Saving)
-            {
-                nvFullLightMod = RoundAndCheck(nvFullLightMod, false);
-                nvZeroLightMod = RoundAndCheck(nvZeroLightMod, true);
-                psFullLightMod = RoundAndCheck(psFullLightMod, false);
-                psZeroLightMod = RoundAndCheck(psZeroLightMod, true);
-            }
-            Scribe_Values.Look(ref nvZeroLightMod, "NightVisionZeroLightModifier", DefaultNVZero);
-            Scribe_Values.Look(ref nvFullLightMod, "NightVisionFullLightModifier", DefaultNVFull);
-            Scribe_Values.Look(ref psZeroLightMod, "PhotosensitivityZeroLightModifier", DefaultPSZero);
-            Scribe_Values.Look(ref psFullLightMod, "PhotosensitivityFullLightModifier", DefaultPSFull);
+    //        if (Scribe.mode == LoadSaveMode.LoadingVars)
+    //        {
+    //            nvFullLightMod = RoundAndCheck(nvFullLightMod, false);
+    //            NvZeroLightMod = RoundAndCheck(NvZeroLightMod, true);
+    //            PsFullLightMod = RoundAndCheck(PsFullLightMod, false);
+    //            PsZeroLightMod = RoundAndCheck(PsZeroLightMod, true);
+    //        }
+    //    }
+    //    #endregion
+    //}
 
-            if (Scribe.mode == LoadSaveMode.LoadingVars)
-            {
-                nvFullLightMod = RoundAndCheck(nvFullLightMod, false);
-                nvZeroLightMod = RoundAndCheck(nvZeroLightMod, true);
-                psFullLightMod = RoundAndCheck(psFullLightMod, false);
-                psZeroLightMod = RoundAndCheck(psZeroLightMod, true);
-            }
-        }
-        #endregion
-    }
+    ///// <summary>
+    ///// As LightModifiers, but, for standard settings (NV & PS), divides the results by the set number of eyes
+    ///// </summary>
+    //public class EyeLightModifiers : LightModifiers
+    //{
+    //    #region Instance Fields
+    //    private float? _nvZeroLightEyeMod;
+    //    private float? _nvFullLightEyeMod;
+    //    private float? _psZeroLightEyeMod;
+    //    private float? _psFullLightEyeMod;
 
-    /// <summary>
-    /// As GlowMods, but, for standard settings (NV & PS), divides the results by the set number of eyes
-    /// </summary>
-    public class EyeGlowMods : GlowMods
-    {
-        #region Instance Fields
-        private float? nvZeroLightEyeMod;
-        private float? nvFullLightEyeMod;
-        private float? psZeroLightEyeMod;
-        private float? psFullLightEyeMod;
+    //    //Bi-Retinal Normative
+    //    internal int NumOfEyesNormalisedFor = 2;
 
-        //Bi-Retinal Normative
-        internal int NumOfEyesNormalisedFor = 2;
+    //    //Used to check for changes to general NV and PS multipliers
+    //    internal int EyeNVVersion;
+    //    internal int EyePSVersion;
+    //    #endregion
 
-        //Used to check for changes to general NV and PS multipliers
-        internal int EyeNVVersion;
-        internal int EyePSVersion;
-        #endregion
+    //    #region Get Overrides
+    //    internal override float NVZeroLightMod
+    //    {
+    //        get
+    //        {
+    //            if ((_nvZeroLightEyeMod != null) && (EyeNVVersion == NVVersion))
+    //            {
+    //                return (float) _nvZeroLightEyeMod;
+    //            }
+    //            FetchAndNormaliseNVMods();
+    //            EyeNVVersion = NVVersion;
+    //            return (float)_nvZeroLightEyeMod;
+    //        }
+    //    }
+    //    internal override float NVFullLightMod
+    //    {
+    //        get
+    //        {
+    //            if ((_nvFullLightEyeMod != null) && (EyeNVVersion == NVVersion))
+    //                {
+    //                    return (float) _nvFullLightEyeMod;
+    //                }
 
-        #region Get Overrides
-        internal override float NVZeroLightMod
-        {
-            get
-            {
-                if (nvZeroLightEyeMod == null || EyeNVVersion != GlowMods.NVVersion)
-                {
-                    FetchAndNormaliseNVMods();
-                    EyeNVVersion = NVVersion;
-                }
-                return (float)nvZeroLightEyeMod;
-            }
-        }
-        internal override float NVFullLightMod
-        {
-            get
-            {
-                if (nvFullLightEyeMod == null || EyeNVVersion != GlowMods.NVVersion)
-                {
-                    FetchAndNormaliseNVMods();
-                    EyeNVVersion = NVVersion;
-                }
-                return (float)nvFullLightEyeMod;
-            }
-        }
-        internal override float PSZeroLightMod
-        {
-            get
-            {
-                if (psZeroLightEyeMod == null || EyePSVersion != GlowMods.PSVersion)
-                {
-                    FetchAndNormalisePSMods();
-                    EyePSVersion = PSVersion;
-                }
-                return (float)psZeroLightEyeMod;
-            }
-        }
-        internal override float PSFullLightMod
-        {
-            get
-            {
-                if (psFullLightEyeMod == null || EyePSVersion != GlowMods.PSVersion)
-                {
-                    FetchAndNormalisePSMods();
-                    EyePSVersion = PSVersion;
-                }
-                return (float)psFullLightEyeMod;
-            }
-        }
-        #endregion
+    //            FetchAndNormaliseNVMods();
+    //            EyeNVVersion = NVVersion;
+    //            return (float)_nvFullLightEyeMod;
+    //        }
+    //    }
+    //    internal override float PSZeroLightMod
+    //    {
+    //        get
+    //        {
+    //            if ((_psZeroLightEyeMod != null) && (EyePSVersion == PSVersion))
+    //                {
+    //                    return (float) _psZeroLightEyeMod;
+    //                }
 
-        #region Constructors
-        internal EyeGlowMods(GlowMods racegm, int numeyes)
-        {
-            this.Setting = racegm.Setting;
-            NumOfEyesNormalisedFor = numeyes;
-            if (this.Setting == Options.NVCustom)
-            {
-                zeroLightMod = RoundAndCheck(racegm.ZeroLight, true, numeyes);
-                fullLightMod = RoundAndCheck(racegm.FullLight, false, numeyes);
-            }
-        }
+    //            FetchAndNormalisePSMods();
+    //            EyePSVersion = PSVersion;
+    //            return (float)_psZeroLightEyeMod;
+    //        }
+    //    }
+    //    internal override float PSFullLightMod
+    //    {
+    //        get
+    //        {
+    //            if ((_psFullLightEyeMod != null) && (EyePSVersion == PSVersion))
+    //                {
+    //                    return (float) _psFullLightEyeMod;
+    //                }
+
+    //            FetchAndNormalisePSMods();
+    //            EyePSVersion = PSVersion;
+    //            return (float)_psFullLightEyeMod;
+    //        }
+    //    }
+    //    #endregion
+
+    //    #region Constructors
+    //    internal EyeLightModifiers(LightModifiers racegm, int numeyes)
+    //    {
+    //        Setting = racegm.Setting;
+    //        NumOfEyesNormalisedFor = numeyes;
+    //        if (Setting == Options.NVCustom)
+    //        {
+    //            ZeroLightMod = RoundAndCheck(racegm.ZeroLight, true, numeyes);
+    //            FullLightMod = RoundAndCheck(racegm.FullLight, false, numeyes);
+    //        }
+    //        if (racegm.LoadedFromFile)
+    //        {
+    //            LoadedFromFile = true;
+    //            FileSetting = racegm.FileSetting;
+    //        }
+    //    }
         
-        internal EyeGlowMods(HediffCompProperties_NightVision compprops) : base(compprops) {}
+    //    internal EyeLightModifiers(LightModifiers hediffMod)
+    //    {
+    //        Setting = hediffMod.Setting;
+    //        if (Setting == Options.NVCustom)
+    //        {
+    //            ZeroLightMod = RoundAndCheck(hediffMod.ZeroLight, true);
+    //            FullLightMod = RoundAndCheck(hediffMod.FullLight, false);
+    //        }
+    //    }
 
-        internal EyeGlowMods(Options setting) : base(setting) { }
+    //    internal EyeLightModifiers(HediffCompProperties_NightVision compprops) : base(compprops) {}
 
-        public EyeGlowMods() : base() { }
-        #endregion
+    //    internal EyeLightModifiers(Options setting) : base(setting) { }
 
-        #region Fetching from base class
-        private void FetchAndNormaliseNVMods()
-        {
-            //Fetches values from base class
-            nvZeroLightEyeMod = RoundAndCheck(nvZeroLightMod, true, NumOfEyesNormalisedFor);
-            nvFullLightEyeMod = RoundAndCheck(nvFullLightMod, false, NumOfEyesNormalisedFor);
-        }
+    //    public EyeLightModifiers()
+    //    { }
+    //    #endregion
 
-        private void FetchAndNormalisePSMods()
-        {
-            //Fetches values from base class
-            psZeroLightEyeMod = RoundAndCheck(GlowMods.psZeroLightMod, true, NumOfEyesNormalisedFor);
-            psFullLightEyeMod = RoundAndCheck(GlowMods.psFullLightMod, false, NumOfEyesNormalisedFor);
-        }
-        #endregion
-    }
+    //    #region Fetching from base class
+    //    private void FetchAndNormaliseNVMods()
+    //    {
+    //        //Fetches values from base class
+    //        _nvZeroLightEyeMod = RoundAndCheck(NvZeroLightMod, true, NumOfEyesNormalisedFor);
+    //        _nvFullLightEyeMod = RoundAndCheck(nvFullLightMod, false, NumOfEyesNormalisedFor);
+    //    }
+
+    //    private void FetchAndNormalisePSMods()
+    //    {
+    //        //Fetches values from base class
+    //        _psZeroLightEyeMod = RoundAndCheck(PsZeroLightMod, true, NumOfEyesNormalisedFor);
+    //        _psFullLightEyeMod = RoundAndCheck(PsFullLightMod, false, NumOfEyesNormalisedFor);
+    //    }
+    //    #endregion
+    //}
 }

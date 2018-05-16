@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using RimWorld;
-using Verse;
+﻿using Verse;
 using UnityEngine;
-using Harmony;
+using JetBrains.Annotations;
 
 namespace NightVision
 {
-    class Controller : Mod
+    internal class Controller : Mod
     {
         public static Controller Instance;
         public static NightVisionSettings Settings;
 
+        [UsedImplicitly]
         public Controller(ModContentPack content) : base(content)
         {
             Instance = this;
@@ -25,9 +21,12 @@ namespace NightVision
         {
             Settings.DoSettingsWindowContents(inRect);
         }
-
+        /// <summary>
+        /// Called by Rimworld before displaying the list of mod settings & after closing this mods settings window
+        /// </summary>
         public override void WriteSettings()
         {
+            Log.Message("Nightvision: WriteSettings called");
             Settings.DoPreWriteTasks();
             base.WriteSettings();
         }

@@ -22,6 +22,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,18 +31,23 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=1.0.9.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\misc rimworld\Harmony\0Harmony.dll</HintPath>
+      <HintPath>..\..\..\Rimworld Libraries\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="AlienRace">
-      <HintPath>..\..\..\RimWorld1722Win\Mods\AlienRaces-master\Assemblies\AlienRace.dll</HintPath>
+      <HintPath>..\..\..\Rimworld Libraries\AlienRace.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\RimWorld_MODTEST\RimWorld1722Win_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\Rimworld Libraries\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CombatExtended">
+      <HintPath>..\..\..\Rimworld Libraries\CombatExtended.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -51,21 +57,29 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\RimWorld_MODTEST\RimWorld1722Win_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\Rimworld Libraries\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Comps\HediffCompProperties_NightVision.cs" />
+    <Compile Include="Comps\TestCalc.cs" />
+    <Compile Include="LightModifiers\Hediff_LightModifiers.cs" />
+    <Compile Include="IndicatorTex.cs" />
+    <Compile Include="LightModifiers\LightModifiers.cs" />
+    <Compile Include="NightVisionStat.cs" />
+    <Compile Include="LightModifiers\Race_LightModifiers.cs" />
     <Compile Include="SettingClasses.cs" />
-    <Compile Include="HediffComp_NightVision.cs" />
-    <Compile Include="Comp_NightVision.cs" />
-    <Compile Include="Comp_NightVisionApparel.cs" />
+    <Compile Include="Comps\HediffComp_NightVision.cs" />
+    <Compile Include="Comps\Comp_NightVision.cs" />
+    <Compile Include="Comps\Comp_NightVisionApparel.cs" />
     <Compile Include="Harmony_Patches.cs" />
-    <Compile Include="CompProperties_NightVision.cs" />
+    <Compile Include="Comps\CompProperties_NightVision.cs" />
     <Compile Include="DictionaryBuilders.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Properties\NightVision.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="NVStrings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Xml_Defs\NightVision_Apparel.xml">

@@ -50,6 +50,14 @@
           <grantsNightVision>true</grantsNightVision>
       </li>
     </comps>
+    <colorGenerator Class="ColorGenerator_White">
+      <!--<options>
+        <li>
+          <weight>4</weight>
+          <only>RGBA(1,1,1,1)</only>
+        </li>
+      </options>-->
+    </colorGenerator>
   </ThingDef>
   <ThingDef ParentName="ArmorHelmetMakeableBase">
     <defName>tintedgoggles</defName>
@@ -103,6 +111,14 @@
       </li>
     </comps>
 
+    <colorGenerator Class="ColorGenerator_White">
+      <!--<options>
+        <li>
+          <weight>4</weight>
+          <only>RGBA(1,1,1,1)</only>
+        </li>
+      </options>-->
+    </colorGenerator>
   </ThingDef>
   <ThingDef ParentName="ArmorHelmetMakeableBase">
     <defName>advNVgear</defName>
@@ -130,6 +146,7 @@
     </statBases>
     <equippedStatOffsets>
       <MoveSpeed>-0.04</MoveSpeed>
+      <NightVision>+0.2</NightVision>
     </equippedStatOffsets>
     <costList>
       <Component>7</Component>
@@ -157,5 +174,13 @@
         <grantsNightVision>true</grantsNightVision>
       </li>
     </comps>
+    <colorGenerator Class="ColorGenerator_White">
+      <!--<options>
+        <li>
+          <weight>4</weight>
+          <only>RGBA(1,1,1,1)</only>
+        </li>
+      </options>-->
+    </colorGenerator>
   </ThingDef>
 </Defs>

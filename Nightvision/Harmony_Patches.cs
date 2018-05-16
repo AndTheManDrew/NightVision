@@ -1,30 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using CombatExtended;
+using Harmony;
+using NightVision.Comps;
 using RimWorld;
 using Verse;
-using Harmony;
-using System.Diagnostics;
+
+// ReSharper disable InconsistentNaming
 
 namespace NightVision
 {
-    //TODO Add an injector?? Doesn't seem to need it
-
     [StaticConstructorOnStartup]
     public static class HarmonyPatches
     {
-        public const string eyeTag = "SightSource";
-
         #region Applying Harmony Patches
         static HarmonyPatches()
         {
-
-
             var harmony = HarmonyInstance.Create("nightvision.rimworld.mod");
-
-            
 
         // Targets
             //StatPart_Glow
@@ -40,12 +35,12 @@ namespace NightVision
             //MethodInfo HediffWithComps_PostRemoved = AccessTools.Method(typeof(HediffWithComps), nameof(HediffWithComps.PostRemoved));
 
             //HealthTracker
-            MethodInfo HealthTracker_AddHediff = AccessTools.Method(typeof(Pawn_HealthTracker), nameof(Pawn_HealthTracker.AddHediff), new Type[] { typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo) });
+            MethodInfo HealthTracker_AddHediff = AccessTools.Method(typeof(Pawn_HealthTracker), nameof(Pawn_HealthTracker.AddHediff), new[] { typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo) });
             //MethodInfo HealthTracker_RemoveHediff = AccessTools.Method(typeof(Pawn_HealthTracker), nameof(Pawn_HealthTracker.RemoveHediff));
 
             //ApparelTracker
             MethodInfo ApparelTracker_Wear = AccessTools.Method(typeof(Pawn_ApparelTracker), nameof(Pawn_ApparelTracker.Wear));
-            MethodInfo ApparelTracker_TryDrop = typeof(Pawn_ApparelTracker).GetMethods(AccessTools.all).Where(methodInfo => methodInfo.Name == "TryDrop" && methodInfo.GetParameters().Where(pi => pi.ParameterType == typeof(IntVec3)).Any()).First();
+            MethodInfo ApparelTracker_TryDrop = typeof(Pawn_ApparelTracker).GetMethods(AccessTools.all).First(methodInfo => methodInfo.Name == "TryDrop" && methodInfo.GetParameters().Any(pi => pi.ParameterType == typeof(IntVec3)));
             MethodInfo ApparelTracker_Remove = AccessTools.Method(typeof(Pawn_ApparelTracker), nameof(Pawn_ApparelTracker.Remove));
             MethodInfo ApparelTracker_TakeWearoutDamageForDay = AccessTools.Method(typeof(Pawn_ApparelTracker), "TakeWearoutDamageForDay");
 
@@ -59,7 +54,7 @@ namespace NightVision
             harmony.Patch(StatPart_Glow_FactorFromGlow, null, new HarmonyMethod(thistype, nameof(FactorFromGlow_PostFix)));
             harmony.Patch(StatPart_Glow_ExplanationPart, null, new HarmonyMethod(thistype, nameof(ExplanationPart_PostFix)));
             //Hediff
-            harmony.Patch(Hediff_PostAdd, null, new HarmonyMethod(thistype, nameof(HediffWithComps_PostAdd_Postfix)));
+            harmony.Patch(Hediff_PostAdd, null, new HarmonyMethod(thistype, nameof(Hediff_PostAdd_Postfix)));
             harmony.Patch(Hediff_PostRemoved, null, new HarmonyMethod(thistype, nameof(Hediff_PostRemoved_Postfix)));
             //HediffWithComps
             harmony.Patch(HediffWithComps_PostAdd, null, new HarmonyMethod(thistype, nameof(HediffWithComps_PostAdd_Postfix)));
@@ -72,41 +67,44 @@ namespace NightVision
             harmony.Patch(ApparelTracker_TakeWearoutDamageForDay, null, new HarmonyMethod(thistype, nameof(TakeWearoutDamageForTheDay_Postfix)));
             //ThoughtWorker_Dark
             harmony.Patch(ThoughtWorker_Dark_CurrentStateInternal, null, new HarmonyMethod(thistype, nameof(CurrentStateInternal_Postfix)));
-
-            var meths = harmony.GetPatchedMethods();
-            Log.Message(meths.Count().ToString());
-            foreach (MethodInfo mi in meths)
+            
+        //Combat Extended Patch
+            try
             {
-                Log.Message("Night Vision patched: " + mi.Name);
+                ApplyCombatExtendedPatch(ref harmony);
             }
+            catch (TypeLoadException)
+            {
+            }
+            
             
         }
         #endregion
 
         #region StatPart_Glow Patches
-        //The bits that actually effect the game
-        public static double TotalGlFactorNanoSec = 0f;
-        public static Int64 TotalTicks = 0;
-        public static Stopwatch glfactorTimer = new Stopwatch();
-        public static int glfactorTicks = 0;
+        //The bits that actually effect the gameplay
+        public static double TotalGlFactorNanoSec;
+        public static Int64 TotalTicks;
+        public static Stopwatch GlfactorTimer = new Stopwatch();
+        public static int GlfactorTicks;
         public static void FactorFromGlow_PostFix(Thing t, ref float __result)
         {
-            glfactorTimer.Start();
+            GlfactorTimer.Start();
             if (t is Pawn pawn /*&& pawn.RaceProps.Humanlike  -- Not necessary? Statpart_glow.ActiveFor() should filter*/ && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
-                float glowat = pawn.Map.glowGrid.GameGlowAt(pawn.Position, false);
+                float glowat = pawn.Map.glowGrid.GameGlowAt(pawn.Position);
                 __result = comp.FactorFromGlow(glowat);
             }
             //TODO Remove timers for release
-            glfactorTimer.Stop();
-            if (Find.TickManager.TicksGame - glfactorTicks > 600)
+            GlfactorTimer.Stop();
+            if (Find.TickManager.TicksGame - GlfactorTicks > 600)
             {
-                int elapsedTicks = Find.TickManager.TicksGame - glfactorTicks;
-                Log.Message($"FactorFromGlow_PostFix Timer: {((glfactorTimer.Elapsed.TotalMilliseconds * 1000000) / elapsedTicks):#.0 ns} per tick in the last {elapsedTicks} ticks");
-                glfactorTicks = Find.TickManager.TicksGame;
-                TotalGlFactorNanoSec += glfactorTimer.ElapsedMilliseconds * 1000000;
+                int elapsedTicks = Find.TickManager.TicksGame - GlfactorTicks;
+                //Log.Message($"FactorFromGlow_PostFix Timer: {((glfactorTimer.Elapsed.TotalMilliseconds * 1000000) / elapsedTicks):#.0 ns} per tick in the last {elapsedTicks} ticks");
+                GlfactorTicks = Find.TickManager.TicksGame;
+                TotalGlFactorNanoSec += GlfactorTimer.ElapsedMilliseconds * 1000000;
                 TotalTicks += elapsedTicks;
-                glfactorTimer.Reset();
+                GlfactorTimer.Reset();
 
             }
         }
@@ -115,10 +113,10 @@ namespace NightVision
         {
             if (!__result.NullOrEmpty() && req.Thing is Pawn pawn && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
-                float glowat = pawn.Map.glowGrid.GameGlowAt(pawn.Position, false);
+                float glowat = pawn.Map.glowGrid.GameGlowAt(pawn.Position);
                 if (glowat < 0.3f || glowat > 0.7f)
                 {
-                    __result = comp.ExplanationBuilder(__result, glowat);
+                    __result = comp.ExplanationBuilder(__result, glowat, out bool _);
                 }
             }
         }
@@ -129,11 +127,8 @@ namespace NightVision
         //public virtual void PostAdd(DamageInfo? dinfo)
         public static void Hediff_PostAdd_Postfix(Hediff __instance)
         {
-            Log.Message("Hediff_PostAdd_Postfix called on: " + __instance.Label);
             if (__instance?.pawn is Pawn pawn && pawn.Spawned /*&& pawn.RaceProps.Humanlike*/ && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
-                Log.Message("Hediff_PostAdd_postfix: Calling CheckAndAddHediff with: " + pawn.NameStringShort + " - " + __instance.def.defName);
-
                 comp.CheckAndAddHediff(__instance, __instance.Part);
             }
         }
@@ -141,12 +136,8 @@ namespace NightVision
         //For hediffs that are removed in Pawn_HealthTracker.HealthTick (removes them directly from list, then calls Hediff.PostRemoved)
         public static void Hediff_PostRemoved_Postfix(Hediff __instance)
         {
-
-            Log.Message("Hediff_PostRemoved_Postfix: called on: " + __instance.Label);
             if (__instance.pawn is Pawn pawn && pawn.Spawned /*&& pawn.RaceProps.Humanlike*/ && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
-                Log.Message("NightVision: Calling RemoveHediff with: " + pawn.NameStringShort + " - " + __instance.def.defName);
-
                 comp.RemoveHediff(__instance, __instance.Part);
             }
         }
@@ -158,8 +149,6 @@ namespace NightVision
         {
             if (__instance.pawn is Pawn pawn && pawn.Spawned /*&& pawn.RaceProps.Humanlike*/ && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
-                Log.Message("HediffWithComps_PostAdd_postfix: Calling CheckAndAddHediff on: " + pawn.NameStringShort + " with hediff " + __instance.Label + " and part " + __instance.Part?.def?.defName ?? " null");
-
                 comp.CheckAndAddHediff(__instance, __instance.Part);
             }
         }
@@ -172,11 +161,8 @@ namespace NightVision
         {
 
             Pawn pawn = Traverse.Create(__instance).Field("pawn")?.GetValue<Pawn>();
-            Log.Message("AddHediff_Postfix called on: " + pawn?.Label ?? " null " + "'s hediff " + hediff.Label + " && part " + part?.def.defName?? " null ");
             if (pawn != null &&  pawn.Spawned && /*part != null && hediff is Hediff_MissingPart &&*/ /*pawn.RaceProps.Humanlike &&*/ pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
-                Log.Message("AddHediff_Postfix: Calling CheckAndAddHediff with: " + pawn.NameStringShort + " & " + hediff.def.defName);
-
                 comp.CheckAndAddHediff(hediff, part);
             }
         }
@@ -211,9 +197,9 @@ namespace NightVision
                 }
             }
         }
-        public static void TryDrop_Postfix(Apparel ap, Pawn_ApparelTracker __instance, bool __result)
+        public static void TryDrop_Postfix(Apparel ap, Pawn_ApparelTracker __instance, bool result)
         {
-            if (__result && __instance?.pawn is Pawn pawn && pawn.Spawned && pawn.RaceProps.Humanlike && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
+            if (result && __instance?.pawn is Pawn pawn && pawn.Spawned && pawn.RaceProps.Humanlike && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
                 comp.RemoveApparel(ap);
             }
@@ -222,8 +208,6 @@ namespace NightVision
         {
             if (__instance?.pawn is Pawn pawn && pawn.RaceProps.Humanlike && pawn.Spawned && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
-                Log.Message("ApparelTracker.Remove_Postfix: " + pawn.NameStringShort + " - " + ap.Label);
-
                 comp.RemoveApparel(ap);
             }
         }
@@ -232,7 +216,6 @@ namespace NightVision
         {
             if (ap.Destroyed && __instance.pawn is Pawn pawn && pawn.RaceProps.Humanlike && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
-                Log.Message("ApparelTracker.TakeWearoutDamageForTheDay_Postfix: " + pawn.NameStringShort + " - " + ap.Label);
                 if (ap is Apparel apparel)
                 {
                     comp.RemoveApparel(apparel);
@@ -249,16 +232,15 @@ namespace NightVision
             {
                 if (p.GetComp<Comp_NightVision>() is Comp_NightVision comp)
                 {
-                    switch (comp.NVPsychDark())
+                    switch (comp.PsychDark())
                     {
                         default:
-                        case GlowMods.Options.NVNone:
                             return;
-                        case GlowMods.Options.NVNightVision:
+                        case LightModifiers.Options.NVNightVision:
                             __result = ThoughtState.Inactive;
                             return;
-                        case GlowMods.Options.NVPhotosensitivity:
-                            __result = ThoughtState.ActiveAtStage(PhotosensDarkThoughtStage, GlowMods.Options.NVPhotosensitivity.ToString().Translate());
+                        case LightModifiers.Options.NVPhotosensitivity:
+                            __result = ThoughtState.ActiveAtStage(PhotosensDarkThoughtStage, LightModifiers.Options.NVPhotosensitivity.ToString().Translate());
                             return;
                     }
                 }
@@ -266,6 +248,48 @@ namespace NightVision
         }
         #endregion
 
-        //TODO Add patch for Combat Extended ShiftVecReportFor
+        #region Combat Extended Patch
+
+        //Inspired by Pick Up And Haul's implementation, which is more elegant
+        /// <summary>
+        /// Should only be executed in try-catch(TypeLoadException) block
+        /// See: https://stackoverflow.com/questions/3346740/typeloadexception-is-not-caught-by-try-catch
+        /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void ApplyCombatExtendedPatch(ref HarmonyInstance harmony)
+        {
+            //ModMetaData m.Name is defined in the About.xml file of the mod, therefore no need to account for steamID messes
+            if (ModsConfig.ActiveModsInLoadOrder.Any(m => m.Name == "Combat Extended"))
+            {
+                MethodInfo Verb_LaunchProjectileCE_ShiftVecReportFor = AccessTools.Method(typeof(Verb_LaunchProjectileCE), nameof(Verb_LaunchProjectileCE.ShiftVecReportFor));
+                harmony.Patch(Verb_LaunchProjectileCE_ShiftVecReportFor, null, new HarmonyMethod(typeof(HarmonyPatches), nameof(ShiftVecReportFor_Postfix)));
+                //Checked by mod settings window: if true will display checkbox for NVEnabledForCE
+                NightVisionSettings.CEDetected = true;
+                Log.Message("Night Vision detected Combat Extended and patched: " + Verb_LaunchProjectileCE_ShiftVecReportFor.Name);
+            }
+        }
+
+        //Can be changed in the mod settings
+        public static bool NVEnabledForCE = true;
+
+        /// <summary>
+        /// CE's lighting shift (= 1 - glow) is linear function between points (glow = 1, shift = 0) & (glow = 0, shift = 1)
+        /// All this method does is transform the shift function to a linear function between points: 
+        ///     (glow = 1, shift = - modifier at 100% light) 
+        ///     (glow = 0, shift = 1 - modifier at 0% light)
+        /// where, with default settings, 
+        ///     modifier at 100%  less or  = 0   , therefore same or worse
+        ///     modifier at 0% light greater or = 0, therefore same or better
+        /// </summary>
+        public static void ShiftVecReportFor_Postfix(ref ShiftVecReport __result, Verb_LaunchProjectileCE instance)
+        {
+            if (NVEnabledForCE && instance.caster is Pawn pawn && pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
+            {
+                __result.lightingShift = (__result.lightingShift * (1 + comp.FullLightModifier - comp.ZeroLightModifier)) - comp.FullLightModifier;
+            }
+        }
+
+        #endregion
+
     }
 }

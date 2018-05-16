@@ -2,6 +2,7 @@
 <Patch>
   <Operation Class="PatchOperationSequence">
     <success>Always</success>
+    <operations>  
     <li Class="PatchOperationTest">
       <xpath>Defs/ThoughtDef[defName="EnvironmentDark"]/stages[1]</xpath>
       <success>Invert</success>
@@ -16,5 +17,6 @@
         </li>
       </value>
     </li>
+    </operations>
   </Operation>
 </Patch>
