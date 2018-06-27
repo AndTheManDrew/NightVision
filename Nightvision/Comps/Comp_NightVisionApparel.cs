@@ -6,10 +6,7 @@ namespace NightVision.Comps
     public class Comp_NightVisionApparel : ThingComp
     {   
         [UsedImplicitly]
-        public CompProperties_NightVisionApparel Props
-        {
-            get { return (CompProperties_NightVisionApparel) props; }
-        }
+        public CompProperties_NightVisionApparel Props => (CompProperties_NightVisionApparel) props;
     }
 
     public class CompProperties_NightVisionApparel : CompProperties

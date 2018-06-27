@@ -1,21 +1,26 @@
-﻿using RimWorld;
+﻿using System;
+using System.Linq;
 using Verse;
-using System;
-using NightVision.Comps;
 
-namespace NightVision
+namespace NightVision.LightModifiers
     {
 
-        public class LightModifiers : IExposable, INVSaveCheck
+        public class LightModifiersBase : IExposable, INVSaveCheck
             {
-                internal static readonly float[] NVDefaultOffsets = new[] {0.2f, 0f};
-                internal static readonly float[] PSDefaultOffsets = new[] {0.4f, -0.2f};
+                internal static readonly float[] NVDefaultOffsets = {0.2f, 0f};
+                internal static readonly float[] PSDefaultOffsets = {0.4f, -0.2f};
 
-                private Def parentDef;
+                
 
-                public virtual Def ParentDef => parentDef;
+                public virtual Def ParentDef => null;
 
                 public bool Initialised;
+
+                internal virtual Options Setting
+                    {
+            get => Options.NVNone;
+                        set { }
+                    }
                 
 
                 public enum Options : byte
@@ -29,19 +34,24 @@ namespace NightVision
                         NVCustom = 3
                     }
 
-                public static LightModifiers NVLightModifiers =
-                            new LightModifiers() {offsets = new []{NVDefaultOffsets[0], NVDefaultOffsets[1]}, Initialised = true};
+                public static LightModifiersBase NVLightModifiers =
+                            new LightModifiersBase {Offsets = new []{NVDefaultOffsets[0], NVDefaultOffsets[1]}, Initialised = true};
 
-                public static LightModifiers PSLightModifiers =
-                            new LightModifiers() {offsets = new []{PSDefaultOffsets[0], PSDefaultOffsets[1]}, Initialised = true};
+                public static LightModifiersBase PSLightModifiers =
+                            new LightModifiersBase {Offsets = new []{PSDefaultOffsets[0], PSDefaultOffsets[1]}, Initialised = true};
+                //TODO Remove
+/*
+                public static LightModifiers DefaultModifiers = 
+                            new LightModifiers {Initialised = true};
+*/
 
-                internal float[] offsets = new float[2];
+                internal float[] Offsets = new float[2];
         
                 public virtual float this[int index]
                 {
-                    get { return offsets[index]; }
-                    set { offsets[index] = value; }
-                }
+                    get => Offsets[index];
+                        set => Offsets[index] = value;
+                    }
 
                 public virtual float[] DefaultOffsets
                     {
@@ -60,13 +70,119 @@ namespace NightVision
                                 return new float[2];
                             }
                     }
-                /// <summary>
-                /// Save and load: in this class only used for NV and PS settings
-                /// </summary>
-                public virtual void ExposeData()
+                
+                public float GetEffectAtGlow(float glow)
                     {
-                        Scribe_Values.Look(ref offsets[0], "ZeroOffset");
-                        Scribe_Values.Look(ref offsets[1], "FullOffset");
+                        if (glow < 0.001)
+                            {
+                                return this[0];
+                            }
+
+                        if (glow > 0.999)
+                            {
+                                return this[1];
+                            }
+
+                        if (glow < 0.3)
+                            {
+                                return this[0] * (0.3f - glow) / 0.3f;
+                            }
+
+                        if (glow > 0.7)
+                            {
+                                return this[1] * (glow - 0.7f) / 0.3f;
+                            }
+
+                        return 0;
+                    }
+
+                public static float[] GetCapsAtGlow(float glow)
+                    {
+                        float mincap;
+                        float maxcap;
+                        float nvcap;
+                        float pscap;
+                        if (glow < 0.3f)
+                        {
+                            mincap = (NightVisionSettings.MultiplierCaps.min - NightVisionSettings.DefaultZeroLightMultiplier) * (0.3f - glow) / 0.3f;
+                            maxcap = (NightVisionSettings.MultiplierCaps.max - NightVisionSettings.DefaultZeroLightMultiplier) * (0.3f - glow) / 0.3f;
+                            pscap = PSLightModifiers[0] * (0.3f - glow) / 0.3f;
+                            nvcap = NVLightModifiers[0] * (0.3f - glow) / 0.3f;
+                        }
+                        else
+                        {
+                            mincap = (NightVisionSettings.MultiplierCaps.min - NightVisionSettings.DefaultFullLightMultiplier) * (glow - 0.7f) / 0.3f;
+                            maxcap = (NightVisionSettings.MultiplierCaps.max - NightVisionSettings.DefaultFullLightMultiplier) * (glow - 0.7f) / 0.3f;
+                            pscap = PSLightModifiers[1] * (glow - 0.7f) / 0.3f;
+                            nvcap = NVLightModifiers[1] * (glow - 0.7f) / 0.3f;
+                        }
+                        return new[] { maxcap, mincap, nvcap, pscap };
+                    }
+                    
+                public bool HasModifier()
+                    {
+                        return Math.Abs(this[0]) > 0.001 && Math.Abs(this[1]) > 0.001;
+                    }
+
+                public bool IsCustom()
+                    {
+                        return Setting == Options.NVCustom;
+                    }
+
+                internal void ChangeSetting(Options newsetting)
+                    {
+                        if (Setting != newsetting)
+                            {
+                                if (newsetting == Options.NVCustom && !HasModifier())
+                                    {
+                                        float[] defaultValues = DefaultOffsets;
+                                        if (Math.Abs(defaultValues[0]) > 0.001 && Math.Abs(defaultValues[1]) > 0.001)
+                                            {
+                                                Offsets = DefaultOffsets;
+                                            }
+                                        else if (Setting == Options.NVNightVision)
+                                            {
+                                                Offsets = NVLightModifiers.Offsets;
+                                            }
+                                        else if (Setting == Options.NVPhotosensitivity)
+                                            {
+                                                Offsets = PSLightModifiers.Offsets;
+                                            }
+                                    }
+                            }
+
+                        Setting = newsetting;
+                    }
+            
+
+
+        /// <summary>
+        /// Save and load: in this class only used for NV and PS settings
+        /// </summary>
+        public virtual void ExposeData()
+                    {
+                        Scribe_Values.Look(ref Offsets[0], "ZeroOffset");
+                        Scribe_Values.Look(ref Offsets[1], "FullOffset");
+                        if (Scribe.mode == LoadSaveMode.LoadingVars)
+                            {
+                                if (Offsets == null)
+                                    {
+                                        if (this == NVLightModifiers)
+                                            {
+                                                Offsets = NVDefaultOffsets.ToArray();
+                                            }
+
+                                        else if (this == PSLightModifiers)
+                                            {
+                                                Offsets = PSDefaultOffsets.ToArray();
+                                            }
+                                        else
+                                            {
+                                                Offsets = new float[2];
+                                            }
+                                    }
+                                Initialised = true;
+                            }
                     }   
 
                 public virtual bool ShouldBeSaved()

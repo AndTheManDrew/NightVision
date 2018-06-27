@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using CombatExtended;
 using Harmony;
 using NightVision.Comps;
+using NightVision.LightModifiers;
 using RimWorld;
 using Verse;
 
@@ -35,35 +36,46 @@ namespace NightVision
             //MethodInfo HediffWithComps_PostRemoved = AccessTools.Method(typeof(HediffWithComps), nameof(HediffWithComps.PostRemoved));
 
             //HealthTracker
-            MethodInfo HealthTracker_AddHediff = AccessTools.Method(typeof(Pawn_HealthTracker), nameof(Pawn_HealthTracker.AddHediff), new[] { typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo) });
+            MethodInfo HealthTracker_AddHediff = AccessTools.Method(typeof(Pawn_HealthTracker), nameof(Pawn_HealthTracker.AddHediff), new[] { typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo), typeof(DamageWorker.DamageResult) });
             //MethodInfo HealthTracker_RemoveHediff = AccessTools.Method(typeof(Pawn_HealthTracker), nameof(Pawn_HealthTracker.RemoveHediff));
 
             //ApparelTracker
             MethodInfo ApparelTracker_Wear = AccessTools.Method(typeof(Pawn_ApparelTracker), nameof(Pawn_ApparelTracker.Wear));
-            MethodInfo ApparelTracker_TryDrop = typeof(Pawn_ApparelTracker).GetMethods(AccessTools.all).First(methodInfo => methodInfo.Name == "TryDrop" && methodInfo.GetParameters().Any(pi => pi.ParameterType == typeof(IntVec3)));
+            MethodInfo ApparelTracker_TryDrop = AccessTools.Method(typeof(Pawn_ApparelTracker), nameof(Pawn_ApparelTracker.TryDrop), new []{typeof(Apparel), typeof(Apparel).MakeByRefType(), typeof(IntVec3), typeof(bool)});
             MethodInfo ApparelTracker_Remove = AccessTools.Method(typeof(Pawn_ApparelTracker), nameof(Pawn_ApparelTracker.Remove));
             MethodInfo ApparelTracker_TakeWearoutDamageForDay = AccessTools.Method(typeof(Pawn_ApparelTracker), "TakeWearoutDamageForDay");
 
             //ThoughtWorker_Dark
             MethodInfo ThoughtWorker_Dark_CurrentStateInternal = AccessTools.Method(typeof(ThoughtWorker_Dark), "CurrentStateInternal");
 
+            Log.Message("ApparelTrackerPatchMI: " + ApparelTracker_TryDrop, true);
 
         //Patches
             Type thistype = typeof(HarmonyPatches);
             //StatPart_Glow
+            Log.Message("1");
             harmony.Patch(StatPart_Glow_FactorFromGlow, null, new HarmonyMethod(thistype, nameof(FactorFromGlow_PostFix)));
+            Log.Message("2");
             harmony.Patch(StatPart_Glow_ExplanationPart, null, new HarmonyMethod(thistype, nameof(ExplanationPart_PostFix)));
+            Log.Message("3");
             //Hediff
             harmony.Patch(Hediff_PostAdd, null, new HarmonyMethod(thistype, nameof(Hediff_PostAdd_Postfix)));
+            Log.Message("4");
             harmony.Patch(Hediff_PostRemoved, null, new HarmonyMethod(thistype, nameof(Hediff_PostRemoved_Postfix)));
+            Log.Message("5");
             //HediffWithComps
             harmony.Patch(HediffWithComps_PostAdd, null, new HarmonyMethod(thistype, nameof(HediffWithComps_PostAdd_Postfix)));
+            Log.Message("6");
             //HealthTracker
             harmony.Patch(HealthTracker_AddHediff, null, new HarmonyMethod(thistype, nameof(AddHediff_Postfix)));
+            Log.Message("7");
             //ApparelTracker
             harmony.Patch(ApparelTracker_Wear, null, new HarmonyMethod(thistype, nameof(Wear_Postfix)));
+            Log.Message("8");
             harmony.Patch(ApparelTracker_TryDrop, null, new HarmonyMethod(thistype, nameof(TryDrop_Postfix)));
+            Log.Message("9");
             harmony.Patch(ApparelTracker_Remove, null, new HarmonyMethod(thistype, nameof(Remove_Postfix)));
+            Log.Message("10");
             harmony.Patch(ApparelTracker_TakeWearoutDamageForDay, null, new HarmonyMethod(thistype, nameof(TakeWearoutDamageForTheDay_Postfix)));
             //ThoughtWorker_Dark
             harmony.Patch(ThoughtWorker_Dark_CurrentStateInternal, null, new HarmonyMethod(thistype, nameof(CurrentStateInternal_Postfix)));
@@ -85,8 +97,8 @@ namespace NightVision
         //The bits that actually effect the gameplay
         public static double TotalGlFactorNanoSec;
         public static Int64 TotalTicks;
-        public static Stopwatch GlfactorTimer = new Stopwatch();
-        public static int GlfactorTicks;
+        private static Stopwatch GlfactorTimer = new Stopwatch();
+        private static int GlfactorTicks;
         public static void FactorFromGlow_PostFix(Thing t, ref float __result)
         {
             GlfactorTimer.Start();
@@ -197,9 +209,9 @@ namespace NightVision
                 }
             }
         }
-        public static void TryDrop_Postfix(Apparel ap, Pawn_ApparelTracker __instance, bool result)
+        public static void TryDrop_Postfix(Apparel ap, Pawn_ApparelTracker __instance, ref bool __result)
         {
-            if (result && __instance?.pawn is Pawn pawn && pawn.Spawned && pawn.RaceProps.Humanlike && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
+            if (__result && __instance?.pawn is Pawn pawn && pawn.Spawned && pawn.RaceProps.Humanlike && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
                 comp.RemoveApparel(ap);
             }
@@ -225,7 +237,8 @@ namespace NightVision
         #endregion
 
         #region ThoughtWorker_Dark Patches
-        public const int PhotosensDarkThoughtStage = 1;
+
+        private const int PhotosensDarkThoughtStage = 1;
         public static void CurrentStateInternal_Postfix(Pawn p, ref ThoughtState __result)
         {
             if (__result.Active)
@@ -236,11 +249,11 @@ namespace NightVision
                     {
                         default:
                             return;
-                        case LightModifiers.Options.NVNightVision:
+                        case LightModifiersBase.Options.NVNightVision:
                             __result = ThoughtState.Inactive;
                             return;
-                        case LightModifiers.Options.NVPhotosensitivity:
-                            __result = ThoughtState.ActiveAtStage(PhotosensDarkThoughtStage, LightModifiers.Options.NVPhotosensitivity.ToString().Translate());
+                        case LightModifiersBase.Options.NVPhotosensitivity:
+                            __result = ThoughtState.ActiveAtStage(PhotosensDarkThoughtStage, LightModifiersBase.Options.NVPhotosensitivity.ToString().Translate());
                             return;
                     }
                 }

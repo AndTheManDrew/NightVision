@@ -1,6 +1,6 @@
-﻿using Verse;
+﻿using JetBrains.Annotations;
 using UnityEngine;
-using JetBrains.Annotations;
+using Verse;
 
 namespace NightVision
 {

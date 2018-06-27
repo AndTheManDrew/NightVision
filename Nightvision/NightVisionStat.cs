@@ -5,7 +5,6 @@ using NightVision.Comps;
 using RimWorld;
 using Verse;
 
-
 namespace NightVision
 {
     [DefOf]
@@ -47,18 +46,19 @@ namespace NightVision
 
         public override string GetStatDrawEntryLabel(StatDef stat, float value, ToStringNumberSense numberSense, StatRequest optionalReq)
         {
-            if (optionalReq.HasThing) 
-            {
-                if ( optionalReq.Thing is Pawn pawn && pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
+            if (optionalReq.HasThing)
+                {
+                    if ( optionalReq.Thing is Pawn pawn && pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
                 {
                     return $"x{comp.ZeroLightModifier + NightVisionSettings.DefaultZeroLightMultiplier:0%}";
                 }
-                else if (optionalReq.Thing is Apparel apparel && NightVisionSettings.NVApparel.TryGetValue(apparel.def, out ApparelSetting apparelSetting) && apparelSetting.GrantsNV)
-                {
-                    return "NVGiveNV".Translate();
+
+                    if (optionalReq.Thing is Apparel apparel && NightVisionSettings.NVApparel.TryGetValue(apparel.def, out ApparelSetting apparelSetting) && apparelSetting.GrantsNV)
+                        {
+                            return "NVGiveNV".Translate();
+                        }
+                    //TODO Add a check for hediffs but will need to do so elsewhere
                 }
-                //TODO Add a check for hediffs but will need to do so elsewhere
-            }
             return string.Empty;
         }
 

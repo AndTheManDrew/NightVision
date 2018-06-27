@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
+using NightVision.LightModifiers;
 using Verse;
 
 namespace NightVision.Comps
@@ -8,19 +10,25 @@ namespace NightVision.Comps
     /// </summary>
     public class HediffComp_NightVision : HediffComp
     {
-        internal bool AffectsEyes = false;
-
+        //TODO: Consider moving all hediff harmony patches here
+        //internal bool AffectsEyes = false;
         [UsedImplicitly]
-        public HediffCompProperties_NightVision Props
-        {
-            get { return (HediffCompProperties_NightVision) props; }
-        }
+        public HediffCompProperties_NightVision Props => (HediffCompProperties_NightVision) props;
 
 
-        public override string CompTipStringExtra
-        {
-            get { return base.CompTipStringExtra; }
-        }
+        public override string CompTipStringExtra => TipString();
+
+        private string TipString()
+            {
+                switch (Props.LightModifiers.Setting)
+                    {
+                        //TODO Review returning empty & expand explaination
+                        case LightModifiersBase.Options.NVNightVision: return "NVNightVision".Translate();
+                        case LightModifiersBase.Options.NVPhotosensitivity: return "NVPhotosensitivity".Translate();
+                        case LightModifiersBase.Options.NVCustom: return "NVZeroLabel".Translate() + $" = {Props.LightModifiers[0]:+#;-#;0}%" + " | " + "NVFullLabel".Translate()+ $" = {Props.LightModifiers[1]:+#;-#;0}%";
+                        default: return String.Empty;
+                    }
+            }
 
         public override void CompPostMake()
         {
