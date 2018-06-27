@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  
+  <!-- The implant item -->
+  <ThingDef ParentName="BodyPartProstheticBase">
+    <defName>NV_TapetumImplant</defName>
+    <label>retinal retro-reflector implant</label>
+    <description>An implant that enhances low light vision but reduces bright light vision.</description>
+    <techLevel>Industrial</techLevel>
+    <costList>
+      <NV_TapetumRaw>1</NV_TapetumRaw>
+      <ComponentIndustrial>4</ComponentIndustrial>
+      <Steel>20</Steel>
+    </costList>
+    <statBases>
+      <WorkToMake>11000</WorkToMake>
+      <Mass>0.05</Mass>
+    </statBases>
+    <techHediffTags>
+      <li>Simple</li>
+    </techHediffTags>
+  </ThingDef>
+  
+  <!-- The Secret Ingredient -->
+  <ThingDef ParentName="BodyPartNaturalBase">
+    <defName>NV_TapetumRaw</defName>
+    <label>extracted tapetum lucidum</label>
+    <description>An extracted tapetum lucidum - the organ responsible for night vision in many mammals. With some work this could be fashioned into an implant suitable for humanoids.</description>
+    <statBases>
+      <MarketValue>150</MarketValue>
+      <Mass>1</Mass>
+    </statBases>
+  </ThingDef>
+
+
+</Defs>

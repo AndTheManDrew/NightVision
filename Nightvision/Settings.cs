@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using JetBrains.Annotations;
 using NightVision.Comps;
+using NightVision.LightModifiers;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -16,13 +16,13 @@ namespace NightVision
 
         internal const float DefaultZeroLightMultiplier = 0.8f;
         internal const float DefaultFullLightMultiplier = 1f;
-        internal const float DefaultMinCap = 0.8f;
-        internal const float DefaultMaxCap = 1.2f;
+        private const float DefaultMinCap = 0.8f;
+        private const float DefaultMaxCap = 1.2f;
 
         #endregion
 
         #region Class Fields
-        public static NightVisionSettings Instance;
+        [UsedImplicitly] public static NightVisionSettings Instance;
         [UsedImplicitly]
         public NightVisionSettings()
         {
@@ -36,47 +36,47 @@ namespace NightVision
         internal static HashSet<HediffDef> AllSightAffectingHediffs = new HashSet<HediffDef>();
         internal static HashSet<ThingDef> AllEyeCoveringHeadgearDefs = new HashSet<ThingDef>();
 
-        internal static List<ThingDef> HeadgearCache;
+        private static List<ThingDef> _headgearCache;
         internal static List<ThingDef> GetAllHeadgear
         {
             get
             {
-                if (HeadgearCache == null)
+                if (_headgearCache == null)
                 {
-                    HeadgearCache = new List<ThingDef>(AllEyeCoveringHeadgearDefs);
+                    _headgearCache = new List<ThingDef>(AllEyeCoveringHeadgearDefs);
                     foreach (ThingDef appareldef in NVApparel.Keys)
                     {
-                        int appindex = HeadgearCache.IndexOf(appareldef);
+                        int appindex = _headgearCache.IndexOf(appareldef);
                         if (appindex > 0)
                         {
-                            HeadgearCache.RemoveAt(appindex);
-                            HeadgearCache.Insert(0, appareldef);
+                            _headgearCache.RemoveAt(appindex);
+                            _headgearCache.Insert(0, appareldef);
                         }
                     }
                 }
-                return HeadgearCache;
+                return _headgearCache;
             }
         }
 
-        internal static List<HediffDef> AllHediffsCache;
+        private static List<HediffDef> _allHediffsCache;
         internal static List<HediffDef> GetAllHediffs
         {
             get
             {
-                if (AllHediffsCache == null)
+                if (_allHediffsCache == null)
                 {
-                    AllHediffsCache = new List<HediffDef>(AllSightAffectingHediffs);
+                    _allHediffsCache = new List<HediffDef>(AllSightAffectingHediffs);
                     foreach (HediffDef hediffdef in HediffLightMods.Keys)
                     {
-                        int appindex = AllHediffsCache.IndexOf(hediffdef);
+                        int appindex = _allHediffsCache.IndexOf(hediffdef);
                         if (appindex > 0)
                         {
-                            AllHediffsCache.RemoveAt(appindex);
-                            AllHediffsCache.Insert(0, hediffdef);
+                            _allHediffsCache.RemoveAt(appindex);
+                            _allHediffsCache.Insert(0, hediffdef);
                         }
                     }
                 }
-                return AllHediffsCache;
+                return _allHediffsCache;
             }
         }
 
@@ -91,7 +91,7 @@ namespace NightVision
 
         public static FloatRange MultiplierCaps = new FloatRange(DefaultMinCap, DefaultMaxCap);
 
-        public static bool CustomCapsEnabled;
+        private static bool _customCapsEnabled;
         public static bool CEDetected = false;
 
         #endregion
@@ -152,27 +152,25 @@ namespace NightVision
         private float? _psFullCache;
         private bool _cacheInited;
         private Dictionary<Def, string> _tipStringHolder;
-        
-        public Dictionary<Def, string> TipStringHolder
+
+        private Dictionary<Def, string> TipStringHolder
         {
-            get { return _tipStringHolder ?? (_tipStringHolder = new Dictionary<Def, string>()); }
-            set { _tipStringHolder = value; }
-        }
+            get => _tipStringHolder ?? (_tipStringHolder = new Dictionary<Def, string>());
+                set => _tipStringHolder = value;
+            }
 
 
         #endregion
 
         #region Settings Window Strings and Constants
         //TODO use translate's string format function
-        private static string _zeroLabel = "NVSettingsZeroLabel".Translate()+ " = {0:+#;-#;0}%";
-        private static string _fullLabel = "NVSettingsFullLabel".Translate()+" = {0:+#;-#;0}%";
-        private static string _zeroMultiLabel = "NVSettingsZeroLabel".Translate()+" = x{0:##}%";
-        private static string _fullMultiLabel = "NVSettingsFullLabel".Translate()+" = x{0:##}%";
+        private static readonly string ZeroLabel = "NVZeroLabel".Translate()+ " = {0:+#;-#;0}%";
+        private static readonly string FullLabel = "NVFullLabel".Translate()+" = {0:+#;-#;0}%";
+        private static readonly string ZeroMultiLabel = "NVZeroLabel".Translate()+" = x{0:##}%";
+        private static readonly string FullMultiLabel = "NVFullLabel".Translate()+" = x{0:##}%";
 
         private const string XLabel = "x{0:#0}%";
         private const string Alabel = "{0:+#;-#;0}%";
-
-        private static string _sight = PawnCapacityDefOf.Sight.label;
 
         private const float IndicatorSize = 12f;
         private const float RowHeight = 40f;
@@ -204,7 +202,7 @@ namespace NightVision
 
             inRect.yMin += 32f;
             Widgets.DrawMenuSection(inRect);
-            TabDrawer.DrawTabs(inRect, _tabsList);
+            TabDrawer.DrawTabs(inRect, _tabsList, 1);
 
             inRect = inRect.ContractedBy(17f);
             GUI.BeginGroup(inRect);
@@ -251,38 +249,38 @@ namespace NightVision
             rowRect.y += rowHeight + RowGap;
             Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
             rowRect.y += RowGap;
+
             //Night Vision Settings
 
-            Widgets.Label(rowRect, "NVMoveWorkSpeedMultipliers".Translate(LightModifiers.Options.NVNightVision.ToString().Translate().ToLower()));
+            Widgets.Label(rowRect, "NVMoveWorkSpeedMultipliers".Translate(LightModifiersBase.Options.NVNightVision.ToString().Translate()).ToLower().CapitalizeFirst());
             rowRect.y += rowHeight + RowGap;
-            _nvZeroCache = Widgets.HorizontalSlider(rowRect, (float)_nvZeroCache, (float)_minCache, (float)_maxCache, true, String.Format(_zeroMultiLabel, _nvZeroCache), String.Format(XLabel, _minCache), String.Format(XLabel, _maxCache), 1);
-            DrawIndicator(rowRect, DefaultZeroLightMultiplier, LightModifiers.NVZeroDefaultOffset, (float)_minCache, (float)_maxCache, IndicatorTex.DefIndicator);
-            
+            _nvZeroCache = Widgets.HorizontalSlider(rowRect, (float)_nvZeroCache, (float)_minCache, (float)_maxCache, true, String.Format(ZeroMultiLabel, _nvZeroCache), String.Format(XLabel, _minCache), String.Format(XLabel, _maxCache), 1);
+            DrawIndicator(rowRect, DefaultZeroLightMultiplier, LightModifiersBase.NVDefaultOffsets[0], (float)_minCache, (float)_maxCache, IndicatorTex.DefIndicator);
             rowRect.y += rowHeight * 1.5f;
-            _nvFullCache = Widgets.HorizontalSlider(rowRect, (float)_nvFullCache, (float)_minCache, (float)_maxCache, true, String.Format(_fullMultiLabel, _nvFullCache), String.Format(XLabel, _minCache), String.Format(XLabel, _maxCache), 1);
-            DrawIndicator(rowRect, DefaultFullLightMultiplier, LightModifiers.NVFullDefaultOffset, (float)_minCache, (float)_maxCache, IndicatorTex.DefIndicator);
+            _nvFullCache = Widgets.HorizontalSlider(rowRect, (float)_nvFullCache, (float)_minCache, (float)_maxCache, true, String.Format(FullMultiLabel, _nvFullCache), String.Format(XLabel, _minCache), String.Format(XLabel, _maxCache), 1);
+            DrawIndicator(rowRect, DefaultFullLightMultiplier, LightModifiersBase.NVDefaultOffsets[1], (float)_minCache, (float)_maxCache, IndicatorTex.DefIndicator);
             rowRect.y += rowHeight *2f;
             Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
             rowRect.y += RowGap;
 
             //Photosensitivity settings
 
-            Widgets.Label(rowRect, "NVMoveWorkSpeedMultipliers".Translate(LightModifiers.Options.NVPhotosensitivity.ToString().Translate().ToLower()));
+            Widgets.Label(rowRect, "NVMoveWorkSpeedMultipliers".Translate(LightModifiersBase.Options.NVPhotosensitivity.ToString().Translate()).ToLower().CapitalizeFirst());
             rowRect.y += rowHeight * 1.5f;
-            _psZeroCache = Widgets.HorizontalSlider(rowRect, (float)_psZeroCache, (float)_minCache, (float)_maxCache, true, String.Format(_zeroMultiLabel, _psZeroCache), String.Format(XLabel, _minCache), String.Format(XLabel, _maxCache), 1);
-            DrawIndicator(rowRect, DefaultZeroLightMultiplier, LightModifiers.PSZeroDefaultOffset, (float)_minCache, (float)_maxCache, IndicatorTex.DefIndicator);
+            _psZeroCache = Widgets.HorizontalSlider(rowRect, (float)_psZeroCache, (float)_minCache, (float)_maxCache, true, String.Format(ZeroMultiLabel, _psZeroCache), String.Format(XLabel, _minCache), String.Format(XLabel, _maxCache), 1);
+            DrawIndicator(rowRect, DefaultZeroLightMultiplier, LightModifiersBase.PSDefaultOffsets[0], (float)_minCache, (float)_maxCache, IndicatorTex.DefIndicator);
 
             rowRect.y += rowHeight * 1.5f;
-            _psFullCache = Widgets.HorizontalSlider(rowRect, (float)_psFullCache, (float)_minCache, (float)_maxCache, true, String.Format(_fullMultiLabel, _psFullCache), String.Format(XLabel, _minCache), String.Format(XLabel, _maxCache), 1);
-            DrawIndicator(rowRect, DefaultFullLightMultiplier, LightModifiers.PSFullDefaultOffset, (float)_minCache, (float)_maxCache, IndicatorTex.DefIndicator);
+            _psFullCache = Widgets.HorizontalSlider(rowRect, (float)_psFullCache, (float)_minCache, (float)_maxCache, true, String.Format(FullMultiLabel, _psFullCache), String.Format(XLabel, _minCache), String.Format(XLabel, _maxCache), 1);
+            DrawIndicator(rowRect, DefaultFullLightMultiplier, LightModifiersBase.PSDefaultOffsets[1], (float)_minCache, (float)_maxCache, IndicatorTex.DefIndicator);
 
             rowRect.y += rowHeight *2f;
             Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
             rowRect.y += RowGap;
 
             //Multiplier Limits
-            Widgets.CheckboxLabeled(rowRect, "NVCustomCapsEnabled".Translate(), ref CustomCapsEnabled);
-            if (CustomCapsEnabled)
+            Widgets.CheckboxLabeled(rowRect, "NVCustomCapsEnabled".Translate(), ref _customCapsEnabled);
+            if (_customCapsEnabled)
             {
                 rowRect.y += rowHeight * 1.5f;
                 Text.Font = GameFont.Tiny;
@@ -290,10 +288,10 @@ namespace NightVision
                 Text.Font = GameFont.Small;
                 rowRect.y += rowHeight + RowGap;
                 _minCache = Widgets.HorizontalSlider(rowRect, (float)_minCache, 1f, 100f, true, "NVSettingsMinCapLabel".Translate(_minCache), "1%", "100%", 1);
-                DrawIndicator(rowRect, DefaultMinCap, 0f, 1f, 100f, IndicatorTex.NvIndicator);
+                DrawIndicator(rowRect, DefaultMinCap, 0f, 1f, 100f, IndicatorTex.DefIndicator);
                 rowRect.y += rowHeight*1.5f;
                 _maxCache = Widgets.HorizontalSlider(rowRect, (float)_maxCache, 100f, 200f, true, "NVSettingsMinCapLabel".Translate(_maxCache), "100%", "200%", 1);
-                DrawIndicator(rowRect, DefaultMaxCap, 0f, 100f, 200f, IndicatorTex.PsIndicator);
+                DrawIndicator(rowRect, DefaultMaxCap, 0f, 100f, 200f, IndicatorTex.DefIndicator);
             }
             rowRect.y += rowHeight *1.5f;
             Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
@@ -313,7 +311,7 @@ namespace NightVision
             int raceCount = RaceLightMods.Count;
             if (_numberOfCustomRaces == null)
             {
-                _numberOfCustomRaces = RaceLightMods.Count(rlm => rlm.Value.Setting == LightModifiers.Options.NVCustom);
+                _numberOfCustomRaces = RaceLightMods.Count(rlm => rlm.Value.IntSetting == LightModifiersBase.Options.NVCustom);
             }
             inRect = inRect.AtZero();
             DrawLightModifiersHeader(ref inRect, "NVRaces".Translate());
@@ -369,9 +367,9 @@ namespace NightVision
                 Rect rowRect = new Rect(scrollRect.x + 12f, num, scrollRect.width - 24f, 40);
                 Widgets.DrawAltRect(rowRect);
                 
-                var gUIContent = new GUIContent(appareldef.LabelCap, appareldef.uiIcon);
+                var locGUIContent = new GUIContent(appareldef.LabelCap, appareldef.uiIcon);
                 Rect apparelRect = rowRect.LeftPart(0.4f);
-                Widgets.Label(apparelRect, gUIContent);
+                Widgets.Label(apparelRect, locGUIContent);
                 TooltipHandler.TipRegion(apparelRect, new TipSignal( appareldef.description, apparelRect.GetHashCode()));
                 Vector2 leftBoxPos = new Vector2(leftBoxX, rowRect.center.y - (checkboxSize / 2));
                 Vector2 rightBoxPos = new Vector2(rightBoxX, rowRect.center.y - (checkboxSize / 2));
@@ -416,7 +414,7 @@ namespace NightVision
             int hediffcount = GetAllHediffs.Count;
             if (_numberOfCustomHediffs == null)
             {
-                _numberOfCustomHediffs = HediffLightMods.Count(hlm => hlm.Value.Setting == LightModifiers.Options.NVCustom);
+                _numberOfCustomHediffs = HediffLightMods.Count(hlm => hlm.Value.IntSetting == LightModifiersBase.Options.NVCustom);
             }
             inRect = inRect.AtZero();
             DrawLightModifiersHeader(ref inRect, "NVHediffs".Translate());
@@ -435,10 +433,11 @@ namespace NightVision
                 }
                 else 
                 {
-                    Hediff_LightModifiers temp = AllEyeHediffs.Contains(hediffdef) ? new Hediff_LightModifiers(){AffectsEye = true} : new Hediff_LightModifiers();
+                    Hediff_LightModifiers temp = AllEyeHediffs.Contains(hediffdef) ? new Hediff_LightModifiers {AffectsEye = true} : new Hediff_LightModifiers();
                     _numberOfCustomHediffs += DrawLightModifiersRow(hediffdef, temp, rowRect, ref num, false);
-                    if (temp.Setting != LightModifiers.Options.NVNone)
+                    if (temp.IntSetting != LightModifiersBase.Options.NVNone)
                     {
+                        temp.InitialiseNewFromSettings(hediffdef);
                         HediffLightMods[hediffdef] = temp;
                     }
                 }
@@ -471,17 +470,17 @@ namespace NightVision
             settingsRect = settingsRect.BottomPart(0.4f);
             Text.Font = GameFont.Tiny;
             settingsRect.width = num;
-            Widgets.Label(settingsRect, new GUIContent("default".Translate().ToUpper(), IndicatorTex.DefIndicator));
+            Widgets.Label(settingsRect, new GUIContent("default".Translate().ToLower().CapitalizeFirst(), IndicatorTex.DefIndicator));
             settingsRect.x += num;
-            Widgets.Label(settingsRect, new GUIContent("NVNightVision".Translate().ToUpper(), IndicatorTex.NvIndicator));
+            Widgets.Label(settingsRect, new GUIContent("NVNightVision".Translate().ToLower().CapitalizeFirst(), IndicatorTex.NvIndicator));
             settingsRect.x += num;
-            Widgets.Label(settingsRect, new GUIContent("NVPhotosensitivity".Translate().ToUpper(), IndicatorTex.PsIndicator));
+            Widgets.Label(settingsRect, new GUIContent("NVPhotosensitivity".Translate().ToLower().CapitalizeFirst(), IndicatorTex.PsIndicator));
             Text.Font = font;
             Widgets.DrawLineHorizontal(headerRect.x + 10f, headerRect.yMax + RowGap/4 - 0.5f, headerRect.width - 20f);
             inRect.yMin += headerRect.height + RowGap/2;
         }
 
-        private string GetTipString(Def def, LightModifiers LightModifiers)
+        private string GetTipString(Def def, LightModifiersBase lightModifiers)
         {
             if (TipStringHolder == null)
             {
@@ -491,65 +490,29 @@ namespace NightVision
             {
                 return tip;
             }
-            string result;
-            if (def.description != null)
-            {
-                result = def.description;
-            }
-            else if (def is HediffDef hediffdef)
-                {
-                    Hediff_LightModifiers hediffMods = (Hediff_LightModifiers) LightModifiers;
-                StringBuilder stringBuilder = new StringBuilder();
-                if (hediffdef.stages != null)
-                {
-                    foreach (var stage in hediffdef.stages)
-                    {
-                        if (stage.capMods?.Exists(pcm => pcm.capacity == PawnCapacityDefOf.Sight) ?? false)
-                            {
-                                PawnCapacityModifier capmod =
-                                            stage.capMods.First(pcm => pcm.capacity == PawnCapacityDefOf.Sight);
-                                stringBuilder.AppendLine($"{stage.label} {NVStrings.Sight} = {capmod.offset :#%}");
-                            }
-                    }
-                }
 
-                if (hediffMods.AffectsEye)
-                {
-                    stringBuilder.AppendLine("NVIsEyeHediff".Translate("", "NVEye".Translate()));
-                    if (hediffdef.addedPartProps is AddedBodyPartProps abpp)
-                    {
-                        stringBuilder.AppendLine($"{"PartEfficiency".Translate()} = {abpp.partEfficiency:%}");
-                        if (abpp.isSolid)
-                        {
-                            stringBuilder.AppendLine("NVIsSolidPart".Translate("NVEye".Translate()));
-                            if (abpp.isBionic)
-                            {
-                                stringBuilder.AppendLine("NVDefaultNightV".Translate());
-                                result = stringBuilder.ToString();
-                                TipStringHolder[def] = result;
-                                return result;
-                            }
-                        }
-                        else if (abpp.isBionic)
-                        {
-                            stringBuilder.AppendLine("NVBionic".Translate("NVEye".Translate()));
-                        }
-                    }
-                }
-                else
-                {
-                    stringBuilder.AppendLine("NVIsEyeHediff".Translate("NVNot".Translate(), "NVEye".Translate()));
-                }
-                result = stringBuilder.ToString();
-            }
-            else
-            {
-                result = def.LabelCap;
-            }
+            string result = def.description ?? def.LabelCap;
 
-            if (LightModifiers.)
+            if (lightModifiers is Hediff_LightModifiers hediffMods)
+                {
+                    if (hediffMods.AffectsEye)
+                        {
+                            result += "\n" + "NVHediffQualifier".Translate();
+                        }
+
+                    if (hediffMods.AutoAssigned)
+                        {
+                            result += "\n" + "NVHediffAutoAssigned".Translate();
+                        }
+                    else if (Math.Abs(lightModifiers.DefaultOffsets[0]) > 0.001f
+                             || Math.Abs(lightModifiers.DefaultOffsets[1]) > 0.001f)
+                        {
+                            result += "\n" + "NVLoadedFromFile".Translate("default".Translate(), lightModifiers.DefaultOffsets.ToStringSafeEnumerable());
+                        }
+                }
+            else if (Math.Abs(lightModifiers.DefaultOffsets[0]) > 0.001f || Math.Abs(lightModifiers.DefaultOffsets[1]) > 0.001f  )
             {
-                result += "\n" + "NVLoadedFromFile".Translate("default".Translate(), LightModifiers.FileSetting);
+                result += "\n" + "NVLoadedFromFile".Translate("default".Translate(), lightModifiers.DefaultOffsets.ToStringSafeEnumerable());
             }
             TipStringHolder[def] = result;
             return result;
@@ -559,8 +522,7 @@ namespace NightVision
         /// 0 if LightModifiers is unchanged, 1 if LightModifiers changed to custom, -1 if LightModifiers changed from custom
         /// </summary>
         /// <param name="num">the y-coord of the rect: is increased if rect needs more space</param>
-        /// <param name="isRace"></param>
-        private int DrawLightModifiersRow(Def def, LightModifiers LightModifiers, Rect rowRect, ref float num, bool isRace)
+        private int DrawLightModifiersRow(Def def, LightModifiersBase lightMods, Rect rowRect, ref float num, bool isRace)
         {
             int result = 0;
             float labelwidth = rowRect.width * 0.3f;
@@ -572,15 +534,15 @@ namespace NightVision
 
             Widgets.DrawAltRect(labelRect.ContractedBy(2f));
             Widgets.Label(labelRect, def.LabelCap);
-            TooltipHandler.TipRegion(labelRect, new TipSignal(GetTipString(def, LightModifiers), labelRect.GetHashCode()));
+            TooltipHandler.TipRegion(labelRect, new TipSignal(GetTipString(def, lightMods), labelRect.GetHashCode()));
             Widgets.DrawLineVertical(x, rowRect.y, rowRect.height);
             //LightModifiers.Options =  enum: default = 0; nightvis = 1; photosens = 2; custom = 3
             for (int i = 0; i < 4; i++)
             {
-                LightModifiers.Options iOption = (LightModifiers.Options)Enum.ToObject(typeof(LightModifiers.Options), i);
+                LightModifiersBase.Options iOption = (LightModifiersBase.Options)Enum.ToObject(typeof(LightModifiersBase.Options), i);
                 x += buttongap;
                 Rect buttonRect = new Rect(x, rowRect.y + 6f, buttonwidth, rowRect.height - 12f);
-                if (iOption == LightModifiers.Setting)
+                if (iOption == lightMods.Setting)
                 {
                     Color color = GUI.color;
                     GUI.color = Color.yellow;
@@ -594,12 +556,12 @@ namespace NightVision
                     bool changesetting = Widgets.ButtonText(buttonRect, iOption.ToString().Translate());
                     if (changesetting)
                     {
-                        if (LightModifiers.IsCustom())
+                        if (lightMods.IsCustom())
                         {
                             result = -1;
                         }
-                        LightModifiers.ChangeSetting(iOption);
-                        if (LightModifiers.IsCustom())
+                        lightMods.ChangeSetting(iOption);
+                        if (lightMods.IsCustom())
                         {
                             result = 1;
                         }
@@ -607,13 +569,13 @@ namespace NightVision
                 }
                 x += buttonwidth;
             }
-            if (LightModifiers.IsCustom())
+            if (lightMods.IsCustom())
             {
                 num += RowHeight + RowGap;
                 Rect topRect = new Rect(labelRect.xMax + 2 * buttongap, num , rowRect.width -labelRect.width -60f, RowHeight/ 2);
                 Rect bottomRect = new Rect(labelRect.xMax + 2 * buttongap, topRect.yMax + RowGap*2, rowRect.width - labelRect.width - 60f, RowHeight / 2);
 
-                Rect explanationRect = new Rect(labelRect.xMax - (labelRect.width * 0.9f), num, labelRect.width * 0.9f, RowHeight);
+                Rect explanationRect = new Rect(labelRect.xMax - (labelRect.width * 0.95f), num, labelRect.width * 0.9f, RowHeight);
                 //Color savedcolor = GUI.color;
                 //GUI.color = Color.red;
                 //Widgets.DrawBox(topRect);
@@ -625,49 +587,56 @@ namespace NightVision
 
                 Widgets.DrawLineVertical(labelRect.xMax + buttongap, rowRect.y + rowRect.height, RowHeight * 2 - RowGap * 0.5f );
 
-                GameFont font = Text.Font;
-                Text.Font = GameFont.Tiny;
-                Widgets.Label(explanationRect, isRace? "NVMoveWorkSpeedMultipliers".Translate(def.LabelCap)  : "NVMoveWorkSpeedModifiers".Translate(def.LabelCap) );
-                Text.Font = font;
+                
 
 
-                float zeroModAsPercent = (float)Math.Round((LightModifiers.ZeroLight + (isRace? DefaultZeroLightMultiplier : 0)) * 100);
-                float fullModAsPercent = (float)Math.Round((LightModifiers.FullLight + (isRace? DefaultFullLightMultiplier : 0)) * 100);
+                float zeroModAsPercent = (float)Math.Round((lightMods.Offsets[0] + (isRace? DefaultZeroLightMultiplier : 0)) * 100);
+                float fullModAsPercent = (float)Math.Round((lightMods.Offsets[1]+ (isRace? DefaultFullLightMultiplier : 0)) * 100);
                 
                 if (isRace)
                 {
+                    GameFont font = Text.Font;
+                    Text.Font = GameFont.Tiny;
+                    Widgets.Label(explanationRect, "NVMoveWorkSpeedMultipliers".Translate("") + "\n" + "NVRaceQualifier".Translate());
+                    Text.Font = font;
+
                     zeroModAsPercent =         
-                        Widgets.HorizontalSlider(topRect, zeroModAsPercent, (float)_minCache, (float)_maxCache, true, String.Format(_zeroMultiLabel, zeroModAsPercent)
+                        Widgets.HorizontalSlider(topRect, zeroModAsPercent, (float)_minCache, (float)_maxCache, true, String.Format(ZeroMultiLabel, zeroModAsPercent)
                                                     , String.Format(XLabel, _minCache), String.Format(XLabel, _maxCache), 1);
                     
                     fullModAsPercent = 
-                        Widgets.HorizontalSlider(bottomRect, fullModAsPercent, (float)_minCache, (float)_maxCache, true, String.Format(_fullMultiLabel, fullModAsPercent)
+                        Widgets.HorizontalSlider(bottomRect, fullModAsPercent, (float)_minCache, (float)_maxCache, true, String.Format(FullMultiLabel, fullModAsPercent)
                                                     , String.Format(XLabel, _minCache), String.Format(XLabel, _maxCache), 1);
 
-                    DrawIndicators(topRect, bottomRect, LightModifiers, (float)_minCache, (float)_maxCache, (float)_minCache, (float)_maxCache);
+                    DrawIndicators(topRect, bottomRect, lightMods, (float)_minCache, (float)_maxCache, (float)_minCache, (float)_maxCache);
 
                 }
                 else
                 {
+                    GameFont font = Text.Font;
+                    Text.Font = GameFont.Tiny;
+                    //bool AffectsEye = ((Hediff_LightModifiers) lightMods).AffectsEye;
+                    Widgets.Label(explanationRect, "NVMoveWorkSpeedModifiers".Translate(def.LabelCap)/* +( AffectsEye? "/n" + "NVHediffQualifier".Translate() : "" )*/);
+                    Text.Font = font;
                     zeroModAsPercent = 
                         Widgets.HorizontalSlider(
-                            topRect, zeroModAsPercent, (float)_minCache - 80, (float)_maxCache -80, true, String.Format(_zeroLabel, zeroModAsPercent), String.Format(Alabel, _minCache - 80), String.Format(Alabel, _maxCache - 80), 1);
+                            topRect, zeroModAsPercent, (float)_minCache - 80, (float)_maxCache -80, true, String.Format(ZeroLabel, zeroModAsPercent), String.Format(Alabel, _minCache - 80), String.Format(Alabel, _maxCache - 80), 1);
                     
 
                     fullModAsPercent = 
                         Widgets.HorizontalSlider(
-                            bottomRect, fullModAsPercent, (float)_minCache - 100, (float)_maxCache -100, true, String.Format(_fullLabel, fullModAsPercent), String.Format(Alabel, _minCache - 100), String.Format(Alabel, _maxCache - 100), 1);
+                            bottomRect, fullModAsPercent, (float)_minCache - 100, (float)_maxCache -100, true, String.Format(FullLabel, fullModAsPercent), String.Format(Alabel, _minCache - 100), String.Format(Alabel, _maxCache - 100), 1);
 
-                    DrawIndicators(topRect, bottomRect, LightModifiers, (float)_minCache, (float)_maxCache, (float)_minCache, (float)_maxCache);
+                    DrawIndicators(topRect, bottomRect, lightMods, (float)_minCache, (float)_maxCache, (float)_minCache, (float)_maxCache);
                 }
                 
-                if (!Mathf.Approximately(zeroModAsPercent / 100, LightModifiers.ZeroLight))
+                if (!Mathf.Approximately(zeroModAsPercent / 100, lightMods.Offsets[0]))
                 {
-                    LightModifiers.ZeroLight = (zeroModAsPercent / 100) - (isRace ? DefaultZeroLightMultiplier : 0);
+                    lightMods[0] = (zeroModAsPercent / 100) - (isRace ? DefaultZeroLightMultiplier : 0);
                 }
-                if (!Mathf.Approximately(fullModAsPercent / 100, LightModifiers.FullLight))
+                if (!Mathf.Approximately(fullModAsPercent / 100, lightMods.Offsets[1]))
                 {
-                    LightModifiers.FullLight = (fullModAsPercent / 100) - (isRace ? DefaultFullLightMultiplier : 0);
+                    lightMods[1] = (fullModAsPercent / 100) - (isRace ? DefaultFullLightMultiplier : 0);
                 }
                 num += RowHeight * 0.9f /*+ rowGap*/;
             }
@@ -678,8 +647,8 @@ namespace NightVision
 
         #region Debug Tab
         internal static bool LogPawnComps;
-        internal List<Pawn> AllPawns;
-        internal Vector2 DebugScrollPos = Vector2.zero;
+        private List<Pawn> _allPawns;
+        private Vector2 _debugScrollPos = Vector2.zero;
         float _maxY;
         private void DrawDebugTab(Rect inRect)
         {
@@ -696,15 +665,15 @@ namespace NightVision
             listing.End();
             if (playing)
             {
-                if (AllPawns == null)
+                if (_allPawns == null)
                 {
-                    AllPawns = PawnsFinder.AllMapsCaravansAndTravelingTransportPods.Where(pwn => pwn.RaceProps.Humanlike).ToList();
+                    _allPawns = PawnsFinder.AllMaps_Spawned.Where(pwn => pwn.RaceProps.Humanlike).ToList();
 
                 }
                 float height;
                 if (Math.Abs(_maxY) < 0.001)
                 {
-                    height = 25 * AllPawns.Count + 200 * AllPawns.FindAll(pawn => pawn.GetComp<Comp_NightVision>() != null).Count;
+                    height = 25 * _allPawns.Count + 200 * _allPawns.FindAll(pawn => pawn.GetComp<Comp_NightVision>() != null).Count;
                 }
                 else
                 {
@@ -714,16 +683,16 @@ namespace NightVision
                 Rect remainRect = new Rect(inRect.x, listingY + 5f, inRect.width, inRect.yMax - listingY + 5f);
                 Rect viewRect = new Rect(remainRect.x + 6f, remainRect.y, remainRect.width -12f, height);
                 Rect rowRect = new Rect(remainRect.x + 10f, remainRect.y + 3f, remainRect.width - 20f, RowHeight/ 2);
-                Widgets.BeginScrollView(remainRect, ref DebugScrollPos, viewRect);
+                Widgets.BeginScrollView(remainRect, ref _debugScrollPos, viewRect);
                 Text.Font = GameFont.Tiny;
-                foreach (Pawn pawn in AllPawns)
+                foreach (Pawn pawn in _allPawns)
                 {
-                    Widgets.Label(rowRect.LeftPart(0.1f), pawn.NameStringShort);
+                    Widgets.Label(rowRect.LeftPart(0.1f), pawn.Name.ToStringShort);
                     if (pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
                     {
                         Rect rightRect = rowRect.RightPart(0.8f);
                         Widgets.Label( rightRect,
-                            $"Number of eyes: {comp.NumberOfRemainingEyes}/{comp.RaceSightParts.Count}   Natural modifier: {comp.NaturalLightModifiers.Setting}  - def file setting:{(comp.NaturalLightModifiers.FileSetting)}");
+                            $"Number of eyes: {comp.NumberOfRemainingEyes}/{comp.RaceSightParts.Count}   Natural modifier: {comp.NaturalLightModifiers.IntSetting}");
                         rightRect.y += RowHeight / 2;
                         Widgets.Label( rightRect, 
                             $"0% light modifier: {comp.ZeroLightModifier}   100% light modifier: {comp.FullLightModifier}");
@@ -742,10 +711,10 @@ namespace NightVision
                             Widgets.Label(rightRect, $"  Body part: {hedifflist.Key} has hediffs: ");
                             foreach (var hediff in hedifflist.Value)
                             {
-                                if(HediffLightMods.TryGetValue(hediff, out LightModifiers value))
+                                if(HediffLightMods.TryGetValue(hediff, out Hediff_LightModifiers value))
                                 {
                                     rightRect.y += RowHeight / 2;
-                                    Widgets.Label(rightRect, $"    {hediff.LabelCap}: current setting = {value.Setting} - def file setting = {value.FileSetting}");
+                                    Widgets.Label(rightRect, $"    {hediff.LabelCap}: current setting = {value.IntSetting}");
                                 }
                                 else
                                 {
@@ -762,7 +731,7 @@ namespace NightVision
                             if (NVApparel.TryGetValue(apparel.def, out ApparelSetting appSet))
                             {
                                 rightRect.y += RowHeight / 2;
-                                Widgets.Label(rightRect, $"  {apparel.LabelCap}: nightvis: {appSet.GrantsNV}  anti-bright: {appSet.NullifiesPS}  - def file setting: NV:{appSet.compGrantsNV} A-B:{appSet.NullifiesPS}");
+                                Widgets.Label(rightRect, $"  {apparel.LabelCap}: nightvis: {appSet.GrantsNV}  anti-bright: {appSet.NullifiesPS}  - def file setting: NV:{appSet.CompGrantsNV} A-B:{appSet.CompNullifiesPS}");
                             }
                             else
                             {
@@ -834,22 +803,22 @@ namespace NightVision
             //GUI.color = Overlay;
             //Widgets.DrawLineVertical(posOfDefault, rowRect.y + rowRect.height * 0.4f, rowRect.height * 0.5f);
             //GUI.color = color;
-            rowRect.position = new Vector2(posOfDefault - 0.5f * IndicatorSize, rowRect.y + rowRect.height );
+            rowRect.position = new Vector2(posOfDefault - 0.5f * IndicatorSize, rowRect.y + rowRect.height * 0.95f );
             rowRect.width = IndicatorSize;
             rowRect.height = IndicatorSize;
             Widgets.DrawTextureFitted(rowRect, indicator, 1);
         }
-        private void DrawIndicators(Rect zeroRect, Rect fullRect, LightModifiers lightModifiers, float minZero, float maxZero, float minFull, float maxFull)
+        private void DrawIndicators(Rect zeroRect, Rect fullRect, LightModifiersBase lightModifiers, float minZero, float maxZero, float minFull, float maxFull)
             {
-                int eyeCount = lightModifiers is Race_LightModifiers rlm ? rlm.EyeCount : 1; 
+                //int eyeCount = lightModifiers is Race_LightModifiers rlm ? rlm.EyeCount : 1; 
             //Draw indicators on zero light rect
-            DrawIndicator(zeroRect,  DefaultZeroLightMultiplier,  lightModifiers.,  minZero,  maxZero,  IndicatorTex.PsIndicator);
-            DrawIndicator(zeroRect, DefaultZeroLightMultiplier,  lightModifiers.,  minZero,  maxZero,  IndicatorTex.NvIndicator);
-            DrawIndicator(zeroRect, DefaultZeroLightMultiplier,  lightModifiers.,  minZero,  maxZero,  IndicatorTex.DefIndicator);
+            DrawIndicator(zeroRect,  DefaultZeroLightMultiplier,  LightModifiersBase.PSLightModifiers[0],  minZero,  maxZero,  IndicatorTex.PsIndicator);
+            DrawIndicator(zeroRect, DefaultZeroLightMultiplier,  LightModifiersBase.NVLightModifiers[0],  minZero,  maxZero,  IndicatorTex.NvIndicator);
+            DrawIndicator(zeroRect, DefaultZeroLightMultiplier,  lightModifiers.DefaultOffsets[0],  minZero,  maxZero,  IndicatorTex.DefIndicator);
             //Draw indicators on full light rect
-            DrawIndicator(fullRect, DefaultFullLightMultiplier, lightModifiers., minFull, maxFull, IndicatorTex.PsIndicator);
-            DrawIndicator(fullRect, DefaultFullLightMultiplier, lightModifiers., minFull, maxFull, IndicatorTex.NvIndicator);
-            DrawIndicator(fullRect, DefaultFullLightMultiplier, lightModifiers., minFull, maxFull, IndicatorTex.DefIndicator);
+            DrawIndicator(fullRect, DefaultFullLightMultiplier, LightModifiersBase.PSLightModifiers[1], minFull, maxFull, IndicatorTex.PsIndicator);
+            DrawIndicator(fullRect, DefaultFullLightMultiplier, LightModifiersBase.NVLightModifiers[1], minFull, maxFull, IndicatorTex.NvIndicator);
+            DrawIndicator(fullRect, DefaultFullLightMultiplier, lightModifiers.DefaultOffsets[1], minFull, maxFull, IndicatorTex.DefIndicator);
         }
         #endregion
 
@@ -859,16 +828,31 @@ namespace NightVision
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref CustomCapsEnabled, "CustomLimitsEnabled");
-            if (CustomCapsEnabled)
+            Scribe_Values.Look(ref _customCapsEnabled, "CustomLimitsEnabled");
+            if (_customCapsEnabled)
             {
                 Scribe_Values.Look(ref MultiplierCaps.min, "LowerLimit", 0.8f);
                 Scribe_Values.Look(ref MultiplierCaps.max, "UpperLimit", 1.2f);
             }
             Scribe_Values.Look(ref HarmonyPatches.NVEnabledForCE, "EnabledForCombatExtended", true);
-            LightModifiers.PSLightModifiers.ExposeData();
-            LightModifiers.NVLightModifiers.ExposeData();
-            
+            Scribe_Deep.Look(ref LightModifiersBase.PSLightModifiers, "photosensitivitymodifiers");
+            Scribe_Deep.Look(ref LightModifiersBase.NVLightModifiers, "nightvisionmodifiers");
+            if (Scribe.mode == LoadSaveMode.LoadingVars)
+                {
+                    if (LightModifiersBase.PSLightModifiers == null)
+                        LightModifiersBase.PSLightModifiers = new LightModifiersBase
+                        {
+                                    Offsets     = LightModifiersBase.PSDefaultOffsets.ToArray(),
+                                    Initialised = true
+                        };
+
+                    if (LightModifiersBase.NVLightModifiers == null)
+                        LightModifiersBase.NVLightModifiers = new LightModifiersBase
+                        {
+                                    Offsets     = LightModifiersBase.NVDefaultOffsets.ToArray(),
+                                    Initialised = true
+                        };
+                }
             LightModifiersDictionaryScribe(ref RaceLightMods, "Race");
             LightModifiersDictionaryScribe(ref HediffLightMods, "Hediffs");
             ApparelDictionaryScribe(ref NVApparel);
@@ -878,6 +862,10 @@ namespace NightVision
         #region Dictionary Scribe
         private void ApparelDictionaryScribe( ref Dictionary<ThingDef, ApparelSetting> dictionary)
         {
+            if (dictionary == null)
+                {
+                    return;
+                }
             List<ApparelSaveLoadClass> tempList = new List<ApparelSaveLoadClass>();  
             if (Scribe.mode == LoadSaveMode.Saving)
             {
@@ -914,15 +902,14 @@ namespace NightVision
                     Scribe.mode = LoadSaveMode.LoadingVars;
                 }
             }
-            if (Scribe.mode == LoadSaveMode.PostLoadInit && tempList != null)
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
-                tempList.Clear();
-                tempList = null;
+                tempList?.Clear();
             }
         }
 
         private void LightModifiersDictionaryScribe<K, V>(ref Dictionary<K, V> dictionary, string label)
-                    where K : Def where V : LightModifiers
+                    where K : Def where V : LightModifiersBase
             {
                 List<V> tempList;
                 if (Scribe.mode == LoadSaveMode.Saving)
@@ -933,12 +920,12 @@ namespace NightVision
                             }
                         tempList = dictionary.Values.ToList();
                         tempList.RemoveAll(lm => (lm == null) || (!lm.ShouldBeSaved()));
-                        Scribe_Collections.Look(ref tempList, label, LookMode.Deep, new object[0]);
+                        Scribe_Collections.Look(ref tempList, label, LookMode.Deep);
                     }
                 else if (Scribe.mode == LoadSaveMode.LoadingVars)
                     {
                         tempList = new List<V>();
-                        Scribe_Collections.Look(ref tempList, label, LookMode.Deep, new object[0]);
+                        Scribe_Collections.Look(ref tempList, label, LookMode.Deep);
                         dictionary.Clear();
                         int removed = 0;
                         for (int i = tempList.Count - 1; i >= 0; i--)
@@ -1007,11 +994,25 @@ namespace NightVision
             {
                 MultiplierCaps.min = _minCache != null? (float)Math.Round((float)_minCache / 100, 2) : MultiplierCaps.min;
                 MultiplierCaps.max = _maxCache != null? (float)Math.Round((float)_maxCache / 100, 2): MultiplierCaps.max;
-            
-                LightModifiers.SetNVZeroLightMod = _nvZeroCache != null? MultiPercentToMod((float)_nvZeroCache, true) : LightModifiers.NvZeroLightMod;
-                LightModifiers.SetNVFullLightMod = _nvFullCache != null? MultiPercentToMod((float)_nvFullCache, false) : LightModifiers.nvFullLightMod;
-                LightModifiers.SetPSZeroLightMod = _psZeroCache != null? MultiPercentToMod((float)_psZeroCache, true) : LightModifiers.PsZeroLightMod;
-                LightModifiers.SetPSFullLightMod = _psFullCache != null? MultiPercentToMod((float)_psFullCache, false) : LightModifiers.PsFullLightMod;
+
+                LightModifiersBase.NVLightModifiers.Offsets = new[]
+                {
+                            _nvZeroCache != null
+                                        ? MultiPercentToMod((float) _nvZeroCache, true)
+                                        : LightModifiersBase.NVLightModifiers[0],
+                            _nvFullCache != null
+                                        ? MultiPercentToMod((float) _nvFullCache, false)
+                                        : LightModifiersBase.NVLightModifiers[1]
+                };
+                LightModifiersBase.PSLightModifiers.Offsets = new[]
+                {
+                            _psZeroCache != null
+                                        ? MultiPercentToMod((float) _psZeroCache, true)
+                                        : LightModifiersBase.PSLightModifiers[0],
+                            _psFullCache != null
+                                        ? MultiPercentToMod((float) _psFullCache, false)
+                                        : LightModifiersBase.PSLightModifiers[1]
+                };
             
                 _minCache = null;
                 _maxCache = null;
@@ -1023,13 +1024,13 @@ namespace NightVision
 
             _cacheInited = false;
 
-            if (_raceEyeLightModifiersCached.Count != 0)
-            {
-                _raceEyeLightModifiersCached.Clear();
-            }
+            //if (_raceEyeLightModifiersCached.Count != 0)
+            //{
+            //    _raceEyeLightModifiersCached.Clear();
+            //}
             TipStringHolder.Clear();
-            AllHediffsCache = null;
-            HeadgearCache = null;
+            _allHediffsCache = null;
+            _headgearCache = null;
             _numberOfCustomRaces = null;
             _numberOfCustomHediffs = null;
             if (Current.ProgramState == ProgramState.Playing)
@@ -1037,7 +1038,7 @@ namespace NightVision
                 SetDirtyAllComps();
             }
             
-            AllPawns = null;
+            _allPawns = null;
             _maxY = 0f;
         }
 
@@ -1046,7 +1047,7 @@ namespace NightVision
         /// </summary>
         private void SetDirtyAllComps()
         {
-            foreach (Pawn pawn in PawnsFinder.AllMapsCaravansAndTravelingTransportPods.Where(pwn => pwn.RaceProps.Humanlike))
+            foreach (Pawn pawn in PawnsFinder.AllMaps_Spawned.Where(pwn => pwn.RaceProps.Humanlike))
             {
                 if (pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
                 {
@@ -1067,19 +1068,19 @@ namespace NightVision
             //}
             //if (nvZeroCache == null)
             //{
-                _nvZeroCache = ModToMultiPercent(LightModifiers.NvZeroLightMod, true);
+                _nvZeroCache = ModToMultiPercent(LightModifiersBase.NVLightModifiers[0], true);
             //}
             //if (nvFullCache == null)
             //{
-                _nvFullCache = ModToMultiPercent(LightModifiers.nvFullLightMod, false);
+                _nvFullCache = ModToMultiPercent(LightModifiersBase.NVLightModifiers[1], false);
             //}
             //if (psZeroCache == null)
             //{
-                _psZeroCache = ModToMultiPercent(LightModifiers.PsZeroLightMod, true);
+                _psZeroCache = ModToMultiPercent(LightModifiersBase.PSLightModifiers[0], true);
             //}
             //if (psFullCache == null)
             //{
-                _psFullCache = ModToMultiPercent(LightModifiers.PsFullLightMod, false);
+                _psFullCache = ModToMultiPercent(LightModifiersBase.PSLightModifiers[1], false);
             //}
         }
     }

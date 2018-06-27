@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NightVision.Comps;
+using NightVision.LightModifiers;
+using NightVision.Utilities;
 using RimWorld;
 using Verse;
 
@@ -10,7 +12,7 @@ namespace NightVision
     static class NightVisionDictionaryBuilders
     {
         #region Hediff Dict & Lists Builder
-        const string EyeTag = "SightSource";
+        private static readonly BodyPartTagDef EyeTag = BodyPartTagDefOf.SightSource;
 
         internal static void MakeHediffsDict()
         {
@@ -54,7 +56,7 @@ namespace NightVision
                                                 .SelectMany(hgsd => hgsd.hediffGivers.Where(hg => hg.partsToAffect != null
                                                 && hg.partsToAffect.Exists(bpd => bpd.tags.Contains(EyeTag))).Select(hg => hg.hediff)));
 
-            //Using IEnumerable except because hashset exceptwith changes in place and returns void
+            //Using IEnumerable.except because hashset.exceptwith changes in place and returns void
             List<HediffDef> list = NightVisionSettings.AllSightAffectingHediffs.Except(NightVisionSettings.AllEyeHediffs).ToList();
 
             NightVisionSettings.AllSightAffectingHediffs.UnionWith(NightVisionSettings.AllEyeHediffs);
@@ -69,38 +71,65 @@ namespace NightVision
             {
                 if (!NightVisionSettings.HediffLightMods.TryGetValue(hediffDef, out Hediff_LightModifiers value) || value == null)
                 {
-                    
+                    if (hediffDef.HasComp(typeof(HediffComp_NightVision)))
+                        {
+                            NightVisionSettings.HediffLightMods[hediffDef] = new Hediff_LightModifiers(hediffDef);
+                        }
+
+                    //if (hediffDef.stages != null)
+                    //    {
+                    //        foreach (var stage in hediffDef.stages)
+                    //            {
+                    //                if (!stage.capMods.NullOrEmpty())
+                    //                    {
+                    //                        Log.Message(hediffDef.labelNoun);
+                    //                        foreach (var capMod in stage.capMods)
+                    //                            {
+                    //                                Log.Message(capMod.capacity.label);
+                    //                                Log.Message((capMod.offset * 100f).ToString("+#;-#") + "%");
+                    //                                Log.Message((capMod.postFactor * 100f).ToString("+#;-#") + "%");
+                    //                                Log.Message((capMod.setMax * 100f).ToString("+#;-#") + "%");
+
+                    //                            }
+
+                    //                    }
+                    //            }
+                    //    }
                 }
+                if (value != null && AutoQualifier.HediffCheck(hediffDef) != null)
+                    {
+                        value.AutoAssigned = true;
+                    }
             }
             list = NightVisionSettings.AllEyeHediffs.ToList();
 
             //Do the same thing as above but for eye hediffs; 
             foreach (var hediffDef in list)
             {
-                if (!NightVisionSettings.HediffLightMods.TryGetValue(hediffDef, out LightModifiers value) || value == null)
+                if (!NightVisionSettings.HediffLightMods.TryGetValue(hediffDef, out Hediff_LightModifiers value) || value == null)
                 {
-                    if (hediffDef.CompPropsFor(typeof(HediffComp_NightVision)) is HediffCompProperties_NightVision compprops)
+                    if (hediffDef.CompPropsFor(typeof(HediffComp_NightVision)) is HediffCompProperties_NightVision)
                     {
-                        NightVisionSettings.HediffLightMods[hediffDef] = new EyeLightModifiers(compprops);
+                        NightVisionSettings.HediffLightMods[hediffDef] = new Hediff_LightModifiers(hediffDef){AffectsEye = true};
                     }
                     //bionic eyes and such are automatically assigned night vision, this can be individually overridden in the mod settings
                     //this does not include bionic implants e.g. EPOE's tactical cornea implant, which do not remove the eye
-                    else if (hediffDef.addedPartProps is AddedBodyPartProps abpp && abpp.isBionic && abpp.isSolid)
+                    else if (AutoQualifier.HediffCheck(hediffDef) is LightModifiersBase.Options autoOptions)
                     {
                         NightVisionSettings.HediffLightMods[hediffDef] 
-                            = new EyeLightModifiers(LightModifiers.Options.NVNightVision)
-                                { FileSetting = LightModifiers.Options.NVNightVision, LoadedFromFile = true };
+                            = new Hediff_LightModifiers(hediffDef){AffectsEye = true, AutoAssigned = true, Setting = autoOptions};
                     }
                 }
-                else if (hediffDef.CompPropsFor(typeof(HediffComp_NightVision)) is HediffCompProperties_NightVision compprops)
+                else if (hediffDef.CompPropsFor(typeof(HediffComp_NightVision)) is HediffCompProperties_NightVision)
                 {
-                    // Check to see if class is correct for an eye hediff
-                    if (!(value is EyeLightModifiers))
-                    {
-                        NightVisionSettings.HediffLightMods[hediffDef] = new EyeLightModifiers(value);
-                    }
-                    value.AttachComp(compprops);
+                    // Ensure bool is correct for an eye hediff
+                    value.AffectsEye = true;
+                    
                 }
+                if (value != null && AutoQualifier.HediffCheck(hediffDef) != null)
+                    {
+                        value.AutoAssigned = true;
+                    }
             }
             
             
@@ -119,7 +148,7 @@ namespace NightVision
             }
             foreach ( ThingDef rdef in raceDefList )
             {
-                if (!NightVisionSettings.RaceLightMods.TryGetValue(rdef, out Race_LightModifiers rLM) || rLM == null)
+                if (!NightVisionSettings.RaceLightMods.TryGetValue(rdef, out Race_LightModifiers rLm) || rLm == null)
                 {
                     NightVisionSettings.RaceLightMods[rdef] = new Race_LightModifiers(rdef);
                 }

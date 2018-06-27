@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
+using NightVision.LightModifiers;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -12,12 +13,13 @@ namespace NightVision.Comps
     public class Comp_NightVision : ThingComp
     {
         #region Constants
-        public const string EyeTag = "SightSource";
-        public const string BrainTag = "ConsciousnessSource";
-        public const string BodyKey = "WholeBody";
-        
-        public const float MinGlowNoGlow = 0.3f;
-        public const float MaxGlowNoGlow = 0.7f;
+
+        private static readonly BodyPartTagDef EyeTag = BodyPartTagDefOf.SightSource;
+        //public static BodyPartTagDef BrainTag = BodyPartTagDefOf.ConsciousnessSource;
+        private const string BodyKey = "WholeBody";
+
+        private const float MinGlowNoGlow = 0.3f;
+        private const float MaxGlowNoGlow = 0.7f;
         
         private const string ModifierLine = "    {0} : {1,6:+#0.0%;-#0.0%;0%}";
         private const string MultiplierLine = "    {0} : {1,6:x#0.0%;x#0.0%;x0%}";
@@ -32,7 +34,7 @@ namespace NightVision.Comps
         internal float[] HediffMods = new float[2];
         internal float[] PshediffMods = new float[2];
         internal float[] NvhediffMods = new float[2];
-        private string _brainName;
+        //private string _brainName;
 
         private bool _hediffsNeedChecking;
         private bool _apparelNeedsChecking;
@@ -40,15 +42,12 @@ namespace NightVision.Comps
         private float _fullLightModifier = -1;
         private List<Hediff> _pawnsHediffs;
 
-        private static LightModifiers NVModifiers;
+        //private static LightModifiers NVModifiers;
         #endregion
 
         #region Public Fields
         [UsedImplicitly]
-        public CompProperties_NightVision Props
-        {
-            get { return (CompProperties_NightVision) props; }
-        }
+        public CompProperties_NightVision Props => (CompProperties_NightVision) props;
 
         public List<Apparel> PawnsNVApparel = new List<Apparel>();
         public Dictionary<string, List<HediffDef>> PawnsNVHediffs = new Dictionary<string, List<HediffDef>>();
@@ -58,22 +57,18 @@ namespace NightVision.Comps
 
         #region Pawn Details
 
-        public Pawn ParentPawn
-        {
-            get { return _intParentPawn ?? (_intParentPawn = parent as Pawn); }
-        }
-        
-        public List<Hediff> PawnHediffs
-        {
-            get { return _pawnsHediffs ?? (_pawnsHediffs = ParentPawn.health?.hediffSet?.hediffs); }
-        }
+        public Pawn ParentPawn => _intParentPawn ?? (_intParentPawn = parent as Pawn);
+
+        private List<Hediff> PawnHediffs => _pawnsHediffs ?? (_pawnsHediffs = ParentPawn.health?.hediffSet?.hediffs);
+
         public List<BodyPartRecord> RaceSightParts
         {
             get
             {
                 if (_raceSightParts.NullOrEmpty())
-                {
-                    _raceSightParts = ParentPawn.RaceProps.body.AllParts.Where(part => part.def.tags.Contains(EyeTag)).ToList();
+                    {
+                        _raceSightParts = ParentPawn.RaceProps.body.GetPartsWithTag(EyeTag).ToList();
+                    //_raceSightParts = ParentPawn.RaceProps.body.AllParts.Where(part => part.def.tags.Contains(EyeTag)).ToList();
                     if (_raceSightParts.NullOrEmpty())
                     {
                         Log.Message($"{ParentPawn.LabelShort}'s race has no eyes. The NightVision Comp should not be attached.");
@@ -99,11 +94,8 @@ namespace NightVision.Comps
                 }
                 return _numRemainingEyes;
             }
-            set
-            {
-                _numRemainingEyes = (value < 0)? 0 : value;
+            set => _numRemainingEyes = (value < 0)? 0 : value;
             }
-        }
 
         #endregion
 
@@ -119,7 +111,12 @@ namespace NightVision.Comps
             {
                 if (_naturalLightModifiers == null)
                 {
-                    _naturalLightModifiers = NightVisionSettings.GetRaceNightVisionMod(ParentPawn.def, RaceSightParts.Count);
+                    _naturalLightModifiers = NightVisionSettings.RaceLightMods[ParentPawn.def];
+                    if (_naturalLightModifiers == null)
+                        {
+                            _naturalLightModifiers = new Race_LightModifiers(ParentPawn.def);
+                            NightVisionSettings.RaceLightMods[ParentPawn.def] = _naturalLightModifiers;
+                        }
                     _zeroLightModifier = -1f;
                     _fullLightModifier = -1f;
                 }
@@ -133,53 +130,53 @@ namespace NightVision.Comps
         private float CalcZeroLightModifier()
         {
             float mod = NightVisionSettings.DefaultZeroLightMultiplier;
-            byte setting = (byte)NaturalLightModifiers.Setting;
+            byte setting = (byte)NaturalLightModifiers.IntSetting;
             switch (setting)
             {
                 
                 default:
                     mod += Mathf.Clamp(
                                 NvhediffMods[0],
-                                Math.Min(0f, LightModifiers.NvZeroLightMod),
-                                Math.Max(0f, LightModifiers.NvZeroLightMod))
+                                Math.Min(0f, LightModifiersBase.NVLightModifiers[0]),
+                                Math.Max(0f, LightModifiersBase.NVLightModifiers[0]))
                             + Mathf.Clamp(
                                 PshediffMods[0],
-                                Math.Min(0f, LightModifiers.PsZeroLightMod),
-                                Math.Max(0f, LightModifiers.PsZeroLightMod))
+                                Math.Min(0f, LightModifiersBase.PSLightModifiers[0]),
+                                Math.Max(0f, LightModifiersBase.PSLightModifiers[0]))
                             + HediffMods[0];
                     break;
                 case 1: //Nightvision
                     mod += Mathf.Clamp(
-                                NvhediffMods[0] + NaturalLightModifiers.ZeroLight * _numRemainingEyes,
-                                Math.Min(0f, LightModifiers.NvZeroLightMod),
-                                Math.Max(0f, LightModifiers.NvZeroLightMod))
+                                NvhediffMods[0] + NaturalLightModifiers[0] * _numRemainingEyes,
+                                Math.Min(0f, LightModifiersBase.NVLightModifiers[0]),
+                                Math.Max(0f, LightModifiersBase.NVLightModifiers[0]))
                             + Mathf.Clamp(
                                 PshediffMods[0],
-                                Math.Min(0f, LightModifiers.PsZeroLightMod),
-                                Math.Max(0f, LightModifiers.PsZeroLightMod))
+                                Math.Min(0f, LightModifiersBase.PSLightModifiers[0]),
+                                Math.Max(0f, LightModifiersBase.PSLightModifiers[0]))
                             + HediffMods[0];
                     break;
                 case 2: // Photosensitive
                     mod += Mathf.Clamp(
                                 NvhediffMods[0],
-                                Math.Min(0f, LightModifiers.NvZeroLightMod),
-                                Math.Max(0f, LightModifiers.NvZeroLightMod))
+                                Math.Min(0f, LightModifiersBase.NVLightModifiers[0]),
+                                Math.Max(0f, LightModifiersBase.NVLightModifiers[0]))
                             + Mathf.Clamp(
-                                PshediffMods[0] + NaturalLightModifiers.ZeroLight * _numRemainingEyes,
-                                Math.Min(0f, LightModifiers.PsZeroLightMod),
-                                Math.Max(0f, LightModifiers.PsZeroLightMod))
+                                PshediffMods[0] + NaturalLightModifiers[0] * _numRemainingEyes,
+                                Math.Min(0f, LightModifiersBase.PSLightModifiers[0]),
+                                Math.Max(0f, LightModifiersBase.PSLightModifiers[0]))
                             + HediffMods[0];
                     break;
                 case 3: //Custom
                     mod += Mathf.Clamp(
                                 NvhediffMods[0],
-                                Math.Min(0f, LightModifiers.NvZeroLightMod),
-                                Math.Max(0f, LightModifiers.NvZeroLightMod))
+                                Math.Min(0f, LightModifiersBase.NVLightModifiers[0]),
+                                Math.Max(0f, LightModifiersBase.NVLightModifiers[0]))
                             + Mathf.Clamp(
                                 PshediffMods[0],
-                                Math.Min(0f, LightModifiers.PsZeroLightMod),
-                                Math.Max(0f, LightModifiers.PsZeroLightMod))
-                            + HediffMods[0] + NaturalLightModifiers.ZeroLight * _numRemainingEyes;
+                                Math.Min(0f, LightModifiersBase.PSLightModifiers[0]),
+                                Math.Max(0f, LightModifiersBase.PSLightModifiers[0]))
+                            + HediffMods[0] + NaturalLightModifiers[0] * _numRemainingEyes;
                     break;
             }
             return (float)Math.Round(
@@ -193,52 +190,52 @@ namespace NightVision.Comps
         private float CalcFullLightModifier()
         {
             float mod = NightVisionSettings.DefaultFullLightMultiplier;
-            byte setting = (byte)NaturalLightModifiers.Setting;
+            byte setting = (byte)NaturalLightModifiers.IntSetting;
             switch (setting)
             {
                 default:
                     mod += Mathf.Clamp(
                                 NvhediffMods[1],
-                                Math.Min(0f, LightModifiers.nvFullLightMod),
-                                Math.Max(0f, LightModifiers.nvFullLightMod))
+                                Math.Min(0f, LightModifiersBase.NVLightModifiers[1]),
+                                Math.Max(0f, LightModifiersBase.NVLightModifiers[1]))
                             + Mathf.Clamp(
                                 PshediffMods[1],
-                                Math.Min(0f, LightModifiers.PsFullLightMod),
-                                Math.Max(0f, LightModifiers.PsFullLightMod))
+                                Math.Min(0f, LightModifiersBase.PSLightModifiers[1]),
+                                Math.Max(0f, LightModifiersBase.PSLightModifiers[1]))
                             + HediffMods[1];
                     break;
                 case 1: //Nightvision
                     mod += Mathf.Clamp(
-                                NvhediffMods[1] + NaturalLightModifiers.FullLight * _numRemainingEyes,
-                                Math.Min(0f, LightModifiers.nvFullLightMod),
-                                Math.Max(0f, LightModifiers.nvFullLightMod))
+                                NvhediffMods[1] + NaturalLightModifiers[1] * _numRemainingEyes,
+                                Math.Min(0f, LightModifiersBase.NVLightModifiers[1]),
+                                Math.Max(0f, LightModifiersBase.NVLightModifiers[1]))
                             + Mathf.Clamp(
                                 PshediffMods[1],
-                                Math.Min(0f, LightModifiers.PsFullLightMod),
-                                Math.Max(0f, LightModifiers.PsFullLightMod))
+                                Math.Min(0f, LightModifiersBase.PSLightModifiers[1]),
+                                Math.Max(0f, LightModifiersBase.PSLightModifiers[1]))
                             + HediffMods[1];
                     break;
                 case 2: // Photosensitive
                     mod += Mathf.Clamp(
                                 NvhediffMods[1],
-                                Math.Min(0f, LightModifiers.nvFullLightMod),
-                                Math.Max(0f, LightModifiers.nvFullLightMod))
+                                Math.Min(0f, LightModifiersBase.NVLightModifiers[1]),
+                                Math.Max(0f, LightModifiersBase.NVLightModifiers[1]))
                             + Mathf.Clamp(
-                                PshediffMods[1] + NaturalLightModifiers.FullLight * _numRemainingEyes,
-                                Math.Min(0f, LightModifiers.PsFullLightMod),
-                                Math.Max(0f, LightModifiers.PsFullLightMod))
+                                PshediffMods[1] + NaturalLightModifiers[1] * _numRemainingEyes,
+                                Math.Min(0f, LightModifiersBase.PSLightModifiers[1]),
+                                Math.Max(0f, LightModifiersBase.PSLightModifiers[1]))
                             + HediffMods[1];
                     break;
                 case 3: //Custom
                     mod += Mathf.Clamp(
                                 NvhediffMods[1],
-                                Math.Min(0f, LightModifiers.nvFullLightMod),
-                                Math.Max(0f, LightModifiers.nvFullLightMod))
+                                Math.Min(0f, LightModifiersBase.NVLightModifiers[1]),
+                                Math.Max(0f, LightModifiersBase.NVLightModifiers[1]))
                             + Mathf.Clamp(
                                 PshediffMods[1],
-                                Math.Min(0f, LightModifiers.PsFullLightMod),
-                                Math.Max(0f, LightModifiers.PsFullLightMod))
-                            + HediffMods[1] + NaturalLightModifiers.FullLight * _numRemainingEyes;
+                                Math.Min(0f, LightModifiersBase.PSLightModifiers[1]),
+                                Math.Max(0f, LightModifiersBase.PSLightModifiers[1]))
+                            + HediffMods[1] + NaturalLightModifiers[1] * _numRemainingEyes;
                     break;
             }
             return (float)Math.Round(
@@ -275,9 +272,9 @@ namespace NightVision.Comps
                     _zeroLightModifier = CalcZeroLightModifier();
 
                 }
-                if (ApparelGrantsNV && _zeroLightModifier + 0.001f < LightModifiers.NvZeroLightMod)
+                if (ApparelGrantsNV && _zeroLightModifier + 0.001f < LightModifiersBase.NVLightModifiers[0])
                 {
-                    return LightModifiers.NvZeroLightMod;
+                    return LightModifiersBase.NVLightModifiers[0];
                 }
                 return _zeroLightModifier;
             }
@@ -361,7 +358,7 @@ namespace NightVision.Comps
             float nvsum = 0f;
             float pssum = 0f;
             float sum = 0f;
-            float[] caps = LightModifiers.GetCapsAtGlow(glow);
+            float[] caps = LightModifiersBase.GetCapsAtGlow(glow);
             bool foundSomething = false;
             float effect;
             float basevalue = 0f;
@@ -369,8 +366,8 @@ namespace NightVision.Comps
             usedApparelSetting = false;
 
             StringBuilder explanation = new StringBuilder(result);
-            StringBuilder nvexplanation = new StringBuilder().Append(LightModifiers.Options.NVNightVision.ToString().Translate());
-            StringBuilder psexplanation = new StringBuilder().AppendFormat(LightModifiers.Options.NVPhotosensitivity.ToString().Translate());
+            StringBuilder nvexplanation = new StringBuilder().Append(LightModifiersBase.Options.NVNightVision.ToString().Translate());
+            StringBuilder psexplanation = new StringBuilder().AppendFormat(LightModifiersBase.Options.NVPhotosensitivity.ToString().Translate());
 
             explanation.AppendLine();
             if (lowLight)
@@ -398,23 +395,24 @@ namespace NightVision.Comps
                     foundSomething = true;
                 }
             }
-            if (!NaturalLightModifiers.IsNone())
+            //Possibly a redundant check
+            if (NaturalLightModifiers.HasModifier())
             {
                 effect = NaturalLightModifiers.GetEffectAtGlow(glow);
                 if (Math.Abs(effect) >= 0.005)
                 {
                     foundSomething = true;
-                    switch (NaturalLightModifiers.Setting)
+                    switch (NaturalLightModifiers.IntSetting)
                     {
-                        case LightModifiers.Options.NVNightVision:
+                        case LightModifiersBase.Options.NVNightVision:
                             nvsum += effect * NumberOfRemainingEyes;
                             nvexplanation.AppendFormat(ModifierLine, ParentPawn.def.LabelCap + " x" + NumberOfRemainingEyes, effect * NumberOfRemainingEyes);
                             break;
-                        case LightModifiers.Options.NVPhotosensitivity:
+                        case LightModifiersBase.Options.NVPhotosensitivity:
                             pssum += effect * NumberOfRemainingEyes;
                             psexplanation.AppendFormat(ModifierLine, ParentPawn.def.LabelCap + " x" + NumberOfRemainingEyes, effect * NumberOfRemainingEyes);
                             break;
-                        case LightModifiers.Options.NVCustom:
+                        case LightModifiersBase.Options.NVCustom:
                             sum += effect * NumberOfRemainingEyes;
                             explanation.AppendFormat(ModifierLine, ParentPawn.def.LabelCap + " x" + NumberOfRemainingEyes, effect * NumberOfRemainingEyes);
                             break;
@@ -430,23 +428,23 @@ namespace NightVision.Comps
                 }
                 foreach (var hediffDef in value)
                 {
-                    if (NightVisionSettings.HediffLightMods.TryGetValue(hediffDef, out LightModifiers hediffSetting) && !hediffSetting.IsNone())
+                    if (NightVisionSettings.HediffLightMods.TryGetValue(hediffDef, out Hediff_LightModifiers hediffSetting))
                     {
                         effect = hediffSetting.GetEffectAtGlow(glow);
                         if (Math.Abs(effect) > 0.005)
                         {
                             foundSomething = true;
-                            switch (hediffSetting.Setting)
+                            switch (hediffSetting.IntSetting)
                             {
-                                case LightModifiers.Options.NVNightVision:
+                                case LightModifiersBase.Options.NVNightVision:
                                     nvsum += effect;
                                     nvexplanation.AppendFormat(ModifierLine, hediffDef.LabelCap, effect);
                                     break;
-                                case LightModifiers.Options.NVPhotosensitivity:
+                                case LightModifiersBase.Options.NVPhotosensitivity:
                                     pssum += effect;
                                     psexplanation.AppendFormat(ModifierLine, hediffDef.LabelCap, effect);
                                     break;
-                                case LightModifiers.Options.NVCustom:
+                                case LightModifiersBase.Options.NVCustom:
                                     sum += effect;
                                     explanation.AppendFormat(ModifierLine, hediffDef.LabelCap, effect);
                                     break;
@@ -523,45 +521,45 @@ namespace NightVision.Comps
         /// For ThoughtWorker_Dark patch
         /// </summary>
         /// <returns></returns>
-        public LightModifiers.Options PsychDark()
+        public LightModifiersBase.Options PsychDark()
         {
             if (ZeroLightModifier < 0.01f)
             {
-                return LightModifiers.Options.NVNone;
+                return LightModifiersBase.Options.NVNone;
             }
 
             //if nightvis and photosens have equal bonuses at zero % light
-            if (Math.Abs(LightModifiers.NvZeroLightMod - LightModifiers.PsZeroLightMod) < 0.01f)
+            if (Math.Abs(LightModifiersBase.NVLightModifiers[0] - LightModifiersBase.PSLightModifiers[0]) < 0.01f)
             {
                 //if equal to photosensitivity bonus ( or nightvis bonus)
-                if (Math.Abs(ZeroLightModifier - LightModifiers.PsZeroLightMod) < 0.01f)
+                if (Math.Abs(ZeroLightModifier - LightModifiersBase.PSLightModifiers[0]) < 0.01f)
                 {
-                    return LightModifiers.Options.NVPhotosensitivity;
+                    return LightModifiersBase.Options.NVPhotosensitivity;
                 }
-                //otherwise if greater than min 0.2 (equivalent to 100% mv&wrk speed at 0% light) or half the photosens bonus 
+                //otherwise if greater than min 0.2 (equivalent to 100% mv&wrk speed at 0% light) or half the photosens&nv bonus 
 
-                if (ZeroLightModifier > Math.Min(LightModifiers.DefaultNVZero, LightModifiers.NvZeroLightMod / 2) - 0.01f)
+                if (ZeroLightModifier > Math.Min(LightModifiersBase.NVDefaultOffsets[0], LightModifiersBase.NVLightModifiers[0] / 2) - 0.01f)
                 {
-                    return LightModifiers.Options.NVNightVision;
+                    return LightModifiersBase.Options.NVNightVision;
                 }
             }
             else
             {
-                float lower = Math.Min(LightModifiers.NvZeroLightMod, LightModifiers.PsZeroLightMod);
-                float upper = Math.Max(LightModifiers.NvZeroLightMod, LightModifiers.PsZeroLightMod);
+                float lower = Math.Min(LightModifiersBase.NVLightModifiers[0], LightModifiersBase.PSLightModifiers[0]);
+                float upper = Math.Max(LightModifiersBase.NVLightModifiers[0], LightModifiersBase.PSLightModifiers[0]);
                 //if greater than the midpoint between the two bonuses
                 if (ZeroLightModifier > ((lower + upper) / 2) - 0.01f)
                 {
-                    return LightModifiers.Options.NVPhotosensitivity;
+                    return LightModifiersBase.Options.NVPhotosensitivity;
                 }
                 //if greater than the midpoint between no bonus and the lower bonus
                 if (ZeroLightModifier > (lower / 2) - 0.01f)
                 {
-                    return LightModifiers.Options.NVNightVision;
+                    return LightModifiersBase.Options.NVNightVision;
                 }
 
             }
-            return LightModifiers.Options.NVNone;
+            return LightModifiersBase.Options.NVNone;
         }
         #endregion
 
@@ -605,7 +603,7 @@ namespace NightVision.Comps
             if (NightVisionSettings.LogPawnComps)
             {
                 Log.Message(new string('*', 30));
-                Log.Message("NightVisionComp: " + ParentPawn.NameStringShort);
+                Log.Message("NightVisionComp: " + ParentPawn.Name);
                 Log.Message("Hediffs: ");
                 foreach (var hedifflist in PawnsNVHediffs)
                 {
@@ -619,7 +617,7 @@ namespace NightVision.Comps
                 Log.Message(new string('-', 20));
                 Log.Message("NumberRemainingEyes: " + NumberOfRemainingEyes);
                 Log.Message("HediffLightModifiers: zero = " + HediffMods[0] + PshediffMods[0] + NvhediffMods[0] + ", full = " + HediffMods[0] + PshediffMods[0] + NvhediffMods[0]);
-                Log.Message("NaturalLightModifiers: zero = " + NaturalLightModifiers.ZeroLight + ", full = " + NaturalLightModifiers.FullLight);
+                Log.Message("NaturalLightModifiers: zero = " + NaturalLightModifiers[0] + ", full = " + NaturalLightModifiers[1]);
                 Log.Message("Total Glow Mods: zero = " + ZeroLightModifier + ", full = " + FullLightModifier);
                 Log.Message(new string('*', 30));
             }
@@ -663,11 +661,11 @@ namespace NightVision.Comps
             PawnsNVHediffs.Clear();
             for (int i = 0; i < NumberOfRemainingEyes; i++)
             {
-                PawnsNVHediffs[RaceSightParts[i].def.defName] = new List<HediffDef>();
+                PawnsNVHediffs[RaceSightParts[i].Label] = new List<HediffDef>();
             }
-            //not really necessary to do this any more
-            _brainName = ParentPawn.RaceProps.body.GetPartsWithTag(BrainTag).First().def.defName;
-            PawnsNVHediffs[_brainName] = new List<HediffDef>();
+            
+            //_brainName = ParentPawn.RaceProps.body.GetPartsWithTag(BrainTag).First().def.defName;
+            //PawnsNVHediffs[_brainName] = new List<HediffDef>();
             PawnsNVHediffs[BodyKey] = new List<HediffDef>();
             if (!PawnHediffs.NullOrEmpty())
             {
@@ -679,7 +677,7 @@ namespace NightVision.Comps
             CalculateHediffMod();
         }
 
-        public void InitPawnsApparel()
+        private void InitPawnsApparel()
         {
             if (!ParentPawn.Spawned || ParentPawn.health == null || ParentPawn.Dead)
             {
@@ -715,13 +713,13 @@ namespace NightVision.Comps
             {
                 return;
             }
-            if (part != null && PawnsNVHediffs.ContainsKey(part.def.defName) && PawnsNVHediffs[part.def.defName].Remove(hediff.def))
+            if (part != null && PawnsNVHediffs.ContainsKey(part.Label) && PawnsNVHediffs[part.Label].Remove(hediff.def))
             {
-                CalculateHediffMod();
-                if(part.def.tags.Contains(EyeTag) && (hediff is Hediff_MissingPart || (hediff.def.addedPartProps is AddedBodyPartProps abpp && abpp.isSolid)))
+                if(part.def.tags.Contains(EyeTag) && (hediff is Hediff_MissingPart || (hediff.def.addedPartProps is AddedBodyPartProps abpp && abpp.solid)))
                 {
                     NumberOfRemainingEyes++;
                 }
+                CalculateHediffMod();
             }
             else if (PawnsNVHediffs[BodyKey].Remove(hediff.def))
             {
@@ -736,7 +734,7 @@ namespace NightVision.Comps
             }
             if (part != null)
             {
-                string partName = part.def.defName;
+                string partName = part.Label;
                 if (PawnsNVHediffs.TryGetValue(partName, out List<HediffDef> tempPartsHediffDefs))
                 {
                     //Categorise the hediff:
@@ -757,7 +755,7 @@ namespace NightVision.Comps
                         HediffDef hediffDef = hediff.def;
                         if (NightVisionSettings.HediffLightMods.ContainsKey(hediffDef))
                         {
-                            if (hediffDef.addedPartProps is AddedBodyPartProps abpp && abpp.isSolid)
+                            if (hediffDef.addedPartProps is AddedBodyPartProps abpp && abpp.solid)
                             {
                                 removedPart = true;
                                 tempPartsHediffDefs = new List<HediffDef>
@@ -772,7 +770,7 @@ namespace NightVision.Comps
                         }
                         //Last two checks are in case the user changes settings later
                         //Is it a solid replacement?
-                        else if (hediffDef.addedPartProps is AddedBodyPartProps abpp && abpp.isSolid)
+                        else if (hediffDef.addedPartProps is AddedBodyPartProps abpp && abpp.solid)
                         {
                             removedPart = true;
                             tempPartsHediffDefs = new List<HediffDef>
@@ -826,31 +824,34 @@ namespace NightVision.Comps
             float psFullMod = 0f;
             float nvZeroMod = 0f;
             float nvFullMod = 0f;
-            foreach (List<HediffDef> value in PawnsNVHediffs.Values)
+            int eyeCount = RaceSightParts.Count;
+            foreach (var value in PawnsNVHediffs.Values)
             {
                 if (value.NullOrEmpty())
                 {
                     continue;
                 }
+
                 foreach (var hediffDef in value)
                 {
-                    if (NightVisionSettings.HediffLightMods.TryGetValue(hediffDef, out LightModifiers hediffSetting))
-                    {
+                    if (NightVisionSettings.HediffLightMods.TryGetValue(hediffDef, out Hediff_LightModifiers hediffSetting))
+                        {
+                            int eyeNormalisingFactor = hediffSetting.AffectsEye ? eyeCount : 1;
                         switch (hediffSetting.Setting)
                         {
-                            case LightModifiers.Options.NVNone:
+                            case LightModifiersBase.Options.NVNone:
                                 continue;
-                            case LightModifiers.Options.NVCustom:
-                                zeroMod += hediffSetting.ZeroLight;
-                                fullMod += hediffSetting.FullLight;
+                            case LightModifiersBase.Options.NVCustom:
+                                zeroMod += hediffSetting[0] / eyeNormalisingFactor;
+                                fullMod += hediffSetting[1] / eyeNormalisingFactor;
                                 continue;
-                            case LightModifiers.Options.NVNightVision:
-                                nvZeroMod += hediffSetting.ZeroLight;
-                                nvFullMod += hediffSetting.FullLight;
+                            case LightModifiersBase.Options.NVNightVision:
+                                nvZeroMod += hediffSetting[0] / eyeNormalisingFactor;
+                                nvFullMod += hediffSetting[1] / eyeNormalisingFactor;
                                 continue;
-                            case LightModifiers.Options.NVPhotosensitivity:
-                                psZeroMod += hediffSetting.ZeroLight;
-                                psFullMod += hediffSetting.FullLight;
+                            case LightModifiersBase.Options.NVPhotosensitivity:
+                                psZeroMod += hediffSetting[0] / eyeNormalisingFactor;
+                                psFullMod += hediffSetting[1] / eyeNormalisingFactor;
                                 continue;
                             default:
                                 continue;
@@ -888,6 +889,7 @@ namespace NightVision.Comps
                 PawnsNVApparel.Add(apparel);
             }
             //In case the user changes settings in game
+            //TODO replace this with just a check to see if the apparel covers the eyes
             else if (NightVisionSettings.AllEyeCoveringHeadgearDefs.Contains(apparel.def))
             {
                 PawnsNVApparel.Add(apparel);
@@ -915,7 +917,7 @@ namespace NightVision.Comps
         /// <summary>
         /// This only works if PawnsNVApparel is correct
         /// </summary>
-        public void QuickRecheckApparel()
+        private void QuickRecheckApparel()
         {
             ApparelGrantsNV = false;
             ApparelNullsPS = false;

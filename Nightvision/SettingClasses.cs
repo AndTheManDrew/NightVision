@@ -1,7 +1,5 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using NightVision.Comps;
-using UnityEngine;
 using Verse;
 
 namespace NightVision
@@ -20,8 +18,8 @@ namespace NightVision
         internal bool NullifiesPS;
         internal bool GrantsNV;
         //Settings in xml defs
-        internal bool compNullifiesPS;
-        internal bool compGrantsNV;
+        internal bool CompNullifiesPS;
+        internal bool CompGrantsNV;
         #endregion
 
         #region Constructors And comp attacher
@@ -45,10 +43,10 @@ namespace NightVision
         /// </summary>
         internal ApparelSetting(CompProperties_NightVisionApparel compprops)
         {
-            compNullifiesPS = compprops.NullifiesPhotosensitivity;
-            compGrantsNV = compprops.GrantsNightVision;
-            NullifiesPS = compNullifiesPS;
-            GrantsNV = compGrantsNV;
+            CompNullifiesPS = compprops.NullifiesPhotosensitivity;
+            CompGrantsNV = compprops.GrantsNightVision;
+            NullifiesPS = CompNullifiesPS;
+            GrantsNV = CompGrantsNV;
         }
 
         /// <summary>
@@ -56,8 +54,8 @@ namespace NightVision
         /// </summary>
         internal void AttachComp(CompProperties_NightVisionApparel compprops)
         {
-            compNullifiesPS = compprops.NullifiesPhotosensitivity;
-            compGrantsNV = compprops.GrantsNightVision;
+            CompNullifiesPS = compprops.NullifiesPhotosensitivity;
+            CompGrantsNV = compprops.GrantsNightVision;
         }
         #endregion
 
@@ -67,7 +65,7 @@ namespace NightVision
         /// <summary>
         /// Check to see if this setting should be removed from the dictionary, i.e. current and def values are all false
         /// </summary>
-        internal bool IsRedundant() => !(GrantsNV || NullifiesPS) && !(compGrantsNV || compNullifiesPS);
+        internal bool IsRedundant() => !(GrantsNV || NullifiesPS) && !(CompGrantsNV || CompNullifiesPS);
         /// <summary>
         /// Check to see if this setting should be saved, i.e. current and def values are all false,
         /// or current values are equal to def values
@@ -75,15 +73,15 @@ namespace NightVision
         /// <returns></returns>
         public bool ShouldBeSaved()
         {
-            return !(IsRedundant() || ((GrantsNV == compGrantsNV) && (NullifiesPS == compNullifiesPS)));
+            return !(IsRedundant() || ((GrantsNV == CompGrantsNV) && (NullifiesPS == CompNullifiesPS)));
         }
         #endregion
 
         #region Expose Data
         public void ExposeData()
         {
-            Scribe_Values.Look(ref NullifiesPS, "nullifiesphotosens", compNullifiesPS);
-            Scribe_Values.Look(ref GrantsNV, "grantsnightvis", compGrantsNV);
+            Scribe_Values.Look(ref NullifiesPS, "nullifiesphotosens", CompNullifiesPS);
+            Scribe_Values.Look(ref GrantsNV, "grantsnightvis", CompGrantsNV);
         }
         #endregion
     }

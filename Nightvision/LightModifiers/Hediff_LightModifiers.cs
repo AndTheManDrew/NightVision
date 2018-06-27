@@ -1,28 +1,36 @@
 ﻿using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using NightVision.Comps;
+using NightVision.Utilities;
 using UnityEngine;
+using Verse;
 
-namespace NightVision
+namespace NightVision.LightModifiers
     {
-        using Verse;
 
-        public class Hediff_LightModifiers : LightModifiers
+        public class Hediff_LightModifiers : LightModifiersBase
             {
                 internal bool AffectsEye = false;
+                internal bool AutoAssigned = false;
+                internal override Options Setting
+                    {
+                        get => IntSetting;
+                        set => IntSetting = value;
+                    }
 
-                internal Options Setting;
+                internal Options IntSetting;
 
-                private HediffDef parentDef;
-                public override Def ParentDef => parentDef;
+                private HediffDef _parentDef;
+                public override Def ParentDef => _parentDef;
 
-                [CanBeNull] internal HediffCompProperties_NightVision HNVCompProps;
+                [CanBeNull] private HediffCompProperties_NightVision _hediffCompProps;
 
                 public override float this[int index]
                     {
                         get
                             {
-                                switch (Setting)
+                                switch (IntSetting)
                                     {
                                         default:
                                             return 0f;
@@ -31,39 +39,51 @@ namespace NightVision
                                         case Options.NVPhotosensitivity:
                                             return PSLightModifiers[index];
                                         case Options.NVCustom:
-                                            return offsets[index];
+                                            return Offsets[index];
                                     }
                             }
-                        set
-                            {
-                                Setting = Options.NVCustom;
-                                offsets[index] = Mathf.Clamp(value, -0.99f + 0.2f*(1-index), +1f + 0.2f * (1 - index));
-                            }
+                        set => Offsets[index] =
+                                    (float)Math.Round(
+                                                      Mathf.Clamp(value, -0.99f + 0.2f * (1 - index), +1f + 0.2f * (1 - index)), 2, MidpointRounding.AwayFromZero);
                     }
 
+                private float[] _defaultOffsets;
                 public override float[] DefaultOffsets
                     {
                         get
                             {
-                                switch (GetSetting(HNVCompProps))
+                                if (_defaultOffsets == null)
                                     {
-                                        default:
-                                            return new float[2];
-                                        case Options.NVNightVision:
-                                            return NVLightModifiers.offsets;
-                                        case Options.NVPhotosensitivity:
-                                            return PSLightModifiers.offsets;
-                                        case Options.NVCustom:
-                                            return new[] {HNVCompProps.ZeroLightMod, HNVCompProps.FullLightMod};
+                                        Options defaultSetting = AutoAssigned
+                                                    ? AutoQualifier.HediffCheck(_parentDef) ?? Options.NVNone
+                                                    : GetSetting(_hediffCompProps);
+                                        switch (defaultSetting)
+                                            {
+                                                default:
+                                                    _defaultOffsets = new float[2];
+                                                    break;
+                                                case Options.NVNightVision:
+                                                    _defaultOffsets =  NVLightModifiers.Offsets;
+                                                    break;
+                                                case Options.NVPhotosensitivity:
+                                                    _defaultOffsets = PSLightModifiers.Offsets;
+                                                    break;
+                                                case Options.NVCustom:
+                                                    _defaultOffsets = new[] {_hediffCompProps.ZeroLightMod, _hediffCompProps.FullLightMod};
+                                                    break;
+                                            }
                                     }
+
+                                return _defaultOffsets;
+
                             }
                     }
 
                 public override void ExposeData()
                     {
-                        Scribe_Defs.Look(ref parentDef, "HediffDef");
-                        Scribe_Values.Look(ref Setting, "Setting", forceSave: true);
-                        if (Setting == LightModifiers.Options.NVCustom)
+                        Scribe_Defs.Look(ref _parentDef, "HediffDef");
+                        Scribe_Values.Look(ref IntSetting, "Setting", forceSave: true);
+                        if (IntSetting == Options.NVCustom)
                             {
                                 base.ExposeData();
                             }
@@ -79,54 +99,67 @@ namespace NightVision
 
                 public Hediff_LightModifiers(HediffDef hediffDef)
                     {
-                        parentDef = hediffDef;
+                        _parentDef = hediffDef;
                         AttachCompProps();
                     }
 
                 private void AttachCompProps()
                     {
-                        if (parentDef.CompPropsFor(typeof(HediffComp_NightVision)) is HediffCompProperties_NightVision
+                        if (_parentDef.CompPropsFor(typeof(HediffComp_NightVision)) is HediffCompProperties_NightVision
                                     compProps)
                             {
-                                HNVCompProps = compProps;
+                                _hediffCompProps = compProps;
+                                compProps.LightModifiers = this;
                                 if (!Initialised)
                                     {
-                                        Setting = GetSetting(compProps);
-                                        offsets = new[] {compProps.ZeroLightMod, compProps.FullLightMod};
+                                        IntSetting = GetSetting(compProps);
+                                        Offsets = new[] {compProps.ZeroLightMod, compProps.FullLightMod};
                                     }
 
                             }
                         else
                             {
-                                HNVCompProps = null;
-                                parentDef.comps.Add(new HediffCompProperties_NightVision());
+                                if (_parentDef.comps == null)
+                                    {
+                                        //TODO Review
+                                        _parentDef.comps = new List<HediffCompProperties>();
+                                    }
+                                _hediffCompProps = new HediffCompProperties_NightVision {LightModifiers = this};
+                                _parentDef.comps.Add(_hediffCompProps);
                                 Initialised = true;
                             }
+                    }
+
+                public void InitialiseNewFromSettings(HediffDef hediffDef)
+                    {
+                        Initialised = true;
+                        _parentDef = hediffDef;
+                        AttachCompProps();
                     }
 
 
                 public override bool ShouldBeSaved()
                     {
-                        if (HNVCompProps == null)
+                        if (AutoAssigned)
                             {
-                                return Setting != Options.NVNone;
+                                return IntSetting != AutoQualifier.HediffCheck(_parentDef);
                             }
 
-                        switch (Setting)
+                        switch (IntSetting)
                             {
                                 default:
-                                    return !HNVCompProps.IsDefault();
+                                    return !_hediffCompProps.IsDefault();
                                 case Options.NVNightVision:
-                                    return !HNVCompProps.GrantsNightVision;
+                                    return !_hediffCompProps.GrantsNightVision;
                                 case Options.NVPhotosensitivity:
-                                    return !HNVCompProps.GrantsPhotosensitivity;
+                                    return !_hediffCompProps.GrantsPhotosensitivity;
                                 case Options.NVCustom:
-                                    return !(Math.Abs(HNVCompProps.FullLightMod - offsets[1]) < 0.001f)
-                                           || !(Math.Abs(HNVCompProps.ZeroLightMod - offsets[0]) < 0.001f);
+                                    return !(Math.Abs(_hediffCompProps.FullLightMod - Offsets[1]) < 0.001f)
+                                           || !(Math.Abs(_hediffCompProps.ZeroLightMod - Offsets[0]) < 0.001f);
                             }
                     }
 
-                public static Options GetSetting(HediffCompProperties_NightVision compprops)
+                private static Options GetSetting(HediffCompProperties_NightVision compprops)
                     {
                         if (compprops == null)
                             {
@@ -134,20 +167,20 @@ namespace NightVision
                             }
                         if (compprops.GrantsNightVision)
                             {
-                                return LightModifiers.Options.NVNightVision;
+                                return Options.NVNightVision;
                             }
-                        else if (compprops.GrantsPhotosensitivity)
+
+                        if (compprops.GrantsPhotosensitivity)
                             {
-                                return LightModifiers.Options.NVPhotosensitivity;
+                                return Options.NVPhotosensitivity;
                             }
-                        else if (compprops.IsDefault())
+
+                        if (compprops.IsDefault())
                             {
-                                return LightModifiers.Options.NVNone;
+                                return Options.NVNone;
                             }
-                        else
-                            {
-                                return LightModifiers.Options.NVCustom;
-                            }
+
+                        return Options.NVCustom;
                     }
 
     }

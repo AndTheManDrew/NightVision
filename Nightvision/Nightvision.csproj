@@ -16,7 +16,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\RimWorld_MODTEST\Mods\Nightvision\Assemblies\</OutputPath>
+    <OutputPath>..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\Nightvision\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -27,11 +27,12 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\RimWorld_MODTEST\Mods\Nightvision\Assemblies\</OutputPath>
+    <OutputPath>..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\Nightvision\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>latest</LangVersion>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=1.0.9.1, Culture=neutral, processorArchitecture=MSIL">
@@ -43,7 +44,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\Rimworld Libraries\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="CombatExtended">
@@ -63,10 +64,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comps\HediffCompProperties_NightVision.cs" />
-    <Compile Include="Comps\TestCalc.cs" />
     <Compile Include="LightModifiers\Hediff_LightModifiers.cs" />
     <Compile Include="IndicatorTex.cs" />
     <Compile Include="LightModifiers\LightModifiers.cs" />
+    <Compile Include="ModExtension.cs" />
     <Compile Include="NightVisionStat.cs" />
     <Compile Include="LightModifiers\Race_LightModifiers.cs" />
     <Compile Include="SettingClasses.cs" />
@@ -79,7 +80,7 @@
     <Compile Include="Controller.cs" />
     <Compile Include="Properties\NightVision.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="NVStrings.cs" />
+    <Compile Include="Utilities\AutoQualifier.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Xml_Defs\NightVision_Apparel.xml">
@@ -88,6 +89,8 @@
     <Content Include="Xml_Defs\NightVision_Hediffs.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Xml_Defs\NightVision_Items.xml" />
+    <Content Include="Xml_Patches\NV_Races_Animals_BigCats.xml" />
     <Content Include="Xml_Patches\Patches_ForTestingOnly.xml">
       <SubType>Designer</SubType>
     </Content>

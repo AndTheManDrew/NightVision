@@ -1,0 +1,6 @@
+﻿namespace NightVision
+{
+    class ModExtension
+    {
+    }
+}
