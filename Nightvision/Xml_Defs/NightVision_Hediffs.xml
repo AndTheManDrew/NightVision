@@ -6,18 +6,18 @@
     <label>implanted retinal retro-reflector</label>
     <labelNoun>a retinal retro-reflector implant</labelNoun>
     <comps>
-      <li Class="NightVision.HediffCompProperties_NightVision">
-        <grantsPhotosensitivity>true</grantsPhotosensitivity>
+      <li Class="NightVision.Comps.HediffCompProperties_NightVision">
+        <GrantsPhotosensitivity>true</GrantsPhotosensitivity>
       </li>
     </comps>
     <addedPartProps>
-      <isSolid>true</isSolid>
+      <solid>true</solid>
       <partEfficiency>1</partEfficiency>
     </addedPartProps>
   </HediffDef>
 
   <RecipeDef ParentName="SurgeryFlesh">
-    <defName>NV_TapetumRecipe</defName>
+    <defName>NV_InstallTapetum</defName>
     <label>implant tapetum lucidum</label>
     <description>Implant a natural retinal retro-reflector</description>
     <workerClass>Recipe_InstallArtificialBodyPart</workerClass>

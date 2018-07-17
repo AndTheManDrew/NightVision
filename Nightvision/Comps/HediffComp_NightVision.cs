@@ -23,30 +23,37 @@ namespace NightVision.Comps
                 switch (Props.LightModifiers.Setting)
                     {
                         //TODO Review returning empty & expand explaination
-                        case LightModifiersBase.Options.NVNightVision: return "NVNightVision".Translate();
-                        case LightModifiersBase.Options.NVPhotosensitivity: return "NVPhotosensitivity".Translate();
+                        case LightModifiersBase.Options.NVNightVision: return "NVGiveNV".Translate();
+                        case LightModifiersBase.Options.NVPhotosensitivity: return "NVGivePS".Translate();
                         case LightModifiersBase.Options.NVCustom: return "NVZeroLabel".Translate() + $" = {Props.LightModifiers[0]:+#;-#;0}%" + " | " + "NVFullLabel".Translate()+ $" = {Props.LightModifiers[1]:+#;-#;0}%";
                         default: return String.Empty;
                     }
             }
 
-        public override void CompPostMake()
-        {
-            base.CompPostMake();
-            if (Pawn is Pawn pawn && pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
-            {
-                comp.CheckAndAddHediff(parent, parent.Part);
-            }
-        }
+        //Need to use harmony patches instead of overriding these methods as the part is not assigned for added or missing parts until
+        //after these methods are called ==> Comp_NightVision associating the hediffs with the whole body
 
-        public override void CompPostPostRemoved()
-        {
-            base.CompPostPostRemoved();
-        }
-        public override void CompPostMerged(Hediff other)
-        {
-            base.CompPostMerged(other);
-        }
+        //public override void CompPostMake()
+        //{
+        //    base.CompPostMake();
+        //    if (Pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
+        //    {
+        //        comp.CheckAndAddHediff(parent, parent.Part);
+        //    }
+        //}
+
+        //public override void CompPostPostRemoved()
+        //{
+        //    base.CompPostPostRemoved();
+        //    if (Pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
+        //        {
+        //            comp.CheckAndAddHediff(parent, parent.Part);
+        //        }
+        //}
+        //public override void CompPostMerged(Hediff other)
+        //{
+        //    base.CompPostMerged(other);
+        //}
     }
     
 }

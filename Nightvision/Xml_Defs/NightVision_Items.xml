@@ -16,9 +16,9 @@
       <WorkToMake>11000</WorkToMake>
       <Mass>0.05</Mass>
     </statBases>
-    <techHediffTags>
+    <techHediffsTags>
       <li>Simple</li>
-    </techHediffTags>
+    </techHediffsTags>
   </ThingDef>
   
   <!-- The Secret Ingredient -->

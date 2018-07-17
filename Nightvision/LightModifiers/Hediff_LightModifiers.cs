@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using NightVision.Comps;
 using NightVision.Utilities;
@@ -63,10 +64,10 @@ namespace NightVision.LightModifiers
                                                     _defaultOffsets = new float[2];
                                                     break;
                                                 case Options.NVNightVision:
-                                                    _defaultOffsets =  NVLightModifiers.Offsets;
+                                                    _defaultOffsets =  NVLightModifiers.Offsets.ToArray();
                                                     break;
                                                 case Options.NVPhotosensitivity:
-                                                    _defaultOffsets = PSLightModifiers.Offsets;
+                                                    _defaultOffsets = PSLightModifiers.Offsets.ToArray();
                                                     break;
                                                 case Options.NVCustom:
                                                     _defaultOffsets = new[] {_hediffCompProps.ZeroLightMod, _hediffCompProps.FullLightMod};
@@ -102,6 +103,22 @@ namespace NightVision.LightModifiers
                         _parentDef = hediffDef;
                         AttachCompProps();
                     }
+                /// <summary>
+                /// 
+                /// </summary>
+                /// <param name="glow"> [0,1]</param>
+                /// <param name="NumOfEyesNormalisedFor">Required for hediffs</param>
+                /// <returns>Normalised value if hediff is an eye hediff</returns>
+                public override float GetEffectAtGlow(float glow, int NumOfEyesNormalisedFor)
+                    {
+                        if (AffectsEye)
+                            {
+                                return base.GetEffectAtGlow(glow, NumOfEyesNormalisedFor);
+                            }
+
+                        return base.GetEffectAtGlow(glow);
+                    }
+
 
                 private void AttachCompProps()
                     {

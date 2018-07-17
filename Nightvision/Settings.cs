@@ -12,12 +12,12 @@ namespace NightVision
 {
     internal class NightVisionSettings : ModSettings
     {
-        #region Constants
+        #region Constants and Readonly
 
         internal const float DefaultZeroLightMultiplier = 0.8f;
         internal const float DefaultFullLightMultiplier = 1f;
-        private const float DefaultMinCap = 0.8f;
-        private const float DefaultMaxCap = 1.2f;
+        private const float DefaultMinCap = 0.5f;
+        private const float DefaultMaxCap = 2f;
 
         #endregion
 
@@ -95,31 +95,6 @@ namespace NightVision
         public static bool CEDetected = false;
 
         #endregion
-
-        //#region Cached LightModifiers for Races
-        //private static Dictionary<ThingDef, EyeLightModifiers> _raceEyeLightModifiersCached = new Dictionary<ThingDef, EyeLightModifiers>();
-        
-        //internal static EyeLightModifiers GetRaceNightVisionMod(ThingDef race, int numEyes)
-        //{
-        //    if (!_raceEyeLightModifiersCached.ContainsKey(race))
-        //    {
-        //        if (RaceLightModifiers.TryGetValue(race, out LightModifiers raceLightModifiers))
-        //        {
-        //            _raceEyeLightModifiersCached[race] = new EyeLightModifiers(raceLightModifiers, numEyes);
-        //        }
-        //        else
-        //        {
-        //            _raceEyeLightModifiersCached[race] = new EyeLightModifiers
-        //                                           {
-        //                Setting = LightModifiers.Options.NVNone,
-        //                NumOfEyesNormalisedFor = numEyes
-        //            };
-        //        }
-        //    }
-        //    return _raceEyeLightModifiersCached[race];
-        //}
-
-        //#endregion
         
         #region Settings GUI
 
@@ -323,6 +298,10 @@ namespace NightVision
             int count = 0;
             foreach (var kvp in RaceLightMods)
             {
+                if (!kvp.Value.ShouldShowInSettings && !Prefs.DevMode)
+                    {
+                        continue;
+                    }
                 rowRect.y = num;
                 _numberOfCustomRaces += DrawLightModifiersRow(kvp.Key, kvp.Value, rowRect, ref num, true);
                 count++;
@@ -591,7 +570,7 @@ namespace NightVision
 
 
                 float zeroModAsPercent = (float)Math.Round((lightMods.Offsets[0] + (isRace? DefaultZeroLightMultiplier : 0)) * 100);
-                float fullModAsPercent = (float)Math.Round((lightMods.Offsets[1]+ (isRace? DefaultFullLightMultiplier : 0)) * 100);
+                float fullModAsPercent = (float)Math.Round((lightMods.Offsets[1] + (isRace? DefaultFullLightMultiplier : 0)) * 100);
                 
                 if (isRace)
                 {
@@ -756,6 +735,7 @@ namespace NightVision
                 {
                     _maxY = rowRect.yMax;
                 }
+                Widgets.EndScrollView();
             }
         }
         #endregion
@@ -1013,6 +993,9 @@ namespace NightVision
                                         ? MultiPercentToMod((float) _psFullCache, false)
                                         : LightModifiersBase.PSLightModifiers[1]
                 };
+
+                Utilities.Classifier.ZeroLightTurningPoints = null;
+                Utilities.Classifier.FullLightTurningPoint = null;
             
                 _minCache = null;
                 _maxCache = null;
@@ -1047,7 +1030,7 @@ namespace NightVision
         /// </summary>
         private void SetDirtyAllComps()
         {
-            foreach (Pawn pawn in PawnsFinder.AllMaps_Spawned.Where(pwn => pwn.RaceProps.Humanlike))
+            foreach (Pawn pawn in PawnsFinder.AllMaps_Spawned/*.Where(pwn => pwn.RaceProps.Humanlike)*/)
             {
                 if (pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
                 {
