@@ -1,31 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
+
   <ThingDef ParentName="HatMakeableBase">
     <defName>simpleNVGoggles</defName>
     <label>night vision goggles</label>
     <description>A pair of nightvision goggles, with a variety of adjustable straps to ensure they cover the eyes, rather than the mouth.</description>
-    <recipeMaker>
-      <researchPrerequisite>ComplexClothing</researchPrerequisite>
-      <researchPrerequisite>MicroelectronicsBasics</researchPrerequisite>
-    </recipeMaker>
+    <techLevel>Industrial</techLevel>
     <graphicData>
-      <texPath>Apparel/nvgogglesv1_front</texPath>
+      <texPath>Apparel/nvgogglesv1_south</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <!-- <shaderType>CutoutComplex</shaderType> -->
     </graphicData>
-    <costList>
-      <Component>10</Component>
-    </costList>
-    <costStuffCount>15</costStuffCount>
     <stuffCategories>
       <li>Fabric</li>
       <li>Leathery</li>
     </stuffCategories>
+    <costStuffCount>25</costStuffCount>
+    <costList>
+      <ComponentIndustrial>2</ComponentIndustrial>
+    </costList>
     <statBases>
-      <WorkToMake>9000</WorkToMake>
+      <WorkToMake>3000</WorkToMake>
+      <MaxHitPoints>100</MaxHitPoints>
       <Mass>1</Mass>
-      <ArmorRating_Blunt>0.06</ArmorRating_Blunt>
-      <ArmorRating_Sharp>0.08</ArmorRating_Sharp>
+      <StuffEffectMultiplierArmor>0.3</StuffEffectMultiplierArmor>
+      <StuffEffectMultiplierInsulation_Cold>0.05</StuffEffectMultiplierInsulation_Cold>
+      <StuffEffectMultiplierInsulation_Heat>0.05</StuffEffectMultiplierInsulation_Heat>
+      <EquipDelay>1.2</EquipDelay>
     </statBases>
     <equippedStatOffsets>
       <MoveSpeed>-0.05</MoveSpeed>
@@ -35,124 +36,128 @@
         <li>Eyes</li>
       </bodyPartGroups>
       <wornGraphicPath>Apparel/nvgogglesv1</wornGraphicPath>
+      <hatRenderedFrontOfFace>true</hatRenderedFrontOfFace>
       <layers>
         <li>Overhead</li>
       </layers>
       <tags>
-        <li>Military</li>
+        <li>IndustrialMilitaryBasic</li>
       </tags>
       <defaultOutfitTags>
         <li>Soldier</li>
       </defaultOutfitTags>
     </apparel>
+    <recipeMaker>
+      <skillRequirements>
+        <Crafting>5</Crafting>
+      </skillRequirements>
+      <unfinishedThingDef>UnfinishedMetallicTechArmor</unfinishedThingDef>
+      <researchPrerequisite>MicroelectronicsBasics</researchPrerequisite>
+    </recipeMaker>
     <comps>
-      <li Class = "NightVision.CompProperties_NightVisionApparel">
-          <grantsNightVision>true</grantsNightVision>
+      <li Class = "NightVision.Comps.CompProperties_NightVisionApparel">
+        <GrantsNightVision>true</GrantsNightVision>
       </li>
     </comps>
-    <colorGenerator Class="ColorGenerator_White">
-      <!--<options>
-        <li>
-          <weight>4</weight>
-          <only>RGBA(1,1,1,1)</only>
-        </li>
-      </options>-->
-    </colorGenerator>
   </ThingDef>
-  <ThingDef ParentName="ArmorHelmetMakeableBase">
+
+  <ThingDef ParentName="HatMakeableBase">
     <defName>tintedgoggles</defName>
     <label>tinted goggles</label>
     <description>UV is bad for your eyes</description>
-    <techLevel>Spacer</techLevel>
-    <recipeMaker>
-      <unfinishedThingDef>UnfinishedTechArmor</unfinishedThingDef>
-      <researchPrerequisite>PoweredArmor</researchPrerequisite>
-    </recipeMaker>
+    <techLevel>Industrial</techLevel>
     <graphicData>
-      <texPath>Apparel/tintedgoggles_front</texPath>
+      <texPath>Apparel/tintedgoggles_south</texPath>
       <graphicClass>Graphic_Single</graphicClass>
+      <!-- <shaderType>CutoutComplex</shaderType> -->
     </graphicData>
-    <statBases>
-      <WorkToMake>9000</WorkToMake>
-      <Mass>0.5</Mass>
-      <ArmorRating_Blunt>0.06</ArmorRating_Blunt>
-      <ArmorRating_Sharp>0.08</ArmorRating_Sharp>
-    </statBases>
-    <equippedStatOffsets>
-      <MoveSpeed>-0.04</MoveSpeed>
-    </equippedStatOffsets>
-    <costList>
-      <Component>2</Component>
-    </costList>
-    <costStuffCount>15</costStuffCount>
     <stuffCategories>
       <li>Fabric</li>
       <li>Leathery</li>
     </stuffCategories>
-    <generateCommonality>2</generateCommonality>
+    <costStuffCount>25</costStuffCount>
+    <costList>
+      <ComponentIndustrial>2</ComponentIndustrial>
+    </costList>
+    <statBases>
+      <WorkToMake>2000</WorkToMake>
+      <MaxHitPoints>90</MaxHitPoints>
+      <Mass>1</Mass>
+      <StuffEffectMultiplierArmor>0.3</StuffEffectMultiplierArmor>
+      <StuffEffectMultiplierInsulation_Cold>0.05</StuffEffectMultiplierInsulation_Cold>
+      <StuffEffectMultiplierInsulation_Heat>0.05</StuffEffectMultiplierInsulation_Heat>
+      <EquipDelay>1.2</EquipDelay>
+    </statBases>
+    <equippedStatOffsets>
+      <MoveSpeed>-0.05</MoveSpeed>
+    </equippedStatOffsets>
     <apparel>
       <bodyPartGroups>
         <li>Eyes</li>
       </bodyPartGroups>
       <wornGraphicPath>Apparel/tintedgoggles</wornGraphicPath>
+      <hatRenderedFrontOfFace>true</hatRenderedFrontOfFace>
       <layers>
         <li>Overhead</li>
       </layers>
       <tags>
-        <li>Military</li>
+        <li>IndustrialMilitaryBasic</li>
       </tags>
       <defaultOutfitTags>
         <li>Soldier</li>
       </defaultOutfitTags>
     </apparel>
+    <recipeMaker>
+      <skillRequirements>
+        <Crafting>5</Crafting>
+      </skillRequirements>
+      <unfinishedThingDef>UnfinishedMetallicTechArmor</unfinishedThingDef>
+      <researchPrerequisite>MicroelectronicsBasics</researchPrerequisite>
+    </recipeMaker>
     <comps>
-      <li Class = "NightVision.CompProperties_NightVisionApparel">
-        <nullifiesPhotosensitivity>true</nullifiesPhotosensitivity>
+      <li Class = "NightVision.Comps.CompProperties_NightVisionApparel">
+        <NullifiesPhotosensitivity>true</NullifiesPhotosensitivity>
       </li>
     </comps>
-
-    <colorGenerator Class="ColorGenerator_White">
-      <!--<options>
-        <li>
-          <weight>4</weight>
-          <only>RGBA(1,1,1,1)</only>
-        </li>
-      </options>-->
-    </colorGenerator>
   </ThingDef>
+
+
   <ThingDef ParentName="ArmorHelmetMakeableBase">
-    <defName>advNVgear</defName>
-    <label>advanced night vision gear</label>
-    <description>You beat photons!</description>
+    <defName>advNV</defName>
+    <label>advanced night vision helmet</label>
+    <description>A modified power armour helmet with night vision capabilities and UV protection.</description>
     <techLevel>Spacer</techLevel>
     <recipeMaker>
       <unfinishedThingDef>UnfinishedTechArmor</unfinishedThingDef>
       <researchPrerequisite>PoweredArmor</researchPrerequisite>
+      <skillRequirements>
+        <Crafting>9</Crafting>
+      </skillRequirements>
+      <recipeUsers Inherit="False">
+        <li>FabricationBench</li>
+      </recipeUsers>
     </recipeMaker>
     <graphicData>
-      <texPath>Apparel/nvgogglesv2_front</texPath>
+      <texPath>Apparel/nvgogglesv2_south</texPath>
       <graphicClass>Graphic_Single</graphicClass>
     </graphicData>
-    <statBases>
-      <WorkToMake>40000</WorkToMake>
-      <MaxHitPoints>160</MaxHitPoints>
-      <Mass>2.7</Mass>
-      <ArmorRating_Blunt>0.35</ArmorRating_Blunt>
-      <ArmorRating_Sharp>0.6</ArmorRating_Sharp>
-      <ArmorRating_Heat>0.5</ArmorRating_Heat>
-      <ArmorRating_Electric>0</ArmorRating_Electric>
-      <Insulation_Cold>-3</Insulation_Cold>
-      <Insulation_Heat>3</Insulation_Heat>
-    </statBases>
-    <equippedStatOffsets>
-      <MoveSpeed>-0.04</MoveSpeed>
-      <NightVision>+0.2</NightVision>
-    </equippedStatOffsets>
-    <costList>
-      <Component>7</Component>
-      <Plasteel>60</Plasteel>
-    </costList>
     <generateCommonality>2</generateCommonality>
+    <statBases>
+      <WorkToMake>20000</WorkToMake>
+      <MaxHitPoints>140</MaxHitPoints>
+      <Mass>2.9</Mass>
+      <Flammability>0.4</Flammability>
+      <ArmorRating_Sharp>0.9</ArmorRating_Sharp>
+      <ArmorRating_Blunt>0.32</ArmorRating_Blunt>
+      <ArmorRating_Heat>0.9</ArmorRating_Heat>
+      <Insulation_Cold>4</Insulation_Cold>
+      <Insulation_Heat>2</Insulation_Heat>
+      <EquipDelay>4</EquipDelay>
+    </statBases>
+    <costList>
+      <ComponentSpacer>2</ComponentSpacer>
+      <Plasteel>30</Plasteel>
+    </costList>
     <apparel>
       <bodyPartGroups>
         <li>FullHead</li>
@@ -162,25 +167,22 @@
         <li>Overhead</li>
       </layers>
       <tags>
-        <li>Military</li>
+        <li>SpacerMilitary</li>
       </tags>
       <defaultOutfitTags>
         <li>Soldier</li>
       </defaultOutfitTags>
+      <useDeflectMetalEffect>true</useDeflectMetalEffect>
     </apparel>
+    <colorGenerator Class="ColorGenerator_White">
+    </colorGenerator>
+
     <comps>
-      <li Class = "NightVision.CompProperties_NightVisionApparel">
-        <nullifiesPhotosensitivity>true</nullifiesPhotosensitivity>
-        <grantsNightVision>true</grantsNightVision>
+      <li Class = "NightVision.Comps.CompProperties_NightVisionApparel">
+        <NullifiesPhotosensitivity>true</NullifiesPhotosensitivity>
+        <GrantsNightVision>true</GrantsNightVision>
       </li>
     </comps>
-    <colorGenerator Class="ColorGenerator_White">
-      <!--<options>
-        <li>
-          <weight>4</weight>
-          <only>RGBA(1,1,1,1)</only>
-        </li>
-      </options>-->
-    </colorGenerator>
   </ThingDef>
+
 </Defs>

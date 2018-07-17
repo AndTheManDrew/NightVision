@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
 using NightVision.LightModifiers;
+using NightVision.Utilities;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -61,6 +62,7 @@ namespace NightVision.Comps
 
         private List<Hediff> PawnHediffs => _pawnsHediffs ?? (_pawnsHediffs = ParentPawn.health?.hediffSet?.hediffs);
 
+        public int EyeCount => RaceSightParts.Count;
         public List<BodyPartRecord> RaceSightParts
         {
             get
@@ -318,17 +320,17 @@ namespace NightVision.Comps
         public float FactorFromGlow(float glow)
         {
             //If glow is approx. 0%
-            if (Math.Abs(glow) < 0.005)
+            if (glow < 0.001f)
             {
-                return (float)Math.Round(NightVisionSettings.DefaultZeroLightMultiplier + ZeroLightModifier);
+                return (float)Math.Round(NightVisionSettings.DefaultZeroLightMultiplier + ZeroLightModifier, 2);
             }
             //If glow is approx. 100% and the pawns full light modifier is not approx 0
 
-            if (Math.Abs(glow - 1f) < 0.005)
+            if (Math.Abs(glow - 1f) < 0.001)
             {
                 if (Math.Abs(FullLightModifier) > 0.005f)
                 {
-                    return (float)Math.Round(NightVisionSettings.DefaultFullLightMultiplier + FullLightModifier);
+                    return (float)Math.Round(NightVisionSettings.DefaultFullLightMultiplier + FullLightModifier, 2);
                 }
                 return 1f;
             }
@@ -348,6 +350,7 @@ namespace NightVision.Comps
 
         /// <summary>
         /// For the pawn's stat inspect tab; incredibly fat
+        /// TODO Clean this up 
         /// </summary>
         /// <param name="result"></param>
         /// <param name="glow"></param>
@@ -366,8 +369,8 @@ namespace NightVision.Comps
             usedApparelSetting = false;
 
             StringBuilder explanation = new StringBuilder(result);
-            StringBuilder nvexplanation = new StringBuilder().Append(LightModifiersBase.Options.NVNightVision.ToString().Translate());
-            StringBuilder psexplanation = new StringBuilder().AppendFormat(LightModifiersBase.Options.NVPhotosensitivity.ToString().Translate());
+            StringBuilder nvexplanation = new StringBuilder().AppendLine(LightModifiersBase.Options.NVNightVision.ToString().Translate() + " " + "NVEffects".Translate());
+            StringBuilder psexplanation = new StringBuilder().AppendLine(LightModifiersBase.Options.NVPhotosensitivity.ToString().Translate() + " " + "NVEffects".Translate());
 
             explanation.AppendLine();
             if (lowLight)
@@ -387,7 +390,7 @@ namespace NightVision.Comps
             }
             else
             {
-                explanation.AppendFormat(MultiplierLine, "StatsReport_BaseValue".Translate(), 1f);
+                explanation.AppendFormat(MultiplierLine, "StatsReport_BaseValue".Translate(), NightVisionSettings.DefaultFullLightMultiplier);
                 explanation.AppendLine();
                 basevalue = NightVisionSettings.DefaultFullLightMultiplier;
                 if (ApparelNullsPS)
@@ -402,7 +405,7 @@ namespace NightVision.Comps
                 if (Math.Abs(effect) >= 0.005)
                 {
                     foundSomething = true;
-                    switch (NaturalLightModifiers.IntSetting)
+                    switch (NaturalLightModifiers.Setting)
                     {
                         case LightModifiersBase.Options.NVNightVision:
                             nvsum += effect * NumberOfRemainingEyes;
@@ -416,8 +419,7 @@ namespace NightVision.Comps
                             sum += effect * NumberOfRemainingEyes;
                             explanation.AppendFormat(ModifierLine, ParentPawn.def.LabelCap + " x" + NumberOfRemainingEyes, effect * NumberOfRemainingEyes);
                             break;
-                    }
-                    explanation.AppendLine();
+                    };
                 }
             }
             foreach (List<HediffDef> value in PawnsNVHediffs.Values)
@@ -430,7 +432,7 @@ namespace NightVision.Comps
                 {
                     if (NightVisionSettings.HediffLightMods.TryGetValue(hediffDef, out Hediff_LightModifiers hediffSetting))
                     {
-                        effect = hediffSetting.GetEffectAtGlow(glow);
+                        effect = hediffSetting.GetEffectAtGlow(glow, EyeCount);
                         if (Math.Abs(effect) > 0.005)
                         {
                             foundSomething = true;
@@ -439,17 +441,19 @@ namespace NightVision.Comps
                                 case LightModifiersBase.Options.NVNightVision:
                                     nvsum += effect;
                                     nvexplanation.AppendFormat(ModifierLine, hediffDef.LabelCap, effect);
+                                    nvexplanation.AppendLine();
                                     break;
                                 case LightModifiersBase.Options.NVPhotosensitivity:
                                     pssum += effect;
                                     psexplanation.AppendFormat(ModifierLine, hediffDef.LabelCap, effect);
+                                    psexplanation.AppendLine();
                                     break;
                                 case LightModifiersBase.Options.NVCustom:
                                     sum += effect;
                                     explanation.AppendFormat(ModifierLine, hediffDef.LabelCap, effect);
+                                    explanation.AppendLine();
                                     break;
                             }
-                            explanation.AppendLine();
                         }
                     }
                 }
@@ -484,9 +488,9 @@ namespace NightVision.Comps
                 if (Math.Abs(sum) > 0.005f)
                 {
                     explanation.AppendLine();
-                    explanation.AppendFormat(ModifierLine, "NVTotal".Translate() + " " + "NVmodifier".Translate().ToUpper(), sum);
-                    explanation.AppendLine();
-                    explanation.AppendFormat(MultiplierLine, "multiplier".Translate() + ":", sum + basevalue);
+                    explanation.AppendFormat(ModifierLine, "NVTotal".Translate() + " " + "NVModifier".Translate(), sum);
+                    //explanation.AppendLine();
+                    //explanation.AppendFormat(MultiplierLine, "multiplier".Translate() + ":", sum + basevalue);
 
                     explanation.AppendLine();
                 }
@@ -522,45 +526,9 @@ namespace NightVision.Comps
         /// </summary>
         /// <returns></returns>
         public LightModifiersBase.Options PsychDark()
-        {
-            if (ZeroLightModifier < 0.01f)
             {
-                return LightModifiersBase.Options.NVNone;
+                return Classifier.ClassifyModifier(ZeroLightModifier, true);
             }
-
-            //if nightvis and photosens have equal bonuses at zero % light
-            if (Math.Abs(LightModifiersBase.NVLightModifiers[0] - LightModifiersBase.PSLightModifiers[0]) < 0.01f)
-            {
-                //if equal to photosensitivity bonus ( or nightvis bonus)
-                if (Math.Abs(ZeroLightModifier - LightModifiersBase.PSLightModifiers[0]) < 0.01f)
-                {
-                    return LightModifiersBase.Options.NVPhotosensitivity;
-                }
-                //otherwise if greater than min 0.2 (equivalent to 100% mv&wrk speed at 0% light) or half the photosens&nv bonus 
-
-                if (ZeroLightModifier > Math.Min(LightModifiersBase.NVDefaultOffsets[0], LightModifiersBase.NVLightModifiers[0] / 2) - 0.01f)
-                {
-                    return LightModifiersBase.Options.NVNightVision;
-                }
-            }
-            else
-            {
-                float lower = Math.Min(LightModifiersBase.NVLightModifiers[0], LightModifiersBase.PSLightModifiers[0]);
-                float upper = Math.Max(LightModifiersBase.NVLightModifiers[0], LightModifiersBase.PSLightModifiers[0]);
-                //if greater than the midpoint between the two bonuses
-                if (ZeroLightModifier > ((lower + upper) / 2) - 0.01f)
-                {
-                    return LightModifiersBase.Options.NVPhotosensitivity;
-                }
-                //if greater than the midpoint between no bonus and the lower bonus
-                if (ZeroLightModifier > (lower / 2) - 0.01f)
-                {
-                    return LightModifiersBase.Options.NVNightVision;
-                }
-
-            }
-            return LightModifiersBase.Options.NVNone;
-        }
         #endregion
 
         #region Dirtifier

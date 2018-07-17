@@ -4,7 +4,7 @@
     <success>Always</success>
     <operations>  
     <li Class="PatchOperationTest">
-      <xpath>Defs/ThoughtDef[defName="EnvironmentDark"]/stages[1]</xpath>
+      <xpath>Defs/ThoughtDef[defName="EnvironmentDark"]/stages[2]</xpath>
       <success>Invert</success>
     </li>
     <li Class="PatchOperationAdd">

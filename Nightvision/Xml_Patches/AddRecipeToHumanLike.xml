@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/*[race/intelligence = 'Humanlike']/recipes</xpath>
+    <value>
+      <li>NV_InstallTapetum</li>
+    </value>
+  </Operation>
+</Patch>

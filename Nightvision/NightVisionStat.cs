@@ -131,5 +131,6 @@ namespace NightVision
         {
             return thing is Pawn pawn && pawn.GetComp<Comp_NightVision>() == null;
         }
+        
     }
 }

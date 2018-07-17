@@ -8,6 +8,8 @@ using Harmony;
 using NightVision.Comps;
 using NightVision.LightModifiers;
 using RimWorld;
+using RimWorld.BaseGen;
+using UnityEngine;
 using Verse;
 
 // ReSharper disable InconsistentNaming
@@ -26,6 +28,7 @@ namespace NightVision
             //StatPart_Glow
             MethodInfo StatPart_Glow_FactorFromGlow = AccessTools.Method(typeof(StatPart_Glow), "FactorFromGlow");
             MethodInfo StatPart_Glow_ExplanationPart = AccessTools.Method(typeof(StatPart_Glow), nameof(StatPart_Glow.ExplanationPart));
+            MethodInfo StatPart_Glow_ActiveFor = AccessTools.Method(typeof(StatPart_Glow), "ActiveFor");
 
             //Hediff
             MethodInfo Hediff_PostAdd = AccessTools.Method(typeof(Hediff), nameof(Hediff.PostAdd));
@@ -47,39 +50,55 @@ namespace NightVision
 
             //ThoughtWorker_Dark
             MethodInfo ThoughtWorker_Dark_CurrentStateInternal = AccessTools.Method(typeof(ThoughtWorker_Dark), "CurrentStateInternal");
-
-            Log.Message("ApparelTrackerPatchMI: " + ApparelTracker_TryDrop, true);
+            
+            //Pawn - TODO extract stalker patches
+            MethodInfo Pawn_getBodySize = AccessTools.Property(typeof(Pawn), nameof(Pawn.BodySize)).GetGetMethod();
 
         //Patches
             Type thistype = typeof(HarmonyPatches);
             //StatPart_Glow
-            Log.Message("1");
             harmony.Patch(StatPart_Glow_FactorFromGlow, null, new HarmonyMethod(thistype, nameof(FactorFromGlow_PostFix)));
-            Log.Message("2");
             harmony.Patch(StatPart_Glow_ExplanationPart, null, new HarmonyMethod(thistype, nameof(ExplanationPart_PostFix)));
-            Log.Message("3");
+            harmony.Patch(StatPart_Glow_ActiveFor, null, new HarmonyMethod(thistype, nameof(ActiveFor_Postfix)));
             //Hediff
             harmony.Patch(Hediff_PostAdd, null, new HarmonyMethod(thistype, nameof(Hediff_PostAdd_Postfix)));
-            Log.Message("4");
             harmony.Patch(Hediff_PostRemoved, null, new HarmonyMethod(thistype, nameof(Hediff_PostRemoved_Postfix)));
-            Log.Message("5");
             //HediffWithComps
             harmony.Patch(HediffWithComps_PostAdd, null, new HarmonyMethod(thistype, nameof(HediffWithComps_PostAdd_Postfix)));
-            Log.Message("6");
             //HealthTracker
             harmony.Patch(HealthTracker_AddHediff, null, new HarmonyMethod(thistype, nameof(AddHediff_Postfix)));
-            Log.Message("7");
             //ApparelTracker
             harmony.Patch(ApparelTracker_Wear, null, new HarmonyMethod(thistype, nameof(Wear_Postfix)));
-            Log.Message("8");
             harmony.Patch(ApparelTracker_TryDrop, null, new HarmonyMethod(thistype, nameof(TryDrop_Postfix)));
-            Log.Message("9");
             harmony.Patch(ApparelTracker_Remove, null, new HarmonyMethod(thistype, nameof(Remove_Postfix)));
-            Log.Message("10");
             harmony.Patch(ApparelTracker_TakeWearoutDamageForDay, null, new HarmonyMethod(thistype, nameof(TakeWearoutDamageForTheDay_Postfix)));
             //ThoughtWorker_Dark
             harmony.Patch(ThoughtWorker_Dark_CurrentStateInternal, null, new HarmonyMethod(thistype, nameof(CurrentStateInternal_Postfix)));
             
+            //Mechanoid spawn patches - TODO extract stalker patches
+            harmony.Patch(
+                          typeof(SymbolResolver_RandomMechanoidGroup).GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+                                                                     .First(
+                                                                            mi => 
+                                                                                        mi.HasAttribute<CompilerGeneratedAttribute>() && 
+                                                                                        mi.ReturnType == typeof(bool) && 
+                                                                                        mi.GetParameters().Count() == 1 && 
+                                                                                        mi.GetParameters()[0].ParameterType == typeof(PawnKindDef)), 
+                          null, new HarmonyMethod(typeof(HarmonyPatches), nameof(MechanoidsFixerAncient)));
+
+            harmony.Patch(
+                          typeof(CompSpawnerMechanoidsOnDamaged).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+                                                                .First(
+                                                                       mi => 
+                                                                                   mi.HasAttribute<CompilerGeneratedAttribute>() && 
+                                                                                   mi.ReturnType == typeof(bool) && 
+                                                                                   mi.GetParameters().Count() == 1 && 
+                                                                                   mi.GetParameters()[0].ParameterType == typeof(PawnKindDef)), 
+                          null, new HarmonyMethod(typeof(HarmonyPatches), nameof(MechanoidsFixer)));
+            //Pawn
+            harmony.Patch(Pawn_getBodySize, null, new HarmonyMethod(typeof(HarmonyPatches), nameof(GetBodySize_Patch)));
+
+
         //Combat Extended Patch
             try
             {
@@ -102,7 +121,7 @@ namespace NightVision
         public static void FactorFromGlow_PostFix(Thing t, ref float __result)
         {
             GlfactorTimer.Start();
-            if (t is Pawn pawn /*&& pawn.RaceProps.Humanlike  -- Not necessary? Statpart_glow.ActiveFor() should filter*/ && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
+            if (t is Pawn pawn && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
                 float glowat = pawn.Map.glowGrid.GameGlowAt(pawn.Position);
                 __result = comp.FactorFromGlow(glowat);
@@ -132,6 +151,20 @@ namespace NightVision
                 }
             }
         }
+
+        public static void ActiveFor_Postfix(
+            ref Thing t,
+            ref bool  __result)
+            {
+                if (__result || !t.Spawned) { }
+                else
+                    {
+                        if (t is Pawn pawn && pawn.TryGetComp<Comp_NightVision>() != null)
+                            {
+                                __result = true;
+                            }
+                    }
+            }
 
         #endregion
 
@@ -304,5 +337,43 @@ namespace NightVision
 
         #endregion
 
+
+        #region Mechanoid Spawner Patches from Androids
+        //Stolen from Androids mod by Chjees; written by erdelf. My thanks to them both.
+        public static void MechanoidsFixerAncient(ref bool __result, PawnKindDef kind)
+            {
+                if (kind.race.HasModExtension<Stalker_ModExtension>()) __result = false;
+            }
+        
+        public static void MechanoidsFixer(ref bool __result, PawnKindDef def)
+            {
+                if (def.race.HasModExtension<Stalker_ModExtension>()) __result = false;
+            }
+        #endregion
+
+        #region Pawn Patch
+        //TODO - generalise this
+        public static void GetBodySize_Patch(
+            ref Pawn  __instance,
+            ref float __result)
+            {
+                Stealth_ModExtension modextension = __instance?.def?.GetModExtension<Stealth_ModExtension>();
+                if (modextension == null || !__instance.Spawned)
+                    {
+                        return;
+                    }
+
+                if (__instance.Map.glowGrid.GameGlowAt(__instance.Position) > 0.3f)
+                    {
+                        return;
+                    }
+
+                __result *= Mathf.Lerp(modextension.lowlightbodysizefactor,
+                    1,
+                    __instance.Map.glowGrid.GameGlowAt(__instance.Position) / 0.3f);
+
+            }
+
+        #endregion
     }
 }

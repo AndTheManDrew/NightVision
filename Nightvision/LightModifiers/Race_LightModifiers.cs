@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using JetBrains.Annotations;
 using NightVision.Comps;
 using RimWorld;
@@ -16,6 +17,7 @@ namespace NightVision.LightModifiers
                         set => IntSetting = value;
                     }
 
+                internal bool ShouldShowInSettings = true;
                 internal Options IntSetting = Options.NVNone;
 
                 private ThingDef _parentDef;
@@ -51,27 +53,34 @@ namespace NightVision.LightModifiers
                                                       Mathf.Clamp(value, -0.99f + 0.2f * (1 - index), +1f + 0.2f * (1 - index)), 2, MidpointRounding.AwayFromZero);
                     }
 
+                private float[] _defaultOffsets;
                 public override float[] DefaultOffsets
                     {
                         get
                             {
-                                switch (GetSetting(_nvCompProps))
+                                if (_defaultOffsets == null)
                                     {
-                                        default:
-                                            return new float[2];
-                                        case Options.NVNightVision:
-                                            return NVLightModifiers.Offsets;
-                                        case Options.NVPhotosensitivity:
-                                            return PSLightModifiers.Offsets;
-                                        case Options.NVCustom:
-                                            return new[]
+                                        switch (GetSetting(_nvCompProps))
                                             {
-                                                        _nvCompProps.ZeroLightMultiplier
-                                                        - NightVisionSettings.DefaultZeroLightMultiplier,
-                                                        _nvCompProps.FullLightMultiplier
-                                                        - NightVisionSettings.DefaultFullLightMultiplier
-                                            };
+                                                default:
+                                                    return new float[2];
+                                                case Options.NVNightVision:
+                                                    return NVLightModifiers.Offsets.ToArray();
+                                                case Options.NVPhotosensitivity:
+                                                    return PSLightModifiers.Offsets.ToArray();
+                                                case Options.NVCustom:
+                                                    return new[]
+                                                    {
+                                                                _nvCompProps.ZeroLightMultiplier
+                                                                - NightVisionSettings.DefaultZeroLightMultiplier,
+                                                                _nvCompProps.FullLightMultiplier
+                                                                - NightVisionSettings.DefaultFullLightMultiplier
+                                                    };
+                                            }
                                     }
+
+                                return _defaultOffsets;
+
                             }
                     }
 
@@ -103,12 +112,18 @@ namespace NightVision.LightModifiers
                             }
                     }
 
+                public override float GetEffectAtGlow(float glow, int NumEyesNormalisedFor = 1)
+                    {
+                        return base.GetEffectAtGlow(glow, _eyeCount);
+                    }
+
                 private void AttachCompProps()
                     {
                         if (_parentDef.GetCompProperties<CompProperties_NightVision>() is CompProperties_NightVision
                                     compProps)
                             {
                                 _nvCompProps = compProps;
+                                ShouldShowInSettings = _nvCompProps.ShouldShowInSettings;
                                 if (Initialised)
                                     {
                                         return;

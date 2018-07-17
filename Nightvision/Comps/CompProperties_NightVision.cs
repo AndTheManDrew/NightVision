@@ -13,6 +13,7 @@ namespace NightVision.Comps
         public float FullLightMultiplier = NightVisionSettings.DefaultFullLightMultiplier;
         public bool NaturalNightVision = false;
         public bool NaturalPhotosensitivity = false;
+        public bool ShouldShowInSettings = true;
 
         public bool IsDefault()
             {

@@ -71,26 +71,26 @@ namespace NightVision.LightModifiers
                             }
                     }
                 
-                public float GetEffectAtGlow(float glow)
+                public virtual float GetEffectAtGlow(float glow, int NumEyesNormalisedFor = 1)
                     {
                         if (glow < 0.001)
                             {
-                                return this[0];
+                                return (float)Math.Round(this[0]/NumEyesNormalisedFor, 2);
                             }
 
                         if (glow > 0.999)
                             {
-                                return this[1];
+                                return (float)Math.Round(this[1]/NumEyesNormalisedFor, 2);
                             }
 
                         if (glow < 0.3)
                             {
-                                return this[0] * (0.3f - glow) / 0.3f;
+                                return (float)Math.Round(this[0]/NumEyesNormalisedFor * (0.3f - glow) / 0.3f, 2);
                             }
 
                         if (glow > 0.7)
                             {
-                                return this[1] * (glow - 0.7f) / 0.3f;
+                                return (float)Math.Round(this[1]/NumEyesNormalisedFor * (glow - 0.7f) / 0.3f, 2);
                             }
 
                         return 0;
@@ -138,15 +138,15 @@ namespace NightVision.LightModifiers
                                         float[] defaultValues = DefaultOffsets;
                                         if (Math.Abs(defaultValues[0]) > 0.001 && Math.Abs(defaultValues[1]) > 0.001)
                                             {
-                                                Offsets = DefaultOffsets;
+                                                Offsets = DefaultOffsets.ToArray();
                                             }
                                         else if (Setting == Options.NVNightVision)
                                             {
-                                                Offsets = NVLightModifiers.Offsets;
+                                                Offsets = NVLightModifiers.Offsets.ToArray();
                                             }
                                         else if (Setting == Options.NVPhotosensitivity)
                                             {
-                                                Offsets = PSLightModifiers.Offsets;
+                                                Offsets = PSLightModifiers.Offsets.ToArray();
                                             }
                                     }
                             }

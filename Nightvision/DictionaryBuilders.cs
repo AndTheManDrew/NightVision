@@ -56,6 +56,11 @@ namespace NightVision
                                                 .SelectMany(hgsd => hgsd.hediffGivers.Where(hg => hg.partsToAffect != null
                                                 && hg.partsToAffect.Exists(bpd => bpd.tags.Contains(EyeTag))).Select(hg => hg.hediff)));
 
+            //Clean up a bit (we rely on comps as an interface between rimworld stat reporting and our calculations)
+            NightVisionSettings.AllEyeHediffs.RemoveWhere(hdD => !typeof(HediffWithComps).IsAssignableFrom(hdD.hediffClass));
+
+            NightVisionSettings.AllSightAffectingHediffs.RemoveWhere(hdD => !typeof(HediffWithComps).IsAssignableFrom(hdD.hediffClass));
+
             //Using IEnumerable.except because hashset.exceptwith changes in place and returns void
             List<HediffDef> list = NightVisionSettings.AllSightAffectingHediffs.Except(NightVisionSettings.AllEyeHediffs).ToList();
 
@@ -75,26 +80,6 @@ namespace NightVision
                         {
                             NightVisionSettings.HediffLightMods[hediffDef] = new Hediff_LightModifiers(hediffDef);
                         }
-
-                    //if (hediffDef.stages != null)
-                    //    {
-                    //        foreach (var stage in hediffDef.stages)
-                    //            {
-                    //                if (!stage.capMods.NullOrEmpty())
-                    //                    {
-                    //                        Log.Message(hediffDef.labelNoun);
-                    //                        foreach (var capMod in stage.capMods)
-                    //                            {
-                    //                                Log.Message(capMod.capacity.label);
-                    //                                Log.Message((capMod.offset * 100f).ToString("+#;-#") + "%");
-                    //                                Log.Message((capMod.postFactor * 100f).ToString("+#;-#") + "%");
-                    //                                Log.Message((capMod.setMax * 100f).ToString("+#;-#") + "%");
-
-                    //                            }
-
-                    //                    }
-                    //            }
-                    //    }
                 }
                 if (value != null && AutoQualifier.HediffCheck(hediffDef) != null)
                     {
@@ -113,7 +98,6 @@ namespace NightVision
                         NightVisionSettings.HediffLightMods[hediffDef] = new Hediff_LightModifiers(hediffDef){AffectsEye = true};
                     }
                     //bionic eyes and such are automatically assigned night vision, this can be individually overridden in the mod settings
-                    //this does not include bionic implants e.g. EPOE's tactical cornea implant, which do not remove the eye
                     else if (AutoQualifier.HediffCheck(hediffDef) is LightModifiersBase.Options autoOptions)
                     {
                         NightVisionSettings.HediffLightMods[hediffDef] 
@@ -138,10 +122,12 @@ namespace NightVision
 
         #region Race Dictionary Builder
         internal static void RaceDictBuilder()
-        {
-            List<ThingDef> raceDefList = DefDatabase<ThingDef>.AllDefsListForReading.FindAll(rdef =>
-                rdef.race is RaceProperties race
-                && race.Humanlike);
+            {
+                List<ThingDef> raceDefList =
+                            DefDatabase<ThingDef>.AllDefsListForReading.FindAll(
+                                rdef => rdef.race is RaceProperties race
+                                        && (race.Humanlike
+                                            || rdef.GetCompProperties<CompProperties_NightVision>() != null));
             if (NightVisionSettings.RaceLightMods == null)
             {
                 NightVisionSettings.RaceLightMods = new Dictionary<ThingDef, Race_LightModifiers>();
