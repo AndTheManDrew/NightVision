@@ -147,15 +147,15 @@ namespace NightVision
         #region Apparel Dict & List Builder
         internal static void ApparelDictBuilder()
         {
-            //ThingCategoryDef headgearCategoryDef = ThingCategoryDef.Named("Headgear");  --- adds stuff like cowboy hat; which, though cool, isnt what I'm going for
+            ThingCategoryDef headgearCategoryDef = ThingCategoryDef.Named("Headgear");
             BodyPartGroupDef fullHead = BodyPartGroupDefOf.FullHead;
             BodyPartGroupDef eyes = BodyPartGroupDefOf.Eyes;
 
             NightVisionSettings.AllEyeCoveringHeadgearDefs = new HashSet<ThingDef>(DefDatabase<ThingDef>.AllDefsListForReading.FindAll(adef =>
                 adef.IsApparel 
-                && (/*adef.thingCategories.Contains(headgearCategoryDef)
-                ||*/ adef.apparel.bodyPartGroups.Any(bpg => bpg == eyes || bpg == fullHead)
-                || adef.HasComp(typeof(Comp_NightVisionApparel)))));
+                && adef.thingCategories.Contains(headgearCategoryDef)
+                || adef.apparel.bodyPartGroups.Any(bpg => bpg == eyes || bpg == fullHead)
+                || adef.HasComp(typeof(Comp_NightVisionApparel))));
             if (NightVisionSettings.NVApparel == null)
             {
                 NightVisionSettings.NVApparel = new Dictionary<ThingDef, ApparelSetting>();
@@ -176,6 +176,54 @@ namespace NightVision
                 }
             }
         }
+        #endregion
+
+        #region Add Tapetum to large predator
+
+        internal static void TapetumInjector()
+            {
+                //TODO simplify/inline/merge_loops after logging
+                List<ThingDef> bestAnimals = new List<ThingDef>();
+                foreach (var biome in DefDatabase<BiomeDef>.AllDefs)
+                    {
+                        if (!biome.AllWildAnimals.Any())
+                            {
+                                continue;
+                            }
+
+                        List<PawnKindDef> possibleAnimals =
+                                    biome.AllWildAnimals.Where(pkd => pkd.RaceProps.predator == true && pkd.RaceProps.baseBodySize > 1).ToList();
+                        
+                        if (possibleAnimals.Count == 0)
+                            {
+                                continue;
+                            }
+
+                        ThingDef bestAnimal = possibleAnimals.Aggregate((
+                                                                                         best,
+                                                                                         next) =>
+                                                                                     best.RaceProps.baseBodySize
+                                                                                     > next.RaceProps.baseBodySize
+                                                                                                 ? best
+                                                                                                 : next)
+                                              .race;
+                        bestAnimals.AddDistinct(bestAnimal);
+                                              
+                        Log.Message("Biome: " + biome + ", best animal: " + bestAnimal);
+                        
+                    }
+
+                foreach (var animal in bestAnimals)
+                    {
+                        if (animal.recipes.NullOrEmpty())
+                            {
+                                animal.recipes = new List<RecipeDef>();
+                            }
+                        animal.recipes.Add(RecipeDef_ExtractTapetumLucidum.ExtractTapetumLucidum);
+                        Log.Message($"Added extract tapetum lucidum to {animal}");
+                    }
+
+            }
         #endregion
     }
 }

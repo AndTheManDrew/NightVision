@@ -37,6 +37,7 @@ namespace NightVision
             NightVisionDictionaryBuilders.MakeHediffsDict();
             NightVisionDictionaryBuilders.RaceDictBuilder();
             NightVisionDictionaryBuilders.ApparelDictBuilder();
+            NightVisionDictionaryBuilders.TapetumInjector();
         }
     }
 }

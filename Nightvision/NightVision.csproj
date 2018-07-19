@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EB253018-4E17-43AA-9868-16AC468F406A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NightVision</RootNamespace>
+    <AssemblyName>NightVision</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\Nightvision\Assemblies\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\Nightvision\Assemblies\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony, Version=1.0.9.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Rimworld Libraries\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CombatExtended">
+      <HintPath>..\..\..\Rimworld Utilities\CombatExtended.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Comps\HediffCompProperties_NightVision.cs" />
+    <Compile Include="JobDriver_DigNest.cs" />
+    <Compile Include="JobDriver_WaitTillNight.cs" />
+    <Compile Include="JobGiver_MakeLord.cs" />
+    <Compile Include="JobGiver_WaitTillNight.cs" />
+    <Compile Include="LightModifiers\Hediff_LightModifiers.cs" />
+    <Compile Include="IndicatorTex.cs" />
+    <Compile Include="LightModifiers\LightModifiers.cs" />
+    <Compile Include="LordJob_HuntAndHide.cs" />
+    <Compile Include="LordToils.cs" />
+    <Compile Include="NightVisionStat.cs" />
+    <Compile Include="LightModifiers\Race_LightModifiers.cs" />
+    <Compile Include="Recipe_ExtractTapetum.cs" />
+    <Compile Include="SettingClasses.cs" />
+    <Compile Include="Comps\HediffComp_NightVision.cs" />
+    <Compile Include="Comps\Comp_NightVision.cs" />
+    <Compile Include="Comps\Comp_NightVisionApparel.cs" />
+    <Compile Include="Harmony_Patches.cs" />
+    <Compile Include="Comps\CompProperties_NightVision.cs" />
+    <Compile Include="DictionaryBuilders.cs" />
+    <Compile Include="Controller.cs" />
+    <Compile Include="Properties\NightVision.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="Stalker_DefUtilities.cs" />
+    <Compile Include="Stalker_JobGiver_AISapper.cs" />
+    <Compile Include="Utilities\AutoQualifier.cs" />
+    <Compile Include="Utilities\Classifier.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="About\About.xml" />
+    <Content Include="Languages\English\Keyed\NightVision.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Xml_Defs\JobDef.xml" />
+    <Content Include="Xml_Defs\NightVision_Apparel.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Xml_Defs\NightVision_Hediffs.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Xml_Defs\NightVision_Items.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Xml_Defs\NV_Stat.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Xml_Defs\Stalker.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Xml_Defs\Stalker_DutyDef.xml" />
+    <Content Include="Xml_Defs\Surgery_ExtractTapetum.xml" />
+    <Content Include="Xml_Defs\ThinkTree_Stalker.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Xml_Patches\AddRecipeToHumanLike.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Xml_Patches\ThoughtDef.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="build\postbuild.bat" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+xcopy /i /e /y "$(ProjectDir)Xml_Defs\*.xml" "$(ProjectDir)$(OutDir)..\Defs\"
+xcopy /i /e /y "$(ProjectDir)Xml_Patches\*.xml" "$(ProjectDir)$(OutDir)..\Patches\"
+xcopy /i /e /y "$(ProjectDir)Languages\*" "$(ProjectDir)$(OutDir)..\Languages"
+xcopy /i /e /y "$(ProjectDir)About" "$(ProjectDir)$(OutDir)..\About"</PostBuildEvent>
+  </PropertyGroup>
+</Project>
