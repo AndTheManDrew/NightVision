@@ -89,7 +89,9 @@ namespace NightVision
         public static Dictionary<ThingDef, ApparelSetting> NVApparel = new Dictionary<ThingDef, ApparelSetting>();
         public static Dictionary<HediffDef, Hediff_LightModifiers> HediffLightMods = new Dictionary<HediffDef, Hediff_LightModifiers>();
 
+        private static FloatRange multiplierCaps = new FloatRange(DefaultMinCap, DefaultMaxCap);
         public static FloatRange MultiplierCaps = new FloatRange(DefaultMinCap, DefaultMaxCap);
+
 
         private static bool _customCapsEnabled;
         public static bool CEDetected = false;
@@ -297,13 +299,23 @@ namespace NightVision
             Widgets.BeginScrollView(inRect, ref _raceScrollPosition, viewRect);
             int count = 0;
             foreach (var kvp in RaceLightMods)
-            {
-                if (!kvp.Value.ShouldShowInSettings && !Prefs.DevMode)
+                {
+                    Color givenColor = GUI.color;
+                if (!kvp.Value.ShouldShowInSettings)
                     {
-                        continue;
+                        if (!Prefs.DevMode)
+                            {
+                                continue;
+                            }
+                        GUI.color = Color.red;
+
                     }
                 rowRect.y = num;
                 _numberOfCustomRaces += DrawLightModifiersRow(kvp.Key, kvp.Value, rowRect, ref num, true);
+                if (!kvp.Value.ShouldShowInSettings)
+                    {
+                        GUI.color = givenColor;
+                    }
                 count++;
                 num += RowHeight + RowGap;
                 if (count < raceCount)

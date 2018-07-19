@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using NightVision.LightModifiers;
 using NightVision.Utilities;
 using RimWorld;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 using Verse;
 
@@ -22,9 +22,9 @@ namespace NightVision.Comps
         private const float MinGlowNoGlow = 0.3f;
         private const float MaxGlowNoGlow = 0.7f;
         
-        private const string ModifierLine = "    {0} : {1,6:+#0.0%;-#0.0%;0%}";
-        private const string MultiplierLine = "    {0} : {1,6:x#0.0%;x#0.0%;x0%}";
-        private const string Maxline = "     {0} {1} : {2,6:x#0.0%;x#0.0%;x0%}";
+        private const string ModifierLine = " {0}: {1,6:+#0.0%;-#0.0%;0%}";
+        private const string MultiplierLine = " {0}: {1,6:x#0.0%;x#0.0%;x0%}";
+        private const string Maxline = " ({0} {1}: {2,6:+#0.0%;-#0.0%;+0%})";
         #endregion
 
         #region Private Fields
@@ -42,6 +42,8 @@ namespace NightVision.Comps
         private float _zeroLightModifier = -1;
         private float _fullLightModifier = -1;
         private List<Hediff> _pawnsHediffs;
+
+        private bool CanCheat = false;
 
         //private static LightModifiers NVModifiers;
         #endregion
@@ -369,8 +371,8 @@ namespace NightVision.Comps
             usedApparelSetting = false;
 
             StringBuilder explanation = new StringBuilder(result);
-            StringBuilder nvexplanation = new StringBuilder().AppendLine(LightModifiersBase.Options.NVNightVision.ToString().Translate() + " " + "NVEffects".Translate());
-            StringBuilder psexplanation = new StringBuilder().AppendLine(LightModifiersBase.Options.NVPhotosensitivity.ToString().Translate() + " " + "NVEffects".Translate());
+            StringBuilder nvexplanation = new StringBuilder().AppendLine(LightModifiersBase.Options.NVNightVision.ToString().Translate() + " " + "NVEffects".Translate() + String.Format(Maxline, "", "max".Translate(), caps[2]));
+            StringBuilder psexplanation = new StringBuilder().AppendLine(LightModifiersBase.Options.NVPhotosensitivity.ToString().Translate() + " " + "NVEffects".Translate() + String.Format(Maxline, "", "max".Translate(), caps[3]));
 
             explanation.AppendLine();
             if (lowLight)
@@ -391,7 +393,7 @@ namespace NightVision.Comps
             else
             {
                 explanation.AppendFormat(MultiplierLine, "StatsReport_BaseValue".Translate(), NightVisionSettings.DefaultFullLightMultiplier);
-                explanation.AppendLine();
+                //explanation.AppendLine();
                 basevalue = NightVisionSettings.DefaultFullLightMultiplier;
                 if (ApparelNullsPS)
                 {
@@ -409,15 +411,15 @@ namespace NightVision.Comps
                     {
                         case LightModifiersBase.Options.NVNightVision:
                             nvsum += effect * NumberOfRemainingEyes;
-                            nvexplanation.AppendFormat(ModifierLine, ParentPawn.def.LabelCap + " x" + NumberOfRemainingEyes, effect * NumberOfRemainingEyes);
+                            nvexplanation.AppendFormat("  " + ModifierLine, ParentPawn.def.LabelCap + " x" + NumberOfRemainingEyes, effect * NumberOfRemainingEyes);
                             break;
                         case LightModifiersBase.Options.NVPhotosensitivity:
                             pssum += effect * NumberOfRemainingEyes;
-                            psexplanation.AppendFormat(ModifierLine, ParentPawn.def.LabelCap + " x" + NumberOfRemainingEyes, effect * NumberOfRemainingEyes);
+                            psexplanation.AppendFormat("  " + ModifierLine, ParentPawn.def.LabelCap + " x" + NumberOfRemainingEyes, effect * NumberOfRemainingEyes);
                             break;
                         case LightModifiersBase.Options.NVCustom:
                             sum += effect * NumberOfRemainingEyes;
-                            explanation.AppendFormat(ModifierLine, ParentPawn.def.LabelCap + " x" + NumberOfRemainingEyes, effect * NumberOfRemainingEyes);
+                            explanation.AppendFormat("  " + ModifierLine, ParentPawn.def.LabelCap + " x" + NumberOfRemainingEyes, effect * NumberOfRemainingEyes);
                             break;
                     };
                 }
@@ -440,17 +442,17 @@ namespace NightVision.Comps
                             {
                                 case LightModifiersBase.Options.NVNightVision:
                                     nvsum += effect;
-                                    nvexplanation.AppendFormat(ModifierLine, hediffDef.LabelCap, effect);
+                                    nvexplanation.AppendFormat("  " + ModifierLine, hediffDef.LabelCap, effect);
                                     nvexplanation.AppendLine();
                                     break;
                                 case LightModifiersBase.Options.NVPhotosensitivity:
                                     pssum += effect;
-                                    psexplanation.AppendFormat(ModifierLine, hediffDef.LabelCap, effect);
+                                    psexplanation.AppendFormat("  " + ModifierLine, hediffDef.LabelCap, effect);
                                     psexplanation.AppendLine();
                                     break;
                                 case LightModifiersBase.Options.NVCustom:
                                     sum += effect;
-                                    explanation.AppendFormat(ModifierLine, hediffDef.LabelCap, effect);
+                                    explanation.AppendFormat("  " + ModifierLine, hediffDef.LabelCap, effect);
                                     explanation.AppendLine();
                                     break;
                             }
@@ -464,52 +466,52 @@ namespace NightVision.Comps
 
                 if (Math.Abs(nvsum) > 0.005f)
                 {
-                    explanation.AppendLine();
+                    //explanation.AppendLine();
                     explanation.Append(nvexplanation);
-                    if (Math.Abs(nvsum) > Math.Abs(caps[2]))
-                    {
-                        explanation.AppendLine();
-                        explanation.AppendFormat(Maxline, "", "max".Translate(), caps[2]);
-                    }
+                    //if (Math.Abs(nvsum) > Math.Abs(caps[2]))
+                    //{
+                    //    explanation.AppendLine();
+                    //    explanation.AppendFormat(Maxline, "", "max".Translate(), caps[2]);
+                    //}
                     explanation.AppendLine();
                 }
                 if (Math.Abs(pssum) > 0.005f)
                 {
-                    explanation.AppendLine();
+                    //explanation.AppendLine();
                     explanation.Append(psexplanation);
-                    if (Math.Abs(pssum) > Math.Abs(caps[3]))
-                    {
-                        explanation.AppendLine();
-                        explanation.AppendFormat(Maxline, "", "max".Translate(), caps[3]);
-                    }
+                    //if (Math.Abs(pssum) > Math.Abs(caps[3]))
+                    //{
+                    //    explanation.AppendLine();
+                    //    explanation.AppendFormat(Maxline, "", "max".Translate(), caps[3]);
+                    //}
                     explanation.AppendLine();
                 }
                 sum += pssum + nvsum;
                 if (Math.Abs(sum) > 0.005f)
                 {
-                    explanation.AppendLine();
-                    explanation.AppendFormat(ModifierLine, "NVTotal".Translate() + " " + "NVModifier".Translate(), sum);
                     //explanation.AppendLine();
+                    explanation.AppendFormat(ModifierLine, "NVTotal".Translate() + " " + "NVModifier".Translate(), sum);
+                    explanation.AppendLine();
                     //explanation.AppendFormat(MultiplierLine, "multiplier".Translate() + ":", sum + basevalue);
 
                     explanation.AppendLine();
                 }
                 if ((sum - 0.001f > caps[0])|| (sum + 0.001f < caps[1]))
                 {
-                    explanation.AppendLine();
+                    //explanation.AppendLine();
                     explanation.AppendFormat(Maxline, "NVTotal".Translate(), "max".Translate(), (sum + basevalue) > caps[0] ? caps[0] : caps[1]);
 
                     explanation.AppendLine();
                 }
                 if (lowLight & ApparelGrantsNV & sum + 0.001f < caps[2])
                 {
-                    explanation.AppendLine();
+                    //explanation.AppendLine();
                     explanation.Append("NVGearPresent".Translate($"{basevalue + caps[2]:0%}"));
                     usedApparelSetting = true;
                 }
                 else if (ApparelNullsPS &  sum + 0.001f < 0)
                 {
-                    explanation.AppendLine();
+                    //explanation.AppendLine();
                     explanation.Append("PSGearPresent".Translate($"{NightVisionSettings.DefaultFullLightMultiplier:0%}"));
                     usedApparelSetting = true;
                 }
