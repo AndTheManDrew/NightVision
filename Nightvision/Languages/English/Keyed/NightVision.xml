@@ -1,67 +1,69 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<LanguageData>
-	<!-- Settings -->
-	
-	<NVSettingsTab>Settings</NVSettingsTab>
-	<NVRaces>Races</NVRaces>
-	<NVHediffs>Health Conditions</NVHediffs>
-	<NVApparel>Apparel</NVApparel>
-	<NVGeneralTab>General</NVGeneralTab>
-	
-	<NVModifier>modifier</NVModifier>
-	<NVTotal>Total</NVTotal>
-	<NVGlowModOptions>Settings</NVGlowModOptions>
-	
-	<NVZeroLabel>At 0% light</NVZeroLabel>
-	<NVFullLabel>At 100% light</NVFullLabel>
-	
-	<NVNone>None</NVNone>
-	<NVNightVision>Night Vision</NVNightVision>
-	<NVPhotosensitivity>Photosensitivity</NVPhotosensitivity>
-	<NVCustom>Custom</NVCustom>
-	<NVLoadedFromFile>This was loaded from file with the {0} setting: {1}</NVLoadedFromFile>
+<?xml version="1.0" encoding="utf-8"?>
 
-	<NVVanillaMultiExp>In vanilla Rimworld, the move and work speed multipliers due to light are:  At 0% light = x80%; At 100% light = x100%</NVVanillaMultiExp>
-	<NVFullOrZeroExp>In this mod, the modifiers begin to kick in at light levels less than 30% or greater than 70%. They peak at 0% and 100% light.</NVFullOrZeroExp>
-	<NVCustomCapsEnabled>Enable custom limits for the maximum and minimum allowed multipliers:</NVCustomCapsEnabled>
-	<NVCapsExp>Limits for work and movement speed multipliers (Default values: min = x80%, max = x120%) :</NVCapsExp>
-	
-	<!-- Change to using RW language tags in misc -->
-	<NVSettingsMinCapLabel>Minimum allowed multiplier = x{0}%</NVSettingsMinCapLabel>
-	<NVSettingsMaxCapLabel>Maximum allowed multiplier = x{0}%</NVSettingsMaxCapLabel>
-	
-	<NVMoveWorkSpeedMultipliers>{0} move and work speed multipliers</NVMoveWorkSpeedMultipliers>
-	<NVMoveWorkSpeedModifiers>Move and Work speed offsets</NVMoveWorkSpeedModifiers>
-	
-	<NVRaceNote>Note: to get the full effect of these settings the individual must have all their natural eyes. Losing an eye or replacing it with a prosthetic will affect the final result; implants that do not remove the eye will not, nor will injuries.</NVRaceNote>
-  <NVRaceQualifier>This setting requires all eyes to be natural.</NVRaceQualifier>
+<LanguageData>
+  <!-- Settings -->
+
+  <NVSettingsTab>Settings</NVSettingsTab>
+  <NVRaces>Races</NVRaces>
+  <NVHediffs>Health Conditions</NVHediffs>
+  <NVApparel>Apparel</NVApparel>
+  <NVGeneralTab>General</NVGeneralTab>
+
+  <NVModifier>modifier</NVModifier>
+  <NVTotal>Total</NVTotal>
+  <NVGlowModOptions>Settings</NVGlowModOptions>
+
+  <NVZeroLabel>At 0% light</NVZeroLabel>
+  <NVFullLabel>At 100% light</NVFullLabel>
+
+  <NVNone>None</NVNone>
+  <NVNightVision>Night Vision</NVNightVision>
+  <NVPhotosensitivity>Photosensitivity</NVPhotosensitivity>
+  <NVCustom>Custom</NVCustom>
+  <NVLoadedFromFile>This was loaded from file with the {0} setting: {1}</NVLoadedFromFile>
+
+  <NVVanillaMultiExp>In vanilla Rimworld, the move and work speed multipliers due to light are:  At 0% light = x80%; At 100% light = x100%</NVVanillaMultiExp>
+  <NVFullOrZeroExp>In this mod, the modifiers begin to kick in at light levels less than 30% or greater than 70%. They peak at 0% and 100% light.</NVFullOrZeroExp>
+  <NVCustomCapsEnabled>Enable custom limits for the maximum and minimum allowed multipliers:</NVCustomCapsEnabled>
+  <NVCapsExp>Limits for work and movement speed multipliers (Default values: min = x80%, max = x120%) :</NVCapsExp>
+
+  <!-- Change to using RW language tags in misc -->
+  <NVSettingsMinCapLabel>Minimum allowed multiplier = x{0}%</NVSettingsMinCapLabel>
+  <NVSettingsMaxCapLabel>Maximum allowed multiplier = x{0}%</NVSettingsMaxCapLabel>
+  <NVDevModeOnly>Dev Mode Only</NVDevModeOnly>
+
+  <NVMoveWorkSpeedMultipliers>{0} move and work speed multipliers</NVMoveWorkSpeedMultipliers>
+  <NVMoveWorkSpeedModifiers>Move and Work speed offsets</NVMoveWorkSpeedModifiers>
+
+  <NVRaceNote>Note: to get the full effect of these settings the individual must have all their natural eyes. Losing an eye or replacing it with a prosthetic will affect the final result; implants that do not remove the eye will not, nor will injuries.</NVRaceNote>
+  <NVRaceQualifier>Requires all eyes to be natural.</NVRaceQualifier>
 
   <NVHediffAutoAssigned>This setting was auto-assigned.</NVHediffAutoAssigned>
-  <NVHediffQualifier>To get the listed effect all eyes must have this.</NVHediffQualifier>
-	<NVHediffExplained>The conditions listed here are limited to those that are applied directly to the eye, or explicitly affect sight, or have particular modded files.</NVHediffExplained>
-	<NVHediffNote>Note: for conditions that effect the eye directly (e.g. bionic eyes) the night vision and photosensitivity settings require two eyes to have that condition to get the full effect.</NVHediffNote>
-	<NVHediffNoteCont>For example, if both luciferium and bionic eyes were set to give night vision; an individual with just one bionic eye would get half the night vision bonus, but on luciferium they would get the full bonus.</NVHediffNoteCont>
-	
-	<NVNullPS>Nullifies photosensitivity</NVNullPS>
-	<NVGiveNV>Grants night vision</NVGiveNV>
+  <NVHediffQualifier>Full effect requires all eyes to have this.</NVHediffQualifier>
+  <NVHediffExplained>The conditions listed here are limited to those that are applied directly to the eye, or explicitly affect sight, or have particular modded files.</NVHediffExplained>
+  <NVHediffNote>Note: for conditions that effect the eye directly (e.g. bionic eyes) the night vision and photosensitivity settings require all eyes to have that condition to get the full effect.</NVHediffNote>
+  <NVHediffNoteCont>For example, if both luciferium and bionic eyes were set to give night vision; an individual with just one bionic eye would get half the night vision bonus, but on luciferium they would get the full bonus.</NVHediffNoteCont>
+
+  <NVNullPS>Nullifies photosensitivity</NVNullPS>
+  <NVGiveNV>Grants night vision</NVGiveNV>
   <NVGivePS>Grants photosensitivity</NVGivePS>
 
   <NVEffects>effects</NVEffects>
-	<NVApparelExplained></NVApparelExplained>
-	
-	<NVGearPresent>Set to {0} due to night vision apparel</NVGearPresent>
-	<PSGearPresent>Set to {0} due to bright light protection.</PSGearPresent>
-	
-	<NVDebugTab>Debug</NVDebugTab>
-	<NVDebugLogComps>Print the pawn's night vision comp details in the log.</NVDebugLogComps>
-	<NVDebugAverageTime>Rough average time per tick for the harmony patch on StatPart_Glow.FactorFromGlow:</NVDebugAverageTime>
-	
-	<EnableNVForCE>Allow {0} to affect the aim calculations of Combat Extended:</EnableNVForCE>
-	
-	<NVNullEntryLog>Removing {0} null entries from NightVision's {1}.</NVNullEntryLog>
-	<NVEye>eye</NVEye>
-	<NVNot>not</NVNot>
-	<NVBionic>Is a bionic {0}</NVBionic>
-	<NVPartEfficiency>efficiency</NVPartEfficiency>
-	<NVCapMods>Capacity Modifiers:</NVCapMods>
+  <NVApparelExplained></NVApparelExplained>
+
+  <NVGearPresent>Set to {0} due to night vision apparel</NVGearPresent>
+  <PSGearPresent>Set to {0} due to bright light protection.</PSGearPresent>
+
+  <NVDebugTab>Debug</NVDebugTab>
+  <NVDebugLogComps>Print the pawn's night vision comp details in the log.</NVDebugLogComps>
+  <NVDebugAverageTime>Rough average time per tick for the harmony patch on StatPart_Glow.FactorFromGlow:</NVDebugAverageTime>
+
+  <EnableNVForCE>Allow {0} to affect the aim calculations of Combat Extended:</EnableNVForCE>
+
+  <NVNullEntryLog>Removing {0} null entries from NightVision's {1}.</NVNullEntryLog>
+  <NVEye>eye</NVEye>
+  <NVNot>not</NVNot>
+  <NVBionic>Is a bionic {0}</NVBionic>
+  <NVPartEfficiency>efficiency</NVPartEfficiency>
+  <NVCapMods>Capacity Modifiers:</NVCapMods>
 </LanguageData>

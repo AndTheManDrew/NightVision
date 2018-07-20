@@ -9,46 +9,55 @@ using Verse;
 
 namespace NightVision.LightModifiers
     {
-
         public class Hediff_LightModifiers : LightModifiersBase
             {
-                internal bool AffectsEye = false;
-                internal bool AutoAssigned = false;
+                private float[] _defaultOffsets;
+
+                [CanBeNull] private HediffCompProperties_NightVision _hediffCompProps;
+
+                private  HediffDef _parentDef;
+                internal bool      AffectsEye   = false;
+                internal bool      AutoAssigned = false;
+
+                internal Options IntSetting;
+
+                public Hediff_LightModifiers() { }
+
+                public Hediff_LightModifiers(
+                    HediffDef hediffDef)
+                    {
+                        _parentDef = hediffDef;
+                        AttachCompProps();
+                    }
+
                 internal override Options Setting
                     {
                         get => IntSetting;
                         set => IntSetting = value;
                     }
 
-                internal Options IntSetting;
-
-                private HediffDef _parentDef;
                 public override Def ParentDef => _parentDef;
 
-                [CanBeNull] private HediffCompProperties_NightVision _hediffCompProps;
-
-                public override float this[int index]
+                public override float this[
+                    int index]
                     {
                         get
                             {
                                 switch (IntSetting)
                                     {
-                                        default:
-                                            return 0f;
-                                        case Options.NVNightVision:
-                                            return NVLightModifiers[index];
-                                        case Options.NVPhotosensitivity:
-                                            return PSLightModifiers[index];
-                                        case Options.NVCustom:
-                                            return Offsets[index];
+                                        default:                         return 0f;
+                                        case Options.NVNightVision:      return NVLightModifiers[index];
+                                        case Options.NVPhotosensitivity: return PSLightModifiers[index];
+                                        case Options.NVCustom:           return Offsets[index];
                                     }
                             }
-                        set => Offsets[index] =
-                                    (float)Math.Round(
-                                                      Mathf.Clamp(value, -0.99f + 0.2f * (1 - index), +1f + 0.2f * (1 - index)), 2, MidpointRounding.AwayFromZero);
+                        set =>
+                                    Offsets[index] = (float) Math.Round(
+                                        Mathf.Clamp(value, -0.99f + 0.2f * (1 - index), +1f + 0.2f * (1 - index)),
+                                        2,
+                                        MidpointRounding.AwayFromZero);
                     }
 
-                private float[] _defaultOffsets;
                 public override float[] DefaultOffsets
                     {
                         get
@@ -64,19 +73,21 @@ namespace NightVision.LightModifiers
                                                     _defaultOffsets = new float[2];
                                                     break;
                                                 case Options.NVNightVision:
-                                                    _defaultOffsets =  NVLightModifiers.Offsets.ToArray();
+                                                    _defaultOffsets = NVLightModifiers.Offsets.ToArray();
                                                     break;
                                                 case Options.NVPhotosensitivity:
                                                     _defaultOffsets = PSLightModifiers.Offsets.ToArray();
                                                     break;
                                                 case Options.NVCustom:
-                                                    _defaultOffsets = new[] {_hediffCompProps.ZeroLightMod, _hediffCompProps.FullLightMod};
+                                                    _defaultOffsets = new[]
+                                                    {
+                                                        _hediffCompProps.ZeroLightMod, _hediffCompProps.FullLightMod
+                                                    };
                                                     break;
                                             }
                                     }
 
                                 return _defaultOffsets;
-
                             }
                     }
 
@@ -96,24 +107,18 @@ namespace NightVision.LightModifiers
                             }
                     }
 
-                public Hediff_LightModifiers() { }
-
-                public Hediff_LightModifiers(HediffDef hediffDef)
-                    {
-                        _parentDef = hediffDef;
-                        AttachCompProps();
-                    }
                 /// <summary>
-                /// 
                 /// </summary>
                 /// <param name="glow"> [0,1]</param>
-                /// <param name="NumOfEyesNormalisedFor">Required for hediffs</param>
+                /// <param name="numOfEyesNormalisedFor">Required for hediffs</param>
                 /// <returns>Normalised value if hediff is an eye hediff</returns>
-                public override float GetEffectAtGlow(float glow, int NumOfEyesNormalisedFor)
+                public override float GetEffectAtGlow(
+                    float glow,
+                    int   numOfEyesNormalisedFor)
                     {
                         if (AffectsEye)
                             {
-                                return base.GetEffectAtGlow(glow, NumOfEyesNormalisedFor);
+                                return base.GetEffectAtGlow(glow, numOfEyesNormalisedFor);
                             }
 
                         return base.GetEffectAtGlow(glow);
@@ -125,14 +130,13 @@ namespace NightVision.LightModifiers
                         if (_parentDef.CompPropsFor(typeof(HediffComp_NightVision)) is HediffCompProperties_NightVision
                                     compProps)
                             {
-                                _hediffCompProps = compProps;
+                                _hediffCompProps         = compProps;
                                 compProps.LightModifiers = this;
                                 if (!Initialised)
                                     {
                                         IntSetting = GetSetting(compProps);
-                                        Offsets = new[] {compProps.ZeroLightMod, compProps.FullLightMod};
+                                        Offsets    = new[] {compProps.ZeroLightMod, compProps.FullLightMod};
                                     }
-
                             }
                         else
                             {
@@ -141,16 +145,18 @@ namespace NightVision.LightModifiers
                                         //TODO Review
                                         _parentDef.comps = new List<HediffCompProperties>();
                                     }
+
                                 _hediffCompProps = new HediffCompProperties_NightVision {LightModifiers = this};
                                 _parentDef.comps.Add(_hediffCompProps);
                                 Initialised = true;
                             }
                     }
 
-                public void InitialiseNewFromSettings(HediffDef hediffDef)
+                public void InitialiseNewFromSettings(
+                    HediffDef hediffDef)
                     {
                         Initialised = true;
-                        _parentDef = hediffDef;
+                        _parentDef  = hediffDef;
                         AttachCompProps();
                     }
 
@@ -164,24 +170,23 @@ namespace NightVision.LightModifiers
 
                         switch (IntSetting)
                             {
-                                default:
-                                    return !_hediffCompProps.IsDefault();
-                                case Options.NVNightVision:
-                                    return !_hediffCompProps.GrantsNightVision;
-                                case Options.NVPhotosensitivity:
-                                    return !_hediffCompProps.GrantsPhotosensitivity;
+                                default:                         return !_hediffCompProps.IsDefault();
+                                case Options.NVNightVision:      return !_hediffCompProps.GrantsNightVision;
+                                case Options.NVPhotosensitivity: return !_hediffCompProps.GrantsPhotosensitivity;
                                 case Options.NVCustom:
                                     return !(Math.Abs(_hediffCompProps.FullLightMod - Offsets[1]) < 0.001f)
                                            || !(Math.Abs(_hediffCompProps.ZeroLightMod - Offsets[0]) < 0.001f);
                             }
                     }
 
-                private static Options GetSetting(HediffCompProperties_NightVision compprops)
+                private static Options GetSetting(
+                    HediffCompProperties_NightVision compprops)
                     {
                         if (compprops == null)
                             {
                                 return Options.NVNone;
                             }
+
                         if (compprops.GrantsNightVision)
                             {
                                 return Options.NVNightVision;
@@ -199,6 +204,5 @@ namespace NightVision.LightModifiers
 
                         return Options.NVCustom;
                     }
-
+            }
     }
-}

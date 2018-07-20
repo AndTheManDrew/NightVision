@@ -1,6 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Defs>
-  
+
   <!-- The implant item -->
   <ThingDef ParentName="BodyPartProstheticBase">
     <defName>NV_TapetumImplant</defName>
@@ -20,7 +21,7 @@
       <li>Simple</li>
     </techHediffsTags>
   </ThingDef>
-  
+
   <!-- The Secret Ingredient -->
   <ThingDef ParentName="BodyPartNaturalBase">
     <defName>NV_TapetumRaw</defName>

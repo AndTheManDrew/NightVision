@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Defs>
 
   <ThinkTreeDef>
@@ -9,7 +10,7 @@
         <li Class="ThinkNode_Subtree">
           <treeDef>Downed</treeDef>
         </li>
-        
+
         <!-- Do a queued job -->
         <li Class="ThinkNode_QueuedJob" />
 
@@ -27,14 +28,14 @@
             </li>
           </subNodes>
         </li>
-        
+
         <!-- Idle error -->
-        <li Class="JobGiver_IdleError"/>
+        <li Class="JobGiver_IdleError" />
       </subNodes>
     </thinkRoot>
   </ThinkTreeDef>
-  
-  
+
+
   <ThinkTreeDef>
     <defName>Stalker_LordDuty</defName>
     <thinkRoot Class="ThinkNode_Tagger">
@@ -42,7 +43,7 @@
       <subNodes>
         <li Class="ThinkNode_ConditionalHasLord">
           <subNodes>
-            <li Class="ThinkNode_Duty"/>
+            <li Class="ThinkNode_Duty" />
 
             <!-- If doesn't have voluntarily joinable lord -->
             <!-- (otherwise we let pawns do something else if they get no job from the voluntarily joinable lord) -->
@@ -51,7 +52,7 @@
               <subNodes>
                 <!-- If no duty issued a job -->
                 <!-- Wander at fallback -->
-                <li Class="ThinkNode_ConditionalHasFallbackLocation" >
+                <li Class="ThinkNode_ConditionalHasFallbackLocation">
                   <subNodes>
                     <li Class="JobGiver_WanderNearFallbackLocation" />
                   </subNodes>

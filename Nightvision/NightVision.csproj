@@ -64,10 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comps\HediffCompProperties_NightVision.cs" />
-    <Compile Include="JobDriver_DigNest.cs" />
-    <Compile Include="JobDriver_WaitTillNight.cs" />
     <Compile Include="JobGiver_MakeLord.cs" />
-    <Compile Include="JobGiver_WaitTillNight.cs" />
     <Compile Include="LightModifiers\Hediff_LightModifiers.cs" />
     <Compile Include="IndicatorTex.cs" />
     <Compile Include="LightModifiers\LightModifiers.cs" />
@@ -96,7 +93,6 @@
     <Content Include="Languages\English\Keyed\NightVision.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Xml_Defs\JobDef.xml" />
     <Content Include="Xml_Defs\NightVision_Apparel.xml">
       <SubType>Designer</SubType>
     </Content>
