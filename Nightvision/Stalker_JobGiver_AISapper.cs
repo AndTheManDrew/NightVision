@@ -1,24 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
+using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 using Verse.AI;
 using Verse.AI.Group;
 
 namespace NightVision
-{
+    {
         //Copy and paste but forced no mining non-mineables
-        class Stalker_JobGiver_AISapper : ThinkNode_JobGiver
+        [UsedImplicitly]
+        internal class Stalker_JobGiver_AISapper : ThinkNode_JobGiver
             {
                 protected override Job TryGiveJob(
                     Pawn pawn)
                     {
-                        IntVec3 intVec = (IntVec3) pawn.mindState.duty.focus;
+                        var intVec = (IntVec3) pawn.mindState.duty.focus;
                         if (intVec.IsValid)
                             {
-                                if ((float) intVec.DistanceToSquared(pawn.Position) < 100f
+                                if (intVec.DistanceToSquared(pawn.Position) < 100f
                                     && intVec.GetRoom(pawn.Map, RegionType.Set_Passable)
                                     == pawn.GetRoom(RegionType.Set_Passable) && intVec.WithinRegions(pawn.Position,
                                         pawn.Map,
@@ -33,7 +32,6 @@ namespace NightVision
 
                         if (!intVec.IsValid)
                             {
-                                IAttackTarget attackTarget;
                                 if (!(from x in pawn.Map.attackTargetsCache.GetPotentialTargetsFor(pawn)
                                                 where !x.ThreatDisabled(pawn) && x.Thing.Faction == Faction.OfPlayer
                                                                               && pawn.CanReach(x.Thing,
@@ -42,7 +40,7 @@ namespace NightVision
                                                                                   false,
                                                                                   TraverseMode.PassAllDestroyableThings)
                                                 select x)
-                                            .TryRandomElement(out attackTarget))
+                                            .TryRandomElement(out IAttackTarget attackTarget))
                                     {
                                         return null;
                                     }
@@ -69,8 +67,7 @@ namespace NightVision
                                         false),
                                     PathEndMode.OnCell))
                                     {
-                                        IntVec3 cellBeforeBlocker;
-                                        Thing   thing = pawnPath.FirstBlockingBuilding(out cellBeforeBlocker, pawn);
+                                        Thing   thing = pawnPath.FirstBlockingBuilding(out IntVec3 cellBeforeBlocker, pawn);
                                         if (thing != null)
                                             {
                                                 Job job = DigUtility.PassBlockerJob(pawn,

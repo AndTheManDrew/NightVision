@@ -1,9 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Defs>
   <RecipeDef ParentName="SurgeryFlesh">
     <defName>ExtractTapetumLucidum</defName>
     <label>extract tapetum lucidum</label>
-    <description>Extract the tapetum lucidum; an orgam behind the eye responsible for night vision.</description>
+    <description>Extract the tapetum lucidum; an organ that lies behind the eye and is responsible for night vision.</description>
     <workerClass>NightVision.Recipe_ExtractTapetum</workerClass>
     <jobString>Extracting tapetum lucidum.</jobString>
     <workAmount>2500</workAmount>

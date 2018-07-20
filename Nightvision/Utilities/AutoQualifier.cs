@@ -2,17 +2,18 @@
 using Verse;
 
 namespace NightVision.Utilities
-{
-    internal static class AutoQualifier
     {
-        internal static LightModifiersBase.Options? HediffCheck(HediffDef hediffDef)
+        internal static class AutoQualifier
             {
-                if (hediffDef.addedPartProps is AddedBodyPartProps abpp && abpp.partEfficiency > 1.0f)
+                internal static LightModifiersBase.Options? HediffCheck(
+                    HediffDef hediffDef)
                     {
-                        return LightModifiersBase.Options.NVNightVision;
-                    }
+                        if (hediffDef.addedPartProps is AddedBodyPartProps abpp && abpp.partEfficiency > 1.0f)
+                            {
+                                return LightModifiersBase.Options.NVNightVision;
+                            }
 
-                return null;
+                        return null;
+                    }
             }
     }
-}

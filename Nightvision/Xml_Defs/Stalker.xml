@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Defs>
   <ThingDef ParentName="BaseMechanoidWalker">
     <defName>Mech_Stalker</defName>
@@ -57,10 +58,11 @@
         <ZeroLightMultiplier>2</ZeroLightMultiplier>
         <FullLightMultiplier>0.5</FullLightMultiplier>
         <ShouldShowInSettings>false</ShouldShowInSettings>
+        <CanCheat>true</CanCheat>
       </li>
     </comps>
     <modExtensions>
-      <li Class="NightVision.Stalker_ModExtension"/>
+      <li Class="NightVision.Stalker_ModExtension" />
       <li Class="NightVision.Stealth_ModExtension">
         <lowlightbodysizefactor>0.5</lowlightbodysizefactor>
       </li>
