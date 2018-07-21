@@ -1,11 +1,17 @@
-﻿using System.Collections.Generic;
+﻿// Nightvision NightVision JobGiver_MakeLord.cs
+// 
+// 13 07 2018
+// 
+// 21 07 2018
+
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 using Verse.AI;
 using Verse.AI.Group;
 
-namespace NightVision
+namespace NightVision.Stalker
     {
         [UsedImplicitly]
         internal class JobGiver_MakeLord : ThinkNode_JobGiver

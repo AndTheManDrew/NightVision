@@ -1,16 +1,21 @@
-﻿using NightVision.LightModifiers;
+﻿// Nightvision NightVision AutoQualifier.cs
+// 
+// 26 06 2018
+// 
+// 21 07 2018
+
 using Verse;
 
-namespace NightVision.Utilities
+namespace NightVision
     {
         internal static class AutoQualifier
             {
-                internal static LightModifiersBase.Options? HediffCheck(
+                internal static VisionType? HediffCheck(
                     HediffDef hediffDef)
                     {
                         if (hediffDef.addedPartProps is AddedBodyPartProps abpp && abpp.partEfficiency > 1.0f)
                             {
-                                return LightModifiersBase.Options.NVNightVision;
+                                return VisionType.NVNightVision;
                             }
 
                         return null;

@@ -1,14 +1,20 @@
-﻿using JetBrains.Annotations;
+﻿// Nightvision NightVision LordJob_HuntAndHide.cs
+// 
+// 12 07 2018
+// 
+// 21 07 2018
+
+using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 using Verse.AI.Group;
 
-namespace NightVision
+namespace NightVision.Stalker
     {
         internal class LordJob_HuntAndHide : LordJob
             {
+                public                   IntVec3 LairPos = IntVec3.Invalid;
                 [UsedImplicitly] private Faction _faction;
-                public  IntVec3 LairPos = IntVec3.Invalid;
 
                 public LordJob_HuntAndHide() { }
 

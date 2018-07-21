@@ -53,12 +53,16 @@
 
   <NVGearPresent>Set to {0} due to night vision apparel</NVGearPresent>
   <PSGearPresent>Set to {0} due to bright light protection.</PSGearPresent>
+  <NVMaxAtGlow>max at light level {0}:</NVMaxAtGlow>
 
   <NVDebugTab>Debug</NVDebugTab>
   <NVDebugLogComps>Print the pawn's night vision comp details in the log.</NVDebugLogComps>
   <NVDebugAverageTime>Rough average time per tick for the harmony patch on StatPart_Glow.FactorFromGlow:</NVDebugAverageTime>
 
   <EnableNVForCE>Allow {0} to affect the aim calculations of Combat Extended:</EnableNVForCE>
+
+  <!-- Latin name -->
+  <NVTapetum>tapetum lucidum</NVTapetum>
 
   <NVNullEntryLog>Removing {0} null entries from NightVision's {1}.</NVNullEntryLog>
   <NVEye>eye</NVEye>

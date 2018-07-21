@@ -1,13 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using NightVision.LightModifiers;
+﻿// Nightvision NightVision Classifier.cs
+// 
+// 03 07 2018
+// 
+// 21 07 2018
 
-namespace NightVision.Utilities
+using System;
+using System.Collections.Generic;
+
+namespace NightVision
     {
         internal static class Classifier
             {
-                public static List<float> ZeroLightTurningPoints;
                 public static List<float> FullLightTurningPoint;
+                public static List<float> ZeroLightTurningPoints;
 
 
                 /// <summary>
@@ -18,13 +23,13 @@ namespace NightVision.Utilities
                 /// <param name="modifier"></param>
                 /// <param name="isZeroLightMod"></param>
                 /// <returns></returns>
-                public static LightModifiersBase.Options ClassifyModifier(
+                public static VisionType ClassifyModifier(
                     float modifier,
                     bool  isZeroLightMod)
                     {
                         if (Math.Abs(modifier) < 0.005 || isZeroLightMod && modifier < 0.005)
                             {
-                                return LightModifiersBase.Options.NVNone;
+                                return VisionType.NVNone;
                             }
 
                         if (isZeroLightMod)
@@ -36,15 +41,15 @@ namespace NightVision.Utilities
 
                                 if (ZeroLightTurningPoints.Count == 0 || modifier + 0.001f < ZeroLightTurningPoints[0])
                                     {
-                                        return LightModifiersBase.Options.NVNone;
+                                        return VisionType.NVNone;
                                     }
 
                                 if (modifier + 0.001f < ZeroLightTurningPoints[1])
                                     {
-                                        return LightModifiersBase.Options.NVNightVision;
+                                        return VisionType.NVNightVision;
                                     }
 
-                                return LightModifiersBase.Options.NVPhotosensitivity;
+                                return VisionType.NVPhotosensitivity;
                             }
 
                         if (FullLightTurningPoint == null)
@@ -54,10 +59,10 @@ namespace NightVision.Utilities
 
                         if (FullLightTurningPoint.Count == 0 || modifier - 0.001f > FullLightTurningPoint[0])
                             {
-                                return LightModifiersBase.Options.NVNone;
+                                return VisionType.NVNone;
                             }
 
-                        return LightModifiersBase.Options.NVPhotosensitivity;
+                        return VisionType.NVPhotosensitivity;
                     }
 
 

@@ -1,11 +1,17 @@
-﻿using System.Collections.Generic;
+﻿// Nightvision NightVision LordToils.cs
+// 
+// 12 07 2018
+// 
+// 21 07 2018
+
+using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
 using Verse.AI;
 using Verse.AI.Group;
 
-namespace NightVision
+namespace NightVision.Stalker
     {
         internal class LordToil_MakeLairOrHideInIt : LordToil
             {
@@ -70,7 +76,7 @@ namespace NightVision
                                     pawn => pawn.kindDef == PawnKindDef.Named("Mech_Stalker"));
                             }
 
-                        Map     map = leadPawn.Map;
+                        Map map = leadPawn.Map;
                         bool foundEmptyCell = CellFinder.TryFindRandomReachableCellNear(leadPawn.Position,
                             map,
                             100,
@@ -97,6 +103,13 @@ namespace NightVision
 
                         Log.Message("LordJob_HuntAndHide found no new lair position");
                         return leadPawn.Position;
+                    }
+
+                public override void Notify_ReachedDutyLocation(
+                    Pawn pawn)
+                    {
+                        base.Notify_ReachedDutyLocation(pawn);
+                        UpdateAllDuties();
                     }
 
                 private bool IsDeep(
@@ -130,27 +143,7 @@ namespace NightVision
                                     + vec3);
                         return neighbourCanBeReached;
                     }
-
-                public override void Notify_ReachedDutyLocation(
-                    Pawn pawn)
-                    {
-                        base.Notify_ReachedDutyLocation(pawn);
-                        UpdateAllDuties();
-                    }
             }
 
-        internal class LordToilData_MakeLairOrHideInIt : LordToilData
-            {
-                public IntVec3 LairPosition = IntVec3.Invalid;
-
-                public override void ExposeData()
-                    {
-                        Scribe_Values.Look(ref LairPosition, "lairPosition", forceSave: true);
-                    }
-            }
         //TODO implement this with glow grid considerations
-        internal class LordToil_HuntColonists : LordToil
-            {
-                public override void UpdateAllDuties() { }
-            }
     }

@@ -1,12 +1,17 @@
-﻿using System;
+﻿// Nightvision NightVision Harmony_Patches.cs
+// 
+// 30 03 2018
+// 
+// 21 07 2018
+
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using CombatExtended;
 using Harmony;
-using NightVision.Comps;
-using NightVision.LightModifiers;
+using NightVision.Stalker;
 using RimWorld;
 using RimWorld.BaseGen;
 using UnityEngine;
@@ -259,7 +264,9 @@ namespace NightVision
                                 float glowat = pawn.Map.glowGrid.GameGlowAt(pawn.Position);
                                 if (glowat < 0.3f || glowat > 0.7f)
                                     {
-                                        __result = comp.ExplanationBuilder(__result, glowat, out bool _);
+                                        __result = "StatsReport_LightMultiplier".Translate(glowat.ToStringPercent())
+                                                   + ":";
+                                        __result = comp.ExplanationBuilder(__result, glowat, out bool _, true);
                                     }
                             }
                     }
@@ -382,13 +389,12 @@ namespace NightVision
                                         switch (comp.PsychDark())
                                             {
                                                 default: return;
-                                                case LightModifiersBase.Options.NVNightVision:
+                                                case VisionType.NVNightVision:
                                                     __result = ThoughtState.Inactive;
                                                     return;
-                                                case LightModifiersBase.Options.NVPhotosensitivity:
+                                                case VisionType.NVPhotosensitivity:
                                                     __result = ThoughtState.ActiveAtStage(PhotosensDarkThoughtStage,
-                                                        LightModifiersBase.Options.NVPhotosensitivity.ToString()
-                                                                    .Translate());
+                                                        VisionType.NVPhotosensitivity.ToString().Translate());
                                                     return;
                                             }
                                     }
@@ -418,7 +424,7 @@ namespace NightVision
                                     null,
                                     new HarmonyMethod(typeof(HarmonyPatches), nameof(ShiftVecReportFor_Postfix)));
                                 //Checked by mod settings window: if true will display checkbox for NVEnabledForCE
-                                NightVisionSettings.CEDetected = true;
+                                Settings.CEDetected = true;
                                 Log.Message("Night Vision detected Combat Extended and patched: "
                                             + Verb_LaunchProjectileCE_ShiftVecReportFor.Name);
                             }
