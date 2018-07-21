@@ -64,10 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comps\HediffCompProperties_NightVision.cs" />
-    <Compile Include="JobDriver_DigNest.cs" />
-    <Compile Include="JobDriver_WaitTillNight.cs" />
     <Compile Include="JobGiver_MakeLord.cs" />
-    <Compile Include="JobGiver_WaitTillNight.cs" />
     <Compile Include="LightModifiers\Hediff_LightModifiers.cs" />
     <Compile Include="IndicatorTex.cs" />
     <Compile Include="LightModifiers\LightModifiers.cs" />
@@ -75,6 +72,7 @@
     <Compile Include="LordToils.cs" />
     <Compile Include="NightVisionStat.cs" />
     <Compile Include="LightModifiers\Race_LightModifiers.cs" />
+    <Compile Include="Recipe_ExtractTapetum.cs" />
     <Compile Include="SettingClasses.cs" />
     <Compile Include="Comps\HediffComp_NightVision.cs" />
     <Compile Include="Comps\Comp_NightVision.cs" />
@@ -95,14 +93,15 @@
     <Content Include="Languages\English\Keyed\NightVision.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Xml_Defs\JobDef.xml" />
     <Content Include="Xml_Defs\NightVision_Apparel.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Xml_Defs\NightVision_Hediffs.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Xml_Defs\NightVision_Items.xml" />
+    <Content Include="Xml_Defs\NightVision_Items.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Xml_Defs\NV_Stat.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -110,6 +109,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Xml_Defs\Stalker_DutyDef.xml" />
+    <Content Include="Xml_Defs\Surgery_ExtractTapetum.xml" />
     <Content Include="Xml_Defs\ThinkTree_Stalker.xml">
       <SubType>Designer</SubType>
     </Content>
