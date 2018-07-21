@@ -196,5 +196,11 @@ namespace NightVision.LightModifiers
 
                         return Options.NVCustom;
                     }
+
+                public static Options GetSetting(
+                    Race_LightModifiers modifiers)
+                    {
+                        return GetSetting(modifiers._nvCompProps);
+                    }
             }
     }

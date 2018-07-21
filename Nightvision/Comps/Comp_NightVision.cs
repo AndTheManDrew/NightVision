@@ -125,10 +125,10 @@ namespace NightVision.Comps
 
                 private const float MinGlowNoGlow = 0.3f;
                 private const float MaxGlowNoGlow = 0.7f;
-
-                private const string ModifierLine   = " {0}: {1,6:+#0.0%;-#0.0%;0%}";
-                private const string MultiplierLine = " {0}: {1,6:x#0.0%;x#0.0%;x0%}";
-                private const string Maxline        = " ({0} {1}: {2,6:+#0.0%;-#0.0%;+0%})";
+                //TODO sort rounding errors
+                private const string ModifierLine   = "{0}:{1,6:+#0%;-#0%;0%}";
+                private const string MultiplierLine = "{0}:{1,6:x#0%;x#0%;x0%}";
+                private const string Maxline        = " ({0}{1}:{2,6:+#0%;-#0%;+0%})";
 
                 #endregion
 
@@ -407,8 +407,9 @@ namespace NightVision.Comps
 
                 /// <summary>
                 ///     To calculate the effects of light on movement speed and work speed:
-                ///     Returns a multiplier
                 /// </summary>
+                /// <param name="glow">light level as float in [0,1]</param>
+                /// <returns>a multiplier: (default + light offsets)</returns>
                 public float FactorFromGlow(
                     float glow)
                     {
@@ -450,17 +451,18 @@ namespace NightVision.Comps
                     }
 
                 /// <summary>
-                ///     For the pawn's stat inspect tab; incredibly fat
-                ///     TODO Clean this up
+                ///     For the pawn's stat inspect tab. fat
                 /// </summary>
                 /// <param name="result"></param>
                 /// <param name="glow"></param>
-                /// <param name="usedApparelSetting"></param>
+                /// <param name="usedApparelSetting">if apparel had an effect</param>
+                /// <param name="needsFinalValue">if RW will finalise value or we need to add it</param>
                 /// <returns></returns>
                 public string ExplanationBuilder(
                     string   result,
                     float    glow,
-                    out bool usedApparelSetting)
+                    out bool usedApparelSetting,
+                    bool needsFinalValue = false)
                     {
                         var     nvsum          = 0f;
                         var     pssum          = 0f;
@@ -478,7 +480,7 @@ namespace NightVision.Comps
                                                                                             + "NVEffects".Translate()
                                                                                             + string.Format(Maxline,
                                                                                                 "",
-                                                                                                "max".Translate(),
+                                                                                                "NVMaxAtGlow".Translate(glow.ToStringPercent()),
                                                                                                 caps[2]));
                         StringBuilder psexplanation = new StringBuilder().AppendLine(
                             LightModifiersBase.Options.NVPhotosensitivity.ToString().Translate() + " "
@@ -487,7 +489,7 @@ namespace NightVision.Comps
                                                                                                  + string.Format(
                                                                                                      Maxline,
                                                                                                      "",
-                                                                                                     "max".Translate(),
+                                                                                                     "NVMaxAtGlow".Translate(glow.ToStringPercent()),
                                                                                                      caps[3]));
 
                         explanation.AppendLine();
@@ -515,7 +517,7 @@ namespace NightVision.Comps
                                 explanation.AppendFormat(MultiplierLine,
                                     "StatsReport_BaseValue".Translate(),
                                     NightVisionSettings.DefaultFullLightMultiplier);
-                                //explanation.AppendLine();
+                                explanation.AppendLine();
                                 basevalue = NightVisionSettings.DefaultFullLightMultiplier;
                                 if (ApparelNullsPS)
                                     {
@@ -534,21 +536,21 @@ namespace NightVision.Comps
                                             {
                                                 //TODO consider iterating over the racesightparts and returning the custom label of each part
                                                 case LightModifiersBase.Options.NVNightVision:
-                                                    nvsum += effect * NumberOfRemainingEyes;
+                                                    nvsum += (float)Math.Round(effect * NumberOfRemainingEyes, 2, MidpointRounding.AwayFromZero);
                                                     nvexplanation.AppendFormat("  " + ModifierLine,
                                                         RaceSightParts.First().LabelShort + " x"
                                                                                           + NumberOfRemainingEyes,
                                                         effect * NumberOfRemainingEyes);
                                                     break;
                                                 case LightModifiersBase.Options.NVPhotosensitivity:
-                                                    pssum += effect * NumberOfRemainingEyes;
+                                                    pssum += (float)Math.Round(effect * NumberOfRemainingEyes, 2 , MidpointRounding.AwayFromZero);
                                                     psexplanation.AppendFormat("  " + ModifierLine,
                                                         RaceSightParts.First().LabelShort + " x"
                                                                                           + NumberOfRemainingEyes,
                                                         effect * NumberOfRemainingEyes);
                                                     break;
                                                 case LightModifiersBase.Options.NVCustom:
-                                                    sum += effect * NumberOfRemainingEyes;
+                                                    sum += (float)Math.Round(effect * NumberOfRemainingEyes, 2 , MidpointRounding.AwayFromZero);
                                                     explanation.AppendFormat("  " + ModifierLine,
                                                         RaceSightParts.First().LabelShort + " x"
                                                                                           + NumberOfRemainingEyes,
@@ -577,21 +579,21 @@ namespace NightVision.Comps
                                                         switch (hediffSetting.IntSetting)
                                                             {
                                                                 case LightModifiersBase.Options.NVNightVision:
-                                                                    nvsum += effect;
+                                                                    nvsum += (float)Math.Round(effect, 2 , MidpointRounding.AwayFromZero);
                                                                     nvexplanation.AppendFormat("  " + ModifierLine,
                                                                         hediffDef.LabelCap,
                                                                         effect);
                                                                     nvexplanation.AppendLine();
                                                                     break;
                                                                 case LightModifiersBase.Options.NVPhotosensitivity:
-                                                                    pssum += effect;
+                                                                    pssum += (float)Math.Round(effect, 2 , MidpointRounding.AwayFromZero);
                                                                     psexplanation.AppendFormat("  " + ModifierLine,
                                                                         hediffDef.LabelCap,
                                                                         effect);
                                                                     psexplanation.AppendLine();
                                                                     break;
                                                                 case LightModifiersBase.Options.NVCustom:
-                                                                    sum += effect;
+                                                                    sum += (float)Math.Round(effect, 2 , MidpointRounding.AwayFromZero);
                                                                     explanation.AppendFormat("  " + ModifierLine,
                                                                         hediffDef.LabelCap,
                                                                         effect);
@@ -632,9 +634,9 @@ namespace NightVision.Comps
                                         if (sum - 0.001f > caps[0] || sum + 0.001f < caps[1])
                                             {
                                                 explanation.AppendFormat(Maxline,
-                                                    "NVTotal".Translate(),
+                                                    "NVTotal".Translate() + " ",
                                                     "max".Translate(),
-                                                    sum + basevalue > caps[0] ? caps[0] : caps[1]);
+                                                    sum > caps[0] ? caps[0] : caps[1]);
 
                                                 explanation.AppendLine();
                                             }
@@ -644,13 +646,25 @@ namespace NightVision.Comps
                                                 explanation.Append(
                                                     "NVGearPresent".Translate($"{basevalue + caps[2]:0%}"));
                                                 usedApparelSetting = true;
+                                                sum = caps[2];
                                             }
                                         else if (ApparelNullsPS & sum + 0.001f < 0)
                                             {
                                                 explanation.Append("PSGearPresent".Translate(
                                                     $"{NightVisionSettings.DefaultFullLightMultiplier:0%}"));
                                                 usedApparelSetting = true;
+                                                sum = 0;
                                             }
+                                    }
+
+                                explanation.AppendLine();
+                                if (needsFinalValue)
+                                    {
+                                        sum += basevalue;
+                                        explanation.AppendFormat(MultiplierLine,
+                                            "StatsReport_FinalValue".Translate(),
+                                            sum > caps[0] + basevalue ? caps[0] + basevalue :
+                                            sum < caps[1] + basevalue ? caps[1] + basevalue : sum);
                                     }
 
                                 return explanation.ToString();

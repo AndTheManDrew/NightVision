@@ -111,8 +111,6 @@ namespace NightVision
                                 if (usedApparelSetting)
                                     {
                                         var builder = new StringBuilder(result);
-                                        builder.AppendLine();
-                                        builder.AppendLine();
                                         builder.AppendLine("StatsReport_RelevantGear".Translate() + ":");
                                         foreach (Apparel app in comp.PawnsNVApparel ?? Enumerable.Empty<Apparel>())
                                             {

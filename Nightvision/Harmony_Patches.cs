@@ -259,7 +259,9 @@ namespace NightVision
                                 float glowat = pawn.Map.glowGrid.GameGlowAt(pawn.Position);
                                 if (glowat < 0.3f || glowat > 0.7f)
                                     {
-                                        __result = comp.ExplanationBuilder(__result, glowat, out bool _);
+                                        __result = "StatsReport_LightMultiplier".Translate(new object[]
+                                                    {glowat.ToStringPercent()}) + ":";
+                                        __result = comp.ExplanationBuilder(__result, glowat, out bool _, true);
                                     }
                             }
                     }

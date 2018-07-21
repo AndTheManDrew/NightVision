@@ -655,15 +655,16 @@ namespace NightVision
                                 else if (Math.Abs(lightModifiers.DefaultOffsets[0]) > 0.001f
                                          || Math.Abs(lightModifiers.DefaultOffsets[1]) > 0.001f)
                                     {
-                                        result += "\n" + "NVLoadedFromFile".Translate("default".Translate(),
+                                        result += "\n" + "NVLoadedFromFile".Translate(Hediff_LightModifiers.GetSetting(hediffMods),
                                                       lightModifiers.DefaultOffsets.ToStringSafeEnumerable());
                                     }
                             }
-                        else if (Math.Abs(lightModifiers.DefaultOffsets[0]) > 0.001f
-                                 || Math.Abs(lightModifiers.DefaultOffsets[1]) > 0.001f)
+                        else if (lightModifiers is Race_LightModifiers rlm && (Math.Abs(lightModifiers.DefaultOffsets[0]) > 0.001f
+                                 || Math.Abs(lightModifiers.DefaultOffsets[1]) > 0.001f))
                             {
-                                result += "\n" + "NVLoadedFromFile".Translate("default".Translate(),
-                                              lightModifiers.DefaultOffsets.ToStringSafeEnumerable());
+                                
+                                result += "\n" + "NVLoadedFromFile".Translate((Race_LightModifiers.GetSetting(rlm)),
+                                              rlm.DefaultOffsets.ToStringSafeEnumerable());
                             }
 
                         TipStringHolder[def] = result;
@@ -1028,24 +1029,7 @@ namespace NightVision
                     bool  isZeroLight) =>
                             (float) Math.Round(multipercent / 100f, 2)
                             - (isZeroLight ? DefaultZeroLightMultiplier : DefaultFullLightMultiplier);
-
-                ///// <param name="baseVal">default multiplier as decimal</param>
-                ///// <param name="modVal">default modifier as decimal</param>
-                //private void DrawIndicator(Rect rowRect, float baseVal, float modVal, float min, float max)
-                //{
-                //    //min + range * fraction = value = base * 100 + mod * 100
-                //    // let b = base * 100, m = mod * 100
-                //    // => fraction = (b + m - min) / range
-                //    // => pos = rectX + rectWidth * ( b + m - min ) / range
-                //    //Also modify the rectX by +6f and rectWidth by -12f to accomodate the offset induced by the slider thumb (which has width 12f)
-
-                //    float posOfDefault = rowRect.x +6f + (rowRect.width - 12f)* ((baseVal + modVal) * 100 - min) / (max - min);
-                //    Color color = GUI.color;
-                //    GUI.color = Overlay;
-                //    Widgets.DrawLineVertical( posOfDefault, rowRect.y + rowRect.height*0.4f, rowRect.height*0.5f);
-                //    GUI.color = color;
-                //}
-
+        
                 private void DrawIndicator(
                     Rect      rowRect,
                     float     baseVal,
@@ -1054,19 +1038,11 @@ namespace NightVision
                     float     max,
                     Texture2D indicator)
                     {
-                        //min + range * fraction = value = base * 100 + mod * 100
-                        // let b = base * 100, m = mod * 100
-                        // => fraction = (b + m - min) / range
-                        // => pos = rectX + rectWidth * ( b + m - min ) / range
-                        //Also modify the rectX by +6f and rectWidth by -12f to accomodate the offset induced by the slider thumb (which has width 12f)
-
+                
                         float posOfDefault = rowRect.x + 6f
                                                        + (rowRect.width - 12f) * ((baseVal + modVal) * 100 - min)
                                                        / (max - min);
-                        //Color color = GUI.color;
-                        //GUI.color = Overlay;
-                        //Widgets.DrawLineVertical(posOfDefault, rowRect.y + rowRect.height * 0.4f, rowRect.height * 0.5f);
-                        //GUI.color = color;
+
                         rowRect.position = new Vector2(posOfDefault - 0.5f * IndicatorSize,
                             rowRect.y + rowRect.height * 0.95f);
                         rowRect.width  = IndicatorSize;

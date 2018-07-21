@@ -63,7 +63,7 @@ namespace NightVision
                 public override string GetLabelWhenUsedOn(
                     Pawn           pawn,
                     BodyPartRecord part) =>
-                            "HarvestOrgan".Translate();
+                            "HarvestOrgan".Translate() + " " + "NVTapetum".Translate();
 
                 public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(
                     Pawn      pawn,

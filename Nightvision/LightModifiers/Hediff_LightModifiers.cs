@@ -179,6 +179,11 @@ namespace NightVision.LightModifiers
                             }
                     }
 
+                public static Options GetSetting(
+                    Hediff_LightModifiers hLm)
+                    {
+                        return GetSetting(hLm._hediffCompProps);
+                    }
                 private static Options GetSetting(
                     HediffCompProperties_NightVision compprops)
                     {
