@@ -1,16 +1,22 @@
-﻿using JetBrains.Annotations;
+﻿// Nightvision NightVision Mod.cs
+// 
+// 10 03 2018
+// 
+// 21 07 2018
+
+using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 
 namespace NightVision
     {
-        internal class Controller : Mod
+        internal class Mod : Verse.Mod
             {
-                public static Controller          Instance;
-                public static NightVisionSettings Settings;
+                public static Mod      Instance;
+                public static Settings Settings;
 
                 [UsedImplicitly]
-                public Controller(
+                public Mod(
                     ModContentPack content) : base(content)
                     {
                         Instance = this;
@@ -34,13 +40,13 @@ namespace NightVision
                 public override void WriteSettings()
                     {
                         Log.Message("Nightvision: WriteSettings called");
-                        Settings.DoPreWriteTasks();
+                        SettingsCache.DoPreWriteTasks();
                         base.WriteSettings();
                     }
 
                 private static void InitSettings()
                     {
-                        Settings = Instance.GetSettings<NightVisionSettings>();
+                        Settings = Instance.GetSettings<Settings>();
                         NightVisionDictionaryBuilders.MakeHediffsDict();
                         NightVisionDictionaryBuilders.RaceDictBuilder();
                         NightVisionDictionaryBuilders.ApparelDictBuilder();

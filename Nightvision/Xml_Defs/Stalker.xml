@@ -54,7 +54,7 @@
       <soundMeleeMiss>Pawn_Melee_MechanoidSlash_Miss</soundMeleeMiss>
     </race>
     <comps>
-      <li Class="NightVision.Comps.CompProperties_NightVision">
+      <li Class="NightVision.CompProperties_NightVision">
         <ZeroLightMultiplier>2</ZeroLightMultiplier>
         <FullLightMultiplier>0.5</FullLightMultiplier>
         <ShouldShowInSettings>false</ShouldShowInSettings>

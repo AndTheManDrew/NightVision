@@ -60,7 +60,7 @@
   <NVDebugAverageTime>Rough average time per tick for the harmony patch on StatPart_Glow.FactorFromGlow:</NVDebugAverageTime>
 
   <EnableNVForCE>Allow {0} to affect the aim calculations of Combat Extended:</EnableNVForCE>
-  
+
   <!-- Latin name -->
   <NVTapetum>tapetum lucidum</NVTapetum>
 

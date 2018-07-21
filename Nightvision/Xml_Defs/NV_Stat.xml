@@ -6,8 +6,10 @@
     <defName>NightVision</defName>
     <workerClass>NightVision.StatWorker_NightVision</workerClass>
     <label>darkness multiplier</label>
-    <description>The work speed and move speed multipliers in darkness ( &lt; 30% light ).
-  Reaches the peak value listed here at 0% light.</description>
+    <description>
+      The work speed and move speed multipliers in darkness ( &lt; 30% light ).
+      Reaches the peak value listed here at 0% light.
+    </description>
     <category>BasicsPawn</category>
     <defaultBaseValue>0.8</defaultBaseValue>
     <minValue>0.01</minValue>
@@ -21,8 +23,10 @@
     <defName>LightSensitivity</defName>
     <workerClass>NightVision.StatWorker_LightSensitivity</workerClass>
     <label>bright light multiplier</label>
-    <description>The work speed and move speed multipliers in bright light ( &gt; 70% light ).
- Reaches the peak value listed here at 100% light.</description>
+    <description>
+      The work speed and move speed multipliers in bright light ( &gt; 70% light ).
+      Reaches the peak value listed here at 100% light.
+      </description>
     <category>BasicsPawn</category>
     <defaultBaseValue>1</defaultBaseValue>
     <minValue>0.01</minValue>

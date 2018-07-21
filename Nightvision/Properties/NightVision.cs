@@ -1,4 +1,10 @@
-﻿using System.Reflection;
+﻿// Nightvision NightVision NightVision.cs
+// 
+// 16 05 2018
+// 
+// 21 07 2018
+
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following

@@ -7,7 +7,7 @@
     <label>retinal retro-reflector</label>
     <labelNoun>a retinal retro-reflector implant</labelNoun>
     <comps>
-      <li Class="NightVision.Comps.HediffCompProperties_NightVision">
+      <li Class="NightVision.HediffCompProperties_NightVision">
         <GrantsPhotosensitivity>true</GrantsPhotosensitivity>
       </li>
     </comps>

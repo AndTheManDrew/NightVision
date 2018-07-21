@@ -1,9 +1,14 @@
-﻿using System;
+﻿// Nightvision NightVision HediffCompProperties_NightVision.cs
+// 
+// 16 05 2018
+// 
+// 21 07 2018
+
+using System;
 using JetBrains.Annotations;
-using NightVision.LightModifiers;
 using Verse;
 
-namespace NightVision.Comps
+namespace NightVision
     {
         public class HediffCompProperties_NightVision : HediffCompProperties
             {

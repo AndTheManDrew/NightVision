@@ -56,7 +56,7 @@
       <researchPrerequisite>MicroelectronicsBasics</researchPrerequisite>
     </recipeMaker>
     <comps>
-      <li Class="NightVision.Comps.CompProperties_NightVisionApparel">
+      <li Class="NightVision.CompProperties_NightVisionApparel">
         <GrantsNightVision>true</GrantsNightVision>
       </li>
     </comps>
@@ -116,11 +116,11 @@
       <researchPrerequisite>MicroelectronicsBasics</researchPrerequisite>
     </recipeMaker>
     <comps>
-      <li Class="NightVision.Comps.CompProperties_NightVisionApparel">
+      <li Class="NightVision.CompProperties_NightVisionApparel">
         <NullifiesPhotosensitivity>true</NullifiesPhotosensitivity>
       </li>
     </comps>
-    
+
     <colorGenerator Class="ColorGenerator_Options">
       <options>
         <li>
@@ -131,7 +131,7 @@
           <weight>10</weight>
           <only>(0.65,0.65,0.65,1)</only>
         </li>
-<!--        <li>
+        <!--        <li>
           <weight>6</weight>
           <min>(0.3,0.3,0.3,1)</min>
           <max>(0.5,0.5,0.5,1)</max>
@@ -207,7 +207,7 @@
           <weight>10</weight>
           <only>(0.65,0.65,0.65,1)</only>
         </li>
-<!--        <li>
+        <!--        <li>
           <weight>6</weight>
           <min>(0.3,0.3,0.3,1)</min>
           <max>(0.5,0.5,0.5,1)</max>
@@ -219,7 +219,7 @@
       </options>
     </colorGenerator>
     <comps>
-      <li Class="NightVision.Comps.CompProperties_NightVisionApparel">
+      <li Class="NightVision.CompProperties_NightVisionApparel">
         <NullifiesPhotosensitivity>true</NullifiesPhotosensitivity>
         <GrantsNightVision>true</GrantsNightVision>
       </li>

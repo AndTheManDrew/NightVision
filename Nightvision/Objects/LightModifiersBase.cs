@@ -1,51 +1,32 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿// Nightvision NightVision LightModifiers.cs
+// 
+// 16 05 2018
+// 
+// 21 07 2018
+
+using System;
 using System.Linq;
 using Verse;
 
-namespace NightVision.LightModifiers
+namespace NightVision
     {
-        [SuppressMessage("ReSharper", "ValueParameterNotUsed")]
-        public class LightModifiersBase : IExposable, INVSaveCheck
+        public class LightModifiersBase : IExposable, ISaveCheck
             {
-                public enum Options : byte
-                    {
-                        NVNone = 0,
-
-                        NVNightVision = 1,
-
-                        NVPhotosensitivity = 2,
-
-                        NVCustom = 3
-                    }
-
-                internal static readonly float[] NVDefaultOffsets = {0.2f, 0f};
-                internal static readonly float[] PSDefaultOffsets = {0.4f, -0.2f};
-
                 public static LightModifiersBase NVLightModifiers = new LightModifiersBase
                 {
-                    Offsets     = new[] {NVDefaultOffsets[0], NVDefaultOffsets[1]},
+                    Offsets     = new[] {Constants.NVDefaultOffsets[0], Constants.NVDefaultOffsets[1]},
                     Initialised = true
                 };
 
                 public static LightModifiersBase PSLightModifiers = new LightModifiersBase
                 {
-                    Offsets     = new[] {PSDefaultOffsets[0], PSDefaultOffsets[1]},
+                    Offsets     = new[] {Constants.PSDefaultOffsets[0], Constants.PSDefaultOffsets[1]},
                     Initialised = true
                 };
 
                 public bool Initialised;
 
                 internal float[] Offsets = new float[2];
-
-
-                public virtual Def ParentDef => null;
-
-                internal virtual Options Setting
-                    {
-                        get => Options.NVNone;
-                        set { }
-                    }
 
                 public virtual float this[
                     int index]
@@ -54,18 +35,27 @@ namespace NightVision.LightModifiers
                         set => Offsets[index] = value;
                     }
 
+
+                public virtual Def ParentDef => null;
+
+                internal virtual VisionType Setting
+                    {
+                        get => VisionType.NVNone;
+                        set { }
+                    }
+
                 public virtual float[] DefaultOffsets
                     {
                         get
                             {
                                 if (this == NVLightModifiers)
                                     {
-                                        return NVDefaultOffsets;
+                                        return Constants.NVDefaultOffsets;
                                     }
 
                                 if (this == PSLightModifiers)
                                     {
-                                        return PSDefaultOffsets;
+                                        return Constants.PSDefaultOffsets;
                                     }
 
                                 return new float[2];
@@ -86,12 +76,12 @@ namespace NightVision.LightModifiers
                                     {
                                         if (this == NVLightModifiers)
                                             {
-                                                Offsets = NVDefaultOffsets.ToArray();
+                                                Offsets = Constants.NVDefaultOffsets.ToArray();
                                             }
 
                                         else if (this == PSLightModifiers)
                                             {
-                                                Offsets = PSDefaultOffsets.ToArray();
+                                                Offsets = Constants.PSDefaultOffsets.ToArray();
                                             }
                                         else
                                             {
@@ -141,19 +131,19 @@ namespace NightVision.LightModifiers
                         float pscap;
                         if (glow < 0.3f)
                             {
-                                mincap = (NightVisionSettings.MultiplierCaps.min
-                                          - NightVisionSettings.DefaultZeroLightMultiplier) * (0.3f - glow) / 0.3f;
-                                maxcap = (NightVisionSettings.MultiplierCaps.max
-                                          - NightVisionSettings.DefaultZeroLightMultiplier) * (0.3f - glow) / 0.3f;
+                                mincap = (Storage.MultiplierCaps.min - Constants.DefaultZeroLightMultiplier)
+                                         * (0.3f - glow) / 0.3f;
+                                maxcap = (Storage.MultiplierCaps.max - Constants.DefaultZeroLightMultiplier)
+                                         * (0.3f - glow) / 0.3f;
                                 pscap = PSLightModifiers[0] * (0.3f - glow) / 0.3f;
                                 nvcap = NVLightModifiers[0] * (0.3f - glow) / 0.3f;
                             }
                         else
                             {
-                                mincap = (NightVisionSettings.MultiplierCaps.min
-                                          - NightVisionSettings.DefaultFullLightMultiplier) * (glow - 0.7f) / 0.3f;
-                                maxcap = (NightVisionSettings.MultiplierCaps.max
-                                          - NightVisionSettings.DefaultFullLightMultiplier) * (glow - 0.7f) / 0.3f;
+                                mincap = (Storage.MultiplierCaps.min - Constants.DefaultFullLightMultiplier)
+                                         * (glow - 0.7f) / 0.3f;
+                                maxcap = (Storage.MultiplierCaps.max - Constants.DefaultFullLightMultiplier)
+                                         * (glow - 0.7f) / 0.3f;
                                 pscap = PSLightModifiers[1] * (glow - 0.7f) / 0.3f;
                                 nvcap = NVLightModifiers[1] * (glow - 0.7f) / 0.3f;
                             }
@@ -163,25 +153,25 @@ namespace NightVision.LightModifiers
 
                 public bool HasModifier() => Math.Abs(this[0]) > 0.001 && Math.Abs(this[1]) > 0.001;
 
-                public bool IsCustom() => Setting == Options.NVCustom;
+                public bool IsCustom() => Setting == VisionType.NVCustom;
 
                 internal void ChangeSetting(
-                    Options newsetting)
+                    VisionType newsetting)
                     {
                         if (Setting != newsetting)
                             {
-                                if (newsetting == Options.NVCustom && !HasModifier())
+                                if (newsetting == VisionType.NVCustom && !HasModifier())
                                     {
                                         float[] defaultValues = DefaultOffsets;
                                         if (Math.Abs(defaultValues[0]) > 0.001 && Math.Abs(defaultValues[1]) > 0.001)
                                             {
                                                 Offsets = DefaultOffsets.ToArray();
                                             }
-                                        else if (Setting == Options.NVNightVision)
+                                        else if (Setting == VisionType.NVNightVision)
                                             {
                                                 Offsets = NVLightModifiers.Offsets.ToArray();
                                             }
-                                        else if (Setting == Options.NVPhotosensitivity)
+                                        else if (Setting == VisionType.NVPhotosensitivity)
                                             {
                                                 Offsets = PSLightModifiers.Offsets.ToArray();
                                             }

@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿// Nightvision NightVision Recipe_ExtractTapetum.cs
+// 
+// 19 07 2018
+// 
+// 21 07 2018
+
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using RimWorld;
@@ -6,12 +12,6 @@ using Verse;
 
 namespace NightVision
     {
-        [DefOf]
-        public static class RecipeDef_ExtractTapetumLucidum
-            {
-                [UsedImplicitly] public static RecipeDef ExtractTapetumLucidum;
-            }
-
         [UsedImplicitly]
         internal class Recipe_ExtractTapetum : Recipe_Surgery
             {

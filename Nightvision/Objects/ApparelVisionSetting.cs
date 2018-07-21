@@ -1,18 +1,18 @@
-﻿using JetBrains.Annotations;
-using NightVision.Comps;
+﻿// Nightvision NightVision SettingClasses.cs
+// 
+// 06 04 2018
+// 
+// 21 07 2018
+
+using JetBrains.Annotations;
 using Verse;
 
 namespace NightVision
     {
-        public interface INVSaveCheck
-            {
-                bool ShouldBeSaved();
-            }
-
         /// <summary>
         ///     For storing night vision settings for items of apparel
         /// </summary>
-        public class ApparelSetting : IExposable, INVSaveCheck
+        public class ApparelVisionSetting : IExposable, ISaveCheck
             {
                 public void ExposeData()
                     {
@@ -39,12 +39,12 @@ namespace NightVision
                 ///     Parameterless Constructor: necessary for RW scribe system
                 /// </summary>
                 [UsedImplicitly]
-                public ApparelSetting() { }
+                public ApparelVisionSetting() { }
 
                 /// <summary>
                 ///     Manual Constructor: for when user instantiates new setting in mod settings
                 /// </summary>
-                internal ApparelSetting(
+                internal ApparelVisionSetting(
                     bool nullPS,
                     bool giveNv)
                     {
@@ -55,7 +55,7 @@ namespace NightVision
                 /// <summary>
                 ///     Constructor for Dictionary builder
                 /// </summary>
-                internal ApparelSetting(
+                internal ApparelVisionSetting(
                     CompProperties_NightVisionApparel compprops)
                     {
                         CompNullifiesPS = compprops.NullifiesPhotosensitivity;
@@ -79,7 +79,7 @@ namespace NightVision
                 #region Equality, Redundancy, and INVSaveCheck checks
 
                 internal bool Equals(
-                    ApparelSetting other) =>
+                    ApparelVisionSetting other) =>
                             GrantsNV == other.GrantsNV && NullifiesPS == other.NullifiesPS;
 
                 /// <summary>

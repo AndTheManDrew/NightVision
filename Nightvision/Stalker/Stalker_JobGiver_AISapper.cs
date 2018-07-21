@@ -1,11 +1,17 @@
-﻿using System.Linq;
+﻿// Nightvision NightVision Stalker_JobGiver_AISapper.cs
+// 
+// 14 07 2018
+// 
+// 21 07 2018
+
+using System.Linq;
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 using Verse.AI;
 using Verse.AI.Group;
 
-namespace NightVision
+namespace NightVision.Stalker
     {
         //Copy and paste but forced no mining non-mineables
         [UsedImplicitly]
@@ -67,7 +73,8 @@ namespace NightVision
                                         false),
                                     PathEndMode.OnCell))
                                     {
-                                        Thing   thing = pawnPath.FirstBlockingBuilding(out IntVec3 cellBeforeBlocker, pawn);
+                                        Thing thing =
+                                                    pawnPath.FirstBlockingBuilding(out IntVec3 cellBeforeBlocker, pawn);
                                         if (thing != null)
                                             {
                                                 Job job = DigUtility.PassBlockerJob(pawn,
