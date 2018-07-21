@@ -105,43 +105,14 @@
     <Compile Include="Utilities\AutoQualifier.cs" />
     <Compile Include="Utilities\Classifier.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Xml_About\About.xml" />
-    <Content Include="Xml_Languages\English\Keyed\NightVision.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Xml_Defs\NightVision_Apparel.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Xml_Defs\NightVision_Hediffs.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Xml_Defs\NightVision_Items.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Xml_Defs\NV_Stat.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Xml_Defs\Stalker.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Xml_Defs\Stalker_DutyDef.xml" />
-    <Content Include="Xml_Defs\Surgery_ExtractTapetum.xml" />
-    <Content Include="Xml_Defs\ThinkTree_Stalker.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Xml_Patches\AddRecipeToHumanLike.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Xml_Patches\ThoughtDef.xml" />
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
-xcopy /i /e /y "$(ProjectDir)Xml_Defs\*.xml" "$(ProjectDir)$(OutDir)..\Defs\"
-xcopy /i /e /y "$(ProjectDir)Xml_Patches\*.xml" "$(ProjectDir)$(OutDir)..\Patches\"
-xcopy /i /e /y "$(ProjectDir)Xml_Languages\*" "$(ProjectDir)$(OutDir)..\Languages"
-xcopy /i /e /y "$(ProjectDir)Xml_About" "$(ProjectDir)$(OutDir)..\About"</PostBuildEvent>
+xcopy /i /e /y "$(ProjectDir)..\Defs" "$(TargetDir)..\Defs\"
+xcopy /i /e /y "$(ProjectDir)..\Patches" "$(TargetDir)..\Patches\"
+xcopy /i /e /y "$(ProjectDir)..\Languages" "$(TargetDir)..\Languages"
+xcopy /i /e /y "$(ProjectDir)..\About" "$(TargetDir)..\About"
+xcopy /i /e /y "$(TargetDir)*.dll" "$(ProjectDir)..\Assemblies"</PostBuildEvent>
   </PropertyGroup>
 </Project>
