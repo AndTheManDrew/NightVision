@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EB253018-4E17-43AA-9868-16AC468F406A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NightVision</RootNamespace>
+    <AssemblyName>NightVision</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\Nightvision\Assemblies\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\Nightvision\Assemblies\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony, Version=1.0.9.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Rimworld Utilities\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CombatExtended">
+      <HintPath>..\..\..\..\Rimworld Utilities\CombatExtended.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Comps\CompProperties_NightVisionApparel.cs" />
+    <Compile Include="Comps\HediffCompProperties_NightVision.cs" />
+    <Compile Include="Settings\DrawSettings.cs" />
+    <Compile Include="Settings\SettingsHelpers.cs" />
+    <Compile Include="Settings\SettingsCache.cs" />
+    <Compile Include="Static variables\Constants.cs" />
+    <Compile Include="Static variables\VisionType.cs" />
+    <Compile Include="Data Classes\ISaveCheck.cs" />
+    <Compile Include="Settings\Tabs.cs" />
+    <Compile Include="Static variables\RecipeDef_ExtractTapetumLucidum.cs" />
+    <Compile Include="Settings\Storage.cs" />
+    <Compile Include="Data Classes\Hediff_LightModifiers.cs" />
+    <Compile Include="Static variables\IndicatorTex.cs" />
+    <Compile Include="Data Classes\LightModifiersBase.cs" />
+    <Compile Include="Static variables\NightVisionStatDefOf.cs" />
+    <Compile Include="Data Classes\Race_LightModifiers.cs" />
+    <Compile Include="Workers\Recipe_ExtractTapetum.cs" />
+    <Compile Include="Data Classes\ApparelVisionSetting.cs" />
+    <Compile Include="Comps\HediffComp_NightVision.cs" />
+    <Compile Include="Comps\Comp_NightVision.cs" />
+    <Compile Include="Comps\Comp_NightVisionApparel.cs" />
+    <Compile Include="NVHarmonyPatcher.cs" />
+    <Compile Include="Comps\CompProperties_NightVision.cs" />
+    <Compile Include="NightVisionDictionaryBuilders.cs" />
+    <Compile Include="Mod.cs" />
+    <Compile Include="Properties\NightVision.cs" />
+    <Compile Include="Settings\Settings.cs" />
+    <Compile Include="Settings\Scribes.cs" />
+    <Compile Include="Workers\StatWorker_LightSensitivity.cs" />
+    <Compile Include="Workers\StatWorker_NightVision.cs" />
+    <Compile Include="Data Classes\Stealth_ModExtension.cs" />
+    <Compile Include="Utilities\AutoQualifier.cs" />
+    <Compile Include="Utilities\Classifier.cs" />
+    <Compile Include="Workers\ThoughtWorker_TooBright.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+xcopy /i /e /y "$(ProjectDir)..\Defs\" "$(TargetDir)..\Defs\"
+xcopy /i /e /y "$(ProjectDir)..\Patches\" "$(TargetDir)..\Patches\"
+xcopy /i /e /y "$(ProjectDir)..\Languages\" "$(TargetDir)..\Languages\"
+xcopy /i /e /y "$(ProjectDir)..\About\" "$(TargetDir)..\About\"
+xcopy /i /e /y "$(TargetDir)*.dll" "$(ProjectDir)..\Assemblies\"
+</PostBuildEvent>
+  </PropertyGroup>
+</Project>
