@@ -16,35 +16,36 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\Nightvision\Assemblies\</OutputPath>
+    <OutputPath>C:\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\Nightvision\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
     <LangVersion>latest</LangVersion>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\Nightvision\Assemblies\</OutputPath>
+    <OutputPath>C:\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\Nightvision\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>latest</LangVersion>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=1.0.9.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="0Harmony, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Rimworld Utilities\0Harmony.dll</HintPath>
+      <HintPath>C:\Games\Rimworld Utilities\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="CombatExtended">
-      <HintPath>..\..\..\..\Rimworld Utilities\CombatExtended.dll</HintPath>
+      <HintPath>C:\Games\Rimworld Utilities\CombatExtended.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -65,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Comps\CompProperties_NightVisionApparel.cs" />
     <Compile Include="Comps\HediffCompProperties_NightVision.cs" />
+    <None Include="PatchesForCE.cs" />
     <Compile Include="Settings\DrawSettings.cs" />
     <Compile Include="Settings\SettingsHelpers.cs" />
     <Compile Include="Settings\SettingsCache.cs" />
@@ -102,10 +104,10 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
-xcopy /i /e /y "$(ProjectDir)..\Defs\" "$(TargetDir)..\Defs\"
-xcopy /i /e /y "$(ProjectDir)..\Patches\" "$(TargetDir)..\Patches\"
-xcopy /i /e /y "$(ProjectDir)..\Languages\" "$(TargetDir)..\Languages\"
-xcopy /i /e /y "$(ProjectDir)..\About\" "$(TargetDir)..\About\"
+xcopy /i /e /y "$(ProjectDir)..\Defs" "$(TargetDir)..\Defs"
+xcopy /i /e /y "$(ProjectDir)..\Patches" "$(TargetDir)..\Patches"
+xcopy /i /e /y "$(ProjectDir)..\Languages" "$(TargetDir)..\Languages"
+xcopy /i /e /y "$(ProjectDir)..\About" "$(TargetDir)..\About"
 xcopy /i /e /y "$(TargetDir)*.dll" "$(ProjectDir)..\Assemblies\"
 </PostBuildEvent>
   </PropertyGroup>

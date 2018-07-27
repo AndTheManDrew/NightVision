@@ -174,7 +174,7 @@ internal static class DrawSettings
                     {
                         Widgets.CheckboxLabeled(rowRect,
                             "EnableNVForCE".Translate(),
-                            ref NVHarmonyPatcher.NVEnabledForCE);
+                            ref Storage.NVEnabledForCE);
                     }
 
                 Text.Anchor = anchor;

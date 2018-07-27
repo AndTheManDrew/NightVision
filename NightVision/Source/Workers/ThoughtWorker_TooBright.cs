@@ -16,7 +16,7 @@ namespace NightVision
         protected override ThoughtState CurrentStateInternal(
             Pawn p)
             {
-                return p.Awake() && p.GetComp<Comp_NightVision>() is Comp_NightVision comp && comp.TicksSinceLastDark > 240;
+                return p.Awake() && p.GetComp<Comp_NightVision>() is Comp_NightVision comp && comp.PsychBright();
             }
 
         public static void SetLastDarkTick(Pawn pawn)

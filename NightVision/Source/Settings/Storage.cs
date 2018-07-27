@@ -12,6 +12,7 @@ namespace NightVision
     {
         internal static class Storage
             {
+                public static bool NVEnabledForCE = true;
                 public static HashSet<ThingDef> AllEyeCoveringHeadgearDefs = new HashSet<ThingDef>();
 
                 //AllEyeHediffs is a subset of AllSightAffectingHediffs
@@ -45,7 +46,7 @@ namespace NightVision
                                 Scribe_Values.Look(ref MultiplierCaps.max, "UpperLimit", 1.2f);
                             }
 
-                        Scribe_Values.Look(ref NVHarmonyPatcher.NVEnabledForCE, "EnabledForCombatExtended", true);
+                        Scribe_Values.Look(ref NVEnabledForCE, "EnabledForCombatExtended", true);
                         Scribe_Deep.Look(ref LightModifiersBase.PSLightModifiers, "photosensitivitymodifiers");
                         Scribe_Deep.Look(ref LightModifiersBase.NVLightModifiers, "nightvisionmodifiers");
                         if (Scribe.mode == LoadSaveMode.LoadingVars)

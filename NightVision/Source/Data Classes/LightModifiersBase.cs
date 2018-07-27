@@ -68,8 +68,25 @@ namespace NightVision
                 /// </summary>
                 public virtual void ExposeData()
                     {
-                        Scribe_Values.Look(ref Offsets[0], "ZeroOffset");
-                        Scribe_Values.Look(ref Offsets[1], "FullOffset");
+                        float defaultZero = new float();
+                        float defaultFull = new float();
+                        //TODO check if accessing NVLightModifiers/PSLightModifiers on load causes issues (null exception), if it does then uncomment 'if{}'
+                        //if (Scribe.mode == LoadSaveMode.Saving)
+                        //    {
+                                    if (this == NVLightModifiers)
+                                        {
+                                            defaultZero = Constants.NVDefaultOffsets[0];
+                                            defaultFull = Constants.NVDefaultOffsets[1];
+                                        }
+
+                                    else if (this == PSLightModifiers)
+                                        {
+                                            defaultZero = Constants.PSDefaultOffsets[0];
+                                            defaultFull = Constants.PSDefaultOffsets[1];
+                                        }
+                            //}
+                        Scribe_Values.Look(ref Offsets[0], "ZeroOffset", defaultZero);
+                        Scribe_Values.Look(ref Offsets[1], "FullOffset", defaultFull);
                         if (Scribe.mode == LoadSaveMode.LoadingVars)
                             {
                                 if (Offsets == null)

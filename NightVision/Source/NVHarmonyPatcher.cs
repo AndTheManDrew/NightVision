@@ -30,9 +30,9 @@ namespace NightVision
 
                 static NVHarmonyPatcher()
                     {
-                        HarmonyInstance.DEBUG = true;
-                        HarmonyInstance harmony = HarmonyInstance.Create("drumad.rimworld.mod.nightvision");
-
+                        //HarmonyInstance.DEBUG = true;
+                        var harmony = HarmonyInstance.Create("drumad.rimworld.nightvision");
+                        
                         // Targets
                         //StatPart_Glow
                         MethodInfo StatPart_Glow_FactorFromGlow =
@@ -40,7 +40,7 @@ namespace NightVision
                         MethodInfo StatPart_Glow_ExplanationPart = AccessTools.Method(typeof(StatPart_Glow),
                             nameof(StatPart_Glow.ExplanationPart));
                         MethodInfo StatPart_Glow_ActiveFor = AccessTools.Method(typeof(StatPart_Glow), "ActiveFor");
-
+                        
                         //Hediff
                         MethodInfo Hediff_PostAdd     = AccessTools.Method(typeof(Hediff), nameof(Hediff.PostAdd));
                         MethodInfo Hediff_PostRemoved = AccessTools.Method(typeof(Hediff), nameof(Hediff.PostRemoved));
@@ -49,7 +49,7 @@ namespace NightVision
                         MethodInfo HediffWithComps_PostAdd =
                                     AccessTools.Method(typeof(HediffWithComps), nameof(HediffWithComps.PostAdd));
                         //MethodInfo HediffWithComps_PostRemoved = AccessTools.Method(typeof(HediffWithComps), nameof(HediffWithComps.PostRemoved));
-
+                        
                         //HealthTracker
                         MethodInfo HealthTracker_AddHediff = AccessTools.Method(typeof(Pawn_HealthTracker),
                             nameof(Pawn_HealthTracker.AddHediff),
@@ -70,7 +70,7 @@ namespace NightVision
                             nameof(Pawn_ApparelTracker.Remove));
                         MethodInfo ApparelTracker_TakeWearoutDamageForDay =
                                     AccessTools.Method(typeof(Pawn_ApparelTracker), "TakeWearoutDamageForDay");
-
+                        
                         //ThoughtWorker_Dark
                         MethodInfo ThoughtWorker_Dark_CurrentStateInternal =
                                     AccessTools.Method(typeof(ThoughtWorker_Dark), "CurrentStateInternal");
@@ -79,19 +79,22 @@ namespace NightVision
                         // PawnRecentMemory
                         MethodInfo PawnRecentMemory_RecentMemory = AccessTools.Method(typeof(PawnRecentMemory),
                             nameof(PawnRecentMemory.RecentMemoryInterval));
-                        //Pawn - TODO extract stalker patches
+
                         MethodInfo Pawn_getBodySize =
                                     AccessTools.Property(typeof(Pawn), nameof(Pawn.BodySize)).GetGetMethod();
 
                         //Patches
                         Type thistype = typeof(NVHarmonyPatcher);
                         //StatPart_Glow
+                        
                         harmony.Patch(StatPart_Glow_FactorFromGlow,
                             null,
                             new HarmonyMethod(thistype, nameof(FactorFromGlow_PostFix)));
+                        
                         harmony.Patch(StatPart_Glow_ExplanationPart,
                             null,
                             new HarmonyMethod(thistype, nameof(ExplanationPart_PostFix)));
+                        
                         harmony.Patch(StatPart_Glow_ActiveFor,
                             null,
                             new HarmonyMethod(thistype, nameof(ActiveFor_Postfix)));
@@ -110,6 +113,7 @@ namespace NightVision
                         harmony.Patch(HealthTracker_AddHediff,
                             null,
                             new HarmonyMethod(thistype, nameof(AddHediff_Postfix)));
+
                         //ApparelTracker
                         harmony.Patch(ApparelTracker_Wear, null, new HarmonyMethod(thistype, nameof(Wear_Postfix)));
                         harmony.Patch(ApparelTracker_TryDrop,
@@ -119,29 +123,30 @@ namespace NightVision
                         harmony.Patch(ApparelTracker_TakeWearoutDamageForDay,
                             null,
                             new HarmonyMethod(thistype, nameof(TakeWearoutDamageForTheDay_Postfix)));
+
                         //ThoughtWorker_Dark
                         harmony.Patch(ThoughtWorker_Dark_CurrentStateInternal,
                             null,
                             new HarmonyMethod(thistype, nameof(CurrentStateInternal_Postfix)));
-                        //PawnRecentMemory
-                        harmony.Patch(PawnRecentMemory_RecentMemory,
-                            null,
-                            null,
-                            new HarmonyMethod(thistype, nameof(RecentMemory_Transpiler)));
-            
-                        //Pawn
-                        harmony.Patch(Pawn_getBodySize,
+            ////PawnRecentMemory
+            harmony.Patch(PawnRecentMemory_RecentMemory,
+                null,
+                null,
+                new HarmonyMethod(thistype, nameof(RecentMemory_Transpiler)));
+
+            //Pawn
+            harmony.Patch(Pawn_getBodySize,
                             null,
                             new HarmonyMethod(typeof(NVHarmonyPatcher), nameof(GetBodySize_Patch)));
 
 
-                        //Combat Extended Patch
-                        try
-                            {
-                                ApplyCombatExtendedPatch(ref harmony);
-                            }
-                        catch (TypeLoadException) { }
-                    }
+            ////Combat Extended Patch
+            //                try
+            //{
+            //    PatchesForCE.ApplyCombatExtendedPatch(ref harmony);
+            //}
+            //catch (TypeLoadException) { }
+        }
 
                 #endregion
 
@@ -240,7 +245,6 @@ namespace NightVision
                         if (Find.TickManager.TicksGame - GlfactorTicks > 600)
                             {
                                 int elapsedTicks = Find.TickManager.TicksGame - GlfactorTicks;
-                                //Log.Message($"FactorFromGlow_PostFix Timer: {((glfactorTimer.Elapsed.TotalMilliseconds * 1000000) / elapsedTicks):#.0 ns} per tick in the last {elapsedTicks} ticks");
                                 GlfactorTicks        =  Find.TickManager.TicksGame;
                                 TotalGlFactorNanoSec += GlfactorTimer.ElapsedMilliseconds * 1000000;
                                 TotalTicks           += elapsedTicks;
@@ -395,71 +399,16 @@ namespace NightVision
                             }
                     }
 
-                #endregion
+        #endregion
 
-                #region Combat Extended Patch
+        #region PawnRecentMemory Transpiler
 
-                //Inspired by Pick Up And Haul's implementation, which is more elegant
-                /// <summary>
-                ///     Should only be executed in try-catch(TypeLoadException) block
-                ///     See: https://stackoverflow.com/questions/3346740/typeloadexception-is-not-caught-by-try-catch
-                /// </summary>
-                [MethodImpl(MethodImplOptions.NoInlining)]
-                private static void ApplyCombatExtendedPatch(
-                    ref HarmonyInstance harmony)
-                    {
-                        //ModMetaData m.Name is defined in the About.xml file of the mod, therefore no need to account for steamID messes
-                        if (ModsConfig.ActiveModsInLoadOrder.Any(m => m.Name == "Combat Extended"))
-                            {
-                                MethodInfo Verb_LaunchProjectileCE_ShiftVecReportFor =
-                                            AccessTools.Method(typeof(Verb_LaunchProjectileCE),
-                                                nameof(Verb_LaunchProjectileCE.ShiftVecReportFor));
-                                harmony.Patch(Verb_LaunchProjectileCE_ShiftVecReportFor,
-                                    null,
-                                    new HarmonyMethod(typeof(NVHarmonyPatcher), nameof(ShiftVecReportFor_Postfix)));
-                                //Checked by mod settings window: if true will display checkbox for NVEnabledForCE
-                                Settings.CEDetected = true;
-                                Log.Message("Night Vision detected Combat Extended and patched: "
-                                            + Verb_LaunchProjectileCE_ShiftVecReportFor.Name);
-                            }
-                    }
-
-                //Can be changed in the mod settings
-                public static bool NVEnabledForCE = true;
-
-                /// <summary>
-                ///     CE's lighting shift (= 1 - glow) is linear function between points (glow = 1, shift = 0) & (glow = 0, shift = 1)
-                ///     All this method does is transform the shift function to a linear function between points:
-                ///     (glow = 1, shift = - modifier at 100% light)
-                ///     (glow = 0, shift = 1 - modifier at 0% light)
-                ///     where, with default settings,
-                ///     modifier at 100%  less or  = 0   , therefore same or worse
-                ///     modifier at 0% light greater or = 0, therefore same or better
-                /// </summary>
-                public static void ShiftVecReportFor_Postfix(
-                    ref ShiftVecReport      __result,
-                    Verb_LaunchProjectileCE instance)
-                    {
-                        if (NVEnabledForCE && instance.caster is Pawn pawn
-                                           && pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
-                            {
-                                __result.lightingShift =
-                                            __result.lightingShift
-                                            * (1 + comp.FullLightModifier - comp.ZeroLightModifier)
-                                            - comp.FullLightModifier;
-                            }
-                    }
-
-                #endregion
-
-                #region PawnRecentMemory Transpiler
-
-                //Totally unnecessary overkill...but its my first, 
-                public static IEnumerable<CodeInstruction> RecentMemory_Transpiler(
-                    IEnumerable<CodeInstruction> instructions, ILGenerator il)
-                    {
-                        List<CodeInstruction> codes = instructions.ToList();
-                        List<CodeInstruction> inserts = new List<CodeInstruction>
+        //Totally unnecessary overkill...but its my first, so wooop
+        public static IEnumerable<CodeInstruction> RecentMemory_Transpiler(
+            IEnumerable<CodeInstruction> instructions, ILGenerator il)
+        {
+            List<CodeInstruction> codes = instructions.ToList();
+            List<CodeInstruction> inserts = new List<CodeInstruction>
                         {
                             new CodeInstruction(OpCodes.Ldarg_0),
                             new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(PawnRecentMemory), "pawn")),
@@ -468,64 +417,55 @@ namespace NightVision
                                     nameof(ThoughtWorker_TooBright.SetLastDarkTick)))
                         };
 
-                        int jumpToInsertsIndex = -1,
-                        jumpPastInsertsIndex = -1;
+            int jumpToInsertsIndex = -1,
+            jumpPastInsertsIndex = -1;
 
-                        for (int i = 2; i < codes.Count - 2; i++)
-                            {
-                                if (codes[i].opcode == OpCodes.Brfalse
-                                           && codes[i - 1].opcode == OpCodes.Callvirt
-                                           && codes[i - 2].opcode == OpCodes.Callvirt)
-                                    {
-                                        jumpToInsertsIndex = i;
-                                        Log.Message("jumpTo: " + i + " : " + codes[i]);
-                                    }
-                                else if (codes[i].opcode == OpCodes.Stfld && codes[i + 1].opcode != OpCodes.Ret)
-                                    {
-                                        jumpPastInsertsIndex = i + 1;
-                                        Log.Message("jumpPast: " + i + " : " + codes[i]);
-                                    }
-                                else
-                                    {
-                                        Log.Message(i + " : " + codes[i]);
-                                    }
-
-                                if (jumpToInsertsIndex > 0 && jumpPastInsertsIndex > 0)
-                                    {
-                                        break;
-                                    }
-                            }
-                        //Add a new branch after end of org if clause that jumps past our code
-                        inserts.Insert(0, new CodeInstruction(OpCodes.Br, codes[jumpToInsertsIndex].operand));
-                        bool inserted = false;
-                        bool relabeled = false;
-                        Label landInInserts = il.DefineLabel();
-                        //landing point
-                        inserts[1].labels.Add(landInInserts);
-                        foreach (var code in codes)
-                            {
-                                if (inserted == false && codes.IndexOf(code) == jumpPastInsertsIndex)
-                                    {
-                                        foreach (var insert in inserts)
-                                            {
-                                                Log.Message("inserted: " + insert);
-                                                yield return insert;
-                                            }
-
-                                        inserted = true;
-                                    }
-                                else if (relabeled == false && code == codes[jumpToInsertsIndex])
-                                    {
-                                        code.operand = landInInserts;
-                                        relabeled = true;
-                                    }
-                                Log.Message("orginal: " + code);
-                                yield return code;
-
-                            }
-
+            for (int i = 2; i < codes.Count - 2; i++)
+            {
+                if (codes[i].opcode == OpCodes.Brfalse
+                           && codes[i - 1].opcode == OpCodes.Callvirt
+                           && codes[i - 2].opcode == OpCodes.Callvirt)
+                {
+                    jumpToInsertsIndex = i;
+                }
+                else if (codes[i].opcode == OpCodes.Stfld && codes[i + 1].opcode != OpCodes.Ret)
+                {
+                    jumpPastInsertsIndex = i + 1;
+                }
+                if (jumpToInsertsIndex > 0 && jumpPastInsertsIndex > 0)
+                {
+                    break;
+                }
+            }
+            //Add a new branch after end of org if clause that jumps past our code
+            inserts.Insert(0, new CodeInstruction(OpCodes.Br, codes[jumpToInsertsIndex].operand));
+            bool inserted = false;
+            bool relabeled = false;
+            Label landInInserts = il.DefineLabel();
+            //landing point
+            inserts[1].labels.Add(landInInserts);
+            foreach (var code in codes)
+            {
+                if (inserted == false && codes.IndexOf(code) == jumpPastInsertsIndex)
+                {
+                    foreach (var insert in inserts)
+                    {
+                        yield return insert;
                     }
 
-                #endregion
+                    inserted = true;
+                }
+                else if (relabeled == false && code == codes[jumpToInsertsIndex])
+                {
+                    code.operand = landInInserts;
+                    relabeled = true;
+                }
+                yield return code;
+
             }
+
+        }
+
+        #endregion
     }
+}

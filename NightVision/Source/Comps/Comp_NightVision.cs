@@ -479,7 +479,7 @@ namespace NightVision
                                 return explanation.ToString();
                             }
 
-                        return result;
+                        return result + FactorFromGlow(glow).ToStringPercent();
                     }
 
                 #region Thoughts
