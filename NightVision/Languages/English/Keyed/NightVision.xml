@@ -40,14 +40,27 @@
 
   <NVHediffAutoAssigned>This setting was auto-assigned.</NVHediffAutoAssigned>
   <NVHediffQualifier>Full effect requires all eyes to have this.</NVHediffQualifier>
-  <NVHediffExplained>The conditions listed here are limited to those that are applied directly to the eye, or explicitly affect sight, or have particular modded files.</NVHediffExplained>
+  <!--<NVHediffExplained>The conditions listed here are limited to those that are applied directly to the eye, or explicitly affect sight, or have particular modded files.</NVHediffExplained>
   <NVHediffNote>Note: for conditions that effect the eye directly (e.g. bionic eyes) the night vision and photosensitivity settings require all eyes to have that condition to get the full effect.</NVHediffNote>
   <NVHediffNoteCont>For example, if both luciferium and bionic eyes were set to give night vision; an individual with just one bionic eye would get half the night vision bonus, but on luciferium they would get the full bonus.</NVHediffNoteCont>
-
+-->
   <NVNullPS>Nullifies photosensitivity</NVNullPS>
   <NVGiveNV>Grants night vision</NVGiveNV>
   <NVGivePS>Grants photosensitivity</NVGivePS>
+  <NVLowLightVision>Night vision:</NVLowLightVision>
+  <!--
+  <NVBrightLightVision>Bright light vision:</NVBrightLightVision>
 
+  <NVPoor>Poor</NVPoor>
+  <NVStandard>Normal</NVStandard>
+  <NVGood>Good</NVGood>
+  <NVExc>Excellent</NVExc>
+  
+  <NVGearExp>with their gear</NVGearExp>-->
+  
+  <NVGrantsVisionType>Grants Vision Type:</NVGrantsVisionType>
+
+  <NVStatReport_FinalMulti>Final multiplier</NVStatReport_FinalMulti>
   <NVEffects>effects</NVEffects>
   <NVApparelExplained></NVApparelExplained>
 

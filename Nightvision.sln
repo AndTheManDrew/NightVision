@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{65DE852E-3
 		NightVision\Defs\NightVision_Items.xml = NightVision\Defs\NightVision_Items.xml
 		NightVision\Defs\NightVision_Stat.xml = NightVision\Defs\NightVision_Stat.xml
 		NightVision\Defs\NightVision_Surgery.xml = NightVision\Defs\NightVision_Surgery.xml
+		NightVision\Defs\ResearchProjects.xml = NightVision\Defs\ResearchProjects.xml
 		NightVision\Defs\ThoughtDef_TooBright.xml = NightVision\Defs\ThoughtDef_TooBright.xml
 	EndProjectSection
 EndProject

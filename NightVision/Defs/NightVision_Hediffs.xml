@@ -4,7 +4,7 @@
   <HediffDef ParentName="AddedBodyPartBase">
     <defName>NV_TapetumPart</defName>
     <!-- Tapetum Lucidum officially -->
-    <label>retinal retro-reflector</label>
+    <label>retro-reflector implant</label>
     <labelNoun>a retinal retro-reflector implant</labelNoun>
     <comps>
       <li Class="NightVision.HediffCompProperties_NightVision">
@@ -17,44 +17,4 @@
     </addedPartProps>
   </HediffDef>
 
-  <RecipeDef ParentName="SurgeryFlesh">
-    <defName>NV_InstallTapetum</defName>
-    <label>implant tapetum lucidum</label>
-    <description>Implant a retinal retro-reflector</description>
-    <workerClass>Recipe_InstallArtificialBodyPart</workerClass>
-    <jobString>entering the optic cavity</jobString>
-    <workAmount>4500</workAmount>
-    <surgerySuccessChanceFactor>0.8</surgerySuccessChanceFactor>
-    <deathOnFailedSurgeryChance>0.2</deathOnFailedSurgeryChance>
-    <skillRequirements>
-      <Medicine>9</Medicine>
-    </skillRequirements>
-    <ingredients>
-      <li>
-        <filter>
-          <categories>
-            <li>Medicine</li>
-          </categories>
-        </filter>
-        <count>3</count>
-      </li>
-      <li>
-        <filter>
-          <thingDefs>
-            <li>NV_TapetumImplant</li>
-          </thingDefs>
-        </filter>
-        <count>1</count>
-      </li>
-    </ingredients>
-    <fixedIngredientFilter>
-      <categories>
-        <li>Medicine</li>
-      </categories>
-    </fixedIngredientFilter>
-    <appliedOnFixedBodyParts>
-      <li>Eye</li>
-    </appliedOnFixedBodyParts>
-    <addsHediff>NV_TapetumPart</addsHediff>
-  </RecipeDef>
 </Defs>

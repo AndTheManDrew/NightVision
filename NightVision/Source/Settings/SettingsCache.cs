@@ -24,7 +24,7 @@ namespace NightVision
                     {
                         get
                             {
-                                if (HeadgearCache == null)
+                                if (HeadgearCache == null || HeadgearCache.Count == 0)
                                     {
                                         HeadgearCache = new List<ThingDef>(Storage.AllEyeCoveringHeadgearDefs);
                                         foreach (ThingDef appareldef in Storage.NVApparel.Keys)
@@ -47,7 +47,7 @@ namespace NightVision
                     {
                         get
                             {
-                                if (AllHediffsCache == null)
+                                if (AllHediffsCache == null || AllHediffsCache.Count == 0)
                                     {
                                         AllHediffsCache = new List<HediffDef>(Storage.AllSightAffectingHediffs);
                                         foreach (HediffDef hediffdef in Storage.HediffLightMods.Keys)
@@ -129,8 +129,8 @@ namespace NightVision
                             }
 
                         CacheInited     = false;
-                        AllHediffsCache = null;
-                        HeadgearCache   = null;
+                        AllHediffsCache?.Clear();
+                        HeadgearCache?.Clear();
 
                         SettingsHelpers.TipStringHolder.Clear();
                         DrawSettings._numberOfCustomRaces   = null;

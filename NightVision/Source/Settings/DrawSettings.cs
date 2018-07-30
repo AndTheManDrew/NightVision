@@ -125,50 +125,51 @@ internal static class DrawSettings
                 Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
                 rowRect.y += Constants.RowGap;
 
-                //Multiplier Limits
-                Widgets.CheckboxLabeled(rowRect, "NVCustomCapsEnabled".Translate(), ref Storage.CustomCapsEnabled);
-                if (Storage.CustomCapsEnabled)
-                    {
-                        rowRect.y += rowHeight * 1.5f;
-                        Text.Font =  GameFont.Tiny;
-                        Widgets.Label(rowRect, "NVCapsExp".Translate());
-                        Text.Font =  GameFont.Small;
-                        rowRect.y += rowHeight + Constants.RowGap;
-                        SettingsCache.MinCache = Widgets.HorizontalSlider(rowRect,
-                            (float) SettingsCache.MinCache,
-                            1f,
-                            100f,
-                            true,
-                            "NVSettingsMinCapLabel".Translate(SettingsCache.MinCache),
-                            "1%",
-                            "100%",
-                            1);
-                        SettingsHelpers.DrawIndicator(rowRect,
-                            Constants.DefaultMinCap,
-                            0f,
-                            1f,
-                            100f,
-                            IndicatorTex.DefIndicator);
-                        rowRect.y += rowHeight * 1.5f;
-                        SettingsCache.MaxCache = Widgets.HorizontalSlider(rowRect,
-                            (float) SettingsCache.MaxCache,
-                            100f,
-                            200f,
-                            true,
-                            "NVSettingsMinCapLabel".Translate(SettingsCache.MaxCache),
-                            "100%",
-                            "200%",
-                            1);
-                        SettingsHelpers.DrawIndicator(rowRect,
-                            Constants.DefaultMaxCap,
-                            0f,
-                            100f,
-                            200f,
-                            IndicatorTex.DefIndicator);
-                    }
+                //Moved to Advanced Tab
+                ////Multiplier Limits
+                //Widgets.CheckboxLabeled(rowRect, "NVCustomCapsEnabled".Translate(), ref Storage.CustomCapsEnabled);
+                //if (Storage.CustomCapsEnabled)
+                //    {
+                //        rowRect.y += rowHeight * 1.5f;
+                //        Text.Font =  GameFont.Tiny;
+                //        Widgets.Label(rowRect, "NVCapsExp".Translate());
+                //        Text.Font =  GameFont.Small;
+                //        rowRect.y += rowHeight + Constants.RowGap;
+                //        SettingsCache.MinCache = Widgets.HorizontalSlider(rowRect,
+                //            (float) SettingsCache.MinCache,
+                //            1f,
+                //            100f,
+                //            true,
+                //            "NVSettingsMinCapLabel".Translate(SettingsCache.MinCache),
+                //            "1%",
+                //            "100%",
+                //            1);
+                //        SettingsHelpers.DrawIndicator(rowRect,
+                //            Constants.DefaultMinCap,
+                //            0f,
+                //            1f,
+                //            100f,
+                //            IndicatorTex.DefIndicator);
+                //        rowRect.y += rowHeight * 1.5f;
+                //        SettingsCache.MaxCache = Widgets.HorizontalSlider(rowRect,
+                //            (float) SettingsCache.MaxCache,
+                //            100f,
+                //            200f,
+                //            true,
+                //            "NVSettingsMinCapLabel".Translate(SettingsCache.MaxCache),
+                //            "100%",
+                //            "200%",
+                //            1);
+                //        SettingsHelpers.DrawIndicator(rowRect,
+                //            Constants.DefaultMaxCap,
+                //            0f,
+                //            100f,
+                //            200f,
+                //            IndicatorTex.DefIndicator);
+                //    }
 
-                rowRect.y += rowHeight * 1.5f;
-                Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
+                //rowRect.y += rowHeight * 1.5f;
+                //Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
                 rowRect.y += Constants.RowGap;
                 if (Settings.CEDetected)
                     {
@@ -256,8 +257,8 @@ internal static class DrawSettings
                 var scrollRect = new Rect(12f, 48f, inRect.width - 12f, inRect.height - 48f);
 
                 var   checkboxSize = 20f;
-                float leftBoxX     = midRect.center.x + 20f;
-                float rightBoxX    = rightRect.center.x + 20f;
+                float leftBoxX     = midRect.center.x + checkboxSize;
+                float rightBoxX    = rightRect.center.x + checkboxSize;
 
                 var num = 48f;
                 Widgets.BeginScrollView(scrollRect, ref _apparelScrollPosition, viewRect);
@@ -275,8 +276,8 @@ internal static class DrawSettings
                         var rightBoxPos = new Vector2(rightBoxX, rowRect.center.y - checkboxSize / 2);
                         if (Storage.NVApparel.TryGetValue(appareldef, out ApparelVisionSetting apparelSetting))
                             {
-                                Widgets.Checkbox(leftBoxPos,  ref apparelSetting.NullifiesPS, 20f);
-                                Widgets.Checkbox(rightBoxPos, ref apparelSetting.GrantsNV,    20f);
+                                Widgets.Checkbox(leftBoxPos,  ref apparelSetting.NullifiesPS, checkboxSize);
+                                Widgets.Checkbox(rightBoxPos, ref apparelSetting.GrantsNV, checkboxSize);
                                 if (!apparelSetting.Equals(Storage.NVApparel[appareldef]))
                                     {
                                         if (apparelSetting.IsRedundant())
@@ -293,11 +294,22 @@ internal static class DrawSettings
                             {
                                 var nullPs = false;
                                 var giveNV = false;
-                                Widgets.Checkbox(leftBoxPos,  ref nullPs);
-                                Widgets.Checkbox(rightBoxPos, ref giveNV);
+                                Widgets.Checkbox(leftBoxPos,  ref nullPs, checkboxSize);
+                                Widgets.Checkbox(rightBoxPos, ref giveNV, checkboxSize);
                                 if (nullPs || giveNV)
                                     {
-                                        apparelSetting                = new ApparelVisionSetting(nullPs, giveNV);
+                                        if (appareldef.GetCompProperties<CompProperties_NightVisionApparel>() is
+                                                    CompProperties_NightVisionApparel compprops)
+                                            {
+                                                apparelSetting = compprops.AppVisionSetting;
+                                            }
+                                        else
+                                            {
+                                                apparelSetting = ApparelVisionSetting.CreateNewApparelVisionSetting(appareldef);
+                                            }
+
+                                        apparelSetting.NullifiesPS = nullPs;
+                                        apparelSetting.GrantsNV = giveNV;
                                         Storage.NVApparel[appareldef] = apparelSetting;
                                     }
                             }
@@ -371,6 +383,64 @@ internal static class DrawSettings
                 Widgets.EndScrollView();
             }
 
+        public static void AdvancedTab(
+            Rect inRect)
+            {
+                inRect = inRect.AtZero();
+                TextAnchor anchor    = Text.Anchor;
+                float      rowHeight = Constants.RowHeight * 0.6f;
+                var rowRect = new Rect(inRect.width * 0.05f,
+                    inRect.height * 0.05f,
+                    inRect.width * 0.9f,
+                    rowHeight);
+                Text.Anchor = TextAnchor.MiddleLeft;
+                //Multiplier Limits
+                Widgets.CheckboxLabeled(rowRect, "NVCustomCapsEnabled".Translate(), ref Storage.CustomCapsEnabled);
+                if (Storage.CustomCapsEnabled)
+                    {
+                        rowRect.y += rowHeight * 1.5f;
+                        Text.Font =  GameFont.Tiny;
+                        Widgets.Label(rowRect, "NVCapsExp".Translate());
+                        Text.Font =  GameFont.Small;
+                        rowRect.y += rowHeight + Constants.RowGap;
+                        SettingsCache.MinCache = Widgets.HorizontalSlider(rowRect,
+                            (float) SettingsCache.MinCache,
+                            1f,
+                            100f,
+                            true,
+                            "NVSettingsMinCapLabel".Translate(SettingsCache.MinCache),
+                            "1%",
+                            "100%",
+                            1);
+                        SettingsHelpers.DrawIndicator(rowRect,
+                            Constants.DefaultMinCap,
+                            0f,
+                            1f,
+                            100f,
+                            IndicatorTex.DefIndicator);
+                        rowRect.y += rowHeight * 1.5f;
+                        SettingsCache.MaxCache = Widgets.HorizontalSlider(rowRect,
+                            (float) SettingsCache.MaxCache,
+                            100f,
+                            200f,
+                            true,
+                            "NVSettingsMinCapLabel".Translate(SettingsCache.MaxCache),
+                            "100%",
+                            "200%",
+                            1);
+                        SettingsHelpers.DrawIndicator(rowRect,
+                            Constants.DefaultMaxCap,
+                            0f,
+                            100f,
+                            200f,
+                            IndicatorTex.DefIndicator);
+                    }
+
+                rowRect.y += rowHeight * 1.5f;
+                Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
+
+                Text.Anchor = anchor;
+            }
         public static void DebugTab(
             Rect inRect)
             {

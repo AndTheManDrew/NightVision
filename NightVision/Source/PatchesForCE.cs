@@ -6,6 +6,8 @@ using Harmony;
 using Verse;
 
 namespace NightVision {
+
+        //NOT CURRENTLY IMPLEMENTED IN V1.0
         //public static class PatchesForCE {
                 
 
