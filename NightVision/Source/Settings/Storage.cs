@@ -47,8 +47,9 @@ namespace NightVision
                             }
 
                         Scribe_Values.Look(ref NVEnabledForCE, "EnabledForCombatExtended", true);
-                        Scribe_Deep.Look(ref LightModifiersBase.PSLightModifiers, "photosensitivitymodifiers");
-                        Scribe_Deep.Look(ref LightModifiersBase.NVLightModifiers, "nightvisionmodifiers");
+                        //cctor args because otherwise statics don't seem to load properly
+                        Scribe_Deep.Look(ref LightModifiersBase.PSLightModifiers, "photosensitivitymodifiers", new object[]{true, false});
+                        Scribe_Deep.Look(ref LightModifiersBase.NVLightModifiers, "nightvisionmodifiers", new object[]{false, true});
                         if (Scribe.mode == LoadSaveMode.LoadingVars)
                             {
                                 if (LightModifiersBase.PSLightModifiers == null)

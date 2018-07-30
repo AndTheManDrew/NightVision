@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Harmony.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stalker\AvoidGlowGrid.cs" />
     <Compile Include="Stalker\JobGiver_MakeLord.cs" />
     <Compile Include="Stalker\LordJob_HuntAndHide.cs" />
     <Compile Include="Stalker\LordToilData_MakeLairOrHideInIt.cs" />

@@ -4,6 +4,7 @@
 // 
 // 21 07 2018
 
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using Verse;
 
@@ -24,12 +25,13 @@ namespace NightVision
 
                 //Current Settings
                 internal bool NullifiesPS;
-
                 internal bool GrantsNV;
 
                 //Settings in xml defs
                 internal bool CompNullifiesPS;
                 internal bool CompGrantsNV;
+
+                //Corresponding ThingDef
 
                 #endregion
 
@@ -41,39 +43,69 @@ namespace NightVision
                 [UsedImplicitly]
                 public ApparelVisionSetting() { }
 
-                /// <summary>
-                ///     Manual Constructor: for when user instantiates new setting in mod settings
-                /// </summary>
-                internal ApparelVisionSetting(
-                    bool nullPS,
-                    bool giveNv)
-                    {
-                        NullifiesPS = nullPS;
-                        GrantsNV    = giveNv;
-                    }
+                public ThingDef ParentDef;
+                public CompProperties_NightVisionApparel CompProps;
 
                 /// <summary>
-                ///     Constructor for Dictionary builder
+                ///     New Setting
                 /// </summary>
                 internal ApparelVisionSetting(
-                    CompProperties_NightVisionApparel compprops)
+                    ThingDef apparel)
                     {
-                        CompNullifiesPS = compprops.NullifiesPhotosensitivity;
-                        CompGrantsNV    = compprops.GrantsNightVision;
+                        ParentDef = apparel;
+                        AttachComp();
                         NullifiesPS     = CompNullifiesPS;
                         GrantsNV        = CompGrantsNV;
                     }
 
+                private void AttachComp()
+                    {
+                        if (ParentDef == null)
+                            {
+                                Log.Message("NightVision.ApparelVisionSetting.AttachComp: Null Parentdef");
+                                return;
+                            }
+                        if (ParentDef.GetCompProperties<CompProperties_NightVisionApparel>() is
+                                    CompProperties_NightVisionApparel props)
+                            {
+                                CompNullifiesPS            = props.NullifiesPhotosensitivity;
+                                CompGrantsNV               = props.GrantsNightVision;
+                                props.AppVisionSetting = this;
+                            }
+                        else
+                            {
+                                if (ParentDef.comps.NullOrEmpty())
+                                    {
+                                        ParentDef.comps = new List<CompProperties>();
+                                    }
+                                CompProps = new CompProperties_NightVisionApparel(){AppVisionSetting = this};
+                                ParentDef.comps.Add(CompProps);
+                                CompNullifiesPS = false;
+                                CompGrantsNV = false;
+                            }
+                    }
                 /// <summary>
                 ///     Dictionary builder attaches the comp settings to preexisting entries
                 /// </summary>
-                internal void AttachComp(
-                    CompProperties_NightVisionApparel compprops)
+                internal void InitExistingSetting(ThingDef Apparel)
                     {
-                        CompNullifiesPS = compprops.NullifiesPhotosensitivity;
-                        CompGrantsNV    = compprops.GrantsNightVision;
+                        ParentDef = Apparel;
+                        AttachComp();
                     }
 
+                public static ApparelVisionSetting CreateNewApparelVisionSetting(
+                     ThingDef apparel)
+                    {
+                        var newAppSetting = new ApparelVisionSetting(){ParentDef = apparel};
+                        newAppSetting.AttachComp();
+                        if (newAppSetting.ParentDef != apparel)
+                            {
+                                Log.Message("NightVision.ApparelVisionSetting.CreateNewApparelVisionSetting: Failed to attach Comp, parentdef != given appareldef");
+                                
+                            }
+                        return newAppSetting;
+
+                    }
                 #endregion
 
                 #region Equality, Redundancy, and INVSaveCheck checks

@@ -27,7 +27,7 @@ namespace NightVision
                     float modifier,
                     bool  isZeroLightMod)
                     {
-                        if (Math.Abs(modifier) < 0.005 || isZeroLightMod && modifier < 0.005)
+                        if (Math.Abs(modifier) < 0.005)
                             {
                                 return VisionType.NVNone;
                             }

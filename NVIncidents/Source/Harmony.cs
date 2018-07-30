@@ -21,7 +21,6 @@ namespace NVIncidents
                 //harmony.PatchAll(Assembly.GetExecutingAssembly());
 
                 //TODO potentially throw error if nightvision is not present
-                //Mechanoid spawn patches - TODO extract stalker patches
                 harmony.Patch(
                     typeof(SymbolResolver_RandomMechanoidGroup)
                                 .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
@@ -65,6 +64,12 @@ namespace NVIncidents
                         __result = false;
                     }
             }
+
+        #endregion
+
+        #region GetAvoidGridPatcher
+
+
 
         #endregion
     }

@@ -81,7 +81,7 @@
     <costList>
       <ComponentIndustrial>2</ComponentIndustrial>
     </costList>
-    <generateCommonality>0.5</generateCommonality>
+    <generateCommonality>0.2</generateCommonality>
     <statBases>
       <WorkToMake>2000</WorkToMake>
       <MaxHitPoints>90</MaxHitPoints>

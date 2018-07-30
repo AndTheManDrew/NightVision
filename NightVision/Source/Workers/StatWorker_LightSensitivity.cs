@@ -9,6 +9,7 @@ namespace NightVision
         [UsedImplicitly]
         public class StatWorker_LightSensitivity : StatWorker
             {
+
                 public override string GetExplanationUnfinalized(
                     StatRequest         req,
                     ToStringNumberSense numberSense)
@@ -72,5 +73,7 @@ namespace NightVision
                 public override bool IsDisabledFor(
                     Thing thing) =>
                             thing is Pawn pawn && pawn.GetComp<Comp_NightVision>() == null;
-            }
+
+                
+    }
     }

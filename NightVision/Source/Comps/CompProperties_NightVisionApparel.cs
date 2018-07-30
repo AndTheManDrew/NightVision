@@ -7,7 +7,7 @@ namespace NightVision
             {
                 public bool GrantsNightVision         = false;
                 public bool NullifiesPhotosensitivity = false;
-
+                public ApparelVisionSetting AppVisionSetting;
                 [UsedImplicitly]
                 public CompProperties_NightVisionApparel() => compClass = typeof(Comp_NightVisionApparel);
             }

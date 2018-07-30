@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using RimWorld;
 using Verse;
 
@@ -69,16 +70,20 @@ namespace NightVision
                         foreach (ThingDef apparel in Storage.AllEyeCoveringHeadgearDefs)
                             {
                                 if (apparel.comps.Find(comp => comp is CompProperties_NightVisionApparel) is
-                                            CompProperties_NightVisionApparel compprops)
+                                            CompProperties_NightVisionApparel)
                                     {
                                         if (!Storage.NVApparel.TryGetValue(apparel, out ApparelVisionSetting setting))
                                             {
-                                                Storage.NVApparel[apparel] = new ApparelVisionSetting(compprops);
+                                                Storage.NVApparel[apparel] = new ApparelVisionSetting(apparel);
                                             }
                                         else
                                             {
-                                                setting.AttachComp(compprops);
+                                                setting.InitExistingSetting(apparel);
                                             }
+                                    }
+                                else
+                                    {
+                                        ApparelVisionSetting.CreateNewApparelVisionSetting(apparel);
                                     }
                             }
                     }
@@ -89,8 +94,10 @@ namespace NightVision
 
                 internal static void TapetumInjector()
                     {
-                        //TODO simplify/inline/merge_loops after logging
+                        //TODO simplify/inline/merge_loops
                         var bestAnimals = new List<ThingDef>();
+                        var tapetumResearch = ResearchProjectDef.Named("TapetumImplant");
+                        var descAppendage = new StringBuilder();
                         foreach (BiomeDef biome in DefDatabase<BiomeDef>.AllDefs)
                             {
                                 if (!biome.AllWildAnimals.Any())
@@ -120,7 +127,7 @@ namespace NightVision
                                                                      .race;
                                 bestAnimals.AddDistinct(bestAnimal);
 
-                                Log.Message("Biome: " + biome + ", best animal: " + bestAnimal);
+                                //Log.Message("Biome: " + biome + ", best animal: " + bestAnimal);
                             }
 
                         foreach (ThingDef animal in bestAnimals)
@@ -132,7 +139,11 @@ namespace NightVision
 
                                 animal.recipes.Add(RecipeDef_ExtractTapetumLucidum.ExtractTapetumLucidum);
                                 Log.Message($"Added extract tapetum lucidum to {animal}");
+                                descAppendage.Append("\n - " + animal.LabelCap);
+
                             }
+
+                        tapetumResearch.description += descAppendage.ToString();
                     }
 
                 #endregion
@@ -153,6 +164,14 @@ namespace NightVision
 
 
                         //use HashSets because during gameplay these sets are used for membership checks only ( HashSet.Contains is O(1) )
+
+                        /*
+                            This is vanilla 1.0 implementation of the same thing from ThingDef.SpecialDisplayStats TODO see if this would be better
+                           foreach (RecipeDef def in from x in DefDatabase<RecipeDef>.AllDefs
+                           where x.IsIngredient(this.$this)
+                           select x)
+                        */
+
 
                         //Find all hediffs that effect sight
                         Storage.AllSightAffectingHediffs = new HashSet<HediffDef>(

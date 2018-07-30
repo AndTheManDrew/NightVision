@@ -24,6 +24,22 @@ namespace NightVision
                     Initialised = true
                 };
 
+                public LightModifiersBase() { }
+
+                public LightModifiersBase(
+                    bool IsPhotosensitiveLM,
+                    bool IsNightVisionLM)
+                    {
+                        if (IsPhotosensitiveLM)
+                            {
+                                PSLightModifiers = this;
+                            }
+                        else if (IsNightVisionLM)
+
+                            {
+                                NVLightModifiers = this;
+                            }
+                    }
                 public bool Initialised;
 
                 internal float[] Offsets = new float[2];
@@ -68,25 +84,9 @@ namespace NightVision
                 /// </summary>
                 public virtual void ExposeData()
                     {
-                        float defaultZero = new float();
-                        float defaultFull = new float();
-                        //TODO check if accessing NVLightModifiers/PSLightModifiers on load causes issues (null exception), if it does then uncomment 'if{}'
-                        //if (Scribe.mode == LoadSaveMode.Saving)
-                        //    {
-                                    if (this == NVLightModifiers)
-                                        {
-                                            defaultZero = Constants.NVDefaultOffsets[0];
-                                            defaultFull = Constants.NVDefaultOffsets[1];
-                                        }
 
-                                    else if (this == PSLightModifiers)
-                                        {
-                                            defaultZero = Constants.PSDefaultOffsets[0];
-                                            defaultFull = Constants.PSDefaultOffsets[1];
-                                        }
-                            //}
-                        Scribe_Values.Look(ref Offsets[0], "ZeroOffset", defaultZero);
-                        Scribe_Values.Look(ref Offsets[1], "FullOffset", defaultFull);
+                        Scribe_Values.Look(ref Offsets[0], "ZeroOffset", forceSave:true);
+                        Scribe_Values.Look(ref Offsets[1], "FullOffset", forceSave: true);
                         if (Scribe.mode == LoadSaveMode.LoadingVars)
                             {
                                 if (Offsets == null)
@@ -118,22 +118,25 @@ namespace NightVision
                     {
                         if (glow < 0.001)
                             {
-                                return (float) Math.Round(this[0] / numEyesNormalisedFor, 2);
+                                Log.Message("NightVision.LightModifiersBase.GetEffectAtGlow: " + this[0] + "/" + numEyesNormalisedFor + "= " + this[0]/numEyesNormalisedFor);
+
+                                
+                                return (float) Math.Round(this[0] / numEyesNormalisedFor, 2, MidpointRounding.AwayFromZero);
                             }
 
                         if (glow > 0.999)
                             {
-                                return (float) Math.Round(this[1] / numEyesNormalisedFor, 2);
+                                return (float) Math.Round(this[1] / numEyesNormalisedFor, 2, MidpointRounding.AwayFromZero);
                             }
 
                         if (glow < 0.3)
                             {
-                                return (float) Math.Round(this[0] / numEyesNormalisedFor * (0.3f - glow) / 0.3f, 2);
+                                return (float) Math.Round(this[0] / numEyesNormalisedFor * (0.3f - glow) / 0.3f, 2, MidpointRounding.AwayFromZero);
                             }
 
                         if (glow > 0.7)
                             {
-                                return (float) Math.Round(this[1] / numEyesNormalisedFor * (glow - 0.7f) / 0.3f, 2);
+                                return (float) Math.Round(this[1] / numEyesNormalisedFor * (glow - 0.7f) / 0.3f, 2, MidpointRounding.AwayFromZero);
                             }
 
                         return 0;
@@ -168,7 +171,11 @@ namespace NightVision
                         return new[] {maxcap, mincap, nvcap, pscap};
                     }
 
-                public bool HasModifier() => Math.Abs(this[0]) > 0.001 && Math.Abs(this[1]) > 0.001;
+                //public bool HasModifier() => Math.Abs(this[0]) > 0.001 && <- HAHAHAHA took me too long to find that Math.Abs(this[1]) > 0.001;
+                public bool HasModifier()
+                    {
+                        return Math.Abs(this[0]) > 0.001 || Math.Abs(this[1]) > 0.001;
+                    }
 
                 public bool IsCustom() => Setting == VisionType.NVCustom;
 

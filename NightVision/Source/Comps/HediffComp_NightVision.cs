@@ -14,6 +14,7 @@ namespace NightVision
         /// </summary>
         public class HediffComp_NightVision : HediffComp
             {
+
                 [UsedImplicitly]
                 public HediffCompProperties_NightVision Props => (HediffCompProperties_NightVision) props;
 

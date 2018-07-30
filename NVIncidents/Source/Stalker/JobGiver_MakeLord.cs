@@ -13,6 +13,7 @@ using Verse.AI.Group;
 
 namespace NVIncidents
     {
+        //Just used for testing - should assign lord in incident worker
         [UsedImplicitly]
         internal class JobGiver_MakeLord : ThinkNode_JobGiver
             {

@@ -115,11 +115,12 @@ namespace NightVision
                                 AttachCompProps();
                             }
                     }
-
-                public override float GetEffectAtGlow(
-                    float glow,
-                    int   numEyesNormalisedFor = 1) =>
-                            base.GetEffectAtGlow(glow, _eyeCount);
+                
+                // Already normalised in the indexer
+                //public override float GetEffectAtGlow(
+                //    float glow,
+                //    int   numEyesNormalisedFor = 1) =>
+                //            base.GetEffectAtGlow(glow, _eyeCount);
 
                 public override bool ShouldBeSaved()
                     {
