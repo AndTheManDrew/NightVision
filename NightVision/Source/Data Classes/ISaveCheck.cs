@@ -1,7 +1,7 @@
 ﻿namespace NightVision
+{
+    public interface ISaveCheck
     {
-        public interface ISaveCheck
-            {
-                bool ShouldBeSaved();
-            }
+        bool ShouldBeSaved();
     }
+}

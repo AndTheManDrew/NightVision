@@ -12,7 +12,6 @@ using JetBrains.Annotations;
 using RimWorld;
 using UnityEngine;
 using Verse;
-using Debug = System.Diagnostics.Debug;
 
 namespace NightVision
     {
@@ -21,13 +20,13 @@ namespace NightVision
                 public bool ApparelGrantsNV;
                 public bool ApparelNullsPS;
 
-                public int lastDarkTick;
+                public int LastDarkTick;
 
                 public   List<Apparel>                       PawnsNVApparel = new List<Apparel>();
                 public   Dictionary<string, List<HediffDef>> PawnsNVHediffs = new Dictionary<string, List<HediffDef>>();
                 internal float[]                             HediffMods     = new float[2];
                 internal float[]                             NvhediffMods   = new float[2];
-                internal float[] PshediffMods = new float[2];
+                internal float[]                             PshediffMods   = new float[2];
 
                 private bool  _apparelNeedsChecking;
                 private float _fullLightModifier = -1;
@@ -70,28 +69,28 @@ namespace NightVision
 
                 private bool CanCheat => Props.CanCheat;
 
-                public int TicksSinceLastDark => Find.TickManager.TicksGame - lastDarkTick;
+                public int TicksSinceLastDark => Find.TickManager.TicksGame - LastDarkTick;
 
                 [UsedImplicitly]
                 public CompProperties_NightVision Props => (CompProperties_NightVision) props;
-        
+
                 public Pawn ParentPawn => _intParentPawn ?? (_intParentPawn = parent as Pawn);
-        
+
                 private List<Hediff> PawnHediffs =>
                             _pawnsHediffs ?? (_pawnsHediffs = ParentPawn?.health?.hediffSet?.hediffs);
 
                 private int EyeCount => RaceSightParts.Count;
-        
+
                 public List<BodyPartRecord> RaceSightParts
                     {
                         get
                             {
                                 if (_raceSightParts.NullOrEmpty())
                                     {
-                                        _raceSightParts = ParentPawn?
-                                                          .RaceProps.body.GetPartsWithTag(Constants.EyeTag)
+                                        _raceSightParts = ParentPawn
+                                                          ?.RaceProps.body.GetPartsWithTag(Constants.EyeTag)
                                                           .ToList();
-                                        
+
                                         if (_raceSightParts.NullOrEmpty())
                                             {
                                                 Log.Message(
@@ -101,7 +100,7 @@ namespace NightVision
                                                 return new List<BodyPartRecord>();
                                             }
                                     }
-                                
+
                                 return _raceSightParts;
                             }
                     }
@@ -200,6 +199,7 @@ namespace NightVision
                         _fullLightModifier     = -1f;
                         _apparelNeedsChecking  = true;
                         _hediffsNeedChecking   = true;
+                        ClearPsych();
                     }
 
                 /// <summary>
@@ -325,40 +325,51 @@ namespace NightVision
                                 if (Math.Abs(effect) >= 0.005)
                                     {
                                         foundSomething = true;
-                                        Log.Message($"NightVision.Comp_NightVision.ExplanationBuilder: effect:{effect}, numRemEyes:{NumberOfRemainingEyes}");
-                                        
+#if DEBUG
+                                        Log.Message(
+                                            $"NightVision.Comp_NightVision.ExplanationBuilder: effect:{effect}, numRemEyes:{NumberOfRemainingEyes}");
+#endif
                                         switch (NaturalLightModifiers.Setting)
                                             {
                                                 //TODO consider iterating over the racesightparts and returning the custom label of each part
                                                 case VisionType.NVNightVision:
                                                     nvsum += (float) Math.Round(effect * NumberOfRemainingEyes,
                                                         2,
-                                                        MidpointRounding.AwayFromZero);
+                                                        Constants.Rounding);
                                                     nvexplanation.AppendFormat("  " + Constants.ModifierLine,
-                                                        ParentPawn.def.LabelCap + " " +
-                                                        RaceSightParts.First().LabelShort + " x"
-                                                                                          + NumberOfRemainingEyes,
-                                                        effect * NumberOfRemainingEyes).AppendLine();
+                                                                     ParentPawn.def.LabelCap + " "
+                                                                                             + RaceSightParts
+                                                                                               .First()
+                                                                                               .LabelShort + " x"
+                                                                                             + NumberOfRemainingEyes,
+                                                                     effect * NumberOfRemainingEyes)
+                                                                 .AppendLine();
                                                     break;
                                                 case VisionType.NVPhotosensitivity:
                                                     pssum += (float) Math.Round(effect * NumberOfRemainingEyes,
                                                         2,
-                                                        MidpointRounding.AwayFromZero);
+                                                        Constants.Rounding);
                                                     psexplanation.AppendFormat("  " + Constants.ModifierLine,
-                                                        ParentPawn.def.LabelCap + " " +
-                                                        RaceSightParts.First().LabelShort + " x"
-                                                                                          + NumberOfRemainingEyes,
-                                                        effect * NumberOfRemainingEyes).AppendLine();
+                                                                     ParentPawn.def.LabelCap + " "
+                                                                                             + RaceSightParts
+                                                                                               .First()
+                                                                                               .LabelShort + " x"
+                                                                                             + NumberOfRemainingEyes,
+                                                                     effect * NumberOfRemainingEyes)
+                                                                 .AppendLine();
                                                     break;
                                                 case VisionType.NVCustom:
                                                     sum += (float) Math.Round(effect * NumberOfRemainingEyes,
                                                         2,
-                                                        MidpointRounding.AwayFromZero);
+                                                        Constants.Rounding);
                                                     explanation.AppendFormat("  " + Constants.ModifierLine,
-                                                        ParentPawn.def.LabelCap + " " +
-                                                        RaceSightParts.First().LabelShort + " x"
-                                                                                          + NumberOfRemainingEyes,
-                                                        effect * NumberOfRemainingEyes).AppendLine();
+                                                                   ParentPawn.def.LabelCap + " "
+                                                                                           + RaceSightParts
+                                                                                             .First()
+                                                                                             .LabelShort + " x"
+                                                                                           + NumberOfRemainingEyes,
+                                                                   effect * NumberOfRemainingEyes)
+                                                               .AppendLine();
                                                     break;
                                             }
                                     }
@@ -380,12 +391,11 @@ namespace NightVision
                                                 if (Math.Abs(effect) > 0.005)
                                                     {
                                                         foundSomething = true;
+                                                        effect = (float) Math.Round(effect, 2, Constants.Rounding);
                                                         switch (hediffSetting.IntSetting)
                                                             {
                                                                 case VisionType.NVNightVision:
-                                                                    nvsum += (float) Math.Round(effect,
-                                                                        2,
-                                                                        MidpointRounding.AwayFromZero);
+                                                                    nvsum += effect;
                                                                     nvexplanation.AppendFormat(
                                                                         "  " + Constants.ModifierLine,
                                                                         hediffDef.LabelCap,
@@ -393,9 +403,7 @@ namespace NightVision
                                                                     nvexplanation.AppendLine();
                                                                     break;
                                                                 case VisionType.NVPhotosensitivity:
-                                                                    pssum += (float) Math.Round(effect,
-                                                                        2,
-                                                                        MidpointRounding.AwayFromZero);
+                                                                    pssum += effect;
                                                                     psexplanation.AppendFormat(
                                                                         "  " + Constants.ModifierLine,
                                                                         hediffDef.LabelCap,
@@ -403,9 +411,7 @@ namespace NightVision
                                                                     psexplanation.AppendLine();
                                                                     break;
                                                                 case VisionType.NVCustom:
-                                                                    sum += (float) Math.Round(effect,
-                                                                        2,
-                                                                        MidpointRounding.AwayFromZero);
+                                                                    sum += effect;
                                                                     explanation.AppendFormat(
                                                                         "  " + Constants.ModifierLine,
                                                                         hediffDef.LabelCap,
@@ -492,76 +498,13 @@ namespace NightVision
                         return result;
                     }
 
-                #region Thoughts
-                /// <summary>
-                ///     For ThoughtWorker_Dark patch
-                /// </summary>
-                /// <returns></returns>
-                public VisionType PsychDark() => Classifier.ClassifyModifier(ZeroLightModifier, true);
-
-                /// <summary>
-                ///     For ThoughtWorker_TooBright
-                /// </summary>
-                public bool PsychBright() =>
-                            TicksSinceLastDark > Constants.ThoughtActiveTicksPast && IsOversensitiveToLight();
-
-                private bool IsOversensitiveToLight()
-                    {
-                        return Classifier.ClassifyModifier(FullLightModifier, false) == VisionType.NVPhotosensitivity;
-                    }
-
-                #endregion
-                
-                //Is just inspect data bloat
-                //public override string CompInspectStringExtra()
-                //    {
-                //        if (!UpdateComp())
-                //            {
-                //                return String.Empty;
-                //            }
-                //        StringBuilder inspectResult = new StringBuilder();
-
-                //        VisionType preApparelFullLight = Classifier.ClassifyModifier(_zeroLightModifier, false);
-                //        VisionType postApparelFullLight = Classifier.ClassifyModifier(FullLightModifier, false);
-
-                //        VisionType preApparelZeroLight = Classifier.ClassifyModifier(_zeroLightModifier, true);
-                //        VisionType postApparelZeroLight = Classifier.ClassifyModifier(ZeroLightModifier, true);
-
-                //        if (preApparelFullLight == VisionType.NVPhotosensitivity
-                //            || postApparelFullLight == VisionType.NVPhotosensitivity)
-                //            {
-                //                inspectResult.Append("NVBrightLightVision".Translate() + " " + "NVPoor".Translate());
-                //                if (postApparelFullLight != VisionType.NVPhotosensitivity)
-                //                    {
-                //                        inspectResult.AppendFormat(" ({0} {1})",
-                //                            "NVStandard".Translate(),
-                //                            "NVGearExp".Translate());
-                //                    }
-
-                //                inspectResult.AppendLine();
-                //            }
-
-                //        inspectResult.AppendFormat($"{"NVLowLightVision".Translate()} {0}",
-                //            preApparelZeroLight == VisionType.NVNone ? "NVStandard".Translate() :
-                //                        preApparelZeroLight == VisionType.NVNightVision ?
-                //                                    "NVGood".Translate() : "NVExc".Translate());
-                //        if (preApparelZeroLight < postApparelZeroLight)
-                //            {
-                //                inspectResult.AppendFormat(" ({0} {1})",
-                //                    postApparelZeroLight == VisionType.NVNightVision? "NVGood".Translate() : "NVExc".Translate(),
-                //                    "NVGearExp".Translate());
-                //            }
-
-                //        return inspectResult.ToString();
-                //    }
-                
                 public override void CompTickRare()
                     {
                         if (!UpdateComp())
                             {
                                 return;
                             }
-
+                        #if DEBUG
                         if (DrawSettings.LogPawnComps)
                             {
                                 Log.Message(new string('*', 30));
@@ -588,9 +531,10 @@ namespace NightVision
                                             + FullLightModifier);
                                 Log.Message(new string('*', 30));
                             }
+    #endif
                     }
 
-                public bool UpdateComp()
+                private bool UpdateComp()
                     {
                         if (!ParentPawn.Spawned || ParentPawn.Dead)
                             {
@@ -619,6 +563,7 @@ namespace NightVision
                                 _zeroLightModifier = CalcZeroLightModifier();
                             }
 
+                        ClearPsych();
                         return true;
                     }
 
@@ -632,9 +577,9 @@ namespace NightVision
                     }
 
                 public override void Initialize(
-                    CompProperties props)
+                    CompProperties compprops)
                     {
-                        base.Initialize(props);
+                        base.Initialize(compprops);
                         //Note: Pawn.Dead is equivalent to ParentPawn.health.Dead, therefore null check
                         if (parent == null || !ParentPawn.Spawned || ParentPawn.health == null || ParentPawn.Dead)
                             {
@@ -768,6 +713,7 @@ namespace NightVision
                                 ApparelGrantsNV |= value.GrantsNV;
                                 ApparelNullsPS  |= value.NullifiesPS;
                                 PawnsNVApparel.Add(apparel);
+                                ClearPsych();
                             }
                         //In case the user changes settings in game
                         else if (Storage.AllEyeCoveringHeadgearDefs.Contains(apparel.def))
@@ -851,6 +797,7 @@ namespace NightVision
                         _zeroLightModifier   = -1f;
                         _fullLightModifier   = -1f;
                         _hediffsNeedChecking = false;
+                        ClearPsych();
                     }
 
                 private float CalcZeroLightModifier()
@@ -959,7 +906,10 @@ namespace NightVision
 
                 /// <summary>
                 ///     Builds a dictionary to store all the possibly relevant hediffs:
-                ///     <para>Keys: initially .Label of all sight parts & catch-all "wholebody" but will add other parts at runtime if necessary</para>
+                ///     <para>
+                ///         Keys: initially .Label of all sight parts & catch-all "wholebody" but will add other parts at runtime if
+                ///         necessary
+                ///     </para>
                 ///     <para>Values: List of all the hediff defs that affect that part</para>
                 /// </summary>
                 private void InitPawnsHediffsAndCountEyes()
@@ -975,7 +925,7 @@ namespace NightVision
                             {
                                 PawnsNVHediffs[RaceSightParts[i].Label] = new List<HediffDef>();
                             }
-                        
+
                         PawnsNVHediffs[Constants.BodyKey] = new List<HediffDef>();
                         if (!PawnHediffs.NullOrEmpty())
                             {
@@ -1016,6 +966,8 @@ namespace NightVision
                                         PawnsNVApparel.Add(apparel);
                                     }
                             }
+
+                        ClearPsych();
                     }
 
                 /// <summary>
@@ -1037,6 +989,56 @@ namespace NightVision
                             }
 
                         _apparelNeedsChecking = false;
+                        ClearPsych();
                     }
+
+                #region Thoughts
+
+                /// <summary>
+                ///     For ThoughtWorker_Dark patch
+                /// </summary>
+                /// <returns></returns>
+                public VisionType PsychDark
+                    {
+                        get
+                            {
+                                if (DarknessPsych == null)
+                                    {
+                                        DarknessPsych = Classifier.ClassifyModifier(ZeroLightModifier, true);
+                                    }
+
+                                return (VisionType) DarknessPsych;
+                            }
+                    }
+
+                private VisionType? BrightLightPsych;
+                private VisionType? DarknessPsych;
+
+                //TODO Implement
+                private void ClearPsych()
+                    {
+                        BrightLightPsych = null;
+                        DarknessPsych    = null;
+                    }
+
+
+                /// <summary>
+                ///     For ThoughtWorker_TooBright
+                /// </summary>
+                public bool PsychBright
+                    {
+                        get
+                            {
+                                if (BrightLightPsych == null)
+                                    {
+                                        BrightLightPsych = Classifier.ClassifyModifier(FullLightModifier, false);
+                                    }
+
+                                return TicksSinceLastDark > Constants.ThoughtActiveTicksPast
+                                       && BrightLightPsych == VisionType.NVPhotosensitivity;
+                            }
+                    }
+
+                #endregion
             }
     }

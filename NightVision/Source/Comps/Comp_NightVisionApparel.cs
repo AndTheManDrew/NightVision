@@ -9,40 +9,44 @@ using JetBrains.Annotations;
 using Verse;
 
 namespace NightVision
+{
+    public class Comp_NightVisionApparel : ThingComp
     {
-        public class Comp_NightVisionApparel : ThingComp
-            {
-
-                [UsedImplicitly]
-                public CompProperties_NightVisionApparel Props => (CompProperties_NightVisionApparel) props;
+        [UsedImplicitly]
+        public CompProperties_NightVisionApparel Props => (CompProperties_NightVisionApparel) props;
 
         public override string GetDescriptionPart()
         {
-            StringBuilder result = new StringBuilder(base.GetDescriptionPart());
-            if (this.Props?.AppVisionSetting?.GrantsNV == true)
-                {
-                    result.AppendLine("NVGiveNV".Translate());
-                }
+            var result = new StringBuilder(base.GetDescriptionPart());
+
+            if (Props?.AppVisionSetting?.GrantsNV == true)
+            {
+                result.AppendLine("NVGiveNV".Translate());
+            }
+
             if (Props?.AppVisionSetting?.NullifiesPS == true)
-                {
-                    result.AppendLine("NVNullPS".Translate());
-                }
+            {
+                result.AppendLine("NVNullPS".Translate());
+            }
 
             return result.ToString().Trim();
         }
 
         public override string CompInspectStringExtra()
+        {
+            var result = new StringBuilder(base.CompInspectStringExtra());
+
+            if (Props?.AppVisionSetting?.GrantsNV == true)
             {
-                StringBuilder result = new StringBuilder(base.CompInspectStringExtra());
-                if (this.Props?.AppVisionSetting?.GrantsNV == true)
-                {
-                    result.AppendLine("NVGiveNV".Translate());
-                }
-                if (Props?.AppVisionSetting?.NullifiesPS == true)
-                    {
-                        result.AppendLine("NVNullPS".Translate());
-                    }
+                result.AppendLine("NVGiveNV".Translate());
+            }
+
+            if (Props?.AppVisionSetting?.NullifiesPS == true)
+            {
+                result.AppendLine("NVNullPS".Translate());
+            }
+
             return result.ToString().Trim();
         }
     }
-    }
+}
