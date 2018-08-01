@@ -7,18 +7,19 @@
 using Verse;
 
 namespace NightVision
+{
+    internal static class AutoQualifier
     {
-        internal static class AutoQualifier
+        internal static VisionType? HediffCheck(
+                        HediffDef hediffDef
+                    )
+        {
+            if (hediffDef.addedPartProps is AddedBodyPartProps abpp && abpp.partEfficiency > 1.0f)
             {
-                internal static VisionType? HediffCheck(
-                    HediffDef hediffDef)
-                    {
-                        if (hediffDef.addedPartProps is AddedBodyPartProps abpp && abpp.partEfficiency > 1.0f)
-                            {
-                                return VisionType.NVNightVision;
-                            }
-
-                        return null;
-                    }
+                return VisionType.NVNightVision;
             }
+
+            return null;
+        }
     }
+}

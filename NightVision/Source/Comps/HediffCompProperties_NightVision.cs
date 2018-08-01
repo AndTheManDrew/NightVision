@@ -9,21 +9,22 @@ using JetBrains.Annotations;
 using Verse;
 
 namespace NightVision
+{
+    public class HediffCompProperties_NightVision : HediffCompProperties
     {
-        public class HediffCompProperties_NightVision : HediffCompProperties
-            {
-                public float                 FullLightMod           = default;
-                public bool                  GrantsNightVision      = false;
-                public bool                  GrantsPhotosensitivity = false;
-                public Hediff_LightModifiers LightModifiers;
-                public float                 ZeroLightMod = default;
+        public float                 FullLightMod           = default;
+        public bool                  GrantsNightVision      = false;
+        public bool                  GrantsPhotosensitivity = false;
+        public Hediff_LightModifiers LightModifiers;
+        public float                 ZeroLightMod = default;
 
 
-                [UsedImplicitly]
-                public HediffCompProperties_NightVision() => compClass = typeof(HediffComp_NightVision);
+        [UsedImplicitly]
+        public HediffCompProperties_NightVision() => compClass = typeof(HediffComp_NightVision);
 
-                public bool IsDefault() =>
-                            Math.Abs(ZeroLightMod) < 0.001f && Math.Abs(FullLightMod) < 0.001f
-                                                            && !(GrantsNightVision || GrantsPhotosensitivity);
-            }
+        public bool IsDefault()
+            => Math.Abs(ZeroLightMod)    < 0.001f
+               && Math.Abs(FullLightMod) < 0.001f
+               && !(GrantsNightVision || GrantsPhotosensitivity);
     }
+}

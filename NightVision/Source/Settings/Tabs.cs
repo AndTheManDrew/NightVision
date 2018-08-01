@@ -1,11 +1,11 @@
 ﻿namespace NightVision
+{
+    public enum Tab
     {
-        public enum Tab
-            {
-                General,
-                Races,
-                Apparel,
-                Bionics,
-                Debug
-            }
+        General,
+        Races,
+        Apparel,
+        Bionics,
+        Debug
     }
+}

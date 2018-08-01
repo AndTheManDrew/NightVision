@@ -2,10 +2,11 @@
 using Verse;
 
 namespace NightVision
+{
+    [UsedImplicitly]
+    public class Stealth_ModExtension : DefModExtension
     {
         [UsedImplicitly]
-        public class Stealth_ModExtension : DefModExtension
-            {
-                [UsedImplicitly] public float lowlightbodysizefactor;
-            }
+        public float lowlightbodysizefactor;
     }
+}

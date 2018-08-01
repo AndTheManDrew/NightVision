@@ -1,13 +1,13 @@
 ﻿namespace NightVision
+{
+    public enum VisionType : byte
     {
-        public enum VisionType : byte
-            {
-                NVNone = 0,
+        NVNone = 0,
 
-                NVNightVision = 1,
+        NVNightVision = 1,
 
-                NVPhotosensitivity = 2,
+        NVPhotosensitivity = 2,
 
-                NVCustom = 3
-            }
+        NVCustom = 3
     }
+}
