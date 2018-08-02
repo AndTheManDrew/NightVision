@@ -24,7 +24,6 @@ namespace NightVision
         {
             switch (Props.LightModifiers.Setting)
             {
-                //TODO Review returning empty & expand explaination
                 case VisionType.NVNightVision:      return "NVGiveNV".Translate();
                 case VisionType.NVPhotosensitivity: return "NVGivePS".Translate();
                 case VisionType.NVCustom:

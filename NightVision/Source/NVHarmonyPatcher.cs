@@ -290,7 +290,7 @@ namespace NightVision
             {
                 VisionType vt = hlm.Setting;
 
-                if (vt < VisionType.NVCustom /*TODO review: && vt != VisionType.NVNone*/)
+                if (vt < VisionType.NVCustom)
                 {
                     yield return new StatDrawEntry(
                                                    StatCategoryDefOf.Basics,
@@ -302,7 +302,6 @@ namespace NightVision
                 }
                 else
                 {
-                    //TODO Condense? need to review the code for the stats
                     yield return new StatDrawEntry(
                                                    StatCategoryDefOf.Basics,
                                                    "NVGrantsVisionType".Translate(),

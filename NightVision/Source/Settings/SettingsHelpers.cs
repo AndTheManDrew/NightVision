@@ -33,7 +33,7 @@ namespace NightVision
                         float multipercent,
                         bool  isZeroLight
                     )
-            => (float) Math.Round(multipercent / 100f, 2)
+            => (float) Math.Round(multipercent / 100f, Constants.NumberOfDigits)
                - (isZeroLight
                            ? Constants.DefaultZeroLightMultiplier
                            : Constants.DefaultFullLightMultiplier);
@@ -146,7 +146,7 @@ namespace NightVision
                 return tip;
             }
 
-            string result = def.description ?? def.LabelCap;
+            string result = /*Confusing as it shows givenv or null ps and doesnt get updated immediately((ThingDef)def).DescriptionDetailed ??*/ def.description ?? def.LabelCap;
 
             if (lightModifiers is Hediff_LightModifiers hediffMods)
             {

@@ -107,11 +107,11 @@ namespace NightVision
             if (SettingsCache.CacheInited)
             {
                 Storage.MultiplierCaps.min = SettingsCache.MinCache != null && Storage.CustomCapsEnabled
-                            ? (float) Math.Round((float) SettingsCache.MinCache / 100, 2)
+                            ? (float) Math.Round((float) SettingsCache.MinCache / 100, Constants.NumberOfDigits)
                             : Storage.MultiplierCaps.min;
 
                 Storage.MultiplierCaps.max = SettingsCache.MaxCache != null && Storage.CustomCapsEnabled
-                            ? (float) Math.Round((float) SettingsCache.MaxCache / 100, 2)
+                            ? (float) Math.Round((float) SettingsCache.MaxCache / 100, Constants.NumberOfDigits)
                             : Storage.MultiplierCaps.max;
 
                 LightModifiersBase.NVLightModifiers.Offsets = new[]

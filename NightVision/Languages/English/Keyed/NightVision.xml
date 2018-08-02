@@ -20,11 +20,15 @@
   <NVGivePS>Grants photosensitivity</NVGivePS>
   <NVLowLightVision>Night vision:</NVLowLightVision>
   <NVModifier>modifier</NVModifier>
+  <NVMultiplier>multiplier</NVMultiplier>
   <NVTotal>Total</NVTotal>
   <NVGlowModOptions>Settings</NVGlowModOptions>
 
   <NVZeroLabel>At 0% light</NVZeroLabel>
   <NVFullLabel>At 100% light</NVFullLabel>
+  
+  <NVReset>Reset All Settings for Night Vision</NVReset>
+  <NVConfirmReset>Confirm Reset?</NVConfirmReset>
 
   <NVLoadedFromFile>This was loaded from file with the {0} setting: {1}</NVLoadedFromFile>
 

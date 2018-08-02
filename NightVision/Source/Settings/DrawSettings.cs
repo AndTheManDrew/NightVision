@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using RimWorld;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace NightVision
         private static int?       _numberOfCustomRaces;
         private static Vector2    _raceScrollPosition = Vector2.zero;
         private static bool _askToConfirmReset;
+        public static Stopwatch confirmTimer = new Stopwatch();
         #if DEBUG
         public static bool LogPawnComps;
         #endif
@@ -31,14 +33,15 @@ namespace NightVision
             DrawSettings._maxY                  = -1;
             DrawSettings._numberOfCustomHediffs = null;
             DrawSettings._numberOfCustomRaces   = null;
+            DrawSettings._askToConfirmReset = false;
+            DrawSettings.confirmTimer.Reset();
         }
 
         public static void GeneralTab(
                         Rect inRect
                     )
         {
-            //TODO GeneralTab: Add reset defaults and thought settings
-            //TODO GeneralTab: Move cap and multiplier settings to their own tab
+            //TODO GeneralTab: Add  thought settings?
             TextAnchor anchor    = Text.Anchor;
             float      rowHeight = Constants.GenRowHeight;
 
@@ -223,16 +226,33 @@ namespace NightVision
 
 
                 
-            DrawSettings._askToConfirmReset = Widgets.ButtonText(rowRect, "NVReset") || DrawSettings._askToConfirmReset;
             if (DrawSettings._askToConfirmReset)
             {
+                if (!DrawSettings.confirmTimer.IsRunning)
+                {
+                    DrawSettings.confirmTimer.Start();
+                }
                 Color color = GUI.color;
                 GUI.color = Color.red;
-                if (Widgets.ButtonText(rowRect, "NVConfirmReset"))
+                if (Widgets.ButtonText(rowRect, "NVConfirmReset".Translate()))
                 {
+                    //Log.Message("NightVision.DrawSettings.GeneralTab: NVConfirm");
+                    
                     Storage.ResetAllSettings();
+                    DrawSettings.confirmTimer.Reset();
                 }
                 GUI.color = color;
+
+                if (DrawSettings.confirmTimer.ElapsedMilliseconds > 5000)
+                {
+                    DrawSettings._askToConfirmReset = false;
+                    DrawSettings.confirmTimer.Reset();
+                }
+            }
+            else
+            {
+                DrawSettings._askToConfirmReset = Widgets.ButtonText(rowRect, "NVReset".Translate());
+
             }
 
             Text.Anchor = anchor;
@@ -435,7 +455,7 @@ namespace NightVision
             SettingsHelpers.DrawLightModifiersHeader(
                                                      ref inRect,
                                                      "NVHediffs".Translate(),
-                                                     "NVHediffNote".Translate() + "NVHediffNoteCont".Translate()
+                                                     "NVHediffNote".Translate() + " " + "NVHediffNoteCont".Translate()
                                                     );
 
             float num = inRect.y + 3f;

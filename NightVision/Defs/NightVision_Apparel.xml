@@ -20,7 +20,7 @@
       <ComponentIndustrial>3</ComponentIndustrial>
       <Plasteel>10</Plasteel>
     </costList>
-    <generateCommonality>0.2</generateCommonality>
+    <generateCommonality>0.1</generateCommonality>
     <statBases>
       <WorkToMake>3000</WorkToMake>
       <MaxHitPoints>100</MaxHitPoints>
@@ -81,7 +81,7 @@
     <costList>
       <ComponentIndustrial>2</ComponentIndustrial>
     </costList>
-    <generateCommonality>0.2</generateCommonality>
+    <generateCommonality>0.1</generateCommonality>
     <statBases>
       <WorkToMake>2000</WorkToMake>
       <MaxHitPoints>90</MaxHitPoints>

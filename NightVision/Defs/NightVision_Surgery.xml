@@ -26,6 +26,9 @@
         <li>Medicine</li>
       </categories>
     </fixedIngredientFilter>
+    <recipeMaker>
+    <researchPrerequisite>TapetumImplant</researchPrerequisite>
+    </recipeMaker>
   </RecipeDef>
   
   
