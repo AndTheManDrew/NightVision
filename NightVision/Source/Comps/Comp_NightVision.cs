@@ -213,7 +213,7 @@ namespace NightVision
                         //If glow is approx. 0%
                         if (glow < 0.001f)
                             {
-                                return (float) Math.Round(Constants.DefaultZeroLightMultiplier + ZeroLightModifier, 2);
+                                return (float) Math.Round(Constants.DefaultZeroLightMultiplier + ZeroLightModifier, Constants.NumberOfDigits);
                             }
                         //If glow is approx. 100% and the pawns full light modifier is not approx 0
 
@@ -223,7 +223,7 @@ namespace NightVision
                                     {
                                         return (float) Math.Round(
                                             Constants.DefaultFullLightMultiplier + FullLightModifier,
-                                            2);
+                                            Constants.NumberOfDigits);
                                     }
 
                                 return 1f;
@@ -234,14 +234,14 @@ namespace NightVision
                             {
                                 return (float) Math.Round(
                                     1f + (Constants.MinGlowNoGlow - glow) * (ZeroLightModifier - 0.2f) / 0.3f,
-                                    2);
+                                    Constants.NumberOfDigits);
                             }
 
                         if (glow > Constants.MaxGlowNoGlow && Math.Abs(FullLightModifier) > 0.01f)
                             {
                                 return (float) Math.Round(
                                     1f + (glow - Constants.MaxGlowNoGlow) * FullLightModifier / 0.3f,
-                                    2);
+                                    Constants.NumberOfDigits);
                             }
 
                         return 1f;
@@ -270,6 +270,7 @@ namespace NightVision
                         var     basevalue = 0f;
                         bool    lowLight  = glow < 0.3f;
                         usedApparelSetting = false;
+
 
                         var explanation = new StringBuilder(result);
                         StringBuilder nvexplanation = new StringBuilder().AppendLine(
@@ -334,7 +335,7 @@ namespace NightVision
                                                 //TODO consider iterating over the racesightparts and returning the custom label of each part
                                                 case VisionType.NVNightVision:
                                                     nvsum += (float) Math.Round(effect * NumberOfRemainingEyes,
-                                                        2,
+                                                        Constants.NumberOfDigits,
                                                         Constants.Rounding);
                                                     nvexplanation.AppendFormat("  " + Constants.ModifierLine,
                                                                      ParentPawn.def.LabelCap + " "
@@ -347,7 +348,7 @@ namespace NightVision
                                                     break;
                                                 case VisionType.NVPhotosensitivity:
                                                     pssum += (float) Math.Round(effect * NumberOfRemainingEyes,
-                                                        2,
+                                                        Constants.NumberOfDigits,
                                                         Constants.Rounding);
                                                     psexplanation.AppendFormat("  " + Constants.ModifierLine,
                                                                      ParentPawn.def.LabelCap + " "
@@ -360,7 +361,7 @@ namespace NightVision
                                                     break;
                                                 case VisionType.NVCustom:
                                                     sum += (float) Math.Round(effect * NumberOfRemainingEyes,
-                                                        2,
+                                                        Constants.NumberOfDigits,
                                                         Constants.Rounding);
                                                     explanation.AppendFormat("  " + Constants.ModifierLine,
                                                                    ParentPawn.def.LabelCap + " "
@@ -391,7 +392,7 @@ namespace NightVision
                                                 if (Math.Abs(effect) > 0.005)
                                                     {
                                                         foundSomething = true;
-                                                        effect = (float) Math.Round(effect, 2, Constants.Rounding);
+                                                        effect = (float) Math.Round(effect, Constants.NumberOfDigits, Constants.Rounding);
                                                         switch (hediffSetting.IntSetting)
                                                             {
                                                                 case VisionType.NVNightVision:
@@ -424,6 +425,27 @@ namespace NightVision
                                     }
                             }
 
+                        void AppendPreSumIfNeeded(
+                            ref bool needed
+                        )
+                        {
+                            if (!needed)
+                            {
+                                return;
+                            }
+                            explanation.AppendFormat(
+                                                     Constants.MultiplierLine,
+                                                     "NVTotal".Translate()
+                                                     + " "
+                                                     + "NVMultiplier".Translate(),
+                                                     sum + basevalue
+                                                    );
+
+                            explanation.AppendLine();
+
+                            needed = false;
+                        }
+
                         if (foundSomething)
                             {
                                 if (Math.Abs(nvsum) > 0.005f)
@@ -439,19 +461,22 @@ namespace NightVision
                                     }
 
                                 sum += pssum + nvsum;
-                                if (Math.Abs(sum) > 0.005f)
-                                    {
+                                //if (Math.Abs(nvsum) > 0.005f || Math.Abs(pssum) > 0.005f)
+                                //    {
                                         explanation.AppendFormat(Constants.ModifierLine,
                                             "NVTotal".Translate() + " " + "NVModifier".Translate(),
                                             sum);
                                         explanation.AppendLine();
-                                        explanation.AppendLine();
-                                    }
 
+                                        explanation.AppendLine();
+
+                                    //}
+                                bool needed = true;
                                 if (!CanCheat)
                                     {
                                         if (sum - 0.001f > caps[0] || sum + 0.001f < caps[1])
                                             {
+                                                AppendPreSumIfNeeded(ref needed);
                                                 explanation.AppendFormat(Constants.Maxline,
                                                     "NVTotal".Translate() + " ",
                                                     "max".Translate(),
@@ -460,15 +485,17 @@ namespace NightVision
                                                 explanation.AppendLine();
                                             }
 
-                                        if (lowLight & ApparelGrantsNV & sum + 0.001f < caps[2])
+                                        if (lowLight && ApparelGrantsNV && sum + 0.001f < caps[2])
                                             {
+                                                AppendPreSumIfNeeded(ref needed);
                                                 explanation.Append(
                                                     "NVGearPresent".Translate($"{basevalue + caps[2]:0%}"));
                                                 usedApparelSetting = true;
                                                 sum                = caps[2];
                                             }
-                                        else if (ApparelNullsPS & sum + 0.001f < 0)
+                                        else if (ApparelNullsPS && sum + 0.001f < 0)
                                             {
+                                                AppendPreSumIfNeeded(ref needed);
                                                 explanation.Append(
                                                     "PSGearPresent".Translate(
                                                         $"{Constants.DefaultFullLightMultiplier:0%}"));
@@ -843,13 +870,13 @@ namespace NightVision
 
                         if (CanCheat)
                             {
-                                return (float) Math.Round(mod - Constants.DefaultZeroLightMultiplier, 2);
+                                return (float) Math.Round(mod - Constants.DefaultZeroLightMultiplier, Constants.NumberOfDigits);
                             }
 
                         return (float) Math.Round(
                             Mathf.Clamp(mod, Storage.MultiplierCaps.min, Storage.MultiplierCaps.max)
                             - Constants.DefaultZeroLightMultiplier,
-                            2);
+                            Constants.NumberOfDigits);
                     }
 
                 private float CalcFullLightModifier()
@@ -895,13 +922,13 @@ namespace NightVision
 
                         if (CanCheat)
                             {
-                                return (float) Math.Round(mod - Constants.DefaultFullLightMultiplier, 2);
+                                return (float) Math.Round(mod - Constants.DefaultFullLightMultiplier, Constants.NumberOfDigits);
                             }
 
                         return (float) Math.Round(
                             Mathf.Clamp(mod, Storage.MultiplierCaps.min, Storage.MultiplierCaps.max)
                             - Constants.DefaultFullLightMultiplier,
-                            2);
+                            Constants.NumberOfDigits);
                     }
 
                 /// <summary>
@@ -1013,8 +1040,7 @@ namespace NightVision
 
                 private VisionType? BrightLightPsych;
                 private VisionType? DarknessPsych;
-
-                //TODO Implement
+        
                 private void ClearPsych()
                     {
                         BrightLightPsych = null;

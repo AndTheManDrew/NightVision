@@ -140,7 +140,7 @@ namespace NightVision
 
                 return (float) Math.Round(
                                           this[0] / numEyesNormalisedFor,
-                                          2,
+                                          Constants.NumberOfDigits,
                                           Constants.Rounding
                                          );
             }
@@ -149,7 +149,7 @@ namespace NightVision
             {
                 return (float) Math.Round(
                                           this[1] / numEyesNormalisedFor,
-                                          2,
+                                          Constants.NumberOfDigits,
                                           Constants.Rounding
                                          );
             }
@@ -158,7 +158,7 @@ namespace NightVision
             {
                 return (float) Math.Round(
                                           this[0] / numEyesNormalisedFor * (0.3f - glow) / 0.3f,
-                                          2,
+                                          Constants.NumberOfDigits,
                                           Constants.Rounding
                                          );
             }
@@ -167,7 +167,7 @@ namespace NightVision
             {
                 return (float) Math.Round(
                                           this[1] / numEyesNormalisedFor * (glow - 0.7f) / 0.3f,
-                                          2,
+                                          Constants.NumberOfDigits,
                                           Constants.Rounding
                                          );
             }
@@ -210,8 +210,19 @@ namespace NightVision
                 pscap = LightModifiersBase.PSLightModifiers[1] * (glow - 0.7f) / 0.3f;
                 nvcap = LightModifiersBase.NVLightModifiers[1] * (glow - 0.7f) / 0.3f;
             }
+            
+            return new[]
+                   {
+                       (float) Math.Round(maxcap, Constants.NumberOfDigits, Constants.Rounding)
+                       ,
+                        ((float) Math.Round(mincap, Constants.NumberOfDigits, Constants.Rounding))
+                       ,
+                        (float)Math.Round(nvcap, Constants.NumberOfDigits, Constants.Rounding)
+                       , 
+                       (float)Math.Round(pscap, Constants.NumberOfDigits, Constants.Rounding)
+                       
+                   };
 
-            return new[] {maxcap, mincap, nvcap, pscap};
         }
 
         //public bool HasModifier() => Math.Abs(this[0]) > 0.001 && <- HAHAHAHA took me too long to find that Math.Abs(this[1]) > 0.001;

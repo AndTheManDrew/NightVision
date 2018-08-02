@@ -195,7 +195,6 @@ namespace NightVision
             {
                 if (_parentDef.comps == null)
                 {
-                    //TODO Review
                     _parentDef.comps = new List<HediffCompProperties>();
                 }
 

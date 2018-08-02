@@ -84,12 +84,12 @@ namespace NightVision
                          {
                              (float) Math.Round(
                                                 LightModifiersBase.NVLightModifiers[offsetIndex],
-                                                2,
+                                                Constants.NumberOfDigits,
                                                 Constants.Rounding
                                                ),
                              (float) Math.Round(
                                                 LightModifiersBase.PSLightModifiers[offsetIndex],
-                                                2,
+                                                Constants.NumberOfDigits,
                                                 Constants.Rounding
                                                )
                          };
@@ -133,13 +133,13 @@ namespace NightVision
 
                 result = new List<float>
                          {
-                             (float) Math.Round(result[0]               / 2, 2),
-                             (float) Math.Round((result[0] + result[1]) / 2, 2)
+                             (float) Math.Round(result[0]               / 2, Constants.NumberOfDigits),
+                             (float) Math.Round((result[0] + result[1]) / 2, Constants.NumberOfDigits)
                          };
             }
             else
             {
-                result = new List<float> {(float) Math.Round(result[0] / 2, 2)};
+                result = new List<float> {(float) Math.Round(result[0] / 2, Constants.NumberOfDigits)};
             }
 
             return result;

@@ -3,8 +3,6 @@
 <Defs>
 
   <!-- The implant item -->
-  <!-- see if we can implement a special display stat so that this reports the level of NV given-->
-  <!-- - further to above: easiest way is probably to patch HediffDef.SpecialDisplayStats -->
   <ThingDef ParentName="BodyPartProstheticBase">
     <defName>NV_TapetumImplant</defName>
     <label>retro-reflector eye implant</label>
@@ -27,6 +25,9 @@
     <techHediffsTags>
       <li>Simple</li>
     </techHediffsTags>
+    <recipeMaker>
+    <researchPrerequisite>TapetumImplant</researchPrerequisite>
+    </recipeMaker>
   </ThingDef>
 
   <!-- The Secret Ingredient -->
@@ -43,6 +44,7 @@
       <graphicClass>Graphic_Single</graphicClass>
       <!-- <shaderType>CutoutComplex</shaderType> -->
     </graphicData>
+    <tradeTags>ExoticMisc</tradeTags>
   </ThingDef>
 
 
