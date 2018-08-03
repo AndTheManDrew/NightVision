@@ -18,6 +18,7 @@ namespace NightVision
         public static HashSet<HediffDef> AllEyeHediffs            = new HashSet<HediffDef>();
         public static HashSet<HediffDef> AllSightAffectingHediffs = new HashSet<HediffDef>();
         public static bool               CustomCapsEnabled;
+        public static bool NullRefWhenLoading = false;
 
         public static Dictionary<HediffDef, Hediff_LightModifiers> HediffLightMods =
                     new Dictionary<HediffDef, Hediff_LightModifiers>();
@@ -88,7 +89,7 @@ namespace NightVision
                 }
             }
 
-            Scribes.LightModifiersDict(ref Storage.RaceLightMods,   "Race");
+            Scribes.LightModifiersDict(ref Storage.RaceLightMods,   "Races");
             Scribes.LightModifiersDict(ref Storage.HediffLightMods, "Hediffs");
             Scribes.ApparelDict(ref Storage.NVApparel);
         }
@@ -115,10 +116,7 @@ namespace NightVision
             Storage.AllEyeHediffs              = null;
             Storage.AllSightAffectingHediffs   = null;
             Log.Message("NightVision.Storage.ResetAllSettings: Rebuilding Dictionaries");
-            NightVisionDictionaryBuilders.MakeHediffsDict();
-            NightVisionDictionaryBuilders.RaceDictBuilder();
-            NightVisionDictionaryBuilders.ApparelDictBuilder();
-
+            Initialiser.BuildDictionarys();
             SettingsCache.CacheInited = false;
             SettingsCache.DoPreWriteTasks();
             SettingsCache.Init();

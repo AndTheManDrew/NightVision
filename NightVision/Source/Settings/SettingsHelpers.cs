@@ -157,14 +157,14 @@ namespace NightVision
 
                 if (hediffMods.AutoAssigned)
                 {
-                    result += "\n" + "NVHediffAutoAssigned".Translate();
+                    result += "\n" + "NVHediffAutoAssigned".Translate(hediffMods.DefaultSetting.ToString().Translate());
                 }
                 else if (Math.Abs(lightModifiers.DefaultOffsets[0])    > 0.001f
                          || Math.Abs(lightModifiers.DefaultOffsets[1]) > 0.001f)
                 {
                     result += "\n"
                               + "NVLoadedFromFile".Translate(
-                                                             Hediff_LightModifiers.GetSetting(hediffMods).ToString().Translate(),
+                                                             hediffMods.DefaultSetting.ToString().Translate(),
                                                              lightModifiers.DefaultOffsets.ToStringSafeEnumerable()
                                                             );
                 }

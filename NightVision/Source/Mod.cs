@@ -54,10 +54,12 @@ namespace NightVision
         private static void InitSettings()
         {
             Mod.Settings = Mod.Instance.GetSettings<Settings>();
-            NightVisionDictionaryBuilders.MakeHediffsDict();
-            NightVisionDictionaryBuilders.RaceDictBuilder();
-            NightVisionDictionaryBuilders.ApparelDictBuilder();
-            NightVisionDictionaryBuilders.TapetumInjector();
+            Initialiser.Startup();
+
+            if (Storage.NullRefWhenLoading)
+            {
+                Mod.Instance.WriteSettings();
+            }
         }
     }
 }

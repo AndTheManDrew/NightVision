@@ -70,17 +70,17 @@ namespace NightVision
 
         public override Def ParentDef => _parentDef;
 
+        public VisionType DefaultSetting => AutoAssigned
+                    ? AutoQualifier.HediffCheck(_parentDef) ?? VisionType.NVNone
+                    : Hediff_LightModifiers.GetSetting(_hediffCompProps);
+
         public override float[] DefaultOffsets
         {
             get
             {
                 if (_defaultOffsets == null)
                 {
-                    VisionType defaultSetting = AutoAssigned
-                                ? AutoQualifier.HediffCheck(_parentDef) ?? VisionType.NVNone
-                                : Hediff_LightModifiers.GetSetting(_hediffCompProps);
-
-                    switch (defaultSetting)
+                    switch (DefaultSetting)
                     {
                         default:
                             _defaultOffsets = new float[2];
@@ -101,6 +101,9 @@ namespace NightVision
 
                             break;
                     }
+
+                    Log.Message("NightVision.Hediff_LightModifiers.DefaultOffsets: " + _defaultOffsets.ToStringSafeEnumerable());
+                    
                 }
 
                 return _defaultOffsets;
@@ -171,7 +174,7 @@ namespace NightVision
             }
         }
 
-        public static VisionType GetSetting(
+        public static VisionType GetCompSetting(
                         Hediff_LightModifiers hLm
                     )
             => Hediff_LightModifiers.GetSetting(hLm._hediffCompProps);

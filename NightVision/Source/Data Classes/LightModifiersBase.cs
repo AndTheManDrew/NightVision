@@ -225,8 +225,11 @@ namespace NightVision
 
         }
 
-        //public bool HasModifier() => Math.Abs(this[0]) > 0.001 && <- HAHAHAHA took me too long to find that Math.Abs(this[1]) > 0.001;
-        public bool HasModifier() => Math.Abs(this[0]) > 0.001 || Math.Abs(this[1]) > 0.001;
+        //public bool HasAnyModifier() => Math.Abs(this[0]) > 0.001 && <- HAHAHAHA took me too long to find that Math.Abs(this[1]) > 0.001;
+        public bool HasAnyModifier() => Math.Abs(this[0]) > 0.001 || Math.Abs(this[1]) > 0.001;
+
+        public bool HasAnyCustomModifier() => Math.Abs(Offsets[0]) > 0.001 || Math.Abs(Offsets[1]) > 0.001;
+
 
         public bool IsCustom() => Setting == VisionType.NVCustom;
 
@@ -236,9 +239,9 @@ namespace NightVision
         {
             if (Setting != newsetting)
             {
-                if (newsetting == VisionType.NVCustom && !HasModifier())
+                if (newsetting == VisionType.NVCustom && !HasAnyCustomModifier())
                 {
-                    float[] defaultValues = DefaultOffsets;
+                    float[] defaultValues = this.DefaultOffsets;
 
                     if (Math.Abs(defaultValues[0]) > 0.001 && Math.Abs(defaultValues[1]) > 0.001)
                     {

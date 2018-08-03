@@ -5,5 +5,16 @@
   <author>drumad</author>
   <url></url>
   <targetVersion>1.0.0</targetVersion>
-  <description>Starting up</description>
+  <description><![CDATA[
+-<b>Night vision:</b>
+    No slow down in darkness (Apparel, Bionics, Races)
+-<b>Photosensitivity:</b>
+    Faster in darkness, slower in bright light (Bionics, Races;  Apparel can remove the debuff)
+-Includes corresponding positive or negative thoughts
+
+-Supports Alien races (e.g. add natural photosensitivity to your favourite race)
+-Customisable settings for apparel (e.g. add night vision to the cowboy hat)
+-Customisable settings for bionics and health conditions (e.g. add a custom buff to Luciferium for both bright light and darkness)
+]]>
+</description>
 </ModMetaData>

@@ -320,7 +320,7 @@ namespace NightVision
                             }
 
                         //Possibly a redundant check
-                        if (NaturalLightModifiers.HasModifier() && NumberOfRemainingEyes > 0)
+                        if (NaturalLightModifiers.HasAnyModifier() && NumberOfRemainingEyes > 0)
                             {
                                 effect = NaturalLightModifiers.GetEffectAtGlow(glow);
                                 if (Math.Abs(effect) >= 0.005)

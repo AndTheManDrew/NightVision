@@ -88,7 +88,7 @@
     <Compile Include="Comps\Comp_NightVisionApparel.cs" />
     <Compile Include="NVHarmonyPatcher.cs" />
     <Compile Include="Comps\CompProperties_NightVision.cs" />
-    <Compile Include="NightVisionDictionaryBuilders.cs" />
+    <Compile Include="Initialiser.cs" />
     <Compile Include="Mod.cs" />
     <Compile Include="Properties\NightVision.cs" />
     <Compile Include="Settings\Settings.cs" />

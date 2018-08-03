@@ -24,7 +24,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{CB961930-D919-4290-AA2A-5165E570C216}"
 	ProjectSection(SolutionItems) = preProject
 		NightVision\Patches\AddRecipeToHumanLike.xml = NightVision\Patches\AddRecipeToHumanLike.xml
+		NightVision\Patches\ExamplePatchForApparel.xml = NightVision\Patches\ExamplePatchForApparel.xml
+		NightVision\Patches\ExamplePatchForHediffs.xml = NightVision\Patches\ExamplePatchForHediffs.xml
+		NightVision\Patches\ExamplePatchForRace.xml = NightVision\Patches\ExamplePatchForRace.xml
 		NightVision\Patches\ThoughtDef.xml = NightVision\Patches\ThoughtDef.xml
+		NightVision\Patches\TraderKinds.xml = NightVision\Patches\TraderKinds.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assemblies", "Assemblies", "{8BA67C9D-0B01-447A-9D06-A6DCF5014355}"

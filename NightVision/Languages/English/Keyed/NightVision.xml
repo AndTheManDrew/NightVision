@@ -30,6 +30,10 @@
   <NVReset>Reset All Settings for Night Vision</NVReset>
   <NVConfirmReset>Confirm Reset?</NVConfirmReset>
 
+  <NVResMicroAddition>Unlocks night vision goggles.</NVResMicroAddition>
+  <NVResPowerAddition>Unlocks the advanced night vision helmet.</NVResPowerAddition>
+  <NVResClothAddition>Unlocks tinted goggles.</NVResClothAddition>
+
   <NVLoadedFromFile>This was loaded from file with the {0} setting: {1}</NVLoadedFromFile>
 
   <NVVanillaMultiExp>In vanilla Rimworld, the move and work speed multipliers due to light are:  At 0% light = x80%; At 100% light = x100%</NVVanillaMultiExp>
@@ -48,7 +52,7 @@
   <NVRaceNote>Note: to get the full effect of these settings the individual must have all their natural eyes. Losing an eye or replacing it with a prosthetic will affect the final result; implants that do not remove the eye will not, nor will injuries.</NVRaceNote>
   <NVRaceQualifier>Requires all eyes to be natural.</NVRaceQualifier>
 
-  <NVHediffAutoAssigned>This setting was auto-assigned.</NVHediffAutoAssigned>
+  <NVHediffAutoAssigned>{0} was auto-assigned.</NVHediffAutoAssigned>
   <NVHediffQualifier>Full effect requires all eyes to have this.</NVHediffQualifier>
   <!--<NVHediffExplained>The conditions listed here are limited to those that are applied directly to the eye, or explicitly affect sight, or have particular modded files.</NVHediffExplained> -->
   <NVHediffNote>Note: for conditions that effect the eye directly (e.g. bionic eyes) the night vision and photosensitivity settings require all eyes to have that condition to get the full effect.</NVHediffNote>

@@ -286,7 +286,7 @@ namespace NightVision
             }
 
             if (Storage.HediffLightMods.TryGetValue(__instance, out Hediff_LightModifiers hlm)
-                && hlm.HasModifier())
+                && hlm.HasAnyModifier())
             {
                 VisionType vt = hlm.Setting;
 

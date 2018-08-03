@@ -58,9 +58,7 @@ namespace NightVision
                 if (removed > 0)
                 {
                     Log.Message("NVNullEntryLog".Translate(removed, nameof(dictionary)));
-                    Scribe.mode = LoadSaveMode.Saving;
-                    Scribe_Collections.Look(ref tempList, "Apparel", LookMode.Deep);
-                    Scribe.mode = LoadSaveMode.LoadingVars;
+                    Storage.NullRefWhenLoading = true;
                 }
             }
 
@@ -92,7 +90,8 @@ namespace NightVision
             {
                 tempList = new List<TV>();
                 Scribe_Collections.Look(ref tempList, label, LookMode.Deep);
-                dictionary.Clear();
+                
+                    dictionary = new Dictionary<TK, TV>();
                 var removed = 0;
 
                 for (int i = tempList.Count - 1; i >= 0; i--)
@@ -111,9 +110,7 @@ namespace NightVision
                 if (removed > 0)
                 {
                     Log.Message("NVNullEntryLog".Translate(removed, nameof(dictionary)));
-                    Scribe.mode = LoadSaveMode.Saving;
-                    Scribe_Collections.Look(ref tempList, label, LookMode.Deep);
-                    Scribe.mode = LoadSaveMode.LoadingVars;
+                    Storage.NullRefWhenLoading = true;
                 }
             }
         }
