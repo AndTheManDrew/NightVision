@@ -44,7 +44,7 @@
       <graphicClass>Graphic_Single</graphicClass>
       <!-- <shaderType>CutoutComplex</shaderType> -->
     </graphicData>
-    <tradeTags>ExoticMisc</tradeTags>
+    <tradeTags><li>ExoticMisc</li></tradeTags>
   </ThingDef>
 
 
