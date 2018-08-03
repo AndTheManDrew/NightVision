@@ -234,7 +234,7 @@ namespace NightVision
                 }
                 Color color = GUI.color;
                 GUI.color = Color.red;
-                if (Widgets.ButtonText(rowRect, "NVConfirmReset".Translate()))
+                if (Widgets.ButtonText(rowRect, "NVConfirmReset".Translate()) && DrawSettings.confirmTimer.ElapsedMilliseconds > 500)
                 {
                     //Log.Message("NightVision.DrawSettings.GeneralTab: NVConfirm");
                     
