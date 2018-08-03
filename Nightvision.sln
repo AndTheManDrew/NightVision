@@ -3,7 +3,104 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NightVision", "Nightvision\NightVision.csproj", "{EB253018-4E17-43AA-9868-16AC468F406A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main", "Main", "{D802688F-B7A3-464D-886C-342D8DC9C5C6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "About", "About", "{7FE9FA0E-31C4-48BF-A798-49D9151786F6}"
+	ProjectSection(SolutionItems) = preProject
+		NightVision\About\About.xml = NightVision\About\About.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{65DE852E-3F73-416D-90ED-B6C888515240}"
+	ProjectSection(SolutionItems) = preProject
+		NightVision\Defs\NightVision_Apparel.xml = NightVision\Defs\NightVision_Apparel.xml
+		NightVision\Defs\NightVision_Hediffs.xml = NightVision\Defs\NightVision_Hediffs.xml
+		NightVision\Defs\NightVision_Items.xml = NightVision\Defs\NightVision_Items.xml
+		NightVision\Defs\NightVision_Stat.xml = NightVision\Defs\NightVision_Stat.xml
+		NightVision\Defs\NightVision_Surgery.xml = NightVision\Defs\NightVision_Surgery.xml
+		NightVision\Defs\ResearchProjects.xml = NightVision\Defs\ResearchProjects.xml
+		NightVision\Defs\ThoughtDef_TooBright.xml = NightVision\Defs\ThoughtDef_TooBright.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{CB961930-D919-4290-AA2A-5165E570C216}"
+	ProjectSection(SolutionItems) = preProject
+		NightVision\Patches\AddRecipeToHumanLike.xml = NightVision\Patches\AddRecipeToHumanLike.xml
+		NightVision\Patches\ThoughtDef.xml = NightVision\Patches\ThoughtDef.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assemblies", "Assemblies", "{8BA67C9D-0B01-447A-9D06-A6DCF5014355}"
+	ProjectSection(SolutionItems) = preProject
+		NightVision\Assemblies\0Harmony.dll = NightVision\Assemblies\0Harmony.dll
+		NightVision\Assemblies\NightVision.dll = NightVision\Assemblies\NightVision.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Textures", "Textures", "{7200DD67-BD1C-4087-8559-62DAB55B7B3E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Languages", "Languages", "{D2F1EFD3-49FC-4DAE-AD5D-E864D3C2E353}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "English", "English", "{5556B7E1-010D-48A7-959D-DB35D16E3438}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{D9D7732D-3273-46A1-A714-82CCFEA80B02}"
+	ProjectSection(SolutionItems) = preProject
+		NightVision\Languages\English\Keyed\NightVision.xml = NightVision\Languages\English\Keyed\NightVision.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apparel", "Apparel", "{4E3644C1-470E-4EE7-84FB-2D812B662337}"
+	ProjectSection(SolutionItems) = preProject
+		NightVision\Textures\Apparel\nvgogglesv1.png = NightVision\Textures\Apparel\nvgogglesv1.png
+		NightVision\Textures\Apparel\nvgogglesv1_east.png = NightVision\Textures\Apparel\nvgogglesv1_east.png
+		NightVision\Textures\Apparel\nvgogglesv1_north.png = NightVision\Textures\Apparel\nvgogglesv1_north.png
+		NightVision\Textures\Apparel\nvgogglesv1_south.png = NightVision\Textures\Apparel\nvgogglesv1_south.png
+		NightVision\Textures\Apparel\nvgogglesv2.png = NightVision\Textures\Apparel\nvgogglesv2.png
+		NightVision\Textures\Apparel\nvgogglesv2_east.png = NightVision\Textures\Apparel\nvgogglesv2_east.png
+		NightVision\Textures\Apparel\nvgogglesv2_north.png = NightVision\Textures\Apparel\nvgogglesv2_north.png
+		NightVision\Textures\Apparel\nvgogglesv2_south.png = NightVision\Textures\Apparel\nvgogglesv2_south.png
+		NightVision\Textures\Apparel\tintedgoggles.png = NightVision\Textures\Apparel\tintedgoggles.png
+		NightVision\Textures\Apparel\tintedgoggles_east.png = NightVision\Textures\Apparel\tintedgoggles_east.png
+		NightVision\Textures\Apparel\tintedgoggles_north.png = NightVision\Textures\Apparel\tintedgoggles_north.png
+		NightVision\Textures\Apparel\tintedgoggles_south.png = NightVision\Textures\Apparel\tintedgoggles_south.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{9BE9094F-6604-434F-A3C2-13CFEF813E3C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Indicators", "Indicators", "{8F9EB739-7F92-4A78-A3DC-E3CA9C1CFFEF}"
+	ProjectSection(SolutionItems) = preProject
+		NightVision\Textures\UI\Indicators\DefaultArrow.png = NightVision\Textures\UI\Indicators\DefaultArrow.png
+		NightVision\Textures\UI\Indicators\NVarrow.png = NightVision\Textures\UI\Indicators\NVarrow.png
+		NightVision\Textures\UI\Indicators\PSarrow.png = NightVision\Textures\UI\Indicators\PSarrow.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Incidents", "Incidents", "{7AD5CCCA-384A-429C-930A-CFD2A7A9EBA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NVIncidents", "NVIncidents\Source\NVIncidents.csproj", "{53AD9AD3-A8B8-45C4-B8EA-954E82193B32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NightVision", "NightVision\Source\NightVision.csproj", "{EB253018-4E17-43AA-9868-16AC468F406A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "About", "About", "{BB0195D9-30FE-4410-BAB9-E5F721EBB5B2}"
+	ProjectSection(SolutionItems) = preProject
+		NVIncidents\About\About.xml = NVIncidents\About\About.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{769DBBD3-31AA-490E-9B95-BA3E6DD300FC}"
+	ProjectSection(SolutionItems) = preProject
+		NVIncidents\Defs\Stalker.xml = NVIncidents\Defs\Stalker.xml
+		NVIncidents\Defs\Stalker_DutyDef.xml = NVIncidents\Defs\Stalker_DutyDef.xml
+		NVIncidents\Defs\ThinkTree_Stalker.xml = NVIncidents\Defs\ThinkTree_Stalker.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Languages", "Languages", "{D895DC59-37A2-4A49-ABC7-52334D5B7691}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Textures", "Textures", "{FCC0CD0C-9D79-4270-B890-97ED86104D8A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{9ADDC20C-2280-4C47-9700-4521D7488B1B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assemblies", "Assemblies", "{01BB6CC2-22B2-4BBB-BB21-A0951EEE386A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "English", "English", "{FAD2302B-A776-4ED1-9761-4D38589D25E7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{593F2E94-6428-4A64-A480-C2EE7E8DB7E5}"
+	ProjectSection(SolutionItems) = preProject
+		NVIncidents\Languages\English\Keyed\NVIncidents.xml = NVIncidents\Languages\English\Keyed\NVIncidents.xml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,6 +108,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{53AD9AD3-A8B8-45C4-B8EA-954E82193B32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53AD9AD3-A8B8-45C4-B8EA-954E82193B32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53AD9AD3-A8B8-45C4-B8EA-954E82193B32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53AD9AD3-A8B8-45C4-B8EA-954E82193B32}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EB253018-4E17-43AA-9868-16AC468F406A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EB253018-4E17-43AA-9868-16AC468F406A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB253018-4E17-43AA-9868-16AC468F406A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -18,6 +119,29 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7FE9FA0E-31C4-48BF-A798-49D9151786F6} = {D802688F-B7A3-464D-886C-342D8DC9C5C6}
+		{65DE852E-3F73-416D-90ED-B6C888515240} = {D802688F-B7A3-464D-886C-342D8DC9C5C6}
+		{CB961930-D919-4290-AA2A-5165E570C216} = {D802688F-B7A3-464D-886C-342D8DC9C5C6}
+		{8BA67C9D-0B01-447A-9D06-A6DCF5014355} = {D802688F-B7A3-464D-886C-342D8DC9C5C6}
+		{7200DD67-BD1C-4087-8559-62DAB55B7B3E} = {D802688F-B7A3-464D-886C-342D8DC9C5C6}
+		{D2F1EFD3-49FC-4DAE-AD5D-E864D3C2E353} = {D802688F-B7A3-464D-886C-342D8DC9C5C6}
+		{5556B7E1-010D-48A7-959D-DB35D16E3438} = {D2F1EFD3-49FC-4DAE-AD5D-E864D3C2E353}
+		{D9D7732D-3273-46A1-A714-82CCFEA80B02} = {5556B7E1-010D-48A7-959D-DB35D16E3438}
+		{4E3644C1-470E-4EE7-84FB-2D812B662337} = {7200DD67-BD1C-4087-8559-62DAB55B7B3E}
+		{9BE9094F-6604-434F-A3C2-13CFEF813E3C} = {7200DD67-BD1C-4087-8559-62DAB55B7B3E}
+		{8F9EB739-7F92-4A78-A3DC-E3CA9C1CFFEF} = {9BE9094F-6604-434F-A3C2-13CFEF813E3C}
+		{53AD9AD3-A8B8-45C4-B8EA-954E82193B32} = {7AD5CCCA-384A-429C-930A-CFD2A7A9EBA7}
+		{EB253018-4E17-43AA-9868-16AC468F406A} = {D802688F-B7A3-464D-886C-342D8DC9C5C6}
+		{BB0195D9-30FE-4410-BAB9-E5F721EBB5B2} = {7AD5CCCA-384A-429C-930A-CFD2A7A9EBA7}
+		{769DBBD3-31AA-490E-9B95-BA3E6DD300FC} = {7AD5CCCA-384A-429C-930A-CFD2A7A9EBA7}
+		{D895DC59-37A2-4A49-ABC7-52334D5B7691} = {7AD5CCCA-384A-429C-930A-CFD2A7A9EBA7}
+		{FCC0CD0C-9D79-4270-B890-97ED86104D8A} = {7AD5CCCA-384A-429C-930A-CFD2A7A9EBA7}
+		{9ADDC20C-2280-4C47-9700-4521D7488B1B} = {7AD5CCCA-384A-429C-930A-CFD2A7A9EBA7}
+		{01BB6CC2-22B2-4BBB-BB21-A0951EEE386A} = {7AD5CCCA-384A-429C-930A-CFD2A7A9EBA7}
+		{FAD2302B-A776-4ED1-9761-4D38589D25E7} = {D895DC59-37A2-4A49-ABC7-52334D5B7691}
+		{593F2E94-6428-4A64-A480-C2EE7E8DB7E5} = {FAD2302B-A776-4ED1-9761-4D38589D25E7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E55A9DED-D027-4EBF-8C50-469F81858116}
