@@ -90,6 +90,9 @@
       </skillRequirements>
       <unfinishedThingDef>UnfinishedMetallicTechArmor</unfinishedThingDef>
       <researchPrerequisite>MicroelectronicsBasics</researchPrerequisite>
+      <recipeUsers Inherit="False">
+        <li>TableMachining</li>
+      </recipeUsers>
     </recipeMaker>
     <graphicData>
       <texPath>Apparel/nvgogglesv1</texPath>

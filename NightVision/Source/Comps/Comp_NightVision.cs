@@ -519,7 +519,7 @@ namespace NightVision
 
                         if (needsFinalValue)
                             {
-                                result += FactorFromGlow(glow).ToStringPercent();
+                                result += FactorFromGlow(glow).ToStringPercent("x{0:0.0 %}");
                             }
 
                         return result;

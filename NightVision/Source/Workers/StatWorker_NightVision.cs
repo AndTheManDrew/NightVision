@@ -60,18 +60,18 @@ namespace NightVision
                 if (optionalReq.Thing is Pawn pawn
                     && pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
                 {
-                    return $"x{comp.ZeroLightModifier + Constants.DefaultZeroLightMultiplier:0%}";
+                    return $"x{comp.FactorFromGlow(0f):0.0%}";
                 }
 
-                if (optionalReq.Thing is Apparel apparel
-                    && Storage.NVApparel.TryGetValue(
-                                                     apparel.def,
-                                                     out ApparelVisionSetting apparelSetting
-                                                    )
-                    && apparelSetting.GrantsNV)
-                {
-                    return "NVGiveNV".Translate();
-                }
+                //if (optionalReq.Thing is Apparel apparel
+                //    && Storage.NVApparel.TryGetValue(
+                //                                     apparel.def,
+                //                                     out ApparelVisionSetting apparelSetting
+                //                                    )
+                //    && apparelSetting.GrantsNV)
+                //{
+                //    return "NVGiveNV".Translate();
+                //}
             }
 
             return string.Empty;

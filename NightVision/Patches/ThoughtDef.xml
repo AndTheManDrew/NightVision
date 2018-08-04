@@ -12,9 +12,9 @@
         <xpath>Defs/ThoughtDef[defName="EnvironmentDark"]/stages</xpath>
         <value>
           <li>
-            <label>in darkness with night vision</label>
+            <label>in darkness</label>
             <description>I am the tiger in the forests of the night!</description>
-            <baseMoodEffect>3</baseMoodEffect>
+            <baseMoodEffect>5</baseMoodEffect>
           </li>
         </value>
       </li>

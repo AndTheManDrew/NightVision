@@ -4,6 +4,8 @@
 // 
 // 21 07 2018
 
+using System;
+using System.Text;
 using JetBrains.Annotations;
 using Verse;
 
@@ -27,12 +29,23 @@ namespace NightVision
                 case VisionType.NVNightVision:      return "NVGiveNV".Translate();
                 case VisionType.NVPhotosensitivity: return "NVGivePS".Translate();
                 case VisionType.NVCustom:
+                    StringBuilder result = new StringBuilder();
+                    if (Math.Abs(Props.LightModifiers[0]) > 0.0001)
+                    {
+                        result.AppendFormat("{0} = {1:+#;-#;0}% {2}", "NVZeroSh".Translate(), Props.LightModifiers[0] * 100, "NVWorkMoveShort".Translate()) ;
 
-                    return "NVZeroLabel".Translate()
-                           + $" = {Props.LightModifiers[0]:+#;-#;0}%"
-                           + " | "
-                           + "NVFullLabel".Translate()
-                           + $" = {Props.LightModifiers[1]:+#;-#;0}%";
+                        if (Math.Abs(Props.LightModifiers[1]) > 0.0001)
+                        {
+                            result.AppendLine();
+                        }
+                    }
+
+                    if (Math.Abs(Props.LightModifiers[1]) > 0.0001)
+                    {
+                        result.AppendFormat("{0} = {1:+#;-#;0}% {2}", "NVFullSh".Translate(), Props.LightModifiers[1] * 100, "NVWorkMoveShort".Translate()) ;
+                    }
+
+                    return result.ToString();
                 default: return string.Empty;
             }
         }

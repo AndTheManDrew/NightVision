@@ -11,7 +11,8 @@
     <category>BasicsPawn</category>
     <defaultBaseValue>0.8</defaultBaseValue>
     <minValue>0.01</minValue>
-    <toStringStyle>PercentZero</toStringStyle>
+    <toStringStyle>PercentOne</toStringStyle>
+    <formatString>x{0:0.0%}</formatString>
     <showOnAnimals>false</showOnAnimals>
     <showOnMechanoids>false</showOnMechanoids>
     <displayPriorityInCategory>10</displayPriorityInCategory>
@@ -26,7 +27,8 @@
     <category>BasicsPawn</category>
     <defaultBaseValue>1</defaultBaseValue>
     <minValue>0.01</minValue>
-    <toStringStyle>PercentZero</toStringStyle>
+    <toStringStyle>PercentOne</toStringStyle>
+    <formatString>x{0:0.0%}</formatString>
     <showOnAnimals>false</showOnAnimals>
     <showOnMechanoids>false</showOnMechanoids>
     <displayPriorityInCategory>10</displayPriorityInCategory>

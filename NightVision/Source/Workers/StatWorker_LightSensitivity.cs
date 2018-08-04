@@ -57,7 +57,7 @@ namespace NightVision
                 && optionalReq.Thing is Pawn pawn
                 && pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
-                string result = $"x{comp.FullLightModifier + Constants.DefaultFullLightMultiplier:0%}";
+                string result = $"x{comp.FactorFromGlow(1f):0.0%}";
 
                 return result;
             }

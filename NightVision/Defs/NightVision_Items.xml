@@ -13,6 +13,16 @@
       <graphicClass>Graphic_Single</graphicClass>
       <!-- <shaderType>CutoutComplex</shaderType> -->
     </graphicData>
+    <recipeMaker>
+      <skillRequirements>
+        <Crafting>6</Crafting>
+        <Intellectual>4</Intellectual>
+      </skillRequirements>
+      <researchPrerequisite>TapetumImplant</researchPrerequisite>
+      <recipeUsers Inherit="False">
+        <li>DrugLab</li>
+      </recipeUsers>
+    </recipeMaker>
     <costList>
       <NV_TapetumRaw>1</NV_TapetumRaw>
       <ComponentIndustrial>4</ComponentIndustrial>
@@ -25,9 +35,6 @@
     <techHediffsTags>
       <li>Advanced</li>
     </techHediffsTags>
-    <recipeMaker>
-    <researchPrerequisite>TapetumImplant</researchPrerequisite>
-    </recipeMaker>
   </ThingDef>
 
   <!-- The Secret Ingredient -->

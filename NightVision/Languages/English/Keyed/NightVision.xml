@@ -27,6 +27,11 @@
   <NVZeroLabel>At 0% light</NVZeroLabel>
   <NVFullLabel>At 100% light</NVFullLabel>
   
+  <NVZeroSh>0% light</NVZeroSh>
+  <NVFullSh>100% light</NVFullSh>
+  
+  <NVWorkMoveShort>Mv. &amp; Wk.spd</NVWorkMoveShort>
+  
   <NVReset>Reset All Settings for Night Vision</NVReset>
   <NVConfirmReset>Confirm Reset?</NVConfirmReset>
 
@@ -70,7 +75,7 @@
   
   <NVGrantsVisionType>Grants Vision Type:</NVGrantsVisionType>
 
-  <NVStatReport_FinalMulti>Final multiplier</NVStatReport_FinalMulti>
+  <NVStatReport_FinalMulti>Final multiplier from light:</NVStatReport_FinalMulti>
   <NVEffects>effects</NVEffects>
   <NVApparelExplained>The wearer will not receive a debuff in darkness.</NVApparelExplained>
   <PSApparelExplained>The wearer will not receive a debuff in bright light. Relevant for photosensitive pawns.</PSApparelExplained>
