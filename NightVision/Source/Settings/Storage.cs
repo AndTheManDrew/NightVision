@@ -63,12 +63,6 @@ namespace NightVision
 
             if (Scribe.mode == LoadSaveMode.LoadingVars)
             {
-#if DEBUG
-                                Log.Message("NightVision.Storage.ExposeSettings: PSMods:"
-                                            + LightModifiersBase.PSLightModifiers.Offsets + ".");
-                                Log.Message("NightVision.Storage.ExposeSettings: NVMods:"
-                                            + LightModifiersBase.NVLightModifiers.Offsets + ".");
-#endif
 
                 if (LightModifiersBase.PSLightModifiers == null)
                 {

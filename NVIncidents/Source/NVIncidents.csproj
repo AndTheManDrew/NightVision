@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\NightVision_Incidents\Assemblies\</OutputPath>
+    <OutputPath>..\..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\NightVision_Dev\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\NightVision_Incidents\</OutputPath>
+    <OutputPath>..\..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\NightVision_Incidents\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -78,7 +78,7 @@
 xcopy /i /e /y "$(ProjectDir)..\Defs" "$(TargetDir)..\Defs\"
 xcopy /i /e /y "$(ProjectDir)..\Patches" "$(TargetDir)..\Patches\"
 xcopy /i /e /y "$(ProjectDir)..\Languages" "$(TargetDir)..\Languages"
-xcopy /i /e /y "$(ProjectDir)..\About" "$(TargetDir)..\About"
+rem xcopy /i /e /y "$(ProjectDir)..\About" "$(TargetDir)..\About"
 xcopy /i /e /y "$(TargetDir)*.dll" "$(ProjectDir)..\Assemblies"</PostBuildEvent>
   </PropertyGroup>
 </Project>

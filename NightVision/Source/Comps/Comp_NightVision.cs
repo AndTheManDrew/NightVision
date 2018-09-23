@@ -38,7 +38,7 @@ namespace NightVision
 
                 private int                  _numRemainingEyes = -1;
                 private List<Hediff>         _pawnsHediffs;
-                private List<BodyPartRecord> _raceSightParts;
+                public List<BodyPartRecord> _raceSightParts;
                 private float                _zeroLightModifier = -1;
 
                 /// <summary>
@@ -51,12 +51,20 @@ namespace NightVision
                             {
                                 if (_naturalLightModifiers == null)
                                     {
-                                        _naturalLightModifiers = Storage.RaceLightMods[ParentPawn.def];
+                                        _naturalLightModifiers = Storage.RaceLightMods.TryGetValue(ParentPawn.def);
                                         if (_naturalLightModifiers == null)
                                             {
                                                 _naturalLightModifiers =
                                                             new Race_LightModifiers(ParentPawn.def);
                                                 Storage.RaceLightMods[ParentPawn.def] = _naturalLightModifiers;
+
+                                                Log.Message(
+                                                            $"Natural Light Modifiers could not be found for {ParentPawn} of race: {ParentPawn.def}. An entry has been generated."
+                                                           );
+
+                                                Log.Message("If BattleRoyale is running it is recommended that after it has completed you open and close the Night Vision mod settings menu to clear all extraneous entries.");
+
+                                                
                                             }
 
                                         _zeroLightModifier = -1f;
@@ -67,7 +75,7 @@ namespace NightVision
                             }
                     }
 
-                private bool CanCheat => Props.CanCheat;
+                public bool CanCheat => Props.CanCheat;
 
                 public int TicksSinceLastDark => Find.TickManager.TicksGame - LastDarkTick;
 
@@ -76,10 +84,10 @@ namespace NightVision
 
                 public Pawn ParentPawn => _intParentPawn ?? (_intParentPawn = parent as Pawn);
 
-                private List<Hediff> PawnHediffs =>
+                public List<Hediff> PawnHediffs =>
                             _pawnsHediffs ?? (_pawnsHediffs = ParentPawn?.health?.hediffSet?.hediffs);
 
-                private int EyeCount => RaceSightParts.Count;
+                public int EyeCount => RaceSightParts.Count;
 
                 public List<BodyPartRecord> RaceSightParts
                     {
@@ -245,284 +253,6 @@ namespace NightVision
                             }
 
                         return 1f;
-                    }
-
-                /// <summary>
-                ///     For the pawn's stat inspect tab. fat TODO split?
-                /// </summary>
-                /// <param name="result"></param>
-                /// <param name="glow"></param>
-                /// <param name="usedApparelSetting">if apparel had an effect</param>
-                /// <param name="needsFinalValue">if RW will finalise value or we need to add it</param>
-                /// <returns></returns>
-                public string ExplanationBuilder(
-                    string   result,
-                    float    glow,
-                    out bool usedApparelSetting,
-                    bool     needsFinalValue = false)
-                    {
-                        var     nvsum          = 0f;
-                        var     pssum          = 0f;
-                        var     sum            = 0f;
-                        float[] caps           = LightModifiersBase.GetCapsAtGlow(glow);
-                        var     foundSomething = false;
-                        float   effect;
-                        var     basevalue = 0f;
-                        bool    lowLight  = glow < 0.3f;
-                        usedApparelSetting = false;
-
-
-                        var explanation = new StringBuilder(result);
-                        StringBuilder nvexplanation = new StringBuilder().AppendLine(
-                            VisionType.NVNightVision.ToString().Translate() + " " + "NVEffects".Translate()
-                            + string.Format(Constants.Maxline,
-                                "",
-                                "NVMaxAtGlow".Translate(glow.ToStringPercent()),
-                                caps[2]));
-                        StringBuilder psexplanation = new StringBuilder().AppendLine(
-                            VisionType.NVPhotosensitivity.ToString().Translate() + " " + "NVEffects".Translate()
-                            + string.Format(Constants.Maxline,
-                                "",
-                                "NVMaxAtGlow".Translate(glow.ToStringPercent()),
-                                caps[3]));
-
-                        explanation.AppendLine();
-                        if (lowLight)
-                            {
-                                effect = Constants.DefaultFullLightMultiplier
-                                         + (Constants.DefaultZeroLightMultiplier - Constants.DefaultFullLightMultiplier)
-                                         * (0.3f - glow) / 0.3f;
-                                if (Math.Abs(effect) >= 0.005)
-                                    {
-                                        explanation.AppendFormat(Constants.MultiplierLine,
-                                            "StatsReport_BaseValue".Translate(),
-                                            effect);
-                                        explanation.AppendLine();
-                                        basevalue = effect;
-                                    }
-
-                                if (ApparelGrantsNV)
-                                    {
-                                        foundSomething = true;
-                                    }
-                            }
-                        else
-                            {
-                                explanation.AppendFormat(Constants.MultiplierLine,
-                                    "StatsReport_BaseValue".Translate(),
-                                    Constants.DefaultFullLightMultiplier);
-                                explanation.AppendLine();
-                                basevalue = Constants.DefaultFullLightMultiplier;
-                                if (ApparelNullsPS)
-                                    {
-                                        foundSomething = true;
-                                    }
-                            }
-
-                        //Possibly a redundant check
-                        if (NaturalLightModifiers.HasAnyModifier() && NumberOfRemainingEyes > 0)
-                            {
-                                effect = NaturalLightModifiers.GetEffectAtGlow(glow);
-                                if (Math.Abs(effect) >= 0.005)
-                                    {
-                                        foundSomething = true;
-#if DEBUG
-                                        Log.Message(
-                                            $"NightVision.Comp_NightVision.ExplanationBuilder: effect:{effect}, numRemEyes:{NumberOfRemainingEyes}");
-#endif
-                                        switch (NaturalLightModifiers.Setting)
-                                            {
-                                                //TODO consider iterating over the racesightparts and returning the custom label of each part
-                                                case VisionType.NVNightVision:
-                                                    nvsum += (float) Math.Round(effect * NumberOfRemainingEyes,
-                                                        Constants.NumberOfDigits,
-                                                        Constants.Rounding);
-                                                    nvexplanation.AppendFormat("  " + Constants.ModifierLine,
-                                                                     ParentPawn.def.LabelCap + " "
-                                                                                             + RaceSightParts
-                                                                                               .First()
-                                                                                               .LabelShort + " x"
-                                                                                             + NumberOfRemainingEyes,
-                                                                     effect * NumberOfRemainingEyes)
-                                                                 .AppendLine();
-                                                    break;
-                                                case VisionType.NVPhotosensitivity:
-                                                    pssum += (float) Math.Round(effect * NumberOfRemainingEyes,
-                                                        Constants.NumberOfDigits,
-                                                        Constants.Rounding);
-                                                    psexplanation.AppendFormat("  " + Constants.ModifierLine,
-                                                                     ParentPawn.def.LabelCap + " "
-                                                                                             + RaceSightParts
-                                                                                               .First()
-                                                                                               .LabelShort + " x"
-                                                                                             + NumberOfRemainingEyes,
-                                                                     effect * NumberOfRemainingEyes)
-                                                                 .AppendLine();
-                                                    break;
-                                                case VisionType.NVCustom:
-                                                    sum += (float) Math.Round(effect * NumberOfRemainingEyes,
-                                                        Constants.NumberOfDigits,
-                                                        Constants.Rounding);
-                                                    explanation.AppendFormat("  " + Constants.ModifierLine,
-                                                                   ParentPawn.def.LabelCap + " "
-                                                                                           + RaceSightParts
-                                                                                             .First()
-                                                                                             .LabelShort + " x"
-                                                                                           + NumberOfRemainingEyes,
-                                                                   effect * NumberOfRemainingEyes)
-                                                               .AppendLine();
-                                                    break;
-                                            }
-                                    }
-                            }
-
-                        foreach (List<HediffDef> value in PawnsNVHediffs.Values)
-                            {
-                                if (value.NullOrEmpty())
-                                    {
-                                        continue;
-                                    }
-
-                                foreach (HediffDef hediffDef in value)
-                                    {
-                                        if (Storage.HediffLightMods.TryGetValue(hediffDef,
-                                            out Hediff_LightModifiers hediffSetting))
-                                            {
-                                                effect = hediffSetting.GetEffectAtGlow(glow, EyeCount);
-                                                if (Math.Abs(effect) > 0.005)
-                                                    {
-                                                        foundSomething = true;
-                                                        effect = (float) Math.Round(effect, Constants.NumberOfDigits, Constants.Rounding);
-                                                        switch (hediffSetting.IntSetting)
-                                                            {
-                                                                case VisionType.NVNightVision:
-                                                                    nvsum += effect;
-                                                                    nvexplanation.AppendFormat(
-                                                                        "  " + Constants.ModifierLine,
-                                                                        hediffDef.LabelCap,
-                                                                        effect);
-                                                                    nvexplanation.AppendLine();
-                                                                    break;
-                                                                case VisionType.NVPhotosensitivity:
-                                                                    pssum += effect;
-                                                                    psexplanation.AppendFormat(
-                                                                        "  " + Constants.ModifierLine,
-                                                                        hediffDef.LabelCap,
-                                                                        effect);
-                                                                    psexplanation.AppendLine();
-                                                                    break;
-                                                                case VisionType.NVCustom:
-                                                                    sum += effect;
-                                                                    explanation.AppendFormat(
-                                                                        "  " + Constants.ModifierLine,
-                                                                        hediffDef.LabelCap,
-                                                                        effect);
-                                                                    explanation.AppendLine();
-                                                                    break;
-                                                            }
-                                                    }
-                                            }
-                                    }
-                            }
-
-                        void AppendPreSumIfNeeded(
-                            ref bool needed
-                        )
-                        {
-                            if (!needed)
-                            {
-                                return;
-                            }
-                            explanation.AppendFormat(
-                                                     Constants.MultiplierLine,
-                                                     "NVTotal".Translate()
-                                                     + " "
-                                                     + "NVMultiplier".Translate(),
-                                                     sum + basevalue
-                                                    );
-
-                            explanation.AppendLine();
-
-                            needed = false;
-                        }
-
-                        if (foundSomething)
-                            {
-                                if (Math.Abs(nvsum) > 0.005f)
-                                    {
-                                        explanation.Append(nvexplanation);
-                                        explanation.AppendLine();
-                                    }
-
-                                if (Math.Abs(pssum) > 0.005f)
-                                    {
-                                        explanation.Append(psexplanation);
-                                        explanation.AppendLine();
-                                    }
-
-                                sum += pssum + nvsum;
-                                //if (Math.Abs(nvsum) > 0.005f || Math.Abs(pssum) > 0.005f)
-                                //    {
-                                        explanation.AppendFormat(Constants.ModifierLine,
-                                            "NVTotal".Translate() + " " + "NVModifier".Translate(),
-                                            sum);
-                                        explanation.AppendLine();
-
-                                        explanation.AppendLine();
-
-                                    //}
-                                bool needed = true;
-                                if (!CanCheat)
-                                    {
-                                        if (sum - 0.001f > caps[0] || sum + 0.001f < caps[1])
-                                            {
-                                                AppendPreSumIfNeeded(ref needed);
-                                                explanation.AppendFormat(Constants.Maxline,
-                                                    "NVTotal".Translate() + " ",
-                                                    "max".Translate(),
-                                                    sum > caps[0] ? caps[0] : caps[1]);
-
-                                                explanation.AppendLine();
-                                            }
-
-                                        if (lowLight && ApparelGrantsNV && sum + 0.001f < caps[2])
-                                            {
-                                                AppendPreSumIfNeeded(ref needed);
-                                                explanation.Append(
-                                                    "NVGearPresent".Translate($"{basevalue + caps[2]:0%}"));
-                                                usedApparelSetting = true;
-                                                sum                = caps[2];
-                                            }
-                                        else if (ApparelNullsPS && sum + 0.001f < 0)
-                                            {
-                                                AppendPreSumIfNeeded(ref needed);
-                                                explanation.Append(
-                                                    "PSGearPresent".Translate(
-                                                        $"{Constants.DefaultFullLightMultiplier:0%}"));
-                                                usedApparelSetting = true;
-                                                sum                = 0;
-                                            }
-                                    }
-
-                                explanation.AppendLine();
-                                if (needsFinalValue)
-                                    {
-                                        sum += basevalue;
-                                        explanation.AppendFormat(Constants.MultiplierLine,
-                                            "NVStatReport_FinalMulti".Translate(),
-                                            sum > caps[0] + basevalue ? caps[0] + basevalue :
-                                            sum < caps[1] + basevalue ? caps[1] + basevalue : sum);
-                                    }
-
-                                return explanation.ToString();
-                            }
-
-                        if (needsFinalValue)
-                            {
-                                result += FactorFromGlow(glow).ToStringPercent("x{0:0.0 %}");
-                            }
-
-                        return result;
                     }
 
                 public override void CompTickRare()
@@ -1040,7 +770,7 @@ namespace NightVision
 
                 private VisionType? BrightLightPsych;
                 private VisionType? DarknessPsych;
-        
+
                 private void ClearPsych()
                     {
                         BrightLightPsych = null;
@@ -1064,7 +794,7 @@ namespace NightVision
                                        && BrightLightPsych == VisionType.NVPhotosensitivity;
                             }
                     }
-
+        
                 #endregion
             }
     }

@@ -16,7 +16,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>C:\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\Nightvision\Assemblies\</OutputPath>
+    <OutputPath>..\..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\Nightvision_Dev\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -64,13 +64,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caravan\CaravanPatches.cs" />
     <Compile Include="Comps\CompProperties_NightVisionApparel.cs" />
     <Compile Include="Comps\HediffCompProperties_NightVision.cs" />
     <None Include="PatchesForCE.cs" />
+    <Compile Include="Comps\StatReportFor_NightVision.cs" />
+    <Compile Include="Testing\GameCondition_Darkness.cs" />
+    <Compile Include="Testing\PawnGeneratorNV.cs" />
+    <Compile Include="Combat\CombatHelpers.cs" />
+    <Compile Include="Combat\ShotReportPatches.cs" />
+    <Compile Include="Combat\TooltipUtilityPatch.cs" />
+    <Compile Include="Combat\VerbProperties_Patch.cs" />
+    <Compile Include="Combat\Verb_MeleeAttack_Patches.cs" />
     <Compile Include="Settings\DrawSettings.cs" />
     <Compile Include="Settings\SettingsHelpers.cs" />
     <Compile Include="Settings\SettingsCache.cs" />
     <Compile Include="Static variables\Constants.cs" />
+    <Compile Include="Static variables\Str.cs" />
     <Compile Include="Static variables\VisionType.cs" />
     <Compile Include="Data Classes\ISaveCheck.cs" />
     <Compile Include="Settings\Tabs.cs" />
@@ -93,6 +103,7 @@
     <Compile Include="Properties\NightVision.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\Scribes.cs" />
+    <Compile Include="Workers\StatWorker_NightVisionBase.cs" />
     <Compile Include="Workers\StatWorker_LightSensitivity.cs" />
     <Compile Include="Workers\StatWorker_NightVision.cs" />
     <Compile Include="Data Classes\Stealth_ModExtension.cs" />

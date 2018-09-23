@@ -227,10 +227,9 @@ namespace NightVision
             //    PatchesForCE.ApplyCombatExtendedPatch(ref harmony);
             //}
             //catch (TypeLoadException) { }
-#if DEBUG
+            harmony.PatchAll(Assembly.GetExecutingAssembly());
                         HarmonyInstance.DEBUG = false;
 
-#endif
         }
 
         #endregion
@@ -246,12 +245,6 @@ namespace NightVision
                 && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp
                         )
             {
-#if DEBUG
-                                Log.Message("NightVision.NVHarmonyPatcher.HediffWithComps_PostAdd_Postfix: " + pawn
-                                                                                                             + ", "
-                                                                                                             + __instance
-                                                                                                                         .def);
-#endif
                 comp.CheckAndAddHediff(__instance, __instance.Part);
             }
         }
@@ -348,11 +341,6 @@ namespace NightVision
                 && /*part != null && hediff is Hediff_MissingPart &&*/ /*pawn.RaceProps.Humanlike &&*/
                 pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
-#if DEBUG
-                                Log.Message("NightVision.NVHarmonyPatcher.AddHediff_Postfix: " + pawn + ", "
-                                            + hediff.def);
-
-#endif
                 comp.CheckAndAddHediff(hediff, part);
             }
         }
@@ -434,7 +422,7 @@ namespace NightVision
                 }
             }
 
-            //Add a new branch after end of org if clause that jumps past our code
+            //Add a new branch after end of the org if clause that jumps past our code
             inserts.Insert(0, new CodeInstruction(OpCodes.Br, codes[jumpToInsertsIndex].operand));
             var   inserted      = false;
             var   relabeled     = false;
@@ -517,7 +505,7 @@ namespace NightVision
                     __result = "StatsReport_LightMultiplier".Translate(glowat.ToStringPercent())
                                + ":";
 
-                    __result = comp.ExplanationBuilder(__result, glowat, out bool _, true);
+                    __result += StatReportFor_NightVision.ShortStatReport(glowat, comp);
                 }
             }
         }
@@ -551,11 +539,6 @@ namespace NightVision
                 && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision
                             comp)
             {
-#if DEBUG
-                                Log.Message("NightVision.NVHarmonyPatcher.Hediff_PostAdd_Postfix: " + pawn + ", "
-                                            + __instance.def);
-
-#endif
                 comp.CheckAndAddHediff(__instance, __instance.Part);
             }
         }
@@ -571,11 +554,6 @@ namespace NightVision
                 && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision
                             comp)
             {
-#if DEBUG
-                                Log.Message("NightVision.NVHarmonyPatcher.Hediff_PostRemoved_Postfix: " + pawn + ", "
-                                            + __instance.def);
-
-#endif
                 comp.RemoveHediff(__instance, __instance.Part);
             }
         }
@@ -685,5 +663,7 @@ namespace NightVision
         }
 
         #endregion
+        
+    
     }
 }

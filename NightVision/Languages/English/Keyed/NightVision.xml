@@ -73,6 +73,9 @@
   
   <NVGearExp>with their gear</NVGearExp>-->
   
+  <!--The order of arguments is intentionally wrong -->
+  <NVAimFactorFromLight>{1:p} light at target: {0:p}</NVAimFactorFromLight>
+
   <NVGrantsVisionType>Grants Vision Type:</NVGrantsVisionType>
 
   <NVStatReport_FinalMulti>Final multiplier from light:</NVStatReport_FinalMulti>

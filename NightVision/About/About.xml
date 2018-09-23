@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ModMetaData>
-  <name>NightVision</name>
+  <name>NightVision_DEV</name>
   <author>drumad</author>
   <url>https://github.com/AndTheManDrew/NightVision/releases</url>
-  <targetVersion>1.0.0</targetVersion>
+  <targetVersion>0.19.0</targetVersion>
   <description><![CDATA[
 -<b>Night vision:</b>
     No slow down in darkness (Apparel, Bionics, Races)

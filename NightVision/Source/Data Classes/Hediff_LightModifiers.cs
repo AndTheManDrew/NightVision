@@ -101,8 +101,6 @@ namespace NightVision
 
                             break;
                     }
-
-                    Log.Message("NightVision.Hediff_LightModifiers.DefaultOffsets: " + _defaultOffsets.ToStringSafeEnumerable());
                     
                 }
 

@@ -30,6 +30,7 @@ namespace NightVision
         public const           float            RowGap                     = 10f;
         public const           int              ThoughtActiveTicksPast     = 240;
         public const           string           XLabel                     = "x{0: #0}%";
+        public const float ShootSkillCooldownLimit = 14;
         public static readonly BodyPartTagDef   EyeTag                     = BodyPartTagDefOf.SightSource;
 
         public static readonly string FullLabel =
@@ -44,5 +45,9 @@ namespace NightVision
 
         public static readonly  string ZeroMultiLabel = "NVZeroLabel".Translate() + " = x{0:##}%";
         public /*const*/ static float  RowHeight      = 45f;
+
+
+        public static readonly string ExpIntro = "{3} " + Str.Effect + Maxline;
+
     }
 }

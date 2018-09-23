@@ -132,12 +132,6 @@ namespace NightVision
         {
             if (glow < 0.001)
             {
-#if DEBUG
-                                Log.Message("NightVision.LightModifiersBase.GetEffectAtGlow: " + this[0] + "/"
-                                            + numEyesNormalisedFor + "= " + this[0] / numEyesNormalisedFor);
-
-#endif
-
                 return (float) Math.Round(
                                           this[0] / numEyesNormalisedFor,
                                           Constants.NumberOfDigits,
