@@ -11,7 +11,7 @@ namespace NightVision
                         Pawn pawn
                     )
         {
-            if (pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
+            if (pawn?.GetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
                 comp.LastDarkTick = Find.TickManager.TicksGame;
             }

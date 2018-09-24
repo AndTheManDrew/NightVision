@@ -209,8 +209,7 @@ namespace NightVision
             harmony.Patch(
                           PawnRecentMemory_RecentMemory,
                           null,
-                          null,
-                          new HarmonyMethod(thistype, nameof(NVHarmonyPatcher.RecentMemory_Transpiler))
+                          new HarmonyMethod(typeof(NVHarmonyPatcher), nameof(RecentMemory_Postfix))
                          );
 
             //Pawn
@@ -227,9 +226,10 @@ namespace NightVision
             //    PatchesForCE.ApplyCombatExtendedPatch(ref harmony);
             //}
             //catch (TypeLoadException) { }
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
+#if DEBUG
                         HarmonyInstance.DEBUG = false;
 
+#endif
         }
 
         #endregion
@@ -245,6 +245,12 @@ namespace NightVision
                 && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp
                         )
             {
+#if DEBUG
+                                Log.Message("NightVision.NVHarmonyPatcher.HediffWithComps_PostAdd_Postfix: " + pawn
+                                                                                                             + ", "
+                                                                                                             + __instance
+                                                                                                                         .def);
+#endif
                 comp.CheckAndAddHediff(__instance, __instance.Part);
             }
         }
@@ -341,6 +347,11 @@ namespace NightVision
                 && /*part != null && hediff is Hediff_MissingPart &&*/ /*pawn.RaceProps.Humanlike &&*/
                 pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
+#if DEBUG
+                                Log.Message("NightVision.NVHarmonyPatcher.AddHediff_Postfix: " + pawn + ", "
+                                            + hediff.def);
+
+#endif
                 comp.CheckAndAddHediff(hediff, part);
             }
         }
@@ -380,76 +391,84 @@ namespace NightVision
 
         #region PawnRecentMemory Transpiler
 
-        //Totally unnecessary overkill...but its my first, so wooop
-        public static IEnumerable<CodeInstruction> RecentMemory_Transpiler(
-                        IEnumerable<CodeInstruction> instructions,
-                        ILGenerator                  il
-                    )
+        public static void RecentMemory_Postfix(Pawn ___pawn)
         {
-            List<CodeInstruction> codes = instructions.ToList();
-
-            var inserts = new List<CodeInstruction>
-                          {
-                              new CodeInstruction(OpCodes.Ldarg_0),
-                              new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(PawnRecentMemory), "pawn")),
-                              new CodeInstruction(
-                                                  OpCodes.Call,
-                                                  AccessTools.Method(
-                                                                     typeof(ThoughtWorker_TooBright),
-                                                                     nameof(ThoughtWorker_TooBright.SetLastDarkTick)
-                                                                    )
-                                                 )
-                          };
-
-            int jumpToInsertsIndex = -1, jumpPastInsertsIndex = -1;
-
-            for (var i = 2; i < codes.Count - 2; i++)
+            if (___pawn?.Map != null && ___pawn.Map.glowGrid.PsychGlowAt(___pawn.Position) != PsychGlow.Overlit)
             {
-                if (codes[i].opcode        == OpCodes.Brfalse
-                    && codes[i - 1].opcode == OpCodes.Callvirt
-                    && codes[i - 2].opcode == OpCodes.Callvirt)
-                {
-                    jumpToInsertsIndex = i;
-                }
-                else if (codes[i].opcode == OpCodes.Stfld && codes[i + 1].opcode != OpCodes.Ret)
-                {
-                    jumpPastInsertsIndex = i + 1;
-                }
-
-                if (jumpToInsertsIndex > 0 && jumpPastInsertsIndex > 0)
-                {
-                    break;
-                }
-            }
-
-            //Add a new branch after end of the org if clause that jumps past our code
-            inserts.Insert(0, new CodeInstruction(OpCodes.Br, codes[jumpToInsertsIndex].operand));
-            var   inserted      = false;
-            var   relabeled     = false;
-            Label landInInserts = il.DefineLabel();
-            //landing point
-            inserts[1].labels.Add(landInInserts);
-
-            foreach (CodeInstruction code in codes)
-            {
-                if (inserted == false && codes.IndexOf(code) == jumpPastInsertsIndex)
-                {
-                    foreach (CodeInstruction insert in inserts)
-                    {
-                        yield return insert;
-                    }
-
-                    inserted = true;
-                }
-                else if (relabeled == false && code == codes[jumpToInsertsIndex])
-                {
-                    code.operand = landInInserts;
-                    relabeled    = true;
-                }
-
-                yield return code;
+                ThoughtWorker_TooBright.SetLastDarkTick(___pawn);
             }
         }
+
+        //Totally unnecessary overkill...but its my first, so wooop
+        //public static IEnumerable<CodeInstruction> RecentMemory_Transpiler(
+        //                IEnumerable<CodeInstruction> instructions,
+        //                ILGenerator                  il
+        //            )
+        //{
+        //    List<CodeInstruction> codes = instructions.ToList();
+
+        //    var inserts = new List<CodeInstruction>
+        //                  {
+        //                      new CodeInstruction(OpCodes.Ldarg_0),
+        //                      new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(PawnRecentMemory), "pawn")),
+        //                      new CodeInstruction(
+        //                                          OpCodes.Call,
+        //                                          AccessTools.Method(
+        //                                                             typeof(ThoughtWorker_TooBright),
+        //                                                             nameof(ThoughtWorker_TooBright.SetLastDarkTick)
+        //                                                            )
+        //                                         )
+        //                  };
+
+        //    int jumpToInsertsIndex = -1, jumpPastInsertsIndex = -1;
+
+        //    for (var i = 2; i < codes.Count - 2; i++)
+        //    {
+        //        if (codes[i].opcode        == OpCodes.Brfalse
+        //            && codes[i - 1].opcode == OpCodes.Callvirt
+        //            && codes[i - 2].opcode == OpCodes.Callvirt)
+        //        {
+        //            jumpToInsertsIndex = i;
+        //        }
+        //        else if (codes[i].opcode == OpCodes.Stfld && codes[i + 1].opcode != OpCodes.Ret)
+        //        {
+        //            jumpPastInsertsIndex = i + 1;
+        //        }
+
+        //        if (jumpToInsertsIndex > 0 && jumpPastInsertsIndex > 0)
+        //        {
+        //            break;
+        //        }
+        //    }
+
+        //    //Add a new branch after end of org if clause that jumps past our code
+        //    inserts.Insert(0, new CodeInstruction(OpCodes.Br, codes[jumpToInsertsIndex].operand));
+        //    var   inserted      = false;
+        //    var   relabeled     = false;
+        //    Label landInInserts = il.DefineLabel();
+        //    //landing point
+        //    inserts[1].labels.Add(landInInserts);
+
+        //    foreach (CodeInstruction code in codes)
+        //    {
+        //        if (inserted == false && codes.IndexOf(code) == jumpPastInsertsIndex)
+        //        {
+        //            foreach (CodeInstruction insert in inserts)
+        //            {
+        //                yield return insert;
+        //            }
+
+        //            inserted = true;
+        //        }
+        //        else if (relabeled == false && code == codes[jumpToInsertsIndex])
+        //        {
+        //            code.operand = landInInserts;
+        //            relabeled    = true;
+        //        }
+
+        //        yield return code;
+        //    }
+        //}
 
         #endregion
 
@@ -505,7 +524,7 @@ namespace NightVision
                     __result = "StatsReport_LightMultiplier".Translate(glowat.ToStringPercent())
                                + ":";
 
-                    __result += StatReportFor_NightVision.ShortStatReport(glowat, comp);
+                    __result = comp.ExplanationBuilder(__result, glowat, out bool _, true);
                 }
             }
         }
@@ -539,6 +558,11 @@ namespace NightVision
                 && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision
                             comp)
             {
+#if DEBUG
+                                Log.Message("NightVision.NVHarmonyPatcher.Hediff_PostAdd_Postfix: " + pawn + ", "
+                                            + __instance.def);
+
+#endif
                 comp.CheckAndAddHediff(__instance, __instance.Part);
             }
         }
@@ -554,6 +578,11 @@ namespace NightVision
                 && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision
                             comp)
             {
+#if DEBUG
+                                Log.Message("NightVision.NVHarmonyPatcher.Hediff_PostRemoved_Postfix: " + pawn + ", "
+                                            + __instance.def);
+
+#endif
                 comp.RemoveHediff(__instance, __instance.Part);
             }
         }
@@ -663,7 +692,5 @@ namespace NightVision
         }
 
         #endregion
-        
-    
     }
 }
