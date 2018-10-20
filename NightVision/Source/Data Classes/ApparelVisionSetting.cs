@@ -24,12 +24,12 @@ namespace NightVision
         #region Fields
 
         //Current Settings
-        internal bool NullifiesPS;
-        internal bool GrantsNV;
+        public bool NullifiesPS;
+        public bool GrantsNV;
 
         //Settings in xml defs
-        internal bool CompNullifiesPS;
-        internal bool CompGrantsNV;
+        public bool CompNullifiesPS;
+        public bool CompGrantsNV;
 
         //Corresponding ThingDef
 
@@ -49,7 +49,7 @@ namespace NightVision
         /// <summary>
         ///     New Setting
         /// </summary>
-        internal ApparelVisionSetting(
+        public ApparelVisionSetting(
                         ThingDef apparel
                     )
         {
@@ -92,7 +92,7 @@ namespace NightVision
         /// <summary>
         ///     Dictionary builder attaches the comp settings to preexisting entries
         /// </summary>
-        internal void InitExistingSetting(
+        public void InitExistingSetting(
                         ThingDef apparel
                     )
         {
@@ -121,7 +121,7 @@ namespace NightVision
 
         #region Equality, Redundancy, and INVSaveCheck checks
 
-        internal bool Equals(
+        public bool Equals(
                         ApparelVisionSetting other
                     )
             => GrantsNV == other.GrantsNV && NullifiesPS == other.NullifiesPS;
@@ -129,7 +129,7 @@ namespace NightVision
         /// <summary>
         ///     Check to see if this setting should be removed from the dictionary, i.e. current and def values are all false
         /// </summary>
-        internal bool IsRedundant() => !(GrantsNV || NullifiesPS) && !(CompGrantsNV || CompNullifiesPS);
+        public bool IsRedundant() => !(GrantsNV || NullifiesPS) && !(CompGrantsNV || CompNullifiesPS);
 
         /// <summary>
         ///     Check to see if this setting should be saved, i.e. current and def values are all false,

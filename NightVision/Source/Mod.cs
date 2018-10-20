@@ -10,7 +10,7 @@ using Verse;
 
 namespace NightVision
 {
-    internal class Mod : Verse.Mod
+    public class Mod : Verse.Mod
     {
         public static Mod Instance;
 

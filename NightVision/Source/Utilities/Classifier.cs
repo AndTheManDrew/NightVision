@@ -11,7 +11,7 @@ using Verse;
 #endif
 namespace NightVision
 {
-    internal static class Classifier
+    public static class Classifier
     {
         public static List<float> FullLightTurningPoint;
         public static List<float> ZeroLightTurningPoints;
@@ -45,12 +45,12 @@ namespace NightVision
                 }
 
                 if (Classifier.ZeroLightTurningPoints.Count == 0
-                    || modifier + 0.001f                    < Classifier.ZeroLightTurningPoints[0])
+                    || modifier + CalcConstants.NVEpsilon                    < Classifier.ZeroLightTurningPoints[0])
                 {
                     return VisionType.NVNone;
                 }
 
-                if (modifier + 0.001f < Classifier.ZeroLightTurningPoints[1])
+                if (modifier + CalcConstants.NVEpsilon < Classifier.ZeroLightTurningPoints[1])
                 {
                     return VisionType.NVNightVision;
                 }
@@ -63,7 +63,7 @@ namespace NightVision
                 Classifier.FullLightTurningPoint = Classifier.OffsetsList(false);
             }
 
-            if (Classifier.FullLightTurningPoint.Count == 0 || modifier - 0.001f > Classifier.FullLightTurningPoint[0])
+            if (Classifier.FullLightTurningPoint.Count == 0 || modifier - CalcConstants.NVEpsilon > Classifier.FullLightTurningPoint[0])
             {
                 return VisionType.NVNone;
             }
@@ -84,13 +84,13 @@ namespace NightVision
                          {
                              (float) Math.Round(
                                                 LightModifiersBase.NVLightModifiers[offsetIndex],
-                                                Constants.NumberOfDigits,
-                                                Constants.Rounding
+                                                CalcConstants.NumberOfDigits,
+                                                CalcConstants.Rounding
                                                ),
                              (float) Math.Round(
                                                 LightModifiersBase.PSLightModifiers[offsetIndex],
-                                                Constants.NumberOfDigits,
-                                                Constants.Rounding
+                                                CalcConstants.NumberOfDigits,
+                                                CalcConstants.Rounding
                                                )
                          };
 #if DEBUG
@@ -100,9 +100,9 @@ namespace NightVision
 
             for (int i = result.Count - 1; i >= 0; i--)
             {
-                if (Math.Abs(result[i]) < 0.001f
-                    || forZeroLight  && result[i] + 0.001f < 0
-                    || !forZeroLight && result[i] - 0.001f > 0)
+                if (Math.Abs(result[i]) < CalcConstants.NVEpsilon
+                    || forZeroLight  && result[i] + CalcConstants.NVEpsilon < 0
+                    || !forZeroLight && result[i] - CalcConstants.NVEpsilon > 0)
                 {
                     result.RemoveAt(i);
                 }
@@ -133,13 +133,13 @@ namespace NightVision
 
                 result = new List<float>
                          {
-                             (float) Math.Round(result[0]               / 2, Constants.NumberOfDigits),
-                             (float) Math.Round((result[0] + result[1]) / 2, Constants.NumberOfDigits)
+                             (float) Math.Round(result[0]               / 2, CalcConstants.NumberOfDigits),
+                             (float) Math.Round((result[0] + result[1]) / 2, CalcConstants.NumberOfDigits)
                          };
             }
             else
             {
-                result = new List<float> {(float) Math.Round(result[0] / 2, Constants.NumberOfDigits)};
+                result = new List<float> {(float) Math.Round(result[0] / 2, CalcConstants.NumberOfDigits)};
             }
 
             return result;

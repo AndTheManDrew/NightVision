@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+ <PawnKindDef Name="TestBase" Abstract="True">
+    <race>Human</race>
+    <combatPower>100</combatPower>
+    <minGenerationAge>20</minGenerationAge>
+    <maxGenerationAge>50</maxGenerationAge>
+    <isFighter>true</isFighter>
+    <chemicalAddictionChance>0</chemicalAddictionChance>
+    <backstoryCryptosleepCommonality>0.05</backstoryCryptosleepCommonality>
+    <backstoryCategories>
+    <li>Traveler</li></backstoryCategories>
+    <invNutrition>0</invNutrition>
+    <gearHealthRange>
+      <min>1</min>
+      <max>1</max>
+    </gearHealthRange>
+    <forceNormalGearQuality>true</forceNormalGearQuality>
+    <destroyGearOnDrop>true</destroyGearOnDrop>
+  </PawnKindDef>
+</Defs>

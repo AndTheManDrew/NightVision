@@ -17,8 +17,8 @@ namespace NightVision
                                                             {
                                                                 Offsets = new[]
                                                                           {
-                                                                              Constants.NVDefaultOffsets[0],
-                                                                              Constants.NVDefaultOffsets[1]
+                                                                              CalcConstants.NVDefaultOffsets[0],
+                                                                              CalcConstants.NVDefaultOffsets[1]
                                                                           },
                                                                 Initialised = true
                                                             };
@@ -27,15 +27,15 @@ namespace NightVision
                                                             {
                                                                 Offsets = new[]
                                                                           {
-                                                                              Constants.PSDefaultOffsets[0],
-                                                                              Constants.PSDefaultOffsets[1]
+                                                                              CalcConstants.PSDefaultOffsets[0],
+                                                                              CalcConstants.PSDefaultOffsets[1]
                                                                           },
                                                                 Initialised = true
                                                             };
 
         public bool Initialised;
 
-        internal float[] Offsets = new float[2];
+        public float[] Offsets = new float[2];
 
         public LightModifiersBase() { }
 
@@ -67,7 +67,7 @@ namespace NightVision
 
         public virtual Def ParentDef => null;
 
-        internal virtual VisionType Setting
+        public virtual VisionType Setting
         {
             get => VisionType.NVNone;
             set { }
@@ -79,12 +79,12 @@ namespace NightVision
             {
                 if (this == LightModifiersBase.NVLightModifiers)
                 {
-                    return Constants.NVDefaultOffsets;
+                    return CalcConstants.NVDefaultOffsets;
                 }
 
                 if (this == LightModifiersBase.PSLightModifiers)
                 {
-                    return Constants.PSDefaultOffsets;
+                    return CalcConstants.PSDefaultOffsets;
                 }
 
                 return new float[2];
@@ -106,12 +106,12 @@ namespace NightVision
                 {
                     if (this == LightModifiersBase.NVLightModifiers)
                     {
-                        Offsets = Constants.NVDefaultOffsets.ToArray();
+                        Offsets = CalcConstants.NVDefaultOffsets.ToArray();
                     }
 
                     else if (this == LightModifiersBase.PSLightModifiers)
                     {
-                        Offsets = Constants.PSDefaultOffsets.ToArray();
+                        Offsets = CalcConstants.PSDefaultOffsets.ToArray();
                     }
                     else
                     {
@@ -134,8 +134,8 @@ namespace NightVision
             {
                 return (float) Math.Round(
                                           this[0] / numEyesNormalisedFor,
-                                          Constants.NumberOfDigits,
-                                          Constants.Rounding
+                                          CalcConstants.NumberOfDigits,
+                                          CalcConstants.Rounding
                                          );
             }
 
@@ -143,26 +143,26 @@ namespace NightVision
             {
                 return (float) Math.Round(
                                           this[1] / numEyesNormalisedFor,
-                                          Constants.NumberOfDigits,
-                                          Constants.Rounding
+                                          CalcConstants.NumberOfDigits,
+                                          CalcConstants.Rounding
                                          );
             }
 
-            if (glow < 0.3)
+            if (glow.GlowIsDarkness())
             {
                 return (float) Math.Round(
                                           this[0] / numEyesNormalisedFor * (0.3f - glow) / 0.3f,
-                                          Constants.NumberOfDigits,
-                                          Constants.Rounding
+                                          CalcConstants.NumberOfDigits,
+                                          CalcConstants.Rounding
                                          );
             }
 
-            if (glow > 0.7)
+            if (glow.GlowIsBright())
             {
                 return (float) Math.Round(
                                           this[1] / numEyesNormalisedFor * (glow - 0.7f) / 0.3f,
-                                          Constants.NumberOfDigits,
-                                          Constants.Rounding
+                                          CalcConstants.NumberOfDigits,
+                                          CalcConstants.Rounding
                                          );
             }
 
@@ -178,13 +178,13 @@ namespace NightVision
             float nvcap;
             float pscap;
 
-            if (glow < 0.3f)
+            if (glow.GlowIsDarkness())
             {
-                mincap = (Storage.MultiplierCaps.min - Constants.DefaultZeroLightMultiplier)
+                mincap = (Storage.MultiplierCaps.min - CalcConstants.DefaultZeroLightMultiplier)
                          * (0.3f                     - glow)
                          / 0.3f;
 
-                maxcap = (Storage.MultiplierCaps.max - Constants.DefaultZeroLightMultiplier)
+                maxcap = (Storage.MultiplierCaps.max - CalcConstants.DefaultZeroLightMultiplier)
                          * (0.3f                     - glow)
                          / 0.3f;
 
@@ -193,11 +193,11 @@ namespace NightVision
             }
             else
             {
-                mincap = (Storage.MultiplierCaps.min - Constants.DefaultFullLightMultiplier)
+                mincap = (Storage.MultiplierCaps.min - CalcConstants.DefaultFullLightMultiplier)
                          * (glow                     - 0.7f)
                          / 0.3f;
 
-                maxcap = (Storage.MultiplierCaps.max - Constants.DefaultFullLightMultiplier)
+                maxcap = (Storage.MultiplierCaps.max - CalcConstants.DefaultFullLightMultiplier)
                          * (glow                     - 0.7f)
                          / 0.3f;
 
@@ -207,13 +207,13 @@ namespace NightVision
             
             return new[]
                    {
-                       (float) Math.Round(maxcap, Constants.NumberOfDigits, Constants.Rounding)
+                       (float) Math.Round(maxcap, CalcConstants.NumberOfDigits, CalcConstants.Rounding)
                        ,
-                        ((float) Math.Round(mincap, Constants.NumberOfDigits, Constants.Rounding))
+                        ((float) Math.Round(mincap, CalcConstants.NumberOfDigits, CalcConstants.Rounding))
                        ,
-                        (float)Math.Round(nvcap, Constants.NumberOfDigits, Constants.Rounding)
+                        (float)Math.Round(nvcap, CalcConstants.NumberOfDigits, CalcConstants.Rounding)
                        , 
-                       (float)Math.Round(pscap, Constants.NumberOfDigits, Constants.Rounding)
+                       (float)Math.Round(pscap, CalcConstants.NumberOfDigits, CalcConstants.Rounding)
                        
                    };
 
@@ -227,7 +227,7 @@ namespace NightVision
 
         public bool IsCustom() => Setting == VisionType.NVCustom;
 
-        internal void ChangeSetting(
+        public void ChangeSetting(
                         VisionType newsetting
                     )
         {

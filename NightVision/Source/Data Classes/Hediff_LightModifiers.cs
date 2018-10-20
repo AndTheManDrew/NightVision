@@ -15,10 +15,10 @@ namespace NightVision
 {
     public class Hediff_LightModifiers : LightModifiersBase
     {
-        internal bool AffectsEye   = false;
-        internal bool AutoAssigned = false;
+        public bool AffectsEye   = false;
+        public bool AutoAssigned = false;
 
-        internal VisionType IntSetting;
+        public VisionType IntSetting;
         private  float[]    _defaultOffsets;
 
         [CanBeNull]
@@ -58,11 +58,11 @@ namespace NightVision
                                                                    +1f    + 0.2f * (1 - index)
                                                                   ),
                                                        2,
-                                                       Constants.Rounding
+                                                       CalcConstants.Rounding
                                                       );
         }
 
-        internal override VisionType Setting
+        public override VisionType Setting
         {
             get => IntSetting;
             set => IntSetting = value;
@@ -167,8 +167,8 @@ namespace NightVision
                 case VisionType.NVPhotosensitivity: return !_hediffCompProps.GrantsPhotosensitivity;
                 case VisionType.NVCustom:
 
-                    return !(Math.Abs(_hediffCompProps.FullLightMod    - Offsets[1]) < 0.001f)
-                           || !(Math.Abs(_hediffCompProps.ZeroLightMod - Offsets[0]) < 0.001f);
+                    return !(Math.Abs(_hediffCompProps.FullLightMod    - Offsets[1]) < CalcConstants.NVEpsilon)
+                           || !(Math.Abs(_hediffCompProps.ZeroLightMod - Offsets[0]) < CalcConstants.NVEpsilon);
             }
         }
 

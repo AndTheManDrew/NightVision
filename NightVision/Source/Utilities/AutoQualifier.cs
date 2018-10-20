@@ -9,9 +9,9 @@ using Verse;
 
 namespace NightVision
 {
-    internal static class AutoQualifier
+    public static class AutoQualifier
     {
-        internal static VisionType? HediffCheck(
+        public static VisionType? HediffCheck(
                         HediffDef hediffDef
                     )
         {

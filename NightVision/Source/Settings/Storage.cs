@@ -10,7 +10,7 @@ using Verse;
 
 namespace NightVision
 {
-    internal static class Storage
+    public static class Storage
     {
         public static HashSet<ThingDef> AllEyeCoveringHeadgearDefs = new HashSet<ThingDef>();
 
@@ -28,8 +28,8 @@ namespace NightVision
         public const float LowestCap = 0.01f;
 
         public static FloatRange MultiplierCaps =
-                    new FloatRange(Constants.DefaultMinCap, Constants.DefaultMaxCap);
-
+                    new FloatRange(CalcConstants.DefaultMinCap, CalcConstants.DefaultMaxCap);
+        
         public static Dictionary<ThingDef, ApparelVisionSetting> NVApparel =
                     new Dictionary<ThingDef, ApparelVisionSetting>();
 
@@ -45,10 +45,31 @@ namespace NightVision
 
             if (Storage.CustomCapsEnabled)
             {
+                if (Scribe.mode == LoadSaveMode.Saving)
+                {
+                    if (MultiplierCaps.min > MultiplierCaps.max)
+                    {
+                        var temp = MultiplierCaps.max;
+                        MultiplierCaps.max = MultiplierCaps.min;
+                        MultiplierCaps.min = temp;
+                    }
+                }
                 Scribe_Values.Look(ref Storage.MultiplierCaps.min, "LowerLimit", 0.8f);
                 Scribe_Values.Look(ref Storage.MultiplierCaps.max, "UpperLimit", 1.2f);
+                if (Scribe.mode == LoadSaveMode.LoadingVars)
+                {
+                    if (MultiplierCaps.min > MultiplierCaps.max)
+                    {
+                        var temp = MultiplierCaps.max;
+                        MultiplierCaps.max = MultiplierCaps.min;
+                        MultiplierCaps.min = temp;
+                    }
+                }
             }
 
+            Scribe_Values.Look(ref NVGameComponent.FlareRaidIsDisabled, "flareRaidDisabled");
+            
+            
             Scribe_Values.Look(ref Storage.NVEnabledForCE, "EnabledForCombatExtended", true);
 
             //cctor args because otherwise statics don't seem to load properly
@@ -68,7 +89,7 @@ namespace NightVision
                 {
                     LightModifiersBase.PSLightModifiers = new LightModifiersBase
                                                           {
-                                                              Offsets     = Constants.PSDefaultOffsets.ToArray(),
+                                                              Offsets     = CalcConstants.PSDefaultOffsets.ToArray(),
                                                               Initialised = true
                                                           };
                 }
@@ -77,7 +98,7 @@ namespace NightVision
                 {
                     LightModifiersBase.NVLightModifiers = new LightModifiersBase
                                                           {
-                                                              Offsets     = Constants.NVDefaultOffsets.ToArray(),
+                                                              Offsets     = CalcConstants.NVDefaultOffsets.ToArray(),
                                                               Initialised = true
                                                           };
                 }
@@ -93,9 +114,9 @@ namespace NightVision
             Log.Message("NightVision.Storage.ResetAllSettings: Defaulting Settings");
 
             Storage.CustomCapsEnabled = false;
-            Storage.MultiplierCaps    = new FloatRange(Constants.DefaultMinCap, Constants.DefaultMaxCap);
+            Storage.MultiplierCaps    = new FloatRange(CalcConstants.DefaultMinCap, CalcConstants.DefaultMaxCap);
             Storage.NVEnabledForCE    = true;
-
+            NVGameComponent.FlareRaidIsDisabled = false;
             LightModifiersBase.PSLightModifiers.Offsets =
                         LightModifiersBase.PSLightModifiers.DefaultOffsets.ToArray();
 
@@ -110,7 +131,7 @@ namespace NightVision
             Storage.AllEyeHediffs              = null;
             Storage.AllSightAffectingHediffs   = null;
             Log.Message("NightVision.Storage.ResetAllSettings: Rebuilding Dictionaries");
-            Initialiser.BuildDictionarys();
+            Initialiser.BuildDictionaries();
             SettingsCache.CacheInited = false;
             SettingsCache.DoPreWriteTasks();
             SettingsCache.Init();

@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "About", "About", "{7FE9FA0E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{65DE852E-3F73-416D-90ED-B6C888515240}"
 	ProjectSection(SolutionItems) = preProject
+		NightVision\Defs\Incidents.xml = NightVision\Defs\Incidents.xml
 		NightVision\Defs\NightVision_Apparel.xml = NightVision\Defs\NightVision_Apparel.xml
 		NightVision\Defs\NightVision_Hediffs.xml = NightVision\Defs\NightVision_Hediffs.xml
 		NightVision\Defs\NightVision_Items.xml = NightVision\Defs\NightVision_Items.xml
@@ -45,7 +46,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "English", "English", "{5556
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{D9D7732D-3273-46A1-A714-82CCFEA80B02}"
 	ProjectSection(SolutionItems) = preProject
-		NightVision\Languages\English\Keyed\NightVision.xml = NightVision\Languages\English\Keyed\NightVision.xml
+		NightVision\Languages\English\Keyed\Basics.xml = NightVision\Languages\English\Keyed\Basics.xml
+		NightVision\Languages\English\Keyed\Combat.xml = NightVision\Languages\English\Keyed\Combat.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apparel", "Apparel", "{4E3644C1-470E-4EE7-84FB-2D812B662337}"
@@ -73,22 +75,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Indicators", "Indicators", 
 		NightVision\Textures\UI\Indicators\PSarrow.png = NightVision\Textures\UI\Indicators\PSarrow.png
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Incidents", "Incidents", "{7AD5CCCA-384A-429C-930A-CFD2A7A9EBA7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{7AD5CCCA-384A-429C-930A-CFD2A7A9EBA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NVIncidents", "NVIncidents\Source\NVIncidents.csproj", "{53AD9AD3-A8B8-45C4-B8EA-954E82193B32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NVTesting", "NVTesting\Source\NVTesting.csproj", "{53AD9AD3-A8B8-45C4-B8EA-954E82193B32}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NightVision", "NightVision\Source\NightVision.csproj", "{EB253018-4E17-43AA-9868-16AC468F406A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "About", "About", "{BB0195D9-30FE-4410-BAB9-E5F721EBB5B2}"
 	ProjectSection(SolutionItems) = preProject
-		NVIncidents\About\About.xml = NVIncidents\About\About.xml
+		NVTesting\About\About.xml = NVTesting\About\About.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{769DBBD3-31AA-490E-9B95-BA3E6DD300FC}"
 	ProjectSection(SolutionItems) = preProject
-		NVIncidents\Defs\Stalker.xml = NVIncidents\Defs\Stalker.xml
-		NVIncidents\Defs\Stalker_DutyDef.xml = NVIncidents\Defs\Stalker_DutyDef.xml
-		NVIncidents\Defs\ThinkTree_Stalker.xml = NVIncidents\Defs\ThinkTree_Stalker.xml
+		NVTesting\Defs\Stalker.xml = NVTesting\Defs\Stalker.xml
+		NVTesting\Defs\Stalker_DutyDef.xml = NVTesting\Defs\Stalker_DutyDef.xml
+		NVTesting\Defs\ThinkTree_Stalker.xml = NVTesting\Defs\ThinkTree_Stalker.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Languages", "Languages", "{D895DC59-37A2-4A49-ABC7-52334D5B7691}"
@@ -103,7 +105,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "English", "English", "{FAD2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{593F2E94-6428-4A64-A480-C2EE7E8DB7E5}"
 	ProjectSection(SolutionItems) = preProject
-		NVIncidents\Languages\English\Keyed\NVIncidents.xml = NVIncidents\Languages\English\Keyed\NVIncidents.xml
+		NVTesting\Languages\English\Keyed\NVTesting.xml = NVTesting\Languages\English\Keyed\NVTesting.xml
 	EndProjectSection
 EndProject
 Global

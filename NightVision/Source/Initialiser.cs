@@ -1,49 +1,52 @@
-﻿// Nightvision NightVision DictionaryBuilders.cs
+﻿// Nightvision NightVision Initialiser.cs
 // 
-// 05 05 2018
+// 03 08 2018
 // 
-// 21 07 2018
+// 16 10 2018
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using Harmony;
 using RimWorld;
 using Verse;
 
 namespace NightVision
 {
-    internal static class Initialiser
+    public static class Initialiser
     {
-        internal static void Startup()
+        public static void Startup()
         {
-            Initialiser.BuildDictionarys();
-            
-            Initialiser.TapetumInjector();
-            Initialiser.AddNightVisionToResearch();
+            BuildDictionaries();
+
+            TapetumInjector();
+            AddNightVisionToResearch();
+            FindSettingsDependentFields();
         }
 
-        internal static void BuildDictionarys()
+        public static void BuildDictionaries()
         {
-            Initialiser.HediffsDictBuilder();
-            Initialiser.RaceDictBuilder();
-            Initialiser.ApparelDictBuilder();
+            HediffsDictBuilder();
+            RaceDictBuilder();
+            ApparelDictBuilder();
         }
 
 
         #region Race Dictionary Builder
 
-        internal static void RaceDictBuilder()
+        public static void RaceDictBuilder()
         {
             List<ThingDef> raceDefList =
                         DefDatabase<ThingDef>.AllDefsListForReading.FindAll(
-                                                                            rdef => rdef.race is RaceProperties race
-                                                                                    && (race.Humanlike
-                                                                                        || rdef
-                                                                                                    .GetCompProperties<
-                                                                                                                    CompProperties_NightVision
-                                                                                                                >()
-                                                                                        != null)
-                                                                           );
+                            rdef => rdef.race is RaceProperties race
+                                    && (race.Humanlike
+                                        || rdef
+                                                    .GetCompProperties<
+                                                        CompProperties_NightVision
+                                                    >()
+                                        != null)
+                        );
 
             if (Storage.RaceLightMods == null)
             {
@@ -66,44 +69,42 @@ namespace NightVision
 
         #region Apparel Dict & List Builder
 
-        internal static void ApparelDictBuilder()
+        public static void ApparelDictBuilder()
         {
             ThingCategoryDef headgearCategoryDef = ThingCategoryDef.Named("Headgear");
-            BodyPartGroupDef fullHead            = BodyPartGroupDefOf.FullHead;
-            BodyPartGroupDef eyes                = BodyPartGroupDefOf.Eyes;
+            BodyPartGroupDef fullHead            = RwDefs.Head;
+            BodyPartGroupDef eyes                = RwDefs.Eyes;
 
             Storage.AllEyeCoveringHeadgearDefs = new HashSet<ThingDef>(
-                                                                       DefDatabase<ThingDef>
-                                                                                   .AllDefsListForReading.FindAll(
-                                                                                                                  adef
-                                                                                                                              => adef
-                                                                                                                                             .IsApparel
-                                                                                                                                 && (
-                                                                                                                                     (adef
-                                                                                                                                      .thingCategories
-                                                                                                                                      ?.Contains(
-                                                                                                                                                 headgearCategoryDef
-                                                                                                                                                )
-                                                                                                                                      ?? false
-                                                                                                                                     )
-                                                                                                                                     || adef
-                                                                                                                                        .apparel
-                                                                                                                                        .bodyPartGroups
-                                                                                                                                        .Any(
-                                                                                                                                             bpg
-                                                                                                                                                         => bpg
-                                                                                                                                                            == eyes
-                                                                                                                                                            || bpg
-                                                                                                                                                            == fullHead
-                                                                                                                                            )
-                                                                                                                                     || adef
-                                                                                                                                                 .HasComp(
-                                                                                                                                                          typeof
-                                                                                                                                                                      (Comp_NightVisionApparel
-                                                                                                                                                                      )
-                                                                                                                                                         ))
-                                                                                                                 )
-                                                                      );
+                DefDatabase<ThingDef>
+                            .AllDefsListForReading.FindAll(
+                                adef
+                                            => adef
+                                                           .IsApparel
+                                               && (
+                                                   (adef
+                                                                .thingCategories
+                                                                ?.Contains(headgearCategoryDef)
+                                                    ?? false
+                                                   )
+                                                   || adef
+                                                               .apparel
+                                                               .bodyPartGroups
+                                                               .Any(
+                                                                   bpg
+                                                                               => bpg
+                                                                                  == eyes
+                                                                                  || bpg
+                                                                                  == fullHead
+                                                               )
+                                                   || adef
+                                                               .HasComp(
+                                                                   typeof
+                                                                   (Comp_NightVisionApparel
+                                                                   )
+                                                               ))
+                            )
+            );
 
             if (Storage.NVApparel == null)
             {
@@ -138,7 +139,7 @@ namespace NightVision
 
         #region Add Tapetum to large predator
 
-        internal static void TapetumInjector()
+        public static void TapetumInjector()
         {
             //TODO simplify/inline/merge_loops
             var                bestAnimals     = new List<ThingDef>();
@@ -153,12 +154,12 @@ namespace NightVision
                 }
 
                 List<PawnKindDef> possibleAnimals = biome
-                                                    .AllWildAnimals
-                                                    .Where(
-                                                           pkd => pkd.RaceProps.predator
-                                                                  && pkd.RaceProps.baseBodySize > 1
-                                                          )
-                                                    .ToList();
+                            .AllWildAnimals
+                            .Where(
+                                pkd => pkd.RaceProps.predator
+                                       && pkd.RaceProps.baseBodySize > 1
+                            )
+                            .ToList();
 
                 if (possibleAnimals.Count == 0)
                 {
@@ -166,17 +167,17 @@ namespace NightVision
                 }
 
                 ThingDef bestAnimal = possibleAnimals.Aggregate(
-                                                                (
-                                                                                best,
-                                                                                next
-                                                                            ) =>
-                                                                            best.RaceProps.baseBodySize
-                                                                            > next
-                                                                              .RaceProps.baseBodySize
-                                                                                        ? best
-                                                                                        : next
-                                                               )
-                                                     .race;
+                                (
+                                                best,
+                                                next
+                                            ) =>
+                                            best.RaceProps.baseBodySize
+                                            > next
+                                                        .RaceProps.baseBodySize
+                                                        ? best
+                                                        : next
+                            )
+                            .race;
 
                 bestAnimals.AddDistinct(bestAnimal);
             }
@@ -188,7 +189,7 @@ namespace NightVision
                     animal.recipes = new List<RecipeDef>();
                 }
 
-                animal.recipes.Add(RecipeDef_ExtractTapetumLucidum.ExtractTapetumLucidum);
+                animal.recipes.Add(NVDefOf.ExtractTapetumLucidum);
                 descAppendage.Append("\n - " + animal.LabelCap);
             }
 
@@ -198,8 +199,8 @@ namespace NightVision
         #endregion
 
         #region Hediff Dict & Lists Builder
-        
-        internal static void HediffsDictBuilder()
+
+        public static void HediffsDictBuilder()
         {
             //Essentially we construct two collections: 
             //  the first contains all hediffs that affect sight/are applied to eyes/have our HediffComp_NightVision
@@ -222,115 +223,111 @@ namespace NightVision
 
             //Find all hediffs that effect sight
             Storage.AllSightAffectingHediffs = new HashSet<HediffDef>(
-                                                                      DefDatabase<HediffDef>
-                                                                                  .AllDefsListForReading.FindAll(
-                                                                                                                 hediffdef
-                                                                                                                             =>
-                                                                                                                             hediffdef
-                                                                                                                                         .stages
-                                                                                                                             != null
-                                                                                                                             && hediffdef
-                                                                                                                                .stages
-                                                                                                                                .Exists(
-                                                                                                                                        stage
-                                                                                                                                                    =>
-                                                                                                                                                    stage
-                                                                                                                                                                .capMods
-                                                                                                                                                    != null
-                                                                                                                                                    && stage
-                                                                                                                                                       .capMods
-                                                                                                                                                       .Exists(
-                                                                                                                                                               pcm
-                                                                                                                                                                           =>
-                                                                                                                                                                           pcm
-                                                                                                                                                                                       .capacity
-                                                                                                                                                                           == PawnCapacityDefOf
-                                                                                                                                                                                       .Sight
-                                                                                                                                                              )
-                                                                                                                                       )
-                                                                                                                )
-                                                                     );
+                DefDatabase<HediffDef>
+                            .AllDefsListForReading.FindAll(
+                                hediffdef
+                                            =>
+                                            hediffdef
+                                                        .stages
+                                            != null
+                                            && hediffdef
+                                                        .stages
+                                                        .Exists(
+                                                            stage
+                                                                        =>
+                                                                        stage
+                                                                                    .capMods
+                                                                        != null
+                                                                        && stage
+                                                                                    .capMods
+                                                                                    .Exists(
+                                                                                        pcm
+                                                                                                    =>
+                                                                                                    pcm
+                                                                                                                .capacity
+                                                                                                    == PawnCapacityDefOf
+                                                                                                                .Sight
+                                                                                    )
+                                                        )
+                            )
+            );
 
             //Add all the hediffs with our comp
             Storage.AllSightAffectingHediffs.UnionWith(
-                                                       DefDatabase<HediffDef>.AllDefsListForReading.FindAll(
-                                                                                                            hediffdef =>
-                                                                                                                        hediffdef
-                                                                                                                                    .HasComp(
-                                                                                                                                             typeof
-                                                                                                                                                         (HediffComp_NightVision
-                                                                                                                                                         )
-                                                                                                                                            )
-                                                                                                           )
-                                                      );
+                DefDatabase<HediffDef>.AllDefsListForReading.FindAll(
+                    hediffdef =>
+                                hediffdef
+                                            .HasComp(
+                                                typeof
+                                                (HediffComp_NightVision
+                                                )
+                                            )
+                )
+            );
 
             //Having searched for all references to eyes within the def files these are the only options I have found that reference eyes specifically
             //Find all hediffs that have recipes that apply to eyes -- as fun as it is to be able to dev mode apply a  bionic eye to a pawns knee, it would be nice to have
             // some way of saying where a hediff should be applied within the hediffdef itself
             Storage.AllEyeHediffs = new HashSet<HediffDef>(
-                                                           DefDatabase<RecipeDef>
-                                                                       .AllDefsListForReading
-                                                                       .FindAll(
-                                                                                recdef => recdef.addsHediff != null
-                                                                                          && recdef
-                                                                                                      .appliedOnFixedBodyParts
-                                                                                          != null
-                                                                                          && recdef
-                                                                                             .appliedOnFixedBodyParts
-                                                                                             .Exists(
-                                                                                                     bpd => bpd.tags
-                                                                                                            != null
-                                                                                                            && bpd
-                                                                                                               .tags
-                                                                                                               .Contains(
-                                                                                                                         Constants.EyeTag
-                                                                                                                        )
-                                                                                                    )
-                                                                                          && recdef.AllRecipeUsers.Any(
-                                                                                                                       ru
-                                                                                                                                   =>
-                                                                                                                                   ru
-                                                                                                                                               .race
-                                                                                                                                               ?.Humanlike
-                                                                                                                                   == true
-                                                                                                                      )
-                                                                               )
-                                                                       .Select(recdef => recdef.addsHediff)
-                                                          );
+                DefDatabase<RecipeDef>
+                            .AllDefsListForReading
+                            .FindAll(
+                                recdef => recdef.addsHediff != null
+                                          && recdef
+                                                      .appliedOnFixedBodyParts
+                                          != null
+                                          && recdef
+                                                      .appliedOnFixedBodyParts
+                                                      .Exists(
+                                                          bpd => bpd.tags
+                                                                 != null
+                                                                 && bpd
+                                                                             .tags
+                                                                             .Contains(RwDefs.EyeTag)
+                                                      )
+                                          && recdef.AllRecipeUsers.Any(
+                                              ru
+                                                          =>
+                                                          ru
+                                                                      .race
+                                                                      ?.Humanlike
+                                                          == true
+                                          )
+                            )
+                            .Select(recdef => recdef.addsHediff)
+            );
 
             //Add all the eye hediffs that are assigned from HediffGivers: i.e. cataracts from HediffGiver_Birthday
             Storage.AllEyeHediffs.UnionWith(
-                                            DefDatabase<HediffGiverSetDef>
-                                                        .AllDefsListForReading
-                                                        .FindAll(hgsd => hgsd.hediffGivers != null)
-                                                        .SelectMany(
-                                                                    hgsd => hgsd
-                                                                            .hediffGivers
-                                                                            .Where(
-                                                                                   hg => hg.partsToAffect != null
-                                                                                         && hg.partsToAffect.Exists(
-                                                                                                                    bpd
-                                                                                                                                =>
-                                                                                                                                bpd
-                                                                                                                                            .tags
-                                                                                                                                            .Contains(
-                                                                                                                                                      Constants.EyeTag
-                                                                                                                                                     )
-                                                                                                                   )
-                                                                                  )
-                                                                            .Select(hg => hg.hediff)
-                                                                   )
-                                           );
+                DefDatabase<HediffGiverSetDef>
+                            .AllDefsListForReading
+                            .FindAll(hgsd => hgsd.hediffGivers != null)
+                            .SelectMany(
+                                hgsd => hgsd
+                                            .hediffGivers
+                                            .Where(
+                                                hg => hg.partsToAffect != null
+                                                      && hg.partsToAffect.Exists(
+                                                          bpd
+                                                                      =>
+                                                                      bpd
+                                                                                  .tags
+                                                                                  .Contains(RwDefs.EyeTag)
+                                                      )
+                                            )
+                                            .Select(hg => hg.hediff)
+                            )
+            );
 
             //Clean up a bit (we rely on comps as an interface between rimworld stat reporting and our calculations)
             Storage.AllEyeHediffs.RemoveWhere(hdD => !typeof(HediffWithComps).IsAssignableFrom(hdD.hediffClass));
 
             Storage.AllSightAffectingHediffs.RemoveWhere(
-                                                         hdD => !typeof(HediffWithComps).IsAssignableFrom(
-                                                                                                          hdD
-                                                                                                                      .hediffClass
-                                                                                                         )
-                                                        );
+                hdD => !typeof(HediffWithComps).IsAssignableFrom(
+                    hdD
+                                .hediffClass
+                )
+            );
 
             //Using IEnumerable.except because hashset.exceptwith changes in place and returns void
             List<HediffDef> list = Storage.AllSightAffectingHediffs.Except(Storage.AllEyeHediffs).ToList();
@@ -379,12 +376,7 @@ namespace NightVision
                     else if (AutoQualifier.HediffCheck(hediffDef) is VisionType autoOptions)
                     {
                         Storage.HediffLightMods[hediffDef] =
-                                    new Hediff_LightModifiers(hediffDef)
-                                    {
-                                        AffectsEye   = true,
-                                        AutoAssigned = true,
-                                        Setting      = autoOptions
-                                    };
+                                    new Hediff_LightModifiers(hediffDef) {AffectsEye = true, AutoAssigned = true, Setting = autoOptions};
                     }
                 }
                 else if (hediffDef.CompPropsFor(typeof(HediffComp_NightVision)) is
@@ -405,20 +397,28 @@ namespace NightVision
 
         #region Add Nightvision tags to research descriptions & labels - because I don't know how to xpath this
 
-        internal static void AddNightVisionToResearch()
+        public static void AddNightVisionToResearch()
         {
-            ResearchProjectDef complexClothing = ResearchProjectDef.Named("ComplexClothing");
+            ResearchProjectDef complexClothing  = ResearchProjectDef.Named("ComplexClothing");
             ResearchProjectDef microelectronics = ResearchProjectDef.Named("MicroelectronicsBasics");
-            ResearchProjectDef powerArmour = ResearchProjectDef.Named("PoweredArmor");
+            ResearchProjectDef powerArmour      = ResearchProjectDef.Named("PoweredArmor");
 
-            complexClothing.label += " NV+";
+            complexClothing.label  += " NV+";
             microelectronics.label += " NV+";
-            powerArmour.label += " NV+";
+            powerArmour.label      += " NV+";
 
-            complexClothing.description += $"\n{"NVResClothAddition".Translate()}";
+            complexClothing.description  += $"\n{"NVResClothAddition".Translate()}";
             microelectronics.description += $"\n{"NVResMicroAddition".Translate()}";
-            powerArmour.description += $"\n{"NVResPowerAddition".Translate()}";
+            powerArmour.description      += $"\n{"NVResPowerAddition".Translate()}";
         }
+
         #endregion
+
+        public static void FindSettingsDependentFields()
+        {
+            FieldClearer.SettingsDependentFields = GenTypes.AllTypesWithAttribute<NVHasSettingsDependentFieldAttribute>().SelectMany(
+                t => AccessTools.GetDeclaredFields(t).FindAll(fi => fi.HasAttribute<NVSettingsDependentFieldAttribute>())
+            ).ToList();
+        }
     }
 }

@@ -1,4 +1,10 @@
-﻿using System;
+﻿// Nightvision NightVision SettingsCache.cs
+// 
+// 03 08 2018
+// 
+// 16 10 2018
+
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using RimWorld;
@@ -29,23 +35,23 @@ namespace NightVision
         {
             get
             {
-                if (SettingsCache._headgearCache == null || SettingsCache._headgearCache.Count == 0)
+                if (_headgearCache == null || _headgearCache.Count == 0)
                 {
-                    SettingsCache._headgearCache = new List<ThingDef>(Storage.AllEyeCoveringHeadgearDefs);
+                    _headgearCache = new List<ThingDef>(Storage.AllEyeCoveringHeadgearDefs);
 
                     foreach (ThingDef appareldef in Storage.NVApparel.Keys)
                     {
-                        int appindex = SettingsCache._headgearCache.IndexOf(appareldef);
+                        int appindex = _headgearCache.IndexOf(appareldef);
 
                         if (appindex > 0)
                         {
-                            SettingsCache._headgearCache.RemoveAt(appindex);
-                            SettingsCache._headgearCache.Insert(0, appareldef);
+                            _headgearCache.RemoveAt(appindex);
+                            _headgearCache.Insert(0, appareldef);
                         }
                     }
                 }
 
-                return SettingsCache._headgearCache;
+                return _headgearCache;
             }
         }
 
@@ -54,46 +60,46 @@ namespace NightVision
         {
             get
             {
-                if (SettingsCache._allHediffsCache == null || SettingsCache._allHediffsCache.Count == 0)
+                if (_allHediffsCache == null || _allHediffsCache.Count == 0)
                 {
-                    SettingsCache._allHediffsCache = new List<HediffDef>(Storage.AllSightAffectingHediffs);
+                    _allHediffsCache = new List<HediffDef>(Storage.AllSightAffectingHediffs);
 
                     foreach (HediffDef hediffdef in Storage.HediffLightMods.Keys)
                     {
-                        int appindex = SettingsCache._allHediffsCache.IndexOf(hediffdef);
+                        int appindex = _allHediffsCache.IndexOf(hediffdef);
 
                         if (appindex > 0)
                         {
-                            SettingsCache._allHediffsCache.RemoveAt(appindex);
-                            SettingsCache._allHediffsCache.Insert(0, hediffdef);
+                            _allHediffsCache.RemoveAt(appindex);
+                            _allHediffsCache.Insert(0, hediffdef);
                         }
                     }
                 }
 
-                return SettingsCache._allHediffsCache;
+                return _allHediffsCache;
             }
         }
 
         public static void Init()
         {
-            if (SettingsCache.CacheInited)
+            if (CacheInited)
             {
                 return;
             }
 
-            SettingsCache.MinCache    = (float) Math.Round(Storage.MultiplierCaps.min * 100);
-            SettingsCache.MaxCache    = (float) Math.Round(Storage.MultiplierCaps.max * 100);
-            SettingsCache.NVZeroCache = SettingsHelpers.ModToMultiPercent(LightModifiersBase.NVLightModifiers[0], true);
+            MinCache    = (float) Math.Round(Storage.MultiplierCaps.min * 100);
+            MaxCache    = (float) Math.Round(Storage.MultiplierCaps.max * 100);
+            NVZeroCache = SettingsHelpers.ModToMultiPercent(LightModifiersBase.NVLightModifiers[0], true);
 
-            SettingsCache.NVFullCache =
+            NVFullCache =
                         SettingsHelpers.ModToMultiPercent(LightModifiersBase.NVLightModifiers[1], false);
 
-            SettingsCache.PSZeroCache = SettingsHelpers.ModToMultiPercent(LightModifiersBase.PSLightModifiers[0], true);
+            PSZeroCache = SettingsHelpers.ModToMultiPercent(LightModifiersBase.PSLightModifiers[0], true);
 
-            SettingsCache.PSFullCache =
+            PSFullCache =
                         SettingsHelpers.ModToMultiPercent(LightModifiersBase.PSLightModifiers[1], false);
 
-            SettingsCache.CacheInited = true;
+            CacheInited = true;
         }
 
         /// <summary>
@@ -104,77 +110,75 @@ namespace NightVision
         public static void DoPreWriteTasks()
         {
             // this check is required because this method is run on opening the menu
-            if (SettingsCache.CacheInited)
+            if (CacheInited)
             {
-                Storage.MultiplierCaps.min = SettingsCache.MinCache != null && Storage.CustomCapsEnabled
-                            ? (float) Math.Round((float) SettingsCache.MinCache / 100, Constants.NumberOfDigits)
+                Storage.MultiplierCaps.min = MinCache != null && Storage.CustomCapsEnabled
+                            ? (float) Math.Round((float) MinCache / 100, CalcConstants.NumberOfDigits)
                             : Storage.MultiplierCaps.min;
 
-                Storage.MultiplierCaps.max = SettingsCache.MaxCache != null && Storage.CustomCapsEnabled
-                            ? (float) Math.Round((float) SettingsCache.MaxCache / 100, Constants.NumberOfDigits)
+                Storage.MultiplierCaps.max = MaxCache != null && Storage.CustomCapsEnabled
+                            ? (float) Math.Round((float) MaxCache / 100, CalcConstants.NumberOfDigits)
                             : Storage.MultiplierCaps.max;
 
                 LightModifiersBase.NVLightModifiers.Offsets = new[]
                                                               {
-                                                                  SettingsCache.NVZeroCache != null
+                                                                  NVZeroCache != null
                                                                               ? SettingsHelpers.MultiPercentToMod(
-                                                                                                                  (float
-                                                                                                                  ) SettingsCache
-                                                                                                                              .NVZeroCache,
-                                                                                                                  true
-                                                                                                                 )
+                                                                                  (float
+                                                                                  ) NVZeroCache,
+                                                                                  true
+                                                                              )
                                                                               : LightModifiersBase.NVLightModifiers[0],
-                                                                  SettingsCache.NVFullCache != null
+                                                                  NVFullCache != null
                                                                               ? SettingsHelpers.MultiPercentToMod(
-                                                                                                                  (float
-                                                                                                                  ) SettingsCache
-                                                                                                                              .NVFullCache,
-                                                                                                                  false
-                                                                                                                 )
+                                                                                  (float
+                                                                                  ) NVFullCache,
+                                                                                  false
+                                                                              )
                                                                               : LightModifiersBase.NVLightModifiers[1]
                                                               };
 
                 LightModifiersBase.PSLightModifiers.Offsets = new[]
                                                               {
-                                                                  SettingsCache.PSZeroCache != null
+                                                                  PSZeroCache != null
                                                                               ? SettingsHelpers.MultiPercentToMod(
-                                                                                                                  (float
-                                                                                                                  ) SettingsCache
-                                                                                                                              .PSZeroCache,
-                                                                                                                  true
-                                                                                                                 )
+                                                                                  (float
+                                                                                  ) PSZeroCache,
+                                                                                  true
+                                                                              )
                                                                               : LightModifiersBase.PSLightModifiers[0],
-                                                                  SettingsCache.PSFullCache != null
+                                                                  PSFullCache != null
                                                                               ? SettingsHelpers.MultiPercentToMod(
-                                                                                                                  (float
-                                                                                                                  ) SettingsCache
-                                                                                                                              .PSFullCache,
-                                                                                                                  false
-                                                                                                                 )
+                                                                                  (float
+                                                                                  ) PSFullCache,
+                                                                                  false
+                                                                              )
                                                                               : LightModifiersBase.PSLightModifiers[1]
                                                               };
 
                 Classifier.ZeroLightTurningPoints = null;
                 Classifier.FullLightTurningPoint  = null;
 
-                SettingsCache.MinCache    = null;
-                SettingsCache.MaxCache    = null;
-                SettingsCache.NVZeroCache = null;
-                SettingsCache.NVFullCache = null;
-                SettingsCache.PSZeroCache = null;
-                SettingsCache.PSFullCache = null;
+                MinCache    = null;
+                MaxCache    = null;
+                NVZeroCache = null;
+                NVFullCache = null;
+                PSZeroCache = null;
+                PSFullCache = null;
             }
 
-            SettingsCache.CacheInited = false;
-            SettingsCache._allHediffsCache?.Clear();
-            SettingsCache._headgearCache?.Clear();
+            CacheInited = false;
+            _allHediffsCache?.Clear();
+            _headgearCache?.Clear();
 
             SettingsHelpers.TipStringHolder.Clear();
-            DrawSettings.Clear();
+            Settings.ClearDrawVariables();
+
+            FieldClearer.ResetSettingsDependentFields();
 
             if (Current.ProgramState == ProgramState.Playing)
             {
-                SettingsCache.SetDirtyAllComps();
+                SetDirtyAllComps();
             }
         }
 

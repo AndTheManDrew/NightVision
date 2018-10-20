@@ -1,8 +1,8 @@
 ﻿// Nightvision NightVision Race_LightModifiers.cs
 // 
-// 14 06 2018
+// 03 08 2018
 // 
-// 21 07 2018
+// 16 10 2018
 
 using System;
 using System.Linq;
@@ -15,9 +15,11 @@ namespace NightVision
 {
     public class Race_LightModifiers : LightModifiersBase
     {
-        internal VisionType IntSetting = VisionType.NVNone;
+        #region Fields
 
-        internal bool    ShouldShowInSettings = true;
+        public VisionType IntSetting = VisionType.NVNone;
+
+        public bool    ShouldShowInSettings = true;
         private  float[] _defaultOffsets;
 
         private int _eyeCount;
@@ -27,60 +29,38 @@ namespace NightVision
 
         private ThingDef _parentDef;
 
+        #endregion
 
-        [UsedImplicitly]
-        public Race_LightModifiers(
-                    )
-        {
-        }
-
-        public Race_LightModifiers(
-                        ThingDef raceDef
-                    )
-        {
-            _parentDef = raceDef;
-            CountEyes();
-            AttachCompProps();
-        }
+        #region  Properties & Indexers
 
         /// <summary>
         ///     Returns normalised modifiers
         /// </summary>
         /// <param name="index">0: 0% light, 1: 100% light</param>
         /// <returns>modifers divided by number of eyes</returns>
-        public override float this[
-                        int index
-                    ]
+        public override float this[int index]
         {
             get
             {
                 switch (IntSetting)
                 {
                     default:                            return 0f;
-                    case VisionType.NVNightVision:      return LightModifiersBase.NVLightModifiers[index] / _eyeCount;
-                    case VisionType.NVPhotosensitivity: return LightModifiersBase.PSLightModifiers[index] / _eyeCount;
-                    case VisionType.NVCustom:           return Offsets[index]                             / _eyeCount;
+                    case VisionType.NVNightVision:      return NVLightModifiers[index] / _eyeCount;
+                    case VisionType.NVPhotosensitivity: return PSLightModifiers[index] / _eyeCount;
+                    case VisionType.NVCustom:           return Offsets[index]          / _eyeCount;
                 }
             }
             set
                 => Offsets[index] = (float) Math.Round(
-                                                       Mathf.Clamp(
-                                                                   value,
-                                                                   -0.99f + 0.2f * (1 - index),
-                                                                   +1f    + 0.2f * (1 - index)
-                                                                  ),
-                                                       2,
-                                                       Constants.Rounding
-                                                      );
+                    Mathf.Clamp(
+                        value,
+                        -0.99f + 0.2f * (1 - index),
+                        +1f    + 0.2f * (1 - index)
+                    ),
+                    2,
+                    CalcConstants.Rounding
+                );
         }
-
-        internal override VisionType Setting
-        {
-            get => IntSetting;
-            set => IntSetting = value;
-        }
-
-        public override Def ParentDef => _parentDef;
 
         public bool CanCheat => _nvCompProps?.CanCheat ?? false;
 
@@ -90,27 +70,81 @@ namespace NightVision
             {
                 if (_defaultOffsets == null)
                 {
-                    switch (Race_LightModifiers.GetSetting(_nvCompProps))
+                    switch (GetSetting(_nvCompProps))
                     {
-                        default:                       return new float[2];
-                        case VisionType.NVNightVision: return LightModifiersBase.NVLightModifiers.Offsets.ToArray();
-                        case VisionType.NVPhotosensitivity:
-
-                            return LightModifiersBase.PSLightModifiers.Offsets.ToArray();
+                        default:                            return new float[2];
+                        case VisionType.NVNightVision:      return NVLightModifiers.Offsets.ToArray();
+                        case VisionType.NVPhotosensitivity: return PSLightModifiers.Offsets.ToArray();
                         case VisionType.NVCustom:
 
                             return new[]
                                    {
                                        _nvCompProps.ZeroLightMultiplier
-                                       - Constants.DefaultZeroLightMultiplier,
+                                       - CalcConstants.DefaultZeroLightMultiplier,
                                        _nvCompProps.FullLightMultiplier
-                                       - Constants.DefaultFullLightMultiplier
+                                       - CalcConstants.DefaultFullLightMultiplier
                                    };
                     }
                 }
 
                 return _defaultOffsets;
             }
+        }
+
+        public override Def ParentDef => _parentDef;
+
+        public override VisionType Setting
+        {
+            get => IntSetting;
+            set => IntSetting = value;
+        }
+
+        #endregion
+
+        #region  Constructors
+
+        [UsedImplicitly]
+        public Race_LightModifiers() { }
+
+        public Race_LightModifiers(ThingDef raceDef)
+        {
+            _parentDef = raceDef;
+            CountEyes();
+            AttachCompProps();
+        }
+
+        #endregion
+
+        #region  Members
+
+        public static VisionType GetSetting(Race_LightModifiers modifiers)
+        {
+            return GetSetting(modifiers._nvCompProps);
+        }
+
+        private static VisionType GetSetting(CompProperties_NightVision compprops)
+        {
+            if (compprops == null)
+            {
+                return VisionType.NVNone;
+            }
+
+            if (compprops.NaturalNightVision)
+            {
+                return VisionType.NVNightVision;
+            }
+
+            if (compprops.NaturalPhotosensitivity)
+            {
+                return VisionType.NVPhotosensitivity;
+            }
+
+            if (compprops.IsDefault())
+            {
+                return VisionType.NVNone;
+            }
+
+            return VisionType.NVCustom;
         }
 
         public override void ExposeData()
@@ -152,24 +186,19 @@ namespace NightVision
                 case VisionType.NVCustom:
 
                     return !(Math.Abs(
-                                      _nvCompProps.FullLightMultiplier
-                                      - Constants.DefaultFullLightMultiplier
-                                      - Offsets[1]
-                                     )
-                             < 0.001f)
+                                 _nvCompProps.FullLightMultiplier
+                                 - CalcConstants.DefaultFullLightMultiplier
+                                 - Offsets[1]
+                             )
+                             < CalcConstants.NVEpsilon)
                            || !(Math.Abs(
-                                         _nvCompProps.ZeroLightMultiplier
-                                         - Constants.DefaultZeroLightMultiplier
-                                         - Offsets[0]
-                                        )
-                                < 0.001f);
+                                    _nvCompProps.ZeroLightMultiplier
+                                    - CalcConstants.DefaultZeroLightMultiplier
+                                    - Offsets[0]
+                                )
+                                < CalcConstants.NVEpsilon);
             }
         }
-
-        public static VisionType GetSetting(
-                        Race_LightModifiers modifiers
-                    )
-            => Race_LightModifiers.GetSetting(modifiers._nvCompProps);
 
         private void AttachCompProps()
         {
@@ -184,13 +213,9 @@ namespace NightVision
                     return;
                 }
 
-                IntSetting = Race_LightModifiers.GetSetting(_nvCompProps);
+                IntSetting = GetSetting(_nvCompProps);
 
-                Offsets = new[]
-                          {
-                              _nvCompProps.ZeroLightMultiplier - Constants.DefaultZeroLightMultiplier,
-                              _nvCompProps.FullLightMultiplier - Constants.DefaultFullLightMultiplier
-                          };
+                Offsets = new[] {_nvCompProps.ZeroLightMultiplier - CalcConstants.DefaultZeroLightMultiplier, _nvCompProps.FullLightMultiplier - CalcConstants.DefaultFullLightMultiplier};
 
                 Initialised = true;
             }
@@ -205,35 +230,10 @@ namespace NightVision
         private void CountEyes()
         {
             _eyeCount = _parentDef.race.body.AllParts
-                                  .FindAll(bpr => bpr.def.tags.Contains(BodyPartTagDefOf.SightSource))
-                                  .Count;
+                        .FindAll(bpr => bpr.def.tags.Contains(RwDefs.EyeTag))
+                        .Count;
         }
 
-        private static VisionType GetSetting(
-                        CompProperties_NightVision compprops
-                    )
-        {
-            if (compprops == null)
-            {
-                return VisionType.NVNone;
-            }
-
-            if (compprops.NaturalNightVision)
-            {
-                return VisionType.NVNightVision;
-            }
-
-            if (compprops.NaturalPhotosensitivity)
-            {
-                return VisionType.NVPhotosensitivity;
-            }
-
-            if (compprops.IsDefault())
-            {
-                return VisionType.NVNone;
-            }
-
-            return VisionType.NVCustom;
-        }
+        #endregion
     }
 }

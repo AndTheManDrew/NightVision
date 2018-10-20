@@ -28,7 +28,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>C:\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\Nightvision\Assemblies\</OutputPath>
+    <OutputPath>..\..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\Nightvision_Dev\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -64,34 +64,74 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Caravan\CaravanPatches.cs" />
+    <Compile Include="Combat\CurrentShot.cs" />
+    <Compile Include="Combat\CurrentStrike.cs" />
     <Compile Include="Comps\CompProperties_NightVisionApparel.cs" />
     <Compile Include="Comps\HediffCompProperties_NightVision.cs" />
-    <None Include="PatchesForCE.cs" />
-    <Compile Include="Comps\StatReportFor_NightVision.cs" />
-    <Compile Include="Testing\GameCondition_Darkness.cs" />
-    <Compile Include="Testing\PawnGeneratorNV.cs" />
+    <Compile Include="Harmony\ApparelTracker_Remove.cs" />
+    <Compile Include="Harmony\ApparelTracker_Wear.cs" />
+    <Compile Include="Harmony\AttackTargetFinder_BestAttackTarget.cs" />
+    <Compile Include="Harmony\CastPositionFinder_CastPositionPreference.cs" />
+    <Compile Include="Harmony\HediffDef_SpecialDisplayStats.cs" />
+    <Compile Include="Harmony\HediffWithComps_PostAdd.cs" />
+    <Compile Include="Harmony\Hediff_PostAdd.cs" />
+    <Compile Include="Harmony\Manual\ApparelTracker_TryDrop.cs" />
+    <Compile Include="Harmony\ShotReport_HitReportFor.cs" />
+    <Compile Include="Harmony\StatPartGlow_ExplanationPart.cs" />
+    <Compile Include="Harmony\StatPartGlow_FactorFromGlow.cs" />
+    <Compile Include="Harmony\VerbMeleeAttack_GetDodgeChance.cs" />
+    <Compile Include="Harmony\VerbMeleeAttack_GetNonMissChance.cs" />
+    <Compile Include="Incidents\SolarRaidGroupMaker.cs" />
+    <Compile Include="Harmony\PawnRecentMemory_RecentMemoryInterval.cs" />
+    <Compile Include="Stats\StatReportFor_NightVision.cs" />
+    <Compile Include="Harmony\Hediff_PostRemoved.cs" />
+    <Compile Include="Harmony\ApparelTracker_TakeWearoutDamage.cs" />
+    <Compile Include="Harmony\Manual\PawnHealthTracker_AddHediff.cs" />
+    <Compile Include="Harmony\Pawn_BodySize.cs" />
+    <Compile Include="Testing\DebugFlareRaidPawnGen.cs" />
+    <Compile Include="Testing\DebugFlareRaidPawnGenXml.cs" />
+    <Compile Include="Incidents\SolarRaid_StoryWorker.cs" />
+    <Compile Include="Incidents\SolarRaid_IncidentWorker.cs" />
+    <Compile Include="Incidents\NVGameComponent.cs" />
+    <Compile Include="Testing\pawnGenTrialSchema.cs">
+      <DependentUpon>pawnGenTrialSchema.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Incidents\SolarRaid_PawnGenerator.cs" />
+    <Compile Include="Settings\ApparelTab.cs" />
+    <Compile Include="Settings\DebugTab.cs" />
+    <Compile Include="Settings\GeneralTab.cs" />
+    <Compile Include="Settings\HediffTab.cs" />
+    <Compile Include="Settings\RaceTab.cs" />
+    <Compile Include="Static variables\CalcConstants.cs" />
+    <Compile Include="Static variables\DrawConst.cs" />
+    <Compile Include="Harmony\StatPartGlow_ActiveFor.cs" />
     <Compile Include="Combat\CombatHelpers.cs" />
-    <Compile Include="Combat\ShotReportPatches.cs" />
-    <Compile Include="Combat\TooltipUtilityPatch.cs" />
-    <Compile Include="Combat\VerbProperties_Patch.cs" />
-    <Compile Include="Combat\Verb_MeleeAttack_Patches.cs" />
-    <Compile Include="Settings\DrawSettings.cs" />
+    <Compile Include="Harmony\ShotReport_AimOnTarget_Standard.cs" />
+    <Compile Include="Harmony\TooltipUtility_ShotCalculationTipString.cs" />
+    <Compile Include="Harmony\VerbProperties_Patch.cs" />
     <Compile Include="Settings\SettingsHelpers.cs" />
     <Compile Include="Settings\SettingsCache.cs" />
-    <Compile Include="Static variables\Constants.cs" />
+    <Compile Include="Static variables\RwDefs.cs" />
     <Compile Include="Static variables\Str.cs" />
     <Compile Include="Static variables\VisionType.cs" />
     <Compile Include="Data Classes\ISaveCheck.cs" />
     <Compile Include="Settings\Tabs.cs" />
-    <Compile Include="Static variables\RecipeDef_ExtractTapetumLucidum.cs" />
     <Compile Include="Settings\Storage.cs" />
     <Compile Include="Data Classes\Hediff_LightModifiers.cs" />
     <Compile Include="Static variables\IndicatorTex.cs" />
     <Compile Include="Data Classes\LightModifiersBase.cs" />
-    <Compile Include="Static variables\NightVisionStatDefOf.cs" />
+    <Compile Include="Static variables\NVDefOf.cs" />
     <Compile Include="Data Classes\Race_LightModifiers.cs" />
-    <Compile Include="Workers\Recipe_ExtractTapetum.cs" />
+    <Compile Include="Harmony\ThoughtWorkerDark_CurrentStateInternal.cs" />
+    <Compile Include="Utilities\ApparelGenUtility.cs" />
+    <Compile Include="Utilities\FloatExtensions.cs" />
+    <Compile Include="Utilities\FieldClearer.cs" />
+    <Compile Include="Utilities\GlowFor.cs" />
+    <Compile Include="Utilities\NullOrBool.cs" />
+    <Compile Include="Utilities\NVAttributes.cs" />
+    <Compile Include="Utilities\PawnGenUtility.cs" />
+    <Compile Include="Stats\NVStatWorker_RangedCooldown.cs" />
+    <Compile Include="Misc Workers\ExtractTapetum_RecipeWorker.cs" />
     <Compile Include="Data Classes\ApparelVisionSetting.cs" />
     <Compile Include="Comps\HediffComp_NightVision.cs" />
     <Compile Include="Comps\Comp_NightVision.cs" />
@@ -103,13 +143,18 @@
     <Compile Include="Properties\NightVision.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\Scribes.cs" />
-    <Compile Include="Workers\StatWorker_NightVisionBase.cs" />
-    <Compile Include="Workers\StatWorker_LightSensitivity.cs" />
-    <Compile Include="Workers\StatWorker_NightVision.cs" />
+    <Compile Include="Stats\NVStatWorker.cs" />
+    <Compile Include="Stats\NVStatWorker_LightSensitivity.cs" />
+    <Compile Include="Stats\NVStatWorker_NightVision.cs" />
     <Compile Include="Data Classes\Stealth_ModExtension.cs" />
     <Compile Include="Utilities\AutoQualifier.cs" />
     <Compile Include="Utilities\Classifier.cs" />
-    <Compile Include="Workers\ThoughtWorker_TooBright.cs" />
+    <Compile Include="Misc Workers\ThoughtWorker_TooBright.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Testing\pawnGenTrialSchema.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

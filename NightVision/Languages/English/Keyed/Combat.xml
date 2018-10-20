@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  
+  <NightVisionCombat>Combat Effects in {0}:</NightVisionCombat>
+
+
+  <NightVisionShootTargetAtGlow>Ranged hit % vs target in {0} light:</NightVisionShootTargetAtGlow>
+  <NightVisionHitChanceTransform>    At distance {0} to hit ==>{1}</NightVisionHitChanceTransform>
+  
+  <NightVisionStrikeChanceTransform>    {0} ==> {1}</NightVisionStrikeChanceTransform>
+
+  <NightVisionStrikeTargetAtGlow>Melee hit % vs target in {0} light:</NightVisionStrikeTargetAtGlow>
+
+  <NightVisionSurpriseAtkDesc>A surprise attack (s.Atk) never misses.</NightVisionSurpriseAtkDesc>
+  <NightVisionSurpriseAtkChance>    Melee s.Atk % at {0} lit = 0.5 x (Atk's {1} - target's).</NightVisionSurpriseAtkChance>
+  <NightVisionSurpriseAtkDemo>    Atk ({0} {1}) vs target ({2} lit &amp; {3} {1}):  {4} s.Atk %</NightVisionSurpriseAtkDemo>
+  <NightVisionSurpriseAtkDemoExt>    If target {0} {1}:  {2} s.Atk %</NightVisionSurpriseAtkDemoExt>
+
+  <NightVisionDodge>Melee dodge % depends on (attacker's {0} - target's):</NightVisionDodge>
+  <NightVisionDodgeDemo>Attacker ({3} {2}) vs this char ({1} {2}). \n {0} ==> {4}</NightVisionDodgeDemo>
+
+  <NightVisionAimFactorFromLight>target {0} lit  x{1}</NightVisionAimFactorFromLight>
+
+  <NightVisionRangedCooldown>Currently ({0} lit, shooting skill {1}): {2}</NightVisionRangedCooldown>
+  <NightVisionRangedCooldownDemo>    At {0} light: {1}</NightVisionRangedCooldownDemo>
+</LanguageData>

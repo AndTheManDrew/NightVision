@@ -4,8 +4,8 @@
   <!--- Just for display -->
   <StatDef>
     <defName>NightVision</defName>
-    <workerClass>NightVision.StatWorker_NightVision</workerClass>
-    <label>darkness multiplier</label>
+    <workerClass>NightVision.NVStatWorker_NightVision</workerClass>
+    <label>night vision</label>
     <description>The work speed and move speed multipliers in darkness ( &lt; 30% light ).
       Reaches the peak value listed here at 0% light.</description>
     <category>BasicsPawn</category>
@@ -20,18 +20,31 @@
 
   <StatDef>
     <defName>LightSensitivity</defName>
-    <workerClass>NightVision.StatWorker_LightSensitivity</workerClass>
-    <label>bright light multiplier</label>
+    <workerClass>NightVision.NVStatWorker_LightSensitivity</workerClass>
+    <label>photosensitivity</label>
     <description>The work speed and move speed multipliers in bright light ( &gt; 70% light ).
       Reaches the peak value listed here at 100% light.</description>
     <category>BasicsPawn</category>
     <defaultBaseValue>1</defaultBaseValue>
     <minValue>0.01</minValue>
     <toStringStyle>PercentOne</toStringStyle>
-    <formatString>x{0:0.0%}</formatString>
+    <formatString>x{0:0%}</formatString>
     <showOnAnimals>false</showOnAnimals>
-    <showOnMechanoids>false</showOnMechanoids>
     <displayPriorityInCategory>10</displayPriorityInCategory>
+  </StatDef>
+
+  <StatDef>
+    <defName>NVRangedCooldown</defName>
+    <workerClass>NightVision.NVStatWorker_RangedCooldown</workerClass>
+    <label>ranged cooldown</label>
+    <description>The ranged cooldown multiplier due to light. Affected by shooting skill.</description>
+    <category>PawnCombat</category>
+    <defaultBaseValue>1</defaultBaseValue>
+    <minValue>0.01</minValue>
+    <toStringStyle>PercentOne</toStringStyle>
+    <formatString>x{0:0%}</formatString>
+    <showOnAnimals>false</showOnAnimals>
+    <displayPriorityInCategory>100</displayPriorityInCategory>
   </StatDef>
 
 </Defs>

@@ -5,7 +5,7 @@
     <defName>ExtractTapetumLucidum</defName>
     <label>extract tapetum lucidum</label>
     <description>Extract the tapetum lucidum; an organ that lies behind the eye and is responsible for night vision.</description>
-    <workerClass>NightVision.Recipe_ExtractTapetum</workerClass>
+    <workerClass>NightVision.ExtractTapetum_RecipeWorker</workerClass>
     <jobString>Extracting tapetum lucidum.</jobString>
     <workAmount>2500</workAmount>
     <skillRequirements>

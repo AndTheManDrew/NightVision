@@ -1,8 +1,8 @@
 ﻿// Nightvision NightVision Settings.cs
 // 
-// 21 07 2018
+// 03 08 2018
 // 
-// 21 07 2018
+// 16 10 2018
 
 using System.Collections.Generic;
 using JetBrains.Annotations;
@@ -14,7 +14,7 @@ namespace NightVision
     public class Settings : ModSettings
     {
         private static Tab  _tab;
-        public static bool CEDetected = false;
+        public static  bool CEDetected = false;
 
 
         [UsedImplicitly]
@@ -23,7 +23,10 @@ namespace NightVision
         private static readonly List<TabRecord> TabsList = new List<TabRecord>();
 
         [UsedImplicitly]
-        public Settings() => Settings.Instance = this;
+        public Settings()
+        {
+            Instance = this;
+        }
 
 
         public override void ExposeData()
@@ -32,75 +35,73 @@ namespace NightVision
             Storage.ExposeSettings();
         }
 
-        public static void DoSettingsWindowContents(
-                        Rect inRect
-                    )
+        public static void DoSettingsWindowContents(Rect inRect)
         {
-            Settings.TabsList.Clear();
+            TabsList.Clear();
 
-            Settings.TabsList.Add(
-                                  new TabRecord(
-                                                "NVGeneralTab".Translate(),
-                                                delegate
-                                                {
-                                                    Settings._tab = Tab.General;
-                                                },
-                                                Settings._tab == Tab.General
-                                               )
-                                 );
+            TabsList.Add(
+                new TabRecord(
+                    "NVGeneralTab".Translate(),
+                    delegate
+                    {
+                        _tab = Tab.General;
+                    },
+                    _tab == Tab.General
+                )
+            );
 
-            Settings.TabsList.Add(
-                                  new TabRecord(
-                                                "NVRaces".Translate(),
-                                                delegate
-                                                {
-                                                    Settings._tab = Tab.Races;
-                                                },
-                                                Settings._tab == Tab.Races
-                                               )
-                                 );
+            TabsList.Add(
+                new TabRecord(
+                    "NVRaces".Translate(),
+                    delegate
+                    {
+                        _tab = Tab.Races;
+                    },
+                    _tab == Tab.Races
+                )
+            );
 
-            Settings.TabsList.Add(
-                                  new TabRecord(
-                                                "NVApparel".Translate(),
-                                                delegate
-                                                {
-                                                    Settings._tab = Tab.Apparel;
-                                                },
-                                                Settings._tab == Tab.Apparel
-                                               )
-                                 );
+            TabsList.Add(
+                new TabRecord(
+                    "NVApparel".Translate(),
+                    delegate
+                    {
+                        _tab = Tab.Apparel;
+                    },
+                    _tab == Tab.Apparel
+                )
+            );
 
-            Settings.TabsList.Add(
-                                  new TabRecord(
-                                                "NVHediffs".Translate(),
-                                                delegate
-                                                {
-                                                    Settings._tab = Tab.Bionics;
-                                                },
-                                                Settings._tab == Tab.Bionics
-                                               )
-                                 );
+            TabsList.Add(
+                new TabRecord(
+                    "NVHediffs".Translate(),
+                    delegate
+                    {
+                        _tab = Tab.Bionics;
+                    },
+                    _tab == Tab.Bionics
+                )
+            );
 
             if (Prefs.DevMode)
             {
-                Settings.TabsList.Add(
-                                      new TabRecord(
-                                                    "NVDebugTab".Translate(),
-                                                    delegate
-                                                    {
-                                                        Settings._tab = Tab.Debug;
-                                                    },
-                                                    Settings._tab == Tab.Debug
-                                                   )
-                                     );
+                TabsList.Add(
+                    new TabRecord(
+                        "NVDebugTab".Translate(),
+                        delegate
+                        {
+                            _tab = Tab.Debug;
+                        },
+                        _tab == Tab.Debug
+                    )
+                );
             }
 
             SettingsCache.Init();
 
             inRect.yMin += 32f;
             Widgets.DrawMenuSection(inRect);
-            TabDrawer.DrawTabs(inRect, Settings.TabsList, 1);
+            TabDrawer.DrawTabs(inRect, TabsList, 1);
 
             inRect = inRect.ContractedBy(17f);
             GUI.BeginGroup(inRect);
@@ -109,26 +110,26 @@ namespace NightVision
             Text.Font   = GameFont.Small;
             Text.Anchor = TextAnchor.MiddleCenter;
 
-            switch (Settings._tab)
+            switch (_tab)
             {
                 default:
-                    DrawSettings.GeneralTab(inRect);
+                    GeneralTab.DrawTab(inRect);
 
                     break;
                 case Tab.Races:
-                    DrawSettings.RaceTab(inRect);
+                    RaceTab.DrawTab(inRect);
 
                     break;
                 case Tab.Apparel:
-                    DrawSettings.ApparelTab(inRect);
+                    ApparelTab.DrawTab(inRect);
 
                     break;
                 case Tab.Bionics:
-                    DrawSettings.HediffTab(inRect);
+                    HediffTab.DrawTab(inRect);
 
                     break;
                 case Tab.Debug:
-                    DrawSettings.DebugTab(inRect);
+                    DebugTab.DrawTab(inRect);
 
                     break;
             }
@@ -136,6 +137,14 @@ namespace NightVision
             Text.Font   = font;
             Text.Anchor = anchor;
             GUI.EndGroup();
+        }
+
+        public static void ClearDrawVariables()
+        {
+            DebugTab.Clear();
+            ApparelTab.Clear();
+            RaceTab.Clear();
+            GeneralTab.Clear();
         }
     }
 }

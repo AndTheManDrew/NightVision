@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <MapGeneratorDef>
+    <defName>NVTestMap_most</defName>
+    <genSteps>
+      <li>ElevationFertility</li>
+      <li>Caves</li>
+      <li>Terrain</li>
+      <li>CavesTerrain</li>
+      <li>ScenParts</li>
+      <li>Fog</li>
+    </genSteps>
+  </MapGeneratorDef>
+
+    <MapGeneratorDef>
+    <defName>NVTestMap_noRocknorRuinnorRoad</defName>
+    <genSteps>
+      <li>ElevationFertility</li>
+      <li>Caves</li>
+      <li>Terrain</li>
+      <li>CavesTerrain</li>
+
+      <li>SteamGeysers</li>
+      <li>FindPlayerStartSpot</li>
+      <li>ScenParts</li>
+      <li>Fog</li>
+    </genSteps>
+  </MapGeneratorDef>
+
+  <GameConditionDef>
+    <defName>Darkness</defName>
+    <conditionClass>NightVision.GameCondition_Darkness</conditionClass>
+    <label>Darkness</label>
+    <description>Dark.</description>
+    <endMessage>Light.</endMessage>
+    <canBePermanent>true</canBePermanent>
+  </GameConditionDef>
+
+  <CustomFactionBase.CustomFactionBaseDef>
+    <defName>NV_Test</defName>
+    <faction>A</faction>
+    <baseBuildings>
+      <li>
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww,
+w a     w a     w a     w a     w a     w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w     b w     b w     b w     b w     b w,
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww,
+w a     w a     w a     w a     w a     w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w     b w     b w     b w     b w     b w,
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww,
+w a     w a     w a     w a     w a     w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w     b w     b w     b w     b w     b w,
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww,
+w a     w a     w a     w a     w a     w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w     b w     b w     b w     b w     b w,
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww,
+w a     w a     w a     w a     w a     w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w       w       w       w       w       w,
+w     b w     b w     b w     b w     b w,
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww,
+      </li>
+    </baseBuildings>
+    <extendedSubstitutes>
+      <li>
+        <symbol>w</symbol>
+        <building>Wall</building>
+        <stuff>Steel</stuff>
+      </li>
+      <li>
+        <symbol>a</symbol>
+        <building>Cloth</building>
+      </li>
+      <li>
+        <symbol>b</symbol>
+        <building>Silver</building>
+      </li>
+    </extendedSubstitutes>
+  </CustomFactionBase.CustomFactionBaseDef>
+</Defs>

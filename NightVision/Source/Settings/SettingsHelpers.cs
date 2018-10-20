@@ -1,3 +1,9 @@
+// Nightvision NightVision SettingsHelpers.cs
+// 
+// 03 08 2018
+// 
+// 16 10 2018
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,47 +11,51 @@ using Verse;
 
 namespace NightVision
 {
-    internal static class SettingsHelpers
+    public static class SettingsHelpers
     {
         private static Dictionary<Def, string> _tipStringHolder;
 
         public static Dictionary<Def, string> TipStringHolder
         {
             get
-                => SettingsHelpers._tipStringHolder
-                   ?? (SettingsHelpers._tipStringHolder = new Dictionary<Def, string>());
-            set => SettingsHelpers._tipStringHolder = value;
+                => _tipStringHolder
+                   ?? (_tipStringHolder = new Dictionary<Def, string>());
+            set => _tipStringHolder = value;
         }
 
         public static float ModToMultiPercent(
-                        float mod,
-                        bool  isZeroLight
-                    )
-            => (float) Math.Round(
-                                  100f
-                                  * (mod
-                                     + (isZeroLight
-                                                 ? Constants.DefaultZeroLightMultiplier
-                                                 : Constants.DefaultFullLightMultiplier))
-                                 );
+            float mod,
+            bool  isZeroLight
+        )
+        {
+            return (float) Math.Round(
+                100f
+                * (mod
+                   + (isZeroLight
+                               ? CalcConstants.DefaultZeroLightMultiplier
+                               : CalcConstants.DefaultFullLightMultiplier))
+            );
+        }
 
         public static float MultiPercentToMod(
-                        float multipercent,
-                        bool  isZeroLight
-                    )
-            => (float) Math.Round(multipercent / 100f, Constants.NumberOfDigits)
-               - (isZeroLight
-                           ? Constants.DefaultZeroLightMultiplier
-                           : Constants.DefaultFullLightMultiplier);
+            float multipercent,
+            bool  isZeroLight
+        )
+        {
+            return (float) Math.Round(multipercent / 100f, CalcConstants.NumberOfDigits)
+                   - (isZeroLight
+                               ? CalcConstants.DefaultZeroLightMultiplier
+                               : CalcConstants.DefaultFullLightMultiplier);
+        }
 
         public static void DrawIndicator(
-                        Rect      rowRect,
-                        float     baseVal,
-                        float     modVal,
-                        float     min,
-                        float     max,
-                        Texture2D indicator
-                    )
+            Rect      rowRect,
+            float     baseVal,
+            float     modVal,
+            float     min,
+            float     max,
+            Texture2D indicator
+        )
         {
             float posOfDefault = rowRect.x
                                  + 6f
@@ -54,94 +64,94 @@ namespace NightVision
                                  / (max - min);
 
             rowRect.position = new Vector2(
-                                           posOfDefault - 0.5f           * Constants.IndicatorSize,
-                                           rowRect.y    + rowRect.height * 0.95f
-                                          );
+                posOfDefault - 0.5f           * DrawConst.IndicatorSize,
+                rowRect.y    + rowRect.height * 0.95f
+            );
 
-            rowRect.width  = Constants.IndicatorSize;
-            rowRect.height = Constants.IndicatorSize;
+            rowRect.width  = DrawConst.IndicatorSize;
+            rowRect.height = DrawConst.IndicatorSize;
             Widgets.DrawTextureFitted(rowRect, indicator, 1);
         }
 
         private static void DrawIndicators(
-                        Rect               zeroRect,
-                        Rect               fullRect,
-                        LightModifiersBase lightModifiers,
-                        float              minZero,
-                        float              maxZero,
-                        float              minFull,
-                        float              maxFull
-                    )
+            Rect               zeroRect,
+            Rect               fullRect,
+            LightModifiersBase lightModifiers,
+            float              minZero,
+            float              maxZero,
+            float              minFull,
+            float              maxFull
+        )
         {
             //int eyeCount = lightModifiers is Race_LightModifiers rlm ? rlm.EyeCount : 1; 
             //Draw indicators on zero light rect
-            SettingsHelpers.DrawIndicator(
-                                          zeroRect,
-                                          Constants.DefaultZeroLightMultiplier,
-                                          LightModifiersBase.PSLightModifiers[0],
-                                          minZero,
-                                          maxZero,
-                                          IndicatorTex.PsIndicator
-                                         );
+            DrawIndicator(
+                zeroRect,
+                CalcConstants.DefaultZeroLightMultiplier,
+                LightModifiersBase.PSLightModifiers[0],
+                minZero,
+                maxZero,
+                IndicatorTex.PsIndicator
+            );
 
-            SettingsHelpers.DrawIndicator(
-                                          zeroRect,
-                                          Constants.DefaultZeroLightMultiplier,
-                                          LightModifiersBase.NVLightModifiers[0],
-                                          minZero,
-                                          maxZero,
-                                          IndicatorTex.NvIndicator
-                                         );
+            DrawIndicator(
+                zeroRect,
+                CalcConstants.DefaultZeroLightMultiplier,
+                LightModifiersBase.NVLightModifiers[0],
+                minZero,
+                maxZero,
+                IndicatorTex.NvIndicator
+            );
 
-            SettingsHelpers.DrawIndicator(
-                                          zeroRect,
-                                          Constants.DefaultZeroLightMultiplier,
-                                          lightModifiers.DefaultOffsets[0],
-                                          minZero,
-                                          maxZero,
-                                          IndicatorTex.DefIndicator
-                                         );
+            DrawIndicator(
+                zeroRect,
+                CalcConstants.DefaultZeroLightMultiplier,
+                lightModifiers.DefaultOffsets[0],
+                minZero,
+                maxZero,
+                IndicatorTex.DefIndicator
+            );
 
             //Draw indicators on full light rect
-            SettingsHelpers.DrawIndicator(
-                                          fullRect,
-                                          Constants.DefaultFullLightMultiplier,
-                                          LightModifiersBase.PSLightModifiers[1],
-                                          minFull,
-                                          maxFull,
-                                          IndicatorTex.PsIndicator
-                                         );
+            DrawIndicator(
+                fullRect,
+                CalcConstants.DefaultFullLightMultiplier,
+                LightModifiersBase.PSLightModifiers[1],
+                minFull,
+                maxFull,
+                IndicatorTex.PsIndicator
+            );
 
-            SettingsHelpers.DrawIndicator(
-                                          fullRect,
-                                          Constants.DefaultFullLightMultiplier,
-                                          LightModifiersBase.NVLightModifiers[1],
-                                          minFull,
-                                          maxFull,
-                                          IndicatorTex.NvIndicator
-                                         );
+            DrawIndicator(
+                fullRect,
+                CalcConstants.DefaultFullLightMultiplier,
+                LightModifiersBase.NVLightModifiers[1],
+                minFull,
+                maxFull,
+                IndicatorTex.NvIndicator
+            );
 
-            SettingsHelpers.DrawIndicator(
-                                          fullRect,
-                                          Constants.DefaultFullLightMultiplier,
-                                          lightModifiers.DefaultOffsets[1],
-                                          minFull,
-                                          maxFull,
-                                          IndicatorTex.DefIndicator
-                                         );
+            DrawIndicator(
+                fullRect,
+                CalcConstants.DefaultFullLightMultiplier,
+                lightModifiers.DefaultOffsets[1],
+                minFull,
+                maxFull,
+                IndicatorTex.DefIndicator
+            );
         }
 
         public static string GetTipString(
-                        Def                def,
-                        LightModifiersBase lightModifiers
-                    )
+            Def                def,
+            LightModifiersBase lightModifiers
+        )
         {
-            if (SettingsHelpers.TipStringHolder == null)
+            if (TipStringHolder == null)
             {
-                SettingsHelpers.TipStringHolder = new Dictionary<Def, string>();
+                TipStringHolder = new Dictionary<Def, string>();
             }
 
-            if (SettingsHelpers.TipStringHolder.TryGetValue(def, out string tip))
+            if (TipStringHolder.TryGetValue(def, out string tip))
             {
                 return tip;
             }
@@ -159,37 +169,37 @@ namespace NightVision
                 {
                     result += "\n" + "NVHediffAutoAssigned".Translate(hediffMods.DefaultSetting.ToString().Translate());
                 }
-                else if (Math.Abs(lightModifiers.DefaultOffsets[0])    > 0.001f
-                         || Math.Abs(lightModifiers.DefaultOffsets[1]) > 0.001f)
+                else if (Math.Abs(lightModifiers.DefaultOffsets[0])    > CalcConstants.NVEpsilon
+                         || Math.Abs(lightModifiers.DefaultOffsets[1]) > CalcConstants.NVEpsilon)
                 {
                     result += "\n"
                               + "NVLoadedFromFile".Translate(
-                                                             hediffMods.DefaultSetting.ToString().Translate(),
-                                                             lightModifiers.DefaultOffsets.ToStringSafeEnumerable()
-                                                            );
+                                  hediffMods.DefaultSetting.ToString().Translate(),
+                                  lightModifiers.DefaultOffsets.ToStringSafeEnumerable()
+                              );
                 }
             }
             else if (lightModifiers is Race_LightModifiers rlm
-                     && (Math.Abs(lightModifiers.DefaultOffsets[0])    > 0.001f
-                         || Math.Abs(lightModifiers.DefaultOffsets[1]) > 0.001f))
+                     && (Math.Abs(lightModifiers.DefaultOffsets[0])    > CalcConstants.NVEpsilon
+                         || Math.Abs(lightModifiers.DefaultOffsets[1]) > CalcConstants.NVEpsilon))
             {
                 result += "\n"
                           + "NVLoadedFromFile".Translate(
-                                                         Race_LightModifiers.GetSetting(rlm).ToString().Translate(),
-                                                         rlm.DefaultOffsets.ToStringSafeEnumerable()
-                                                        );
+                              Race_LightModifiers.GetSetting(rlm).ToString().Translate(),
+                              rlm.DefaultOffsets.ToStringSafeEnumerable()
+                          );
             }
 
-            SettingsHelpers.TipStringHolder[def] = result;
+            TipStringHolder[def] = result;
 
             return result;
         }
 
         public static void DrawLightModifiersHeader(
-                        ref Rect inRect,
-                        string   label,
-                        string   tooltip
-                    )
+            ref Rect inRect,
+            string   label,
+            string   tooltip
+        )
         {
             var headerRect = new Rect(inRect.x + 6f, inRect.y, inRect.width - 12f, inRect.height * 0.1f);
 
@@ -198,11 +208,11 @@ namespace NightVision
             float xSettings  = headerRect.x + labelwidth + 1f + headerRect.width * 0.05f;
 
             var settingsRect = new Rect(
-                                        xSettings,
-                                        headerRect.y,
-                                        headerRect.xMax - xSettings,
-                                        headerRect.height
-                                       );
+                xSettings,
+                headerRect.y,
+                headerRect.xMax - xSettings,
+                headerRect.height
+            );
 
             GameFont font = Text.Font;
             Text.Font = GameFont.Medium;
@@ -215,42 +225,42 @@ namespace NightVision
             settingsRect.width = num;
 
             Widgets.Label(
-                          settingsRect,
-                          new GUIContent(
-                                         "default".Translate().ToLower().CapitalizeFirst(),
-                                         IndicatorTex.DefIndicator
-                                        )
-                         );
+                settingsRect,
+                new GUIContent(
+                    "default".Translate().ToLower().CapitalizeFirst(),
+                    IndicatorTex.DefIndicator
+                )
+            );
 
             settingsRect.x += num;
 
             Widgets.Label(
-                          settingsRect,
-                          new GUIContent(
-                                         "NVNightVision".Translate().ToLower().CapitalizeFirst(),
-                                         IndicatorTex.NvIndicator
-                                        )
-                         );
+                settingsRect,
+                new GUIContent(
+                    "NVNightVision".Translate().ToLower().CapitalizeFirst(),
+                    IndicatorTex.NvIndicator
+                )
+            );
 
             settingsRect.x += num;
 
             Widgets.Label(
-                          settingsRect,
-                          new GUIContent(
-                                         "NVPhotosensitivity".Translate().ToLower().CapitalizeFirst(),
-                                         IndicatorTex.PsIndicator
-                                        )
-                         );
+                settingsRect,
+                new GUIContent(
+                    "NVPhotosensitivity".Translate().ToLower().CapitalizeFirst(),
+                    IndicatorTex.PsIndicator
+                )
+            );
 
             Text.Font = font;
 
             Widgets.DrawLineHorizontal(
-                                       headerRect.x                           + 10f,
-                                       headerRect.yMax + Constants.RowGap / 4 - 0.5f,
-                                       headerRect.width                       - 20f
-                                      );
+                headerRect.x                           + 10f,
+                headerRect.yMax + DrawConst.RowGap / 4 - 0.5f,
+                headerRect.width                       - 20f
+            );
 
-            inRect.yMin += headerRect.height + Constants.RowGap / 2;
+            inRect.yMin += headerRect.height + DrawConst.RowGap / 2;
         }
 
         /// <summary>
@@ -258,12 +268,12 @@ namespace NightVision
         /// </summary>
         /// <param name="num">the y-coord of the rect: is increased if rect needs more space</param>
         public static int DrawLightModifiersRow(
-                        Def                def,
-                        LightModifiersBase lightMods,
-                        Rect               rowRect,
-                        ref float          num,
-                        bool               isRace
-                    )
+            Def                def,
+            LightModifiersBase lightMods,
+            Rect               rowRect,
+            ref float          num,
+            bool               isRace
+        )
         {
             var   result     = 0;
             float labelwidth = rowRect.width * 0.3f;
@@ -277,12 +287,12 @@ namespace NightVision
             Widgets.Label(labelRect, def.LabelCap);
 
             TooltipHandler.TipRegion(
-                                     labelRect,
-                                     new TipSignal(
-                                                   SettingsHelpers.GetTipString(def, lightMods),
-                                                   labelRect.GetHashCode()
-                                                  )
-                                    );
+                labelRect,
+                new TipSignal(
+                    GetTipString(def, lightMods),
+                    labelRect.GetHashCode()
+                )
+            );
 
             Widgets.DrawLineVertical(x, rowRect.y, rowRect.height);
 
@@ -328,47 +338,47 @@ namespace NightVision
 
             if (lightMods.IsCustom())
             {
-                num += Constants.RowHeight + Constants.RowGap;
+                num += DrawConst.RowHeight + DrawConst.RowGap;
 
                 var topRect = new Rect(
-                                       labelRect.xMax + 2 * buttongap,
-                                       num,
-                                       rowRect.width - labelRect.width - 60f,
-                                       Constants.RowHeight / 2
-                                      );
+                    labelRect.xMax + 2 * buttongap,
+                    num,
+                    rowRect.width - labelRect.width - 60f,
+                    DrawConst.RowHeight / 2
+                );
 
                 var bottomRect = new Rect(
-                                          labelRect.xMax                  + 2                * buttongap,
-                                          topRect.yMax                    + Constants.RowGap * 2,
-                                          rowRect.width - labelRect.width - 60f,
-                                          Constants.RowHeight / 2
-                                         );
+                    labelRect.xMax                  + 2                * buttongap,
+                    topRect.yMax                    + DrawConst.RowGap * 2,
+                    rowRect.width - labelRect.width - 60f,
+                    DrawConst.RowHeight / 2
+                );
 
                 var explanationRect = new Rect(
-                                               labelRect.xMax - labelRect.width * 0.95f,
-                                               num,
-                                               labelRect.width * 0.9f,
-                                               Constants.RowHeight
-                                              );
+                    labelRect.xMax - labelRect.width * 0.95f,
+                    num,
+                    labelRect.width * 0.9f,
+                    DrawConst.RowHeight
+                );
 
                 Widgets.DrawLineVertical(
-                                         labelRect.xMax          + buttongap,
-                                         rowRect.y               + rowRect.height,
-                                         Constants.RowHeight * 2 - Constants.RowGap * 0.5f
-                                        );
+                    labelRect.xMax          + buttongap,
+                    rowRect.y               + rowRect.height,
+                    DrawConst.RowHeight * 2 - DrawConst.RowGap * 0.5f
+                );
 
 
                 var zeroModAsPercent = (float) Math.Round(
-                                                          (lightMods.Offsets[0]
-                                                           + (isRace ? Constants.DefaultZeroLightMultiplier : 0))
-                                                          * 100
-                                                         );
+                    (lightMods.Offsets[0]
+                     + (isRace ? CalcConstants.DefaultZeroLightMultiplier : 0))
+                    * 100
+                );
 
                 var fullModAsPercent = (float) Math.Round(
-                                                          (lightMods.Offsets[1]
-                                                           + (isRace ? Constants.DefaultFullLightMultiplier : 0))
-                                                          * 100
-                                                         );
+                    (lightMods.Offsets[1]
+                     + (isRace ? CalcConstants.DefaultFullLightMultiplier : 0))
+                    * 100
+                );
 
                 if (isRace)
                 {
@@ -376,13 +386,13 @@ namespace NightVision
                     Text.Font = GameFont.Tiny;
 
                     Widgets.Label(
-                                  explanationRect,
-                                  "NVMoveWorkSpeedMultipliers".Translate("").Trim().CapitalizeFirst()
-                                  + "\n"
-                                  + "NVRaceQualifier"
+                        explanationRect,
+                        "NVMoveWorkSpeedMultipliers".Translate("").Trim().CapitalizeFirst()
+                        + "\n"
+                        + "NVRaceQualifier"
                                     .Translate()
                                     .CapitalizeFirst()
-                                 );
+                    );
 
                     Text.Font = font;
                     float min;
@@ -400,36 +410,36 @@ namespace NightVision
                     }
 
                     zeroModAsPercent = Widgets.HorizontalSlider(
-                                                                topRect,
-                                                                zeroModAsPercent,
-                                                                min,
-                                                                max,
-                                                                true,
-                                                                string.Format(
-                                                                              Constants.ZeroMultiLabel,
-                                                                              zeroModAsPercent
-                                                                             ),
-                                                                string.Format(Constants.XLabel, min),
-                                                                string.Format(Constants.XLabel, max),
-                                                                1
-                                                               );
+                        topRect,
+                        zeroModAsPercent,
+                        min,
+                        max,
+                        true,
+                        string.Format(
+                            Str.ZeroMultiLabel,
+                            zeroModAsPercent
+                        ),
+                        string.Format(Str.XLabel, min),
+                        string.Format(Str.XLabel, max),
+                        1
+                    );
 
                     fullModAsPercent = Widgets.HorizontalSlider(
-                                                                bottomRect,
-                                                                fullModAsPercent,
-                                                                min,
-                                                                max,
-                                                                true,
-                                                                string.Format(
-                                                                              Constants.FullMultiLabel,
-                                                                              fullModAsPercent
-                                                                             ),
-                                                                string.Format(Constants.XLabel, min),
-                                                                string.Format(Constants.XLabel, max),
-                                                                1
-                                                               );
+                        bottomRect,
+                        fullModAsPercent,
+                        min,
+                        max,
+                        true,
+                        string.Format(
+                            Str.FullMultiLabel,
+                            fullModAsPercent
+                        ),
+                        string.Format(Str.XLabel, min),
+                        string.Format(Str.XLabel, max),
+                        1
+                    );
 
-                    SettingsHelpers.DrawIndicators(topRect, bottomRect, lightMods, min, max, min, max);
+                    DrawIndicators(topRect, bottomRect, lightMods, min, max, min, max);
                 }
                 else
                 {
@@ -437,73 +447,73 @@ namespace NightVision
                     Text.Font = GameFont.Tiny;
 
                     Widgets.Label(
-                                  explanationRect,
-                                  "NVMoveWorkSpeedModifiers".Translate(def.LabelCap).CapitalizeFirst()
-                                 );
+                        explanationRect,
+                        "NVMoveWorkSpeedModifiers".Translate(def.LabelCap).CapitalizeFirst()
+                    );
 
                     Text.Font = font;
 
                     zeroModAsPercent = Widgets.HorizontalSlider(
-                                                                topRect,
-                                                                zeroModAsPercent,
-                                                                (float) SettingsCache.MinCache - 80,
-                                                                (float) SettingsCache.MaxCache - 80,
-                                                                true,
-                                                                string.Format(Constants.ZeroLabel, zeroModAsPercent),
-                                                                string.Format(
-                                                                              Constants.Alabel,
-                                                                              SettingsCache.MinCache - 80
-                                                                             ),
-                                                                string.Format(
-                                                                              Constants.Alabel,
-                                                                              SettingsCache.MaxCache - 80
-                                                                             ),
-                                                                1
-                                                               );
+                        topRect,
+                        zeroModAsPercent,
+                        (float) SettingsCache.MinCache - 80,
+                        (float) SettingsCache.MaxCache - 80,
+                        true,
+                        string.Format(Str.ZeroLabel, zeroModAsPercent),
+                        string.Format(
+                            Str.Alabel,
+                            SettingsCache.MinCache - 80
+                        ),
+                        string.Format(
+                            Str.Alabel,
+                            SettingsCache.MaxCache - 80
+                        ),
+                        1
+                    );
 
 
                     fullModAsPercent = Widgets.HorizontalSlider(
-                                                                bottomRect,
-                                                                fullModAsPercent,
-                                                                (float) SettingsCache.MinCache - 100,
-                                                                (float) SettingsCache.MaxCache - 100,
-                                                                true,
-                                                                string.Format(Constants.FullLabel, fullModAsPercent),
-                                                                string.Format(
-                                                                              Constants.Alabel,
-                                                                              SettingsCache.MinCache - 100
-                                                                             ),
-                                                                string.Format(
-                                                                              Constants.Alabel,
-                                                                              SettingsCache.MaxCache - 100
-                                                                             ),
-                                                                1
-                                                               );
+                        bottomRect,
+                        fullModAsPercent,
+                        (float) SettingsCache.MinCache - 100,
+                        (float) SettingsCache.MaxCache - 100,
+                        true,
+                        string.Format(Str.FullLabel, fullModAsPercent),
+                        string.Format(
+                            Str.Alabel,
+                            SettingsCache.MinCache - 100
+                        ),
+                        string.Format(
+                            Str.Alabel,
+                            SettingsCache.MaxCache - 100
+                        ),
+                        1
+                    );
 
-                    SettingsHelpers.DrawIndicators(
-                                                   topRect,
-                                                   bottomRect,
-                                                   lightMods,
-                                                   (float) SettingsCache.MinCache,
-                                                   (float) SettingsCache.MaxCache,
-                                                   (float) SettingsCache.MinCache,
-                                                   (float) SettingsCache.MaxCache
-                                                  );
+                    DrawIndicators(
+                        topRect,
+                        bottomRect,
+                        lightMods,
+                        (float) SettingsCache.MinCache,
+                        (float) SettingsCache.MaxCache,
+                        (float) SettingsCache.MinCache,
+                        (float) SettingsCache.MaxCache
+                    );
                 }
 
                 if (!Mathf.Approximately(zeroModAsPercent / 100, lightMods.Offsets[0]))
                 {
                     lightMods[0] = zeroModAsPercent / 100
-                                   - (isRace ? Constants.DefaultZeroLightMultiplier : 0);
+                                   - (isRace ? CalcConstants.DefaultZeroLightMultiplier : 0);
                 }
 
                 if (!Mathf.Approximately(fullModAsPercent / 100, lightMods.Offsets[1]))
                 {
                     lightMods[1] = fullModAsPercent / 100
-                                   - (isRace ? Constants.DefaultFullLightMultiplier : 0);
+                                   - (isRace ? CalcConstants.DefaultFullLightMultiplier : 0);
                 }
 
-                num += Constants.RowHeight * 0.9f /*+ rowGap*/;
+                num += DrawConst.RowHeight * 0.9f /*+ rowGap*/;
             }
 
             return result;

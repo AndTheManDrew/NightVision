@@ -12,18 +12,18 @@ namespace NightVision
     public class CompProperties_NightVision : CompProperties
     {
         public bool  CanCheat                = false;
-        public float FullLightMultiplier     = Constants.DefaultFullLightMultiplier;
+        public float FullLightMultiplier     = CalcConstants.DefaultFullLightMultiplier;
         public bool  NaturalNightVision      = false;
         public bool  NaturalPhotosensitivity = false;
         public bool  ShouldShowInSettings    = true;
 
-        public float ZeroLightMultiplier = Constants.DefaultZeroLightMultiplier;
+        public float ZeroLightMultiplier = CalcConstants.DefaultZeroLightMultiplier;
 
         public CompProperties_NightVision() => compClass = typeof(Comp_NightVision);
 
         public bool IsDefault()
-            => Math.Abs(ZeroLightMultiplier    - Constants.DefaultZeroLightMultiplier) < 0.1
-               && Math.Abs(FullLightMultiplier - Constants.DefaultFullLightMultiplier) < 0.1
+            => Math.Abs(ZeroLightMultiplier    - CalcConstants.DefaultZeroLightMultiplier) < 0.1
+               && Math.Abs(FullLightMultiplier - CalcConstants.DefaultFullLightMultiplier) < 0.1
                && !(NaturalNightVision || NaturalPhotosensitivity);
     }
 }

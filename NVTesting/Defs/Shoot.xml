@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+<PawnKindDef ParentName="TestBase" Name="TestShootBase" Abstract="True">
+    <weaponMoney>
+      <min>136</min>
+      <max>136</max>
+    </weaponMoney>
+    <weaponTags>
+      <li>Revolver</li>
+    </weaponTags>
+    <apparelRequired>
+      <li>Apparel_PlateArmor</li>
+      <li>Apparel_SimpleHelmet</li>
+    </apparelRequired>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="TestShootBase">
+    <defName>BS_NV</defName>
+    <label>NV B</label>
+    <apparelColor>(58,58,58)</apparelColor>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="TestShootBase">
+    <defName>AS_NV</defName>
+    <label>NV A</label>
+    <apparelColor>(200,200,200)</apparelColor>
+  </PawnKindDef>
+
+</Defs>

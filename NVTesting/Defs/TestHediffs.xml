@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+  <HediffDef ParentName="AddedBodyPartBase">
+    <defName>10Pct</defName>
+    <!-- Tapetum Lucidum officially -->
+    <label>10Pct</label>
+    <labelNoun>10Pct</labelNoun>
+    <comps>
+      <li Class="NightVision.HediffCompProperties_NightVision">
+        <ZeroLightMod>0.1</ZeroLightMod>
+      </li>
+    </comps>
+        <addedPartProps>
+      <solid>true</solid>
+      <partEfficiency>1</partEfficiency>
+    </addedPartProps>
+  </HediffDef>
+
+    <HediffDef ParentName="AddedBodyPartBase">
+    <defName>20Pct</defName>
+    <!-- Tapetum Lucidum officially -->
+    <label>20Pct</label>
+    <labelNoun>20Pct</labelNoun>
+    <comps>
+      <li Class="NightVision.HediffCompProperties_NightVision">
+        <ZeroLightMod>0.2</ZeroLightMod>
+      </li>
+    </comps>
+        <addedPartProps>
+      <solid>true</solid>
+      <partEfficiency>1</partEfficiency>
+    </addedPartProps>
+  </HediffDef>
+
+    <HediffDef ParentName="AddedBodyPartBase">
+    <defName>30Pct</defName>
+    <!-- Tapetum Lucidum officially -->
+    <label>30Pct</label>
+    <labelNoun>30Pct</labelNoun>
+    <comps>
+      <li Class="NightVision.HediffCompProperties_NightVision">
+        <ZeroLightMod>0.3</ZeroLightMod>
+      </li>
+    </comps>
+        <addedPartProps>
+      <solid>true</solid>
+      <partEfficiency>1</partEfficiency>
+    </addedPartProps>
+  </HediffDef>
+
+    <HediffDef ParentName="AddedBodyPartBase">
+    <defName>40Pct</defName>
+    <!-- Tapetum Lucidum officially -->
+    <label>40Pct</label>
+    <labelNoun>40Pct</labelNoun>
+    <comps>
+      <li Class="NightVision.HediffCompProperties_NightVision">
+        <ZeroLightMod>0.4</ZeroLightMod>
+      </li>
+    </comps>
+        <addedPartProps>
+      <solid>true</solid>
+      <partEfficiency>1</partEfficiency>
+    </addedPartProps>
+  </HediffDef>
+
+</Defs>

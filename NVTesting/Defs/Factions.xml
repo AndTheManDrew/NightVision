@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<FactionDef>
+    <defName>A</defName>
+		<label>A</label>
+    <pawnSingular>A</pawnSingular>
+		<pawnsPlural>A</pawnsPlural>
+		<requiredCountAtGameStart>1</requiredCountAtGameStart>
+		<fixedName>A</fixedName>
+		<techLevel>Spacer</techLevel>
+		<backstoryCategories><li>Civil</li></backstoryCategories>
+		<hidden>true</hidden>
+		<rescueesCanJoin>false</rescueesCanJoin>
+		<autoFlee>false</autoFlee>
+		<geneticVariance>1</geneticVariance>
+		<hairTags>
+			<li>Urban</li>
+		</hairTags>
+		<apparelStuffFilter>
+			<thingDefs>
+				<li>Steel</li>
+			</thingDefs>
+		</apparelStuffFilter>
+        <permanentEnemy>true</permanentEnemy>
+	</FactionDef>
+
+    	<FactionDef>
+        <defName>B</defName>
+		<label>B</label>
+    <pawnSingular>B</pawnSingular>
+		<pawnsPlural>B</pawnsPlural>
+		<requiredCountAtGameStart>1</requiredCountAtGameStart>
+		<fixedName>B</fixedName>
+		<techLevel>Spacer</techLevel>
+		<backstoryCategories><li>Civil</li></backstoryCategories>
+		<hidden>true</hidden>
+		<rescueesCanJoin>false</rescueesCanJoin>
+		<autoFlee>false</autoFlee>
+		<geneticVariance>1</geneticVariance>
+		<hairTags>
+			<li>Urban</li>
+		</hairTags>
+		<apparelStuffFilter>
+			<thingDefs>
+				<li>Steel</li>
+			</thingDefs>
+		</apparelStuffFilter>
+        <permanentEnemy>true</permanentEnemy>
+	</FactionDef>
+</Defs>
