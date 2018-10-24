@@ -12,7 +12,7 @@ namespace NightVision.Harmony {
             ref float __result
         )
         {
-            if (__result.ApproxZero() || CurrentStrike.GlowDiff.ApproxZero())
+            if (__result.IsTrivial() || CurrentStrike.GlowDiff.IsTrivial())
             {
                 return;
             }

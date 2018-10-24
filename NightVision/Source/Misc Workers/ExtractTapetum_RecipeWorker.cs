@@ -78,7 +78,7 @@ namespace NightVision
                     )
         {
             IEnumerable<BodyPartRecord> parts =
-                        pawn.health.hediffSet.GetNotMissingParts(tag: RwDefs.EyeTag);
+                        pawn.health.hediffSet.GetNotMissingParts(tag: Defs_Rimworld.EyeTag);
 
             foreach (BodyPartRecord part in parts.DefaultIfEmpty())
             {

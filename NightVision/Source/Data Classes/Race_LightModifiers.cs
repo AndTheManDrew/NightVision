@@ -58,7 +58,7 @@ namespace NightVision
                         +1f    + 0.2f * (1 - index)
                     ),
                     2,
-                    CalcConstants.Rounding
+                    Constants_Calculations.Rounding
                 );
         }
 
@@ -80,9 +80,9 @@ namespace NightVision
                             return new[]
                                    {
                                        _nvCompProps.ZeroLightMultiplier
-                                       - CalcConstants.DefaultZeroLightMultiplier,
+                                       - Constants_Calculations.DefaultZeroLightMultiplier,
                                        _nvCompProps.FullLightMultiplier
-                                       - CalcConstants.DefaultFullLightMultiplier
+                                       - Constants_Calculations.DefaultFullLightMultiplier
                                    };
                     }
                 }
@@ -187,16 +187,16 @@ namespace NightVision
 
                     return !(Math.Abs(
                                  _nvCompProps.FullLightMultiplier
-                                 - CalcConstants.DefaultFullLightMultiplier
+                                 - Constants_Calculations.DefaultFullLightMultiplier
                                  - Offsets[1]
                              )
-                             < CalcConstants.NVEpsilon)
+                             < Constants_Calculations.NVEpsilon)
                            || !(Math.Abs(
                                     _nvCompProps.ZeroLightMultiplier
-                                    - CalcConstants.DefaultZeroLightMultiplier
+                                    - Constants_Calculations.DefaultZeroLightMultiplier
                                     - Offsets[0]
                                 )
-                                < CalcConstants.NVEpsilon);
+                                < Constants_Calculations.NVEpsilon);
             }
         }
 
@@ -215,7 +215,7 @@ namespace NightVision
 
                 IntSetting = GetSetting(_nvCompProps);
 
-                Offsets = new[] {_nvCompProps.ZeroLightMultiplier - CalcConstants.DefaultZeroLightMultiplier, _nvCompProps.FullLightMultiplier - CalcConstants.DefaultFullLightMultiplier};
+                Offsets = new[] {_nvCompProps.ZeroLightMultiplier - Constants_Calculations.DefaultZeroLightMultiplier, _nvCompProps.FullLightMultiplier - Constants_Calculations.DefaultFullLightMultiplier};
 
                 Initialised = true;
             }
@@ -230,7 +230,7 @@ namespace NightVision
         private void CountEyes()
         {
             _eyeCount = _parentDef.race.body.AllParts
-                        .FindAll(bpr => bpr.def.tags.Contains(RwDefs.EyeTag))
+                        .FindAll(bpr => bpr.def.tags.Contains(Defs_Rimworld.EyeTag))
                         .Count;
         }
 

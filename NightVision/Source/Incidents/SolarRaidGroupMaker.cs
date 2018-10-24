@@ -6,10 +6,8 @@ using Verse;
 
 namespace NightVision {
     public static class SolarRaidGroupMaker {
-        [TweakValue(category: "aaNV Incidents")]
         public static int PointMultiplier = 1;
-
-        [TweakValue(category: "aaNV Incidents")]
+        
         public static int MaxPawnCostMultiplier = 4;
 
         private static readonly SimpleCurve WeightingPreferPawnsCloseToHighestCost = new SimpleCurve

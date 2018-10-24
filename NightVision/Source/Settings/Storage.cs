@@ -1,8 +1,8 @@
 ﻿// Nightvision NightVision Storage.cs
 // 
-// 21 07 2018
+// 03 08 2018
 // 
-// 21 07 2018
+// 24 10 2018
 
 using System.Collections.Generic;
 using System.Linq;
@@ -12,85 +12,79 @@ namespace NightVision
 {
     public static class Storage
     {
+        public const float HighestCap = 2f;
+
+        public const  float             LowestCap                  = 0.01f;
         public static HashSet<ThingDef> AllEyeCoveringHeadgearDefs = new HashSet<ThingDef>();
 
         //AllEyeHediffs is a subset of AllSightAffectingHediffs
         public static HashSet<HediffDef> AllEyeHediffs            = new HashSet<HediffDef>();
         public static HashSet<HediffDef> AllSightAffectingHediffs = new HashSet<HediffDef>();
         public static bool               CustomCapsEnabled;
-        public static bool NullRefWhenLoading = false;
+        public static bool               NullRefWhenLoading = false;
 
-        public static Dictionary<HediffDef, Hediff_LightModifiers> HediffLightMods =
-                    new Dictionary<HediffDef, Hediff_LightModifiers>();
+        public static Dictionary<HediffDef, Hediff_LightModifiers> HediffLightMods = new Dictionary<HediffDef, Hediff_LightModifiers>();
 
-        public const float HighestCap = 2f;
+        public static FloatRange MultiplierCaps = new FloatRange(
+            min: Constants_Calculations.DefaultMinCap,
+            max: Constants_Calculations.DefaultMaxCap
+        );
 
-        public const float LowestCap = 0.01f;
-
-        public static FloatRange MultiplierCaps =
-                    new FloatRange(CalcConstants.DefaultMinCap, CalcConstants.DefaultMaxCap);
-        
-        public static Dictionary<ThingDef, ApparelVisionSetting> NVApparel =
-                    new Dictionary<ThingDef, ApparelVisionSetting>();
+        public static Dictionary<ThingDef, ApparelVisionSetting> NVApparel = new Dictionary<ThingDef, ApparelVisionSetting>();
 
         public static bool NVEnabledForCE = true;
 
 
-        public static Dictionary<ThingDef, Race_LightModifiers> RaceLightMods =
-                    new Dictionary<ThingDef, Race_LightModifiers>();
+        public static Dictionary<ThingDef, Race_LightModifiers> RaceLightMods = new Dictionary<ThingDef, Race_LightModifiers>();
 
         public static void ExposeSettings()
         {
-            Scribe_Values.Look(ref Storage.CustomCapsEnabled, "CustomLimitsEnabled");
+            Scribe_Values.Look(value: ref CustomCapsEnabled, label: "CustomLimitsEnabled");
 
-            if (Storage.CustomCapsEnabled)
+            if (CustomCapsEnabled)
             {
                 if (Scribe.mode == LoadSaveMode.Saving)
                 {
                     if (MultiplierCaps.min > MultiplierCaps.max)
                     {
-                        var temp = MultiplierCaps.max;
+                        float temp = MultiplierCaps.max;
                         MultiplierCaps.max = MultiplierCaps.min;
                         MultiplierCaps.min = temp;
                     }
                 }
-                Scribe_Values.Look(ref Storage.MultiplierCaps.min, "LowerLimit", 0.8f);
-                Scribe_Values.Look(ref Storage.MultiplierCaps.max, "UpperLimit", 1.2f);
+
+                Scribe_Values.Look(value: ref MultiplierCaps.min, label: "LowerLimit", defaultValue: 0.8f);
+                Scribe_Values.Look(value: ref MultiplierCaps.max, label: "UpperLimit", defaultValue: 1.2f);
+
                 if (Scribe.mode == LoadSaveMode.LoadingVars)
                 {
                     if (MultiplierCaps.min > MultiplierCaps.max)
                     {
-                        var temp = MultiplierCaps.max;
+                        float temp = MultiplierCaps.max;
                         MultiplierCaps.max = MultiplierCaps.min;
                         MultiplierCaps.min = temp;
                     }
                 }
             }
 
-            Scribe_Values.Look(ref NVGameComponent.FlareRaidIsDisabled, "flareRaidDisabled");
-            
-            
-            Scribe_Values.Look(ref Storage.NVEnabledForCE, "EnabledForCombatExtended", true);
+            Scribe_Values.Look(value: ref NVGameComponent.FlareRaidIsEnabled, label: "flareRaidEnabled");
+
+            Storage_Combat.LoadSaveCommit();
+
+            Scribe_Values.Look(value: ref NVEnabledForCE, label: "EnabledForCombatExtended", defaultValue: true);
 
             //cctor args because otherwise statics don't seem to load properly
-            Scribe_Deep.Look(
-                             ref LightModifiersBase.PSLightModifiers,
-                             "photosensitivitymodifiers",
-                             true,
-                             false
-                            );
+            Scribe_Deep.Look(target: ref LightModifiersBase.PSLightModifiers, label: "photosensitivitymodifiers", true, false);
 
-            Scribe_Deep.Look(ref LightModifiersBase.NVLightModifiers, "nightvisionmodifiers", false, true);
+            Scribe_Deep.Look(target: ref LightModifiersBase.NVLightModifiers, label: "nightvisionmodifiers", false, true);
 
             if (Scribe.mode == LoadSaveMode.LoadingVars)
             {
-
                 if (LightModifiersBase.PSLightModifiers == null)
                 {
                     LightModifiersBase.PSLightModifiers = new LightModifiersBase
                                                           {
-                                                              Offsets     = CalcConstants.PSDefaultOffsets.ToArray(),
-                                                              Initialised = true
+                                                              Offsets = Constants_Calculations.PSDefaultOffsets.ToArray(), Initialised = true
                                                           };
                 }
 
@@ -98,43 +92,48 @@ namespace NightVision
                 {
                     LightModifiersBase.NVLightModifiers = new LightModifiersBase
                                                           {
-                                                              Offsets     = CalcConstants.NVDefaultOffsets.ToArray(),
-                                                              Initialised = true
+                                                              Offsets = Constants_Calculations.NVDefaultOffsets.ToArray(), Initialised = true
                                                           };
                 }
             }
 
-            Scribes.LightModifiersDict(ref Storage.RaceLightMods,   "Races");
-            Scribes.LightModifiersDict(ref Storage.HediffLightMods, "Hediffs");
-            Scribes.ApparelDict(ref Storage.NVApparel);
+            Scribes.LightModifiersDict(dictionary: ref RaceLightMods,   label: "Races");
+            Scribes.LightModifiersDict(dictionary: ref HediffLightMods, label: "Hediffs");
+            Scribes.ApparelDict(dictionary: ref NVApparel);
         }
 
         public static void ResetAllSettings()
         {
-            Log.Message("NightVision.Storage.ResetAllSettings: Defaulting Settings");
+            Log.Message(text: "NightVision: Defaulting Settings");
 
-            Storage.CustomCapsEnabled = false;
-            Storage.MultiplierCaps    = new FloatRange(CalcConstants.DefaultMinCap, CalcConstants.DefaultMaxCap);
-            Storage.NVEnabledForCE    = true;
-            NVGameComponent.FlareRaidIsDisabled = false;
-            LightModifiersBase.PSLightModifiers.Offsets =
-                        LightModifiersBase.PSLightModifiers.DefaultOffsets.ToArray();
+            CustomCapsEnabled = false;
 
-            LightModifiersBase.NVLightModifiers.Offsets =
-                        LightModifiersBase.NVLightModifiers.DefaultOffsets.ToArray();
+            MultiplierCaps = new FloatRange(
+                min: Constants_Calculations.DefaultMinCap,
+                max: Constants_Calculations.DefaultMaxCap
+            );
 
-            Log.Message("NightVision.Storage.ResetAllSettings: Clearing Dictionaries");
-            Storage.RaceLightMods              = null;
-            Storage.HediffLightMods            = null;
-            Storage.NVApparel                  = null;
-            Storage.AllEyeCoveringHeadgearDefs = null;
-            Storage.AllEyeHediffs              = null;
-            Storage.AllSightAffectingHediffs   = null;
-            Log.Message("NightVision.Storage.ResetAllSettings: Rebuilding Dictionaries");
+            NVEnabledForCE                              = true;
+            NVGameComponent.FlareRaidIsEnabled          = true;
+            LightModifiersBase.PSLightModifiers.Offsets = LightModifiersBase.PSLightModifiers.DefaultOffsets.ToArray();
+
+            LightModifiersBase.NVLightModifiers.Offsets = LightModifiersBase.NVLightModifiers.DefaultOffsets.ToArray();
+
+            Storage_Combat.ResetCombatSettings();
+
+            Log.Message(text: "NightVision.Storage.ResetAllSettings: Clearing Dictionaries");
+            RaceLightMods              = null;
+            HediffLightMods            = null;
+            NVApparel                  = null;
+            AllEyeCoveringHeadgearDefs = null;
+            AllEyeHediffs              = null;
+            AllSightAffectingHediffs   = null;
+            Log.Message(text: "NightVision.Storage.ResetAllSettings: Rebuilding Dictionaries");
             Initialiser.BuildDictionaries();
             SettingsCache.CacheInited = false;
             SettingsCache.DoPreWriteTasks();
             SettingsCache.Init();
+            FieldClearer.ResetSettingsDependentFields();
         }
     }
 }

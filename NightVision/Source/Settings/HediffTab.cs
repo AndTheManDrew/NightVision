@@ -40,11 +40,11 @@ namespace NightVision {
                 inRect.y,
                 inRect.width * 0.9f,
                 hediffcount
-                * (DrawConst.RowHeight + DrawConst.RowGap)
+                * (Constants_Draw.RowHeight + Constants_Draw.RowGap)
                 + (float) _numberOfCustomHediffs * 100f
             );
 
-            var rowRect = new Rect(inRect.x + 6f, num, inRect.width - 12f, DrawConst.RowHeight);
+            var rowRect = new Rect(inRect.x + 6f, num, inRect.width - 12f, Constants_Draw.RowHeight);
             Widgets.BeginScrollView(inRect, ref _hediffScrollPosition, viewRect);
 
             for (var i = 0; i < hediffcount; i++)
@@ -85,13 +85,13 @@ namespace NightVision {
                     }
                 }
 
-                num += DrawConst.RowHeight + DrawConst.RowGap;
+                num += Constants_Draw.RowHeight + Constants_Draw.RowGap;
 
                 if (i < hediffcount)
                 {
                     Widgets.DrawLineHorizontal(
                         rowRect.x     + 6f,
-                        num           - (DrawConst.RowGap / 2 - 0.5f),
+                        num           - (Constants_Draw.RowGap / 2 - 0.5f),
                         rowRect.width - 12f
                     );
                 }

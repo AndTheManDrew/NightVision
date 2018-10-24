@@ -7,8 +7,8 @@
     <ProjectGuid>{53AD9AD3-A8B8-45C4-B8EA-954E82193B32}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NVIncidents</RootNamespace>
-    <AssemblyName>NVIncidents</AssemblyName>
+    <RootNamespace>NVTesting</RootNamespace>
+    <AssemblyName>NVTesting</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

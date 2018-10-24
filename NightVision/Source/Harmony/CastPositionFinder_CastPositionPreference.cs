@@ -18,12 +18,8 @@ namespace NightVision.Harmony
     [HarmonyPatch(declaringType: typeof(CastPositionFinder), methodName: "CastPositionPreference")]
     public static class CastPositionFinder_CastPositionPreference
     {
-        [TweakValue(category: "0 NV AI", min: 0, max: 2)]
         public static float GlowCoverCoefficient = 1;
-
-        [TweakValue(category: "0 NV AI")]
-        public static bool UsePawnsGlowFactor;
-
+        
 
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
@@ -82,7 +78,7 @@ namespace NightVision.Harmony
 
             if (glow.GlowIsDarkness())
             {
-                return 1f + GlowCoverCoefficient * ((CalcConstants.MinGlowNoGlow - glow) / CalcConstants.MinGlowNoGlow);
+                return 1f + GlowCoverCoefficient * ((Constants_Calculations.MinGlowNoGlow - glow) / Constants_Calculations.MinGlowNoGlow);
             }
 
             return 1f;

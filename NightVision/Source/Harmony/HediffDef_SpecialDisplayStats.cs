@@ -27,7 +27,7 @@ namespace NightVision.Harmony {
                 if (vt < VisionType.NVCustom)
                 {
                     yield return new StatDrawEntry(
-                        RwDefs.BasicStats,
+                        Defs_Rimworld.BasicStats,
                         "NVGrantsVisionType".Translate(),
                         vt.ToString().Translate(),
                         0,
@@ -37,7 +37,7 @@ namespace NightVision.Harmony {
                 else
                 {
                     yield return new StatDrawEntry(
-                        RwDefs.BasicStats,
+                        Defs_Rimworld.BasicStats,
                         "NVGrantsVisionType".Translate(),
                         vt.ToString(),
                         0,
@@ -45,16 +45,16 @@ namespace NightVision.Harmony {
                     );
 
                     yield return new StatDrawEntry(
-                        RwDefs.BasicStats,
-                        NVDefOf.NightVision,
+                        Defs_Rimworld.BasicStats,
+                        Defs_NightVision.NightVision,
                         hlm[0],
                         StatRequest.ForEmpty(),
                         ToStringNumberSense.Offset
                     );
 
                     yield return new StatDrawEntry(
-                        RwDefs.BasicStats,
-                        NVDefOf.LightSensitivity,
+                        Defs_Rimworld.BasicStats,
+                        Defs_NightVision.LightSensitivity,
                         hlm[1],
                         StatRequest.ForEmpty(),
                         ToStringNumberSense.Offset

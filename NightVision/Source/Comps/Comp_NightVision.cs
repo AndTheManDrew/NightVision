@@ -96,7 +96,7 @@ namespace NightVision
                                 if (_raceSightParts.NullOrEmpty())
                                     {
                                         _raceSightParts = ParentPawn
-                                                          ?.RaceProps.body.GetPartsWithTag(RwDefs.EyeTag)
+                                                          ?.RaceProps.body.GetPartsWithTag(Defs_Rimworld.EyeTag)
                                                           .ToList();
 
                                         if (_raceSightParts.NullOrEmpty())
@@ -156,7 +156,7 @@ namespace NightVision
                                         _zeroLightModifier = CalcZeroLightModifier();
                                     }
 
-                                if (ApparelGrantsNV && _zeroLightModifier + CalcConstants.NVEpsilon
+                                if (ApparelGrantsNV && _zeroLightModifier + Constants_Calculations.NVEpsilon
                                     < LightModifiersBase.NVLightModifiers[0])
                                     {
                                         return LightModifiersBase.NVLightModifiers[0];
@@ -191,7 +191,7 @@ namespace NightVision
                                         _fullLightModifier = CalcFullLightModifier();
                                     }
 
-                                if (ApparelNullsPS && _fullLightModifier + CalcConstants.NVEpsilon < 0f)
+                                if (ApparelNullsPS && _fullLightModifier + Constants_Calculations.NVEpsilon < 0f)
                                     {
                                         return 0f;
                                     }
@@ -219,9 +219,9 @@ namespace NightVision
                     float glow)
                     {
                         //If glow is approx. 0%
-                        if (glow.ApproxZero())
+                        if (glow.IsTrivial())
                             {
-                                return (float) Math.Round(CalcConstants.DefaultZeroLightMultiplier + ZeroLightModifier, CalcConstants.NumberOfDigits);
+                                return (float) Math.Round(Constants_Calculations.DefaultZeroLightMultiplier + ZeroLightModifier, Constants_Calculations.NumberOfDigits);
                             }
                         //If glow is approx. 100% and the pawns full light modifier is not approx 0
 
@@ -230,29 +230,29 @@ namespace NightVision
                                 if (FullLightModifier.IsNonTrivial())
                                     {
                                         return (float) Math.Round(
-                                            CalcConstants.DefaultFullLightMultiplier + FullLightModifier,
-                                            CalcConstants.NumberOfDigits);
+                                            Constants_Calculations.DefaultFullLightMultiplier + FullLightModifier,
+                                            Constants_Calculations.NumberOfDigits);
                                     }
 
-                                return CalcConstants.TrivialFactor;
+                                return Constants_Calculations.TrivialFactor;
                             }
                         //Else linear interpolation
 
                         if (glow.GlowIsDarkness())
                             {
                                 return (float) Math.Round(
-                                    1f + (CalcConstants.MinGlowNoGlow - glow) * (ZeroLightModifier - 0.2f) / 0.3f,
-                                    CalcConstants.NumberOfDigits);
+                                    1f + (Constants_Calculations.MinGlowNoGlow - glow) * (ZeroLightModifier - 0.2f) / 0.3f,
+                                    Constants_Calculations.NumberOfDigits);
                             }
 
                         if (glow.GlowIsBright() && FullLightModifier.IsNonTrivial())
                             {
                                 return (float) Math.Round(
-                                    1f + (glow - CalcConstants.MaxGlowNoGlow) * FullLightModifier / 0.3f,
-                                    CalcConstants.NumberOfDigits);
+                                    1f + (glow - Constants_Calculations.MaxGlowNoGlow) * FullLightModifier / 0.3f,
+                                    Constants_Calculations.NumberOfDigits);
                             }
 
-                        return CalcConstants.TrivialFactor;
+                        return Constants_Calculations.TrivialFactor;
                     }
 
                 public override void CompTickRare()
@@ -359,7 +359,7 @@ namespace NightVision
                         if (part != null && PawnsNVHediffs.ContainsKey(part.Label)
                                          && PawnsNVHediffs[part.Label].Remove(hediff.def))
                             {
-                                if (part.def.tags.Contains(RwDefs.EyeTag)
+                                if (part.def.tags.Contains(Defs_Rimworld.EyeTag)
                                     && (hediff is Hediff_MissingPart
                                         || hediff.def.addedPartProps is AddedBodyPartProps abpp && abpp.solid))
                                     {
@@ -433,7 +433,7 @@ namespace NightVision
                                             }
 
                                         //remove an eye
-                                        if (removedPart && part.def.tags.Contains(RwDefs.EyeTag))
+                                        if (removedPart && part.def.tags.Contains(Defs_Rimworld.EyeTag))
                                             {
                                                 NumberOfRemainingEyes--;
                                             }
@@ -559,7 +559,7 @@ namespace NightVision
 
                 private float CalcZeroLightModifier()
                     {
-                        float mod     = CalcConstants.DefaultZeroLightMultiplier;
+                        float mod     = Constants_Calculations.DefaultZeroLightMultiplier;
                         var   setting = (byte) NaturalLightModifiers.IntSetting;
                         switch (setting)
                             {
@@ -600,18 +600,18 @@ namespace NightVision
 
                         if (CanCheat)
                             {
-                                return (float) Math.Round(mod - CalcConstants.DefaultZeroLightMultiplier, CalcConstants.NumberOfDigits);
+                                return (float) Math.Round(mod - Constants_Calculations.DefaultZeroLightMultiplier, Constants_Calculations.NumberOfDigits);
                             }
 
                         return (float) Math.Round(
                             Mathf.Clamp(mod, Storage.MultiplierCaps.min, Storage.MultiplierCaps.max)
-                            - CalcConstants.DefaultZeroLightMultiplier,
-                            CalcConstants.NumberOfDigits);
+                            - Constants_Calculations.DefaultZeroLightMultiplier,
+                            Constants_Calculations.NumberOfDigits);
                     }
 
                 private float CalcFullLightModifier()
                     {
-                        float mod     = CalcConstants.DefaultFullLightMultiplier;
+                        float mod     = Constants_Calculations.DefaultFullLightMultiplier;
                         var   setting = (byte) NaturalLightModifiers.IntSetting;
                         switch (setting)
                             {
@@ -652,13 +652,13 @@ namespace NightVision
 
                         if (CanCheat)
                             {
-                                return (float) Math.Round(mod - CalcConstants.DefaultFullLightMultiplier, CalcConstants.NumberOfDigits);
+                                return (float) Math.Round(mod - Constants_Calculations.DefaultFullLightMultiplier, Constants_Calculations.NumberOfDigits);
                             }
 
                         return (float) Math.Round(
                             Mathf.Clamp(mod, Storage.MultiplierCaps.min, Storage.MultiplierCaps.max)
-                            - CalcConstants.DefaultFullLightMultiplier,
-                            CalcConstants.NumberOfDigits);
+                            - Constants_Calculations.DefaultFullLightMultiplier,
+                            Constants_Calculations.NumberOfDigits);
                     }
 
                 /// <summary>
@@ -790,7 +790,7 @@ namespace NightVision
                                         BrightLightPsych = Classifier.ClassifyModifier(FullLightModifier, false);
                                     }
 
-                                return TicksSinceLastDark > CalcConstants.ThoughtActiveTicksPast
+                                return TicksSinceLastDark > Constants_Calculations.ThoughtActiveTicksPast
                                        && BrightLightPsych == VisionType.NVPhotosensitivity;
                             }
                     }

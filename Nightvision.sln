@@ -48,6 +48,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{D9D7732D
 	ProjectSection(SolutionItems) = preProject
 		NightVision\Languages\English\Keyed\Basics.xml = NightVision\Languages\English\Keyed\Basics.xml
 		NightVision\Languages\English\Keyed\Combat.xml = NightVision\Languages\English\Keyed\Combat.xml
+		NightVision\Languages\English\Keyed\Combat_Settings.xml = NightVision\Languages\English\Keyed\Combat_Settings.xml
+		NightVision\Languages\English\Keyed\Incidents.xml = NightVision\Languages\English\Keyed\Incidents.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apparel", "Apparel", "{4E3644C1-470E-4EE7-84FB-2D812B662337}"

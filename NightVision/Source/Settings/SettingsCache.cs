@@ -112,12 +112,14 @@ namespace NightVision
             // this check is required because this method is run on opening the menu
             if (CacheInited)
             {
+                FieldClearer.ResetSettingsDependentFields();
+
                 Storage.MultiplierCaps.min = MinCache != null && Storage.CustomCapsEnabled
-                            ? (float) Math.Round((float) MinCache / 100, CalcConstants.NumberOfDigits)
+                            ? (float) Math.Round((float) MinCache / 100, Constants_Calculations.NumberOfDigits)
                             : Storage.MultiplierCaps.min;
 
                 Storage.MultiplierCaps.max = MaxCache != null && Storage.CustomCapsEnabled
-                            ? (float) Math.Round((float) MaxCache / 100, CalcConstants.NumberOfDigits)
+                            ? (float) Math.Round((float) MaxCache / 100, Constants_Calculations.NumberOfDigits)
                             : Storage.MultiplierCaps.max;
 
                 LightModifiersBase.NVLightModifiers.Offsets = new[]
@@ -166,7 +168,6 @@ namespace NightVision
                 PSZeroCache = null;
                 PSFullCache = null;
             }
-
             CacheInited = false;
             _allHediffsCache?.Clear();
             _headgearCache?.Clear();
@@ -174,7 +175,6 @@ namespace NightVision
             SettingsHelpers.TipStringHolder.Clear();
             Settings.ClearDrawVariables();
 
-            FieldClearer.ResetSettingsDependentFields();
 
             if (Current.ProgramState == ProgramState.Playing)
             {
@@ -194,13 +194,10 @@ namespace NightVision
                 {
                     continue;
                 }
-
-                Log.Message($"Found {pawn}");
-
+                
                 if (pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
                 {
                     comp.SetDirty();
-                    Log.Message($"Set {pawn}'s comp to dirty");
                 }
             }
         }

@@ -52,6 +52,17 @@ namespace NightVision
 
             TabsList.Add(
                 new TabRecord(
+                    "NVCombat".Translate(),
+                    delegate
+                    {
+                        _tab = Tab.Combat;
+                    },
+                    _tab == Tab.Combat
+                )
+            );
+
+            TabsList.Add(
+                new TabRecord(
                     "NVRaces".Translate(),
                     delegate
                     {
@@ -116,6 +127,9 @@ namespace NightVision
                     GeneralTab.DrawTab(inRect);
 
                     break;
+                case Tab.Combat:
+                    CombatTab.DrawTab(inRect);
+                    break;
                 case Tab.Races:
                     RaceTab.DrawTab(inRect);
 
@@ -145,6 +159,7 @@ namespace NightVision
             ApparelTab.Clear();
             RaceTab.Clear();
             GeneralTab.Clear();
+            CombatTab.Clear();
         }
     }
 }

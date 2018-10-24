@@ -72,8 +72,8 @@ namespace NightVision
         public static void ApparelDictBuilder()
         {
             ThingCategoryDef headgearCategoryDef = ThingCategoryDef.Named("Headgear");
-            BodyPartGroupDef fullHead            = RwDefs.Head;
-            BodyPartGroupDef eyes                = RwDefs.Eyes;
+            BodyPartGroupDef fullHead            = Defs_Rimworld.Head;
+            BodyPartGroupDef eyes                = Defs_Rimworld.Eyes;
 
             Storage.AllEyeCoveringHeadgearDefs = new HashSet<ThingDef>(
                 DefDatabase<ThingDef>
@@ -189,7 +189,7 @@ namespace NightVision
                     animal.recipes = new List<RecipeDef>();
                 }
 
-                animal.recipes.Add(NVDefOf.ExtractTapetumLucidum);
+                animal.recipes.Add(Defs_NightVision.ExtractTapetumLucidum);
                 descAppendage.Append("\n - " + animal.LabelCap);
             }
 
@@ -283,7 +283,7 @@ namespace NightVision
                                                                  != null
                                                                  && bpd
                                                                              .tags
-                                                                             .Contains(RwDefs.EyeTag)
+                                                                             .Contains(Defs_Rimworld.EyeTag)
                                                       )
                                           && recdef.AllRecipeUsers.Any(
                                               ru
@@ -312,7 +312,7 @@ namespace NightVision
                                                                       =>
                                                                       bpd
                                                                                   .tags
-                                                                                  .Contains(RwDefs.EyeTag)
+                                                                                  .Contains(Defs_Rimworld.EyeTag)
                                                       )
                                             )
                                             .Select(hg => hg.hediff)

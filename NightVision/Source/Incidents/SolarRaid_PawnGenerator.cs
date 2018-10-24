@@ -2,14 +2,11 @@
 // 
 // 17 10 2018
 // 
-// 18 10 2018
+// 24 10 2018
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Harmony;
 using RimWorld;
-using UnityEngine;
 using Verse;
 
 namespace NightVision
@@ -44,7 +41,7 @@ namespace NightVision
             return list;
         }
 
-        
+
         public static void GeneratePawns(PawnGroupMakerParms parms, PawnGroupMaker groupMaker, List<Pawn> outPawns, bool errorOnZeroResults = true)
         {
             bool canBringFood = parms.raidStrategy?.pawnsCanBringFood ?? true;
@@ -88,7 +85,7 @@ namespace NightVision
                     certainlyBeenInCryptosleep: false,
                     forceRedressWorldPawnIfFormerColonist: false,
                     worldPawnFactionDoesntMatter: false,
-                    validatorPreGear: pa => !pa.skills.GetSkill(skillDef: RwDefs.MeleeSkill).TotallyDisabled,
+                    validatorPreGear: pa => !pa.skills.GetSkill(skillDef: Defs_Rimworld.MeleeSkill).TotallyDisabled,
                     validatorPostGear: validatorPostGear,
                     minChanceToRedressWorldPawn: null,
                     fixedBiologicalAge: null,
@@ -114,17 +111,17 @@ namespace NightVision
 
         public static void PawnFinaliser(Pawn pawn)
         {
-            int meleeSkill = pawn.skills.GetSkill(skillDef: RwDefs.MeleeSkill).Level;
+            int meleeSkill = pawn.skills.GetSkill(skillDef: Defs_Rimworld.MeleeSkill).Level;
 
             if (meleeSkill < 10)
             {
-                pawn.skills.GetSkill(skillDef: RwDefs.MeleeSkill).Level += Rand.RangeInclusive(min: 10 - meleeSkill, max: 10 - meleeSkill + 5);
+                pawn.skills.GetSkill(skillDef: Defs_Rimworld.MeleeSkill).Level += Rand.RangeInclusive(min: 10 - meleeSkill, max: 10 - meleeSkill + 5);
             }
 
-            var choiceArray = new[] {10 - NVGameComponent.Evilness, 5 + NVGameComponent.Evilness, 5 + NVGameComponent.Evilness};
-            var indexes     = new[] {0, 1, 2};
+            int[] choiceArray = {10 - NVGameComponent.Evilness, 5 + NVGameComponent.Evilness, 5 + NVGameComponent.Evilness};
+            var   indexes     = new[] {0, 1, 2};
 
-            int choice = indexes.RandomElementByWeight(ind => choiceArray[ind]);
+            int choice = indexes.RandomElementByWeight(weightSelector: ind => choiceArray[ind]);
 
             switch (choice)
             {
@@ -132,26 +129,26 @@ namespace NightVision
 
                     if (PawnGenUtility.AnyPSHediffsExist.IsNotFalse())
                     {
-                        foreach (BodyPartRecord bodyPartRecord in pawn.RaceProps.body.GetPartsWithTag(RwDefs.EyeTag))
+                        foreach (BodyPartRecord bodyPartRecord in pawn.RaceProps.body.GetPartsWithTag(tag: Defs_Rimworld.EyeTag))
                         {
-                            var hediff = PawnGenUtility.GetRandomPhotosensitiveHediffDef();
+                            HediffDef hediff = PawnGenUtility.GetRandomPhotosensitiveHediffDef();
 
                             if (hediff != null)
                             {
-                                pawn.health.AddHediff(hediff, bodyPartRecord);
+                                pawn.health.AddHediff(def: hediff, part: bodyPartRecord);
                             }
                         }
 
-                        if (ApparelGenUtility.GetNullPSApparelDefByTag(pawn.kindDef.apparelTags) is ThingDef appDef)
+                        if (ApparelGenUtility.GetNullPSApparelDefByTag(tagsList: pawn.kindDef.apparelTags) is ThingDef appDef)
                         {
-                            if (ApparelUtility.HasPartsToWear(pawn, appDef))
+                            if (ApparelUtility.HasPartsToWear(p: pawn, apparel: appDef))
                             {
                                 Thing apparel = ThingMaker.MakeThing(
-                                    appDef,
-                                    appDef.MadeFromStuff ? GenStuff.RandomStuffByCommonalityFor(appDef) : null
+                                    def: appDef,
+                                    stuff: appDef.MadeFromStuff ? GenStuff.RandomStuffByCommonalityFor(td: appDef) : null
                                 );
 
-                                pawn.apparel.Wear((Apparel) apparel, false);
+                                pawn.apparel.Wear(newApparel: (Apparel) apparel, dropReplacedApparel: false);
                             }
                         }
 
@@ -163,34 +160,33 @@ namespace NightVision
                     }
                 case 2:
 
-                    if (ApparelGenUtility.GetGiveNVApparelDefByTag(pawn.kindDef.apparelTags) is ThingDef nvAppDef)
+                    if (ApparelGenUtility.GetGiveNVApparelDefByTag(tagsList: pawn.kindDef.apparelTags) is ThingDef nvAppDef)
                     {
-                        if (ApparelUtility.HasPartsToWear(pawn, nvAppDef))
+                        if (ApparelUtility.HasPartsToWear(p: pawn, apparel: nvAppDef))
                         {
                             Thing apparel = ThingMaker.MakeThing(
-                                nvAppDef,
-                                nvAppDef.MadeFromStuff ? GenStuff.RandomStuffByCommonalityFor(nvAppDef) : null
+                                def: nvAppDef,
+                                stuff: nvAppDef.MadeFromStuff ? GenStuff.RandomStuffByCommonalityFor(td: nvAppDef) : null
                             );
 
-                            pawn.apparel.Wear((Apparel) apparel, false);
+                            pawn.apparel.Wear(newApparel: (Apparel) apparel, dropReplacedApparel: false);
                         }
                     }
 
                     break;
             }
-        
-            if (Rand.Chance(NVGameComponent.Evilness / 6f))
+
+            if (Rand.Chance(chance: NVGameComponent.Evilness / 6f))
             {
-                ThingDef shield = RwDefs.ShieldDef;
+                ThingDef shield = Defs_Rimworld.ShieldDef;
 
-                if (ApparelUtility.HasPartsToWear(pawn, shield))
+                if (ApparelUtility.HasPartsToWear(p: pawn, apparel: shield))
                 {
-                    Thing shieldBelt = ThingMaker.MakeThing(shield, shield.MadeFromStuff ? GenStuff.RandomStuffFor(shield) : null);
+                    Thing shieldBelt = ThingMaker.MakeThing(def: shield, stuff: shield.MadeFromStuff ? GenStuff.RandomStuffFor(td: shield) : null);
 
-                    pawn.apparel.Wear((Apparel) shieldBelt, false);
+                    pawn.apparel.Wear(newApparel: (Apparel) shieldBelt, dropReplacedApparel: false);
                 }
             }
         }
-        
     }
 }

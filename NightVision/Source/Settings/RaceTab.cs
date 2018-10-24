@@ -47,11 +47,11 @@ namespace NightVision {
                 inRect.y,
                 inRect.width * 0.9f,
                 raceCount
-                * (DrawConst.RowHeight + DrawConst.RowGap)
+                * (Constants_Draw.RowHeight + Constants_Draw.RowGap)
                 + (float) _numberOfCustomRaces * 100f
             );
 
-            var rowRect = new Rect(inRect.x + 6f, num, inRect.width - 12f, DrawConst.RowHeight);
+            var rowRect = new Rect(inRect.x + 6f, num, inRect.width - 12f, Constants_Draw.RowHeight);
             Widgets.BeginScrollView(inRect, ref _raceScrollPosition, viewRect);
             var count = 0;
 
@@ -82,7 +82,7 @@ namespace NightVision {
                 }
 
                 count++;
-                num += DrawConst.RowHeight + DrawConst.RowGap;
+                num += Constants_Draw.RowHeight + Constants_Draw.RowGap;
 
                 if (count < raceCount)
                 {

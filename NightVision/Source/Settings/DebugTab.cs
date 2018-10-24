@@ -48,7 +48,7 @@ namespace NightVision {
                 inRect.width * 0.05f,
                 inRect.height * 0.05f + listingY,
                 inRect.width * 0.9f,
-                DrawConst.RowHeight
+                Constants_Draw.RowHeight
             );
 
             Text.Anchor = TextAnchor.MiddleLeft;
@@ -57,11 +57,11 @@ namespace NightVision {
 
             if (Storage.CustomCapsEnabled)
             {
-                rowRect.y += DrawConst.RowHeight;
+                rowRect.y += Constants_Draw.RowHeight;
                 Text.Font =  GameFont.Tiny;
                 Widgets.Label(rowRect, "NVCapsExp".Translate());
                 //Text.Font =  GameFont.Small;
-                rowRect.y += DrawConst.RowHeight /*+ Constants.RowGap*/;
+                rowRect.y += Constants_Draw.RowHeight /*+ Constants.RowGap*/;
 
                 SettingsCache.MinCache = Widgets.HorizontalSlider(
                     rowRect,
@@ -77,14 +77,14 @@ namespace NightVision {
 
                 SettingsHelpers.DrawIndicator(
                     rowRect.TopPart(0.9f),
-                    CalcConstants.DefaultMinCap,
+                    Constants_Calculations.DefaultMinCap,
                     0f,
                     1f,
                     100f,
                     IndicatorTex.DefIndicator
                 );
 
-                rowRect.y += DrawConst.RowHeight;
+                rowRect.y += Constants_Draw.RowHeight;
 
                 SettingsCache.MaxCache = Widgets.HorizontalSlider(
                     rowRect,
@@ -103,7 +103,7 @@ namespace NightVision {
 
                 SettingsHelpers.DrawIndicator(
                     rowRect.TopPart(0.9f),
-                    CalcConstants.DefaultMaxCap,
+                    Constants_Calculations.DefaultMaxCap,
                     0f,
                     100f,
                     200f,
@@ -111,7 +111,7 @@ namespace NightVision {
                 );
             }
 
-            rowRect.y += DrawConst.RowHeight;
+            rowRect.y += Constants_Draw.RowHeight;
             Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
             float endY = rowRect.yMax;
 
@@ -153,7 +153,7 @@ namespace NightVision {
                     remainRect.x     + 10f,
                     remainRect.y     + 3f,
                     remainRect.width - 20f,
-                    DrawConst.RowHeight / 2
+                    Constants_Draw.RowHeight / 2
                 );
 
                 Widgets.BeginScrollView(remainRect, ref _debugScrollPos, viewRect);
@@ -172,34 +172,34 @@ namespace NightVision {
                             $"Number of eyes: {comp.NumberOfRemainingEyes}/{comp.RaceSightParts.Count}   Natural modifier: {comp.NaturalLightModifiers.IntSetting}"
                         );
 
-                        rightRect.y += DrawConst.RowHeight / 2;
+                        rightRect.y += Constants_Draw.RowHeight / 2;
 
                         Widgets.Label(
                             rightRect,
                             $"0% light modifier: {comp.ZeroLightModifier}   100% light modifier: {comp.FullLightModifier}"
                         );
 
-                        rightRect.y += DrawConst.RowHeight / 2;
+                        rightRect.y += Constants_Draw.RowHeight / 2;
 
                         Widgets.Label(
                             rightRect,
                             $"Psych: {comp.PsychDark}      Apparel: NightVis: {comp.ApparelGrantsNV}   Anti-brightness: {comp.ApparelNullsPS}"
                         );
 
-                        rightRect.y += DrawConst.RowHeight / 2;
+                        rightRect.y += Constants_Draw.RowHeight / 2;
 
                         Widgets.Label(
                             rightRect,
                             $"Health (pre-cap) [0%,100%] : NightV mod: [{comp.NvhediffMods[0]}, {comp.NvhediffMods[1]}]   PhotoS mod: [{comp.PshediffMods[0]}, {comp.PshediffMods[1]}]   Custom: [{comp.HediffMods[0]},{comp.HediffMods[1]}]"
                         );
 
-                        rightRect.y += DrawConst.RowHeight / 2;
+                        rightRect.y += Constants_Draw.RowHeight / 2;
                         Widgets.Label(rightRect, "Body Parts & their hediffs");
 
                         foreach (KeyValuePair<string, List<HediffDef>> hedifflist in comp.PawnsNVHediffs
                         )
                         {
-                            rightRect.y += DrawConst.RowHeight / 2;
+                            rightRect.y += Constants_Draw.RowHeight / 2;
 
                             Widgets.Label(
                                 rightRect,
@@ -213,7 +213,7 @@ namespace NightVision {
                                     out Hediff_LightModifiers value
                                 ))
                                 {
-                                    rightRect.y += DrawConst.RowHeight / 2;
+                                    rightRect.y += Constants_Draw.RowHeight / 2;
 
                                     Widgets.Label(
                                         rightRect,
@@ -222,7 +222,7 @@ namespace NightVision {
                                 }
                                 else
                                 {
-                                    rightRect.y += DrawConst.RowHeight / 2;
+                                    rightRect.y += Constants_Draw.RowHeight / 2;
 
                                     Widgets.Label(
                                         rightRect,
@@ -232,7 +232,7 @@ namespace NightVision {
                             }
                         }
 
-                        rightRect.y += DrawConst.RowHeight / 2;
+                        rightRect.y += Constants_Draw.RowHeight / 2;
                         Widgets.Label(rightRect, "Eye covering or nightvis Apparel:");
 
                         foreach (Apparel apparel in comp.PawnsNVApparel)
@@ -242,7 +242,7 @@ namespace NightVision {
                                 out ApparelVisionSetting appSet
                             ))
                             {
-                                rightRect.y += DrawConst.RowHeight / 2;
+                                rightRect.y += Constants_Draw.RowHeight / 2;
 
                                 Widgets.Label(
                                     rightRect,
@@ -251,12 +251,12 @@ namespace NightVision {
                             }
                             else
                             {
-                                rightRect.y += DrawConst.RowHeight / 2;
+                                rightRect.y += Constants_Draw.RowHeight / 2;
                                 Widgets.Label(rightRect, $"  {apparel.LabelCap}: No Setting");
                             }
                         }
 
-                        rightRect.y += DrawConst.RowHeight / 2;
+                        rightRect.y += Constants_Draw.RowHeight / 2;
                         rowRect.y   =  rightRect.y;
                     }
                     else
@@ -264,9 +264,9 @@ namespace NightVision {
                         Widgets.Label(rowRect.RightHalf(), "No Night Vision component found.");
                     }
 
-                    rowRect.y += DrawConst.RowHeight / 2;
+                    rowRect.y += Constants_Draw.RowHeight / 2;
                     Widgets.DrawLineHorizontal(rowRect.x + 10f, rowRect.y, rowRect.width - 20f);
-                    rowRect.y += DrawConst.RowHeight / 2;
+                    rowRect.y += Constants_Draw.RowHeight / 2;
                 }
 
                 if (Math.Abs(_maxY) < 0.001)

@@ -16,7 +16,7 @@ namespace NightVision {
         public static void DrawTab(Rect inRect)
         {
             TextAnchor anchor    = Text.Anchor;
-            float      rowHeight = DrawConst.GenRowHeight;
+            float      rowHeight = Constants_Draw.GenRowHeight;
 
             var rowRect = new Rect(
                 inRect.width  * 0.05f,
@@ -28,9 +28,9 @@ namespace NightVision {
             Text.Anchor = TextAnchor.MiddleLeft;
 
             Widgets.Label(rowRect, "NVVanillaMultiExp".Translate());
-            rowRect.y += rowHeight + DrawConst.RowGap;
+            rowRect.y += rowHeight + Constants_Draw.RowGap;
             Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
-            rowRect.y += DrawConst.RowGap;
+            rowRect.y += Constants_Draw.RowGap;
 
             //Night Vision Settings
 
@@ -42,7 +42,7 @@ namespace NightVision {
                             .CapitalizeFirst()
             );
 
-            rowRect.y += rowHeight + DrawConst.RowGap;
+            rowRect.y += rowHeight + Constants_Draw.RowGap;
 
             SettingsCache.NVZeroCache = Widgets.HorizontalSlider(
                 rowRect,
@@ -67,8 +67,8 @@ namespace NightVision {
 
             SettingsHelpers.DrawIndicator(
                 rowRect,
-                CalcConstants.DefaultZeroLightMultiplier,
-                CalcConstants.NVDefaultOffsets[0],
+                Constants_Calculations.DefaultZeroLightMultiplier,
+                Constants_Calculations.NVDefaultOffsets[0],
                 (float) SettingsCache.MinCache,
                 (float) SettingsCache.MaxCache,
                 IndicatorTex.DefIndicator
@@ -99,8 +99,8 @@ namespace NightVision {
 
             SettingsHelpers.DrawIndicator(
                 rowRect,
-                CalcConstants.DefaultFullLightMultiplier,
-                CalcConstants.NVDefaultOffsets[1],
+                Constants_Calculations.DefaultFullLightMultiplier,
+                Constants_Calculations.NVDefaultOffsets[1],
                 (float) SettingsCache.MinCache,
                 (float) SettingsCache.MaxCache,
                 IndicatorTex.DefIndicator
@@ -108,7 +108,7 @@ namespace NightVision {
 
             rowRect.y += rowHeight * 2f;
             Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
-            rowRect.y += DrawConst.RowGap;
+            rowRect.y += Constants_Draw.RowGap;
 
             //Photosensitivity settings
 
@@ -145,8 +145,8 @@ namespace NightVision {
 
             SettingsHelpers.DrawIndicator(
                 rowRect,
-                CalcConstants.DefaultZeroLightMultiplier,
-                CalcConstants.PSDefaultOffsets[0],
+                Constants_Calculations.DefaultZeroLightMultiplier,
+                Constants_Calculations.PSDefaultOffsets[0],
                 (float) SettingsCache.MinCache,
                 (float) SettingsCache.MaxCache,
                 IndicatorTex.DefIndicator
@@ -177,8 +177,8 @@ namespace NightVision {
 
             SettingsHelpers.DrawIndicator(
                 rowRect,
-                CalcConstants.DefaultFullLightMultiplier,
-                CalcConstants.PSDefaultOffsets[1],
+                Constants_Calculations.DefaultFullLightMultiplier,
+                Constants_Calculations.PSDefaultOffsets[1],
                 (float) SettingsCache.MinCache,
                 (float) SettingsCache.MaxCache,
                 IndicatorTex.DefIndicator
@@ -186,16 +186,14 @@ namespace NightVision {
 
             rowRect.y += rowHeight * 2f;
             Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
-            rowRect.y += DrawConst.RowGap;
+            rowRect.y += Constants_Draw.RowGap;
 
-
-            if (Settings.CEDetected)
-            {
-                Widgets.CheckboxLabeled(rowRect, "EnableNVForCE".Translate(), ref Storage.NVEnabledForCE);
-                rowRect.y += rowHeight * 2f;
-                Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
-                rowRect.y += DrawConst.RowGap;
-            }
+            
+            Widgets.CheckboxLabeled(rowRect, "NightVisionFlareRaidEnabled".Translate(), ref NVGameComponent.FlareRaidIsEnabled);
+            rowRect.y += rowHeight * 2f;
+            Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
+            rowRect.y += Constants_Draw.RowGap;
+ 
 
 
             if (_askToConfirmReset)
@@ -210,8 +208,6 @@ namespace NightVision {
 
                 if (Widgets.ButtonText(rowRect, "NVConfirmReset".Translate()) && confirmTimer.ElapsedMilliseconds > 500)
                 {
-                    //Log.Message("NightVision.DrawSettings.DrawTab: NVConfirm");
-
                     Storage.ResetAllSettings();
                     confirmTimer.Reset();
                 }

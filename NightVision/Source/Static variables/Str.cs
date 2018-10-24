@@ -11,6 +11,14 @@ namespace NightVision
     {
         public const string PhotoSTag = "Photosensitivity";
 
+        public static readonly string NV = "NightVisionNV".Translate();
+        public static readonly string PS = "NightVisionPS".Translate();
+
+        public static readonly string Drk = "NightVisionDrk".Translate();
+        public static readonly string BriL = "NightVisionBriL".Translate();
+
+        public static string AcronymDef(string  statName, string stAcronym) => "NightVisionAcronymDef".Translate(statName, stAcronym);
+
         public static readonly string Darkness = "NightVisionDarkness".Translate();
         public static readonly string Bright = "NightVisionBright".Translate();
 
@@ -25,52 +33,6 @@ namespace NightVision
             return "NVMaxAtGlow".Translate(glow.ToStringPercent());
         }
 
-        public static string ShootTargetAtGlow(float glow) => "NightVisionShootTargetAtGlow".Translate(glow.ToStringPercent());
-
-        public static string HitChanceTransform(float distance, float hitChance, float result) => "NightVisionHitChanceTransform".Translate(
-            $"{distance.ToString() + ',',-5}{hitChance.ToStringPercent(), 5}", $"{result.ToStringPercent(),5}");
-
-        public static string StrikeChanceTransform(float hitChance, float result) => "NightVisionStrikeChanceTransform".Translate($"{hitChance.ToStringPercent(), 20}", result.ToStringPercent());
-
-        public static string StrikeTargetAtGlow(float glow) => "NightVisionStrikeTargetAtGlow".Translate(glow.ToStringPercent());
-
-        public static string SurpriseAtkChance(float glow, StatDef stat) => "NightVisionSurpriseAtkChance".Translate(glow.ToStringPercent(), stat.label);
-
-        public static string SurpriseAtkDesc() => "NightVisionSurpriseAtkDesc".Translate();
-
-        public static string Combat(bool isDark) => "NightVisionCombat".Translate(isDark? Darkness : Bright);
-
-        public static string SurpriseAtkDemo(StatDef stat, float atkStatVal, float defStatValue, float glow, float sAtkChance)
-            => "NightVisionSurpriseAtkDemo"
-                        .Translate(
-                            atkStatVal.ToStringPercent(),
-                            stat.label,
-                            glow.ToStringPercent(),
-                            defStatValue.ToStringPercent(),
-                            sAtkChance.ToStringPercent()
-                        );
-
-
-        public static string SurpriseAtkDemoExt(StatDef stat, float atkStatVal, float defStatVal, float sAtk) => "NightVisionSurpriseAtkDemoExt"
-                    .Translate(
-                        defStatVal.ToStringPercent(),
-                        stat.label,
-                        sAtk.ToStringPercent());
-
-        public static string Dodge(StatDef stat) => "NightVisionDodge".Translate(stat.label);
-
-        public static string DodgeDemo(StatDef stat, float defStatVal, float atkStatVal, StatDef dodgeStat, float dodgeChance, float result) => "NightVisionDodgeDemo"
-                    .Translate(
-                        dodgeChance.ToStringPercent(),
-                        defStatVal.ToStringPercent(),
-                        stat.LabelCap,
-                        atkStatVal.ToStringPercent(),
-                        result.ToStringPercent()
-
-
-                        );
-
-        public static string AimFactorFromLight(float glowAtTarget, float result) => "NightVisionAimFactorFromLight".Translate(glowAtTarget.ToStringPercent(),  result.ToStringPercent()).CapitalizeFirst();
 
         public const string Alabel = "{0:+#;-#;0}%";
         public const string BodyKey = "WholeBody";
@@ -89,9 +51,5 @@ namespace NightVision
 
         public static readonly string ZeroMultiLabel = "NVZeroLabel".Translate() + " = x{0:##}%";
         public static readonly string ExpIntro = "{3} " + Str.Effect + Maxline;
-
-        public static string RangedCooldown(float glow, int skill, float result) => "NightVisionRangedCooldown".Translate(glow.ToStringPercent(), skill, result.ToStringPercent());
-
-        public static string RangedCooldownDemo (float glow, float result)=> "NightVisionRangedCooldownDemo".Translate(glow.ToStringPercent(), result.ToStringPercent());
     }
 }

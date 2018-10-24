@@ -16,8 +16,6 @@ namespace NightVision.Testing
     [HasDebugOutput]
     public class DebugFlareRaidPawnGen
     {
-        [TweakValue("0 NightVision.Incidents")]
-        public static bool ErrorOnNopawnGenerated;
         [DebugOutput]
         [Category("NightVision")]
         public static void FlareRaidPawnGroupsMade()

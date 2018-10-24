@@ -19,7 +19,7 @@ namespace NightVision
         public void TickCheckForFlareRaid()
         {
 
-            if (NVGameComponent.FlareRaidIsDisabled
+            if (!NVGameComponent.FlareRaidIsEnabled
                 || Find.Scenario.AllParts.Any(
                     scenPart => scenPart is ScenPart_DisableIncident scenPartDisable && scenPartDisable.Incident == FlareRaidDef
                 ))
@@ -29,7 +29,7 @@ namespace NightVision
 
             if (QueuedMapID > 0 && QueuedFiringTick <= Find.TickManager.TicksAbs)
             {
-                if (!Find.World.GameConditionManager.ConditionIsActive(RwDefs.SolarFlare))
+                if (!Find.World.GameConditionManager.ConditionIsActive(Defs_Rimworld.SolarFlare))
                 {
                     Log.Message($"NVGameComp: found queued map but solar flare no longer active. Miscalculated?");
                     QueuedFiringTick = -1;
@@ -65,7 +65,7 @@ namespace NightVision
                 QueuedMapID      = -1;
             }
 
-            if (Find.World.GameConditionManager.GetActiveCondition(def: RwDefs.SolarFlare) is GameCondition solarFlare
+            if (Find.World.GameConditionManager.GetActiveCondition(def: Defs_Rimworld.SolarFlare) is GameCondition solarFlare
                 && !solarFlare.Permanent && solarFlare.startTick != LastFlareStartTick)
             {
                 LastFlareStartTick = solarFlare.startTick;
@@ -90,7 +90,7 @@ namespace NightVision
                     int hourCount = 0;
                     // use tolist to force eval
                     var anony = potentialTargets.Select(target => new {mapID = target.uniqueID, hours = CalcPotentialHoursToFire(target, solarFlare.TicksLeft, ref hourCount)}).Where(anon=> anon.hours != null).ToList();
-                    Log.Message($"anony = {anony.ToStringSafeEnumerable()}");
+          
                 
                     if (
                         hourCount == 0)

@@ -17,8 +17,8 @@ namespace NightVision
                                                             {
                                                                 Offsets = new[]
                                                                           {
-                                                                              CalcConstants.NVDefaultOffsets[0],
-                                                                              CalcConstants.NVDefaultOffsets[1]
+                                                                              Constants_Calculations.NVDefaultOffsets[0],
+                                                                              Constants_Calculations.NVDefaultOffsets[1]
                                                                           },
                                                                 Initialised = true
                                                             };
@@ -27,8 +27,8 @@ namespace NightVision
                                                             {
                                                                 Offsets = new[]
                                                                           {
-                                                                              CalcConstants.PSDefaultOffsets[0],
-                                                                              CalcConstants.PSDefaultOffsets[1]
+                                                                              Constants_Calculations.PSDefaultOffsets[0],
+                                                                              Constants_Calculations.PSDefaultOffsets[1]
                                                                           },
                                                                 Initialised = true
                                                             };
@@ -79,12 +79,12 @@ namespace NightVision
             {
                 if (this == LightModifiersBase.NVLightModifiers)
                 {
-                    return CalcConstants.NVDefaultOffsets;
+                    return Constants_Calculations.NVDefaultOffsets;
                 }
 
                 if (this == LightModifiersBase.PSLightModifiers)
                 {
-                    return CalcConstants.PSDefaultOffsets;
+                    return Constants_Calculations.PSDefaultOffsets;
                 }
 
                 return new float[2];
@@ -106,12 +106,12 @@ namespace NightVision
                 {
                     if (this == LightModifiersBase.NVLightModifiers)
                     {
-                        Offsets = CalcConstants.NVDefaultOffsets.ToArray();
+                        Offsets = Constants_Calculations.NVDefaultOffsets.ToArray();
                     }
 
                     else if (this == LightModifiersBase.PSLightModifiers)
                     {
-                        Offsets = CalcConstants.PSDefaultOffsets.ToArray();
+                        Offsets = Constants_Calculations.PSDefaultOffsets.ToArray();
                     }
                     else
                     {
@@ -134,8 +134,8 @@ namespace NightVision
             {
                 return (float) Math.Round(
                                           this[0] / numEyesNormalisedFor,
-                                          CalcConstants.NumberOfDigits,
-                                          CalcConstants.Rounding
+                                          Constants_Calculations.NumberOfDigits,
+                                          Constants_Calculations.Rounding
                                          );
             }
 
@@ -143,8 +143,8 @@ namespace NightVision
             {
                 return (float) Math.Round(
                                           this[1] / numEyesNormalisedFor,
-                                          CalcConstants.NumberOfDigits,
-                                          CalcConstants.Rounding
+                                          Constants_Calculations.NumberOfDigits,
+                                          Constants_Calculations.Rounding
                                          );
             }
 
@@ -152,8 +152,8 @@ namespace NightVision
             {
                 return (float) Math.Round(
                                           this[0] / numEyesNormalisedFor * (0.3f - glow) / 0.3f,
-                                          CalcConstants.NumberOfDigits,
-                                          CalcConstants.Rounding
+                                          Constants_Calculations.NumberOfDigits,
+                                          Constants_Calculations.Rounding
                                          );
             }
 
@@ -161,8 +161,8 @@ namespace NightVision
             {
                 return (float) Math.Round(
                                           this[1] / numEyesNormalisedFor * (glow - 0.7f) / 0.3f,
-                                          CalcConstants.NumberOfDigits,
-                                          CalcConstants.Rounding
+                                          Constants_Calculations.NumberOfDigits,
+                                          Constants_Calculations.Rounding
                                          );
             }
 
@@ -180,11 +180,11 @@ namespace NightVision
 
             if (glow.GlowIsDarkness())
             {
-                mincap = (Storage.MultiplierCaps.min - CalcConstants.DefaultZeroLightMultiplier)
+                mincap = (Storage.MultiplierCaps.min - Constants_Calculations.DefaultZeroLightMultiplier)
                          * (0.3f                     - glow)
                          / 0.3f;
 
-                maxcap = (Storage.MultiplierCaps.max - CalcConstants.DefaultZeroLightMultiplier)
+                maxcap = (Storage.MultiplierCaps.max - Constants_Calculations.DefaultZeroLightMultiplier)
                          * (0.3f                     - glow)
                          / 0.3f;
 
@@ -193,11 +193,11 @@ namespace NightVision
             }
             else
             {
-                mincap = (Storage.MultiplierCaps.min - CalcConstants.DefaultFullLightMultiplier)
+                mincap = (Storage.MultiplierCaps.min - Constants_Calculations.DefaultFullLightMultiplier)
                          * (glow                     - 0.7f)
                          / 0.3f;
 
-                maxcap = (Storage.MultiplierCaps.max - CalcConstants.DefaultFullLightMultiplier)
+                maxcap = (Storage.MultiplierCaps.max - Constants_Calculations.DefaultFullLightMultiplier)
                          * (glow                     - 0.7f)
                          / 0.3f;
 
@@ -207,13 +207,13 @@ namespace NightVision
             
             return new[]
                    {
-                       (float) Math.Round(maxcap, CalcConstants.NumberOfDigits, CalcConstants.Rounding)
+                       (float) Math.Round(maxcap, Constants_Calculations.NumberOfDigits, Constants_Calculations.Rounding)
                        ,
-                        ((float) Math.Round(mincap, CalcConstants.NumberOfDigits, CalcConstants.Rounding))
+                        ((float) Math.Round(mincap, Constants_Calculations.NumberOfDigits, Constants_Calculations.Rounding))
                        ,
-                        (float)Math.Round(nvcap, CalcConstants.NumberOfDigits, CalcConstants.Rounding)
+                        (float)Math.Round(nvcap, Constants_Calculations.NumberOfDigits, Constants_Calculations.Rounding)
                        , 
-                       (float)Math.Round(pscap, CalcConstants.NumberOfDigits, CalcConstants.Rounding)
+                       (float)Math.Round(pscap, Constants_Calculations.NumberOfDigits, Constants_Calculations.Rounding)
                        
                    };
 

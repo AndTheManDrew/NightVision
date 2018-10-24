@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using RimWorld;
 using Verse;
@@ -15,18 +16,13 @@ namespace NightVision
 {
     public static class StatReportFor_NightVision
     {
-        public static string CompleteStatReport(NVStatWorker worker, Comp_NightVision comp, Pawn pawn)
+        public static string CompleteStatReport(StatDef stat, FieldInfo relevantField, Comp_NightVision comp, float relevantGlow)
         {
-            float   glow           = worker.Glow;
-            StatDef stat           = worker.Stat;
-            float   factorFromGlow = comp.FactorFromGlow(glow: worker.Glow);
+            float   factorFromGlow = comp.FactorFromGlow(relevantGlow);
 
-            return BasicExplanation(glow: glow, usedApparelSetting: out bool UsedApparel, comp: comp)
+            return BasicExplanation(glow: relevantGlow, usedApparelSetting: out bool UsedApparel, comp: comp)
                    + FinalValue(stat: stat, value: factorFromGlow)
-                   + (UsedApparel
-                               ? ApparelPart(worker: worker, comp: comp)
-                                 + CombatPart(pawn: pawn, factorFromGlow: factorFromGlow, glow: glow, stat: stat)
-                               : CombatPart(pawn: pawn, factorFromGlow: factorFromGlow, glow: glow, stat: stat));
+                   + (relevantField != null && UsedApparel ? ApparelPart(relevantField, comp: comp) : "");
         }
 
         public static string ShortStatReport(float glow, Comp_NightVision comp)
@@ -38,8 +34,9 @@ namespace NightVision
         {
             return "StatsReport_FinalValue".Translate() + ": " + stat.ValueToString(val: value, numberSense: stat.toStringNumberSense) + "\n\n";
         }
+        
 
-        private static string ApparelPart(NVStatWorker worker, Comp_NightVision comp)
+        private static string ApparelPart(FieldInfo relevantField, Comp_NightVision comp)
         {
             var builder = new StringBuilder();
             builder.AppendLine(value: "StatsReport_RelevantGear".Translate());
@@ -47,7 +44,7 @@ namespace NightVision
             foreach (Apparel app in comp.PawnsNVApparel ?? Enumerable.Empty<Apparel>())
             {
                 if (Storage.NVApparel.TryGetValue(key: app.def, value: out ApparelVisionSetting setting)
-                    && (bool) worker.RelevantField.GetValue(obj: setting))
+                    && (bool) relevantField.GetValue(obj: setting))
                 {
                     builder.AppendLine(value: app.LabelCap);
                 }
@@ -56,120 +53,6 @@ namespace NightVision
             return builder.ToString();
         }
 
-        public static string RangedCoolDown(Pawn pawn, int skillLevel)
-        {
-            var   stringBuilder = new StringBuilder();
-            float glow          = GlowFor.GlowAt(thing: pawn);
-            float glowFactor    = GlowFor.FactorOrFallBack(pawn: pawn, glow: glow);
-
-            stringBuilder.AppendLine(
-                value: Str.RangedCooldown(
-                    glow: glow,
-                    skill: skillLevel,
-                    result: CombatHelpers.RangedCooldownMultiplier(skill: skillLevel, glowFactor: glowFactor)
-                )
-            );
-
-            glow       = 1f;
-            glowFactor = GlowFor.FactorOrFallBack(pawn: pawn, glow: glow);
-
-            stringBuilder.AppendLine(
-                value: Str.RangedCooldownDemo(glow: glow, result: CombatHelpers.RangedCooldownMultiplier(skill: skillLevel, glowFactor: glowFactor))
-            );
-
-            glow       = 0f;
-            glowFactor = GlowFor.FactorOrFallBack(pawn: pawn, glow: glow);
-
-            stringBuilder.AppendLine(
-                value: Str.RangedCooldownDemo(glow: glow, result: CombatHelpers.RangedCooldownMultiplier(skill: skillLevel, glowFactor: glowFactor))
-            );
-
-            return stringBuilder.ToString();
-        }
-
-
-        private static string CombatPart(Pawn pawn, float factorFromGlow, float glow, StatDef stat)
-        {
-            var     stringbuilder = new StringBuilder();
-
-            stringbuilder.AppendLine(new string('-', 20));
-            stringbuilder.AppendLine(Str.Combat(glow.GlowIsDarkness()));
-            stringbuilder.AppendLine();
-            stringbuilder.AppendLine(value: Str.ShootTargetAtGlow(glow: glow));
-
-
-            for (var i = 1; i <= 4; i++)
-            {
-                float hit = ShotReport.HitFactorFromShooter(caster: pawn, distance: i * 5);
-
-                stringbuilder.AppendLine(
-                    value: Str.HitChanceTransform(
-                        distance: i * 5,
-                        hitChance: hit,
-                        result: CombatHelpers.HitChanceGlowTransform(hitChance: hit, attGlowFactor: factorFromGlow)
-                    )
-                );
-            }
-
-            stringbuilder.AppendLine();
-            stringbuilder.AppendLine(value: Str.StrikeTargetAtGlow(glow: glow));
-            float meleeHit = pawn.GetStatValue(stat: RwDefs.MeleeHitStat, applyPostProcess: true);
-
-            stringbuilder.AppendLine(
-                value: Str.StrikeChanceTransform(
-                    hitChance: meleeHit,
-                    result: CombatHelpers.HitChanceGlowTransform(hitChance: meleeHit, attGlowFactor: factorFromGlow)
-                )
-            );
-
-            stringbuilder.AppendLine();
-            stringbuilder.AppendLine(value: Str.SurpriseAtkDesc());
-            stringbuilder.AppendLine(value: Str.SurpriseAtkChance(glow,  stat));
-            float sAtk = CombatHelpers.SurpriseAttackChance(atkGlowFactor: factorFromGlow, defGlowFactor: Storage.MultiplierCaps.min);
-
-            stringbuilder.AppendLine(
-                value: Str.SurpriseAtkDemo(
-                    stat: stat,
-                    atkStatVal: factorFromGlow,
-                    defStatValue: Storage.MultiplierCaps.min,
-                    glow: glow,
-                    sAtkChance: sAtk
-                )
-            );
-
-            if (sAtk.IsNonTrivial())
-            {
-                sAtk = CombatHelpers.SurpriseAttackChance(atkGlowFactor: factorFromGlow, defGlowFactor: 1f);
-                stringbuilder.AppendLine(value: Str.SurpriseAtkDemoExt(stat: stat, atkStatVal: factorFromGlow, defStatVal: 1f, sAtk: sAtk));
-
-                if (sAtk.IsNonTrivial())
-                {
-                    sAtk = CombatHelpers.SurpriseAttackChance(atkGlowFactor: factorFromGlow, defGlowFactor: Storage.MultiplierCaps.max);
-
-                    stringbuilder.AppendLine(
-                        value: Str.SurpriseAtkDemoExt(stat: stat, atkStatVal: factorFromGlow, defStatVal: Storage.MultiplierCaps.max, sAtk: sAtk)
-                    );
-                }
-            }
-
-
-            stringbuilder.AppendLine();
-            stringbuilder.AppendLine(value: Str.Dodge(stat: stat));
-            float pawnDodgeVal = pawn.GetStatValue(stat: RwDefs.MeleeDodgeStat);
-
-            stringbuilder.AppendLine(
-                value: Str.DodgeDemo(
-                    stat: stat,
-                    defStatVal: factorFromGlow,
-                    atkStatVal: 1f,
-                    dodgeStat: RwDefs.MeleeDodgeStat,
-                    dodgeChance: pawnDodgeVal,
-                    result: CombatHelpers.DodgeChanceFunction(orgDodge: pawnDodgeVal, glowFactorDelta: 1f - factorFromGlow)
-                )
-            );
-
-            return stringbuilder.ToString();
-        }
 
         /// <summary>
         ///     For the pawn's stat inspect tab. Cleaned up a bit, still about as elegant as a panda doing the can-can
@@ -218,8 +101,8 @@ namespace NightVision
 
             if (lowLight)
             {
-                basevalue = CalcConstants.DefaultFullLightMultiplier
-                            + (CalcConstants.DefaultZeroLightMultiplier - CalcConstants.DefaultFullLightMultiplier) * (0.3f - glow) / 0.3f;
+                basevalue = Constants_Calculations.DefaultFullLightMultiplier
+                            + (Constants_Calculations.DefaultZeroLightMultiplier - Constants_Calculations.DefaultFullLightMultiplier) * (0.3f - glow) / 0.3f;
 
                 if (comp.ApparelGrantsNV)
                 {
@@ -228,7 +111,7 @@ namespace NightVision
             }
             else
             {
-                basevalue = CalcConstants.DefaultFullLightMultiplier;
+                basevalue = Constants_Calculations.DefaultFullLightMultiplier;
 
                 if (comp.ApparelNullsPS)
                 {
@@ -252,8 +135,8 @@ namespace NightVision
 
                     var NumToAdd = (float) Math.Round(
                         value: effect * comp.NumberOfRemainingEyes,
-                        digits: CalcConstants.NumberOfDigits,
-                        mode: CalcConstants.Rounding
+                        digits: Constants_Calculations.NumberOfDigits,
+                        mode: Constants_Calculations.Rounding
                     );
 
                     StringToAppend = string.Format(
@@ -299,7 +182,7 @@ namespace NightVision
                         if (effect.IsNonTrivial())
                         {
                             foundSomething = true;
-                            effect         = (float) Math.Round(value: effect, digits: CalcConstants.NumberOfDigits, mode: CalcConstants.Rounding);
+                            effect         = (float) Math.Round(value: effect, digits: Constants_Calculations.NumberOfDigits, mode: Constants_Calculations.Rounding);
                             StringToAppend = string.Format(format: "  " + Str.ModifierLine, arg0: hediffDef.LabelCap, arg1: effect);
 
                             switch (hediffSetting.IntSetting)
@@ -369,7 +252,7 @@ namespace NightVision
 
                 if (!comp.CanCheat)
                 {
-                    if (sum - CalcConstants.NVEpsilon > caps[0] || sum + CalcConstants.NVEpsilon < caps[1])
+                    if (sum - Constants_Calculations.NVEpsilon > caps[0] || sum + Constants_Calculations.NVEpsilon < caps[1])
                     {
                         AppendPreSumIfNeeded(needed: ref needed);
 
@@ -383,17 +266,17 @@ namespace NightVision
                         explanation.AppendLine();
                     }
 
-                    if (lowLight && comp.ApparelGrantsNV && sum + CalcConstants.NVEpsilon < caps[2])
+                    if (lowLight && comp.ApparelGrantsNV && sum + Constants_Calculations.NVEpsilon < caps[2])
                     {
                         AppendPreSumIfNeeded(needed: ref needed);
                         explanation.Append(value: "NVGearPresent".Translate(arg1: $"{basevalue + caps[2]:0%}"));
                         usedApparelSetting = true;
                         sum                = caps[2];
                     }
-                    else if (comp.ApparelNullsPS && sum + CalcConstants.NVEpsilon < 0)
+                    else if (comp.ApparelNullsPS && sum + Constants_Calculations.NVEpsilon < 0)
                     {
                         AppendPreSumIfNeeded(needed: ref needed);
-                        explanation.Append(value: "PSGearPresent".Translate(arg1: $"{CalcConstants.DefaultFullLightMultiplier:0%}"));
+                        explanation.Append(value: "PSGearPresent".Translate(arg1: $"{Constants_Calculations.DefaultFullLightMultiplier:0%}"));
                         usedApparelSetting = true;
                         sum                = 0;
                     }

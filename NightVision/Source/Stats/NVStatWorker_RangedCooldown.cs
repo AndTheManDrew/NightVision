@@ -13,7 +13,7 @@ namespace NightVision
     public class NVStatWorker_RangedCooldown : NVStatWorker
     {
 
-        public SkillDef DerivedFrom = RwDefs.ShootSkill;
+        public SkillDef DerivedFrom = Defs_Rimworld.ShootSkill;
         #region Overrides of NVStatWorker
 
         public override string GetExplanationUnfinalized(StatRequest req, ToStringNumberSense numberSense)
@@ -22,7 +22,7 @@ namespace NightVision
             {
                 int skillLevel = pawn.skills.GetSkill(DerivedFrom).Level;
 
-                return StatReportFor_NightVision.RangedCoolDown(pawn, skillLevel);
+                return StatReportFor_NightVision_Combat.RangedCoolDown(pawn, skillLevel);
             }
             return String.Empty;
         }
@@ -44,34 +44,28 @@ namespace NightVision
                 }
             }
 
-            return CalcConstants.TrivialFactor;
+            return Constants_Calculations.TrivialFactor;
         }
 
         #region Overrides of StatWorker
 
         public override void FinalizeValue(StatRequest req, ref float val, bool applyPostProcess)
         {
-
-            Log.Message(new string('-', 20));
-            Log.Message($"NVStatWorker_RangedCooldown");
-            Log.Message($"FinalizeValue");
-            
-            Log.Message($"val = {val}");
             
             base.FinalizeValue(req, ref val, applyPostProcess);
-            Log.Message($"after base:");
-            
-            Log.Message($"val = {val}");
-            Log.Message(new string('-', 20));
         }
 
         #endregion
 
         public override bool IsDisabledFor(Thing thing)
         {
-            return base.IsDisabledFor(thing) || !(thing is Pawn pawn && !pawn.skills.GetSkill(DerivedFrom).TotallyDisabled);
+            return base.IsDisabledFor(thing) ||  !(thing is Pawn pawn && !pawn.skills.GetSkill(DerivedFrom).TotallyDisabled);
         }
 
+        public override bool ShouldShowFor(StatRequest req)
+        {
+            return base.ShouldShowFor(req) || !Storage_Combat.RangedCooldownEffectsEnabled.Value;
+        }
 
         #endregion
 

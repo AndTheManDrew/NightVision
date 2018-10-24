@@ -26,12 +26,14 @@ namespace NightVision
     public static class NVHarmonyPatcher
     {
 
+        public static HarmonyInstance NVHarmony;
+
         static NVHarmonyPatcher()
         {
 #if DEBUG
                         HarmonyInstance.DEBUG = true;
 #endif
-            HarmonyInstance harmony = HarmonyInstance.Create("drumad.rimworld.nightvision");
+            NVHarmony = HarmonyInstance.Create("drumad.rimworld.nightvision");
             
             MethodInfo addHediffMethod = AccessTools.Method(
                                                                     typeof(Pawn_HealthTracker),
@@ -57,20 +59,20 @@ namespace NightVision
                                                                    }
                                                                   );
             
-            harmony.Patch(
+            NVHarmony.Patch(
                 addHediffMethod,
                           null,
                           new HarmonyMethod(typeof(PawnHealthTracker_AddHediff), nameof(PawnHealthTracker_AddHediff.AddHediff_Postfix))
                          );
             
-            harmony.Patch(
+            NVHarmony.Patch(
                 tryDropMethod,
                           null,
                           new HarmonyMethod(typeof(ApparelTracker_TryDrop), nameof(ApparelTracker_TryDrop.Postfix))
                          );
             
 
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
+            NVHarmony.PatchAll();
 
 #if DEBUG
                         HarmonyInstance.DEBUG = false;

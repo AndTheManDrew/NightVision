@@ -14,7 +14,8 @@ namespace NightVision
         {
             Glow = 0f;
             RelevantField = AccessTools.Field(typeof(ApparelVisionSetting), nameof(ApparelVisionSetting.GrantsNV));
-            DefaultStatValue = CalcConstants.DefaultZeroLightMultiplier;
+            DefaultStatValue = Constants_Calculations.DefaultZeroLightMultiplier;
+            Acronym = Str.NV;
         }
     }
 }

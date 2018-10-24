@@ -58,7 +58,7 @@ namespace NightVision
                                                                    +1f    + 0.2f * (1 - index)
                                                                   ),
                                                        2,
-                                                       CalcConstants.Rounding
+                                                       Constants_Calculations.Rounding
                                                       );
         }
 
@@ -167,8 +167,8 @@ namespace NightVision
                 case VisionType.NVPhotosensitivity: return !_hediffCompProps.GrantsPhotosensitivity;
                 case VisionType.NVCustom:
 
-                    return !(Math.Abs(_hediffCompProps.FullLightMod    - Offsets[1]) < CalcConstants.NVEpsilon)
-                           || !(Math.Abs(_hediffCompProps.ZeroLightMod - Offsets[0]) < CalcConstants.NVEpsilon);
+                    return !(Math.Abs(_hediffCompProps.FullLightMod    - Offsets[1]) < Constants_Calculations.NVEpsilon)
+                           || !(Math.Abs(_hediffCompProps.ZeroLightMod - Offsets[0]) < Constants_Calculations.NVEpsilon);
             }
         }
 

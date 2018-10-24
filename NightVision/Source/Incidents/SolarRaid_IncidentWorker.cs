@@ -37,7 +37,7 @@ namespace NightVision
         {
             var map = (Map) parms.target;
 
-            return Find.World.GameConditionManager.ConditionIsActive(def: RwDefs.SolarFlare)
+            return Find.World.GameConditionManager.ConditionIsActive(def: Defs_Rimworld.SolarFlare)
                    && (parms.faction != null || CandidateFactions(map: map, desperate: false).Any());
         }
 
@@ -54,7 +54,7 @@ namespace NightVision
                 return false;
             }
 
-            PawnGroupKindDef combat = RwDefs.CombatGroup;
+            PawnGroupKindDef combat = Defs_Rimworld.CombatGroup;
             ResolveRaidStrategy(parms: parms, groupKind: combat);
 
             if (!parms.raidArrivalMode.Worker.TryResolveRaidSpawnCenter(parms: parms))
@@ -219,24 +219,7 @@ namespace NightVision
                             result: out parms.raidStrategy
                         ))
             {
-                Log.Error(
-                    text: String.Concat(
-                        "No raid stategy for ",
-                        parms.faction,
-                        " with points ",
-                        parms.points,
-                        ", groupKind=",
-                        groupKind,
-                        "\nparms=",
-                        parms
-                    ),
-                    ignoreStopLoggingLimit: false
-                );
-
-                if (!Prefs.DevMode)
-                {
                     parms.raidStrategy = RaidStrategyDefOf.ImmediateAttack;
-                }
             }
         }
 
@@ -247,9 +230,9 @@ namespace NightVision
 
         protected override string GetLetterText(IncidentParms parms, List<Pawn> pawns)
         {
-            string text = String.Format(format: parms.raidArrivalMode.textEnemy, arg0: parms.faction.def.pawnsPlural, arg1: parms.faction.Name);
+            string text = "NightVisionFlareArrivalText".Translate(parms.faction.def.pawnsPlural, parms.faction.Name);
             text += "\n\n";
-            text += parms.raidStrategy.arrivalTextEnemy;
+            text += "NightVisionFlarePawnText".Translate();
             Pawn pawn = pawns.Find(match: x => x.Faction.leader == x);
 
             if (pawn != null)
@@ -262,9 +245,7 @@ namespace NightVision
                     arg3: pawn.Named(label: "LEADER")
                 );
             }
-
-            text += "NIGHTVISION RAID - REMOVE THIS";
-
+            
             return text;
         }
 

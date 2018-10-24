@@ -23,11 +23,11 @@ namespace NightVision
 
         public override void GameComponentTick()
         {
-            if (!FlareRaidIsDisabled && SolarRaidStoryWorker == null)
+            if (FlareRaidIsEnabled && SolarRaidStoryWorker == null)
             {
                 SolarRaidStoryWorker = new SolarRaid_StoryWorker();
             }
-            else if (FlareRaidIsDisabled && SolarRaidStoryWorker != null)
+            else if (!FlareRaidIsEnabled && SolarRaidStoryWorker != null)
             {
                 SolarRaidStoryWorker = null;
             }
@@ -38,11 +38,11 @@ namespace NightVision
         public override void ExposeData()
         {
             base.ExposeData();
-            if (!FlareRaidIsDisabled && Scribe.mode == LoadSaveMode.Saving)
+            if (FlareRaidIsEnabled && Scribe.mode == LoadSaveMode.Saving)
             {
                 SolarRaidStoryWorker?.ExposeData();
             }
-            else if (!FlareRaidIsDisabled && Scribe.mode == LoadSaveMode.LoadingVars)
+            else if (FlareRaidIsEnabled && Scribe.mode == LoadSaveMode.LoadingVars)
             {
                 SolarRaidStoryWorker = new SolarRaid_StoryWorker();
                 SolarRaidStoryWorker.ExposeData();
@@ -51,7 +51,7 @@ namespace NightVision
         
         public override void FinalizeInit()
         {
-            if (!FlareRaidIsDisabled)
+            if (FlareRaidIsEnabled)
             {
                 SolarRaidStoryWorker = new SolarRaid_StoryWorker();
             }
@@ -62,10 +62,9 @@ namespace NightVision
 
         #endregion
 
-        [TweakValue(category: "0 NV Incidents")]
+        [TweakValue(category: "0 NV Incidents", 0, 10)]
         public static int Evilness = 5;
 
-        [TweakValue(category:"0 NV Incidents")]
-        public static bool FlareRaidIsDisabled;
+        public static bool FlareRaidIsEnabled = true;
     }
 }

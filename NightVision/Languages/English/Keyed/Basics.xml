@@ -9,6 +9,7 @@
   <NVApparel>Apparel</NVApparel>
   <NVGeneralTab>General</NVGeneralTab>
   <NVDebugTab>Dev Mode</NVDebugTab>
+  <NVCombat>Combat</NVCombat>
 
   <NVNone>None</NVNone>
   <NVNightVision>Night Vision</NVNightVision>
@@ -26,6 +27,10 @@
 
   <NightVisionDarkness>darkness</NightVisionDarkness>
   <NightVisionBright>bright light</NightVisionBright>
+
+  <NightVisionNV>N.V.</NightVisionNV>
+
+  <NightVisionPS>P.S.</NightVisionPS>
 
   <NVZeroLabel>At 0% light</NVZeroLabel>
   <NVFullLabel>At 100% light</NVFullLabel>

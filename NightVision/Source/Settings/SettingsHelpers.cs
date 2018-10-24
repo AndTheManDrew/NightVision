@@ -32,8 +32,8 @@ namespace NightVision
                 100f
                 * (mod
                    + (isZeroLight
-                               ? CalcConstants.DefaultZeroLightMultiplier
-                               : CalcConstants.DefaultFullLightMultiplier))
+                               ? Constants_Calculations.DefaultZeroLightMultiplier
+                               : Constants_Calculations.DefaultFullLightMultiplier))
             );
         }
 
@@ -42,10 +42,10 @@ namespace NightVision
             bool  isZeroLight
         )
         {
-            return (float) Math.Round(multipercent / 100f, CalcConstants.NumberOfDigits)
+            return (float) Math.Round(multipercent / 100f, Constants_Calculations.NumberOfDigits)
                    - (isZeroLight
-                               ? CalcConstants.DefaultZeroLightMultiplier
-                               : CalcConstants.DefaultFullLightMultiplier);
+                               ? Constants_Calculations.DefaultZeroLightMultiplier
+                               : Constants_Calculations.DefaultFullLightMultiplier);
         }
 
         public static void DrawIndicator(
@@ -64,12 +64,12 @@ namespace NightVision
                                  / (max - min);
 
             rowRect.position = new Vector2(
-                posOfDefault - 0.5f           * DrawConst.IndicatorSize,
+                posOfDefault - 0.5f           * Constants_Draw.IndicatorSize,
                 rowRect.y    + rowRect.height * 0.95f
             );
 
-            rowRect.width  = DrawConst.IndicatorSize;
-            rowRect.height = DrawConst.IndicatorSize;
+            rowRect.width  = Constants_Draw.IndicatorSize;
+            rowRect.height = Constants_Draw.IndicatorSize;
             Widgets.DrawTextureFitted(rowRect, indicator, 1);
         }
 
@@ -87,7 +87,7 @@ namespace NightVision
             //Draw indicators on zero light rect
             DrawIndicator(
                 zeroRect,
-                CalcConstants.DefaultZeroLightMultiplier,
+                Constants_Calculations.DefaultZeroLightMultiplier,
                 LightModifiersBase.PSLightModifiers[0],
                 minZero,
                 maxZero,
@@ -96,7 +96,7 @@ namespace NightVision
 
             DrawIndicator(
                 zeroRect,
-                CalcConstants.DefaultZeroLightMultiplier,
+                Constants_Calculations.DefaultZeroLightMultiplier,
                 LightModifiersBase.NVLightModifiers[0],
                 minZero,
                 maxZero,
@@ -105,7 +105,7 @@ namespace NightVision
 
             DrawIndicator(
                 zeroRect,
-                CalcConstants.DefaultZeroLightMultiplier,
+                Constants_Calculations.DefaultZeroLightMultiplier,
                 lightModifiers.DefaultOffsets[0],
                 minZero,
                 maxZero,
@@ -115,7 +115,7 @@ namespace NightVision
             //Draw indicators on full light rect
             DrawIndicator(
                 fullRect,
-                CalcConstants.DefaultFullLightMultiplier,
+                Constants_Calculations.DefaultFullLightMultiplier,
                 LightModifiersBase.PSLightModifiers[1],
                 minFull,
                 maxFull,
@@ -124,7 +124,7 @@ namespace NightVision
 
             DrawIndicator(
                 fullRect,
-                CalcConstants.DefaultFullLightMultiplier,
+                Constants_Calculations.DefaultFullLightMultiplier,
                 LightModifiersBase.NVLightModifiers[1],
                 minFull,
                 maxFull,
@@ -133,7 +133,7 @@ namespace NightVision
 
             DrawIndicator(
                 fullRect,
-                CalcConstants.DefaultFullLightMultiplier,
+                Constants_Calculations.DefaultFullLightMultiplier,
                 lightModifiers.DefaultOffsets[1],
                 minFull,
                 maxFull,
@@ -169,8 +169,8 @@ namespace NightVision
                 {
                     result += "\n" + "NVHediffAutoAssigned".Translate(hediffMods.DefaultSetting.ToString().Translate());
                 }
-                else if (Math.Abs(lightModifiers.DefaultOffsets[0])    > CalcConstants.NVEpsilon
-                         || Math.Abs(lightModifiers.DefaultOffsets[1]) > CalcConstants.NVEpsilon)
+                else if (Math.Abs(lightModifiers.DefaultOffsets[0])    > Constants_Calculations.NVEpsilon
+                         || Math.Abs(lightModifiers.DefaultOffsets[1]) > Constants_Calculations.NVEpsilon)
                 {
                     result += "\n"
                               + "NVLoadedFromFile".Translate(
@@ -180,8 +180,8 @@ namespace NightVision
                 }
             }
             else if (lightModifiers is Race_LightModifiers rlm
-                     && (Math.Abs(lightModifiers.DefaultOffsets[0])    > CalcConstants.NVEpsilon
-                         || Math.Abs(lightModifiers.DefaultOffsets[1]) > CalcConstants.NVEpsilon))
+                     && (Math.Abs(lightModifiers.DefaultOffsets[0])    > Constants_Calculations.NVEpsilon
+                         || Math.Abs(lightModifiers.DefaultOffsets[1]) > Constants_Calculations.NVEpsilon))
             {
                 result += "\n"
                           + "NVLoadedFromFile".Translate(
@@ -256,11 +256,11 @@ namespace NightVision
 
             Widgets.DrawLineHorizontal(
                 headerRect.x                           + 10f,
-                headerRect.yMax + DrawConst.RowGap / 4 - 0.5f,
+                headerRect.yMax + Constants_Draw.RowGap / 4 - 0.5f,
                 headerRect.width                       - 20f
             );
 
-            inRect.yMin += headerRect.height + DrawConst.RowGap / 2;
+            inRect.yMin += headerRect.height + Constants_Draw.RowGap / 2;
         }
 
         /// <summary>
@@ -338,45 +338,45 @@ namespace NightVision
 
             if (lightMods.IsCustom())
             {
-                num += DrawConst.RowHeight + DrawConst.RowGap;
+                num += Constants_Draw.RowHeight + Constants_Draw.RowGap;
 
                 var topRect = new Rect(
                     labelRect.xMax + 2 * buttongap,
                     num,
                     rowRect.width - labelRect.width - 60f,
-                    DrawConst.RowHeight / 2
+                    Constants_Draw.RowHeight / 2
                 );
 
                 var bottomRect = new Rect(
                     labelRect.xMax                  + 2                * buttongap,
-                    topRect.yMax                    + DrawConst.RowGap * 2,
+                    topRect.yMax                    + Constants_Draw.RowGap * 2,
                     rowRect.width - labelRect.width - 60f,
-                    DrawConst.RowHeight / 2
+                    Constants_Draw.RowHeight / 2
                 );
 
                 var explanationRect = new Rect(
                     labelRect.xMax - labelRect.width * 0.95f,
                     num,
                     labelRect.width * 0.9f,
-                    DrawConst.RowHeight
+                    Constants_Draw.RowHeight
                 );
 
                 Widgets.DrawLineVertical(
                     labelRect.xMax          + buttongap,
                     rowRect.y               + rowRect.height,
-                    DrawConst.RowHeight * 2 - DrawConst.RowGap * 0.5f
+                    Constants_Draw.RowHeight * 2 - Constants_Draw.RowGap * 0.5f
                 );
 
 
                 var zeroModAsPercent = (float) Math.Round(
                     (lightMods.Offsets[0]
-                     + (isRace ? CalcConstants.DefaultZeroLightMultiplier : 0))
+                     + (isRace ? Constants_Calculations.DefaultZeroLightMultiplier : 0))
                     * 100
                 );
 
                 var fullModAsPercent = (float) Math.Round(
                     (lightMods.Offsets[1]
-                     + (isRace ? CalcConstants.DefaultFullLightMultiplier : 0))
+                     + (isRace ? Constants_Calculations.DefaultFullLightMultiplier : 0))
                     * 100
                 );
 
@@ -504,16 +504,16 @@ namespace NightVision
                 if (!Mathf.Approximately(zeroModAsPercent / 100, lightMods.Offsets[0]))
                 {
                     lightMods[0] = zeroModAsPercent / 100
-                                   - (isRace ? CalcConstants.DefaultZeroLightMultiplier : 0);
+                                   - (isRace ? Constants_Calculations.DefaultZeroLightMultiplier : 0);
                 }
 
                 if (!Mathf.Approximately(fullModAsPercent / 100, lightMods.Offsets[1]))
                 {
                     lightMods[1] = fullModAsPercent / 100
-                                   - (isRace ? CalcConstants.DefaultFullLightMultiplier : 0);
+                                   - (isRace ? Constants_Calculations.DefaultFullLightMultiplier : 0);
                 }
 
-                num += DrawConst.RowHeight * 0.9f /*+ rowGap*/;
+                num += Constants_Draw.RowHeight * 0.9f /*+ rowGap*/;
             }
 
             return result;

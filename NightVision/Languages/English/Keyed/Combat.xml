@@ -1,26 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   
-  <NightVisionCombat>Combat Effects in {0}:</NightVisionCombat>
+  <!--Info card display-->
+  <NightVisionLMDef>L.M. = light multiplier</NightVisionLMDef>
+  <NightVisionOurLM>Our L.M. </NightVisionOurLM>
+  <NightVisionTargetLM>Target L.M.</NightVisionTargetLM>
+  <NightVisionAtkLM>Atk L.M.</NightVisionAtkLM>
+  <NightVisionAnimalAndMechNote>Note: Animals &amp; Mechanoids have a L.M. of 100%</NightVisionAnimalAndMechNote>
 
+<NightVisionTarget>Target is:</NightVisionTarget>
 
-  <NightVisionShootTargetAtGlow>Ranged hit % vs target in {0} light:</NightVisionShootTargetAtGlow>
-  <NightVisionHitChanceTransform>    At distance {0} to hit ==>{1}</NightVisionHitChanceTransform>
+  <NightVisionHitChanceTitle>Hit Chances</NightVisionHitChanceTitle>
+  <NightVisionShootTargetAtGlow>Ranged hit %:</NightVisionShootTargetAtGlow>
+
+  <NightVisionStrikeTargetAtGlow>Melee hit %:</NightVisionStrikeTargetAtGlow>
+
   
-  <NightVisionStrikeChanceTransform>    {0} ==> {1}</NightVisionStrikeChanceTransform>
 
-  <NightVisionStrikeTargetAtGlow>Melee hit % vs target in {0} light:</NightVisionStrikeTargetAtGlow>
+  <NightVisionSurpriseAtkTitle>Surprise Attack</NightVisionSurpriseAtkTitle>
+  <NightVisionSurpriseAtkSh>S.atk %</NightVisionSurpriseAtkSh>
+  <NightVisionSurpriseAtkDesc>A surprise melee attack (S.atk) never misses.</NightVisionSurpriseAtkDesc>
+  <NightVisionSurpriseAtkChance>S.atk % = 0.5 x ( character's L.M.  -  target's L.M.).</NightVisionSurpriseAtkChance>
 
-  <NightVisionSurpriseAtkDesc>A surprise attack (s.Atk) never misses.</NightVisionSurpriseAtkDesc>
-  <NightVisionSurpriseAtkChance>    Melee s.Atk % at {0} lit = 0.5 x (Atk's {1} - target's).</NightVisionSurpriseAtkChance>
-  <NightVisionSurpriseAtkDemo>    Atk ({0} {1}) vs target ({2} lit &amp; {3} {1}):  {4} s.Atk %</NightVisionSurpriseAtkDemo>
-  <NightVisionSurpriseAtkDemoExt>    If target {0} {1}:  {2} s.Atk %</NightVisionSurpriseAtkDemoExt>
 
-  <NightVisionDodge>Melee dodge % depends on (attacker's {0} - target's):</NightVisionDodge>
-  <NightVisionDodgeDemo>Attacker ({3} {2}) vs this char ({1} {2}). \n {0} ==> {4}</NightVisionDodgeDemo>
+  <NightVisionDodgeTitle>Dodge Chance</NightVisionDodgeTitle>
+  <NightVisionDodge>Dodge % depends on (attacker's L.M.  -  character's L.M.):</NightVisionDodge>
 
-  <NightVisionAimFactorFromLight>target {0} lit  x{1}</NightVisionAimFactorFromLight>
+  <NightVisionDodgeChanceShort>Dodge %</NightVisionDodgeChanceShort>
 
   <NightVisionRangedCooldown>Currently ({0} lit, shooting skill {1}): {2}</NightVisionRangedCooldown>
-  <NightVisionRangedCooldownDemo>    At {0} light: {1}</NightVisionRangedCooldownDemo>
+  <NightVisionRangedCooldownDemo>At {0} light: {1}</NightVisionRangedCooldownDemo>
+
+<!--Shot tooltip-->
+  <NightVisionAimFactorFromLight>target {0} lit  x{1}</NightVisionAimFactorFromLight>
 </LanguageData>

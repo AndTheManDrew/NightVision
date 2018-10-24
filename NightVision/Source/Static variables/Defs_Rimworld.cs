@@ -10,7 +10,7 @@ using Verse;
 
 namespace NightVision
 {
-    public static class RwDefs {
+    public static class Defs_Rimworld {
         public static readonly BodyPartTagDef EyeTag = BodyPartTagDefOf.SightSource;
         public static readonly SkillDef ShootSkill = SkillDefOf.Shooting;
         public static readonly BodyPartGroupDef Eyes = BodyPartGroupDefOf.Eyes;

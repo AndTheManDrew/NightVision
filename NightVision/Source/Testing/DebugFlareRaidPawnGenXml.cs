@@ -16,9 +16,6 @@ namespace NightVision.Testing
     [HasDebugOutput]
     public class DebugFlareRaidPawnGenXml
     {
-        [TweakValue(category: "0 NightVision.Incidents")]
-        public static bool ErrorOnNopawnGenerated;
-
         public static RaidStrategyDef GetSmart()
         {
             foreach (RaidStrategyDef raidStrategyDef in DefDatabase<RaidStrategyDef>.AllDefs)

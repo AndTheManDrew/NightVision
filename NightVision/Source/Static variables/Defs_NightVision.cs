@@ -12,7 +12,7 @@ namespace NightVision
 {
     [DefOf]
     [UsedImplicitly]
-    public static class NVDefOf
+    public static class Defs_NightVision
     {
         [UsedImplicitly]
         public static StatDef LightSensitivity = StatDef.Named("LightSensitivity");

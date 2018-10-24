@@ -58,7 +58,7 @@ namespace NVIncidents
                                                             global::Verse.DebugMenuOptionMode.Tool,
                                                             delegate
                                                             {
-                                                                global::NVIncidents.PawnGeneratorNV.SpawnPawn(skill, ab, null, false, global::NightVision.RwDefs.ShootSkill);
+                                                                global::NVIncidents.PawnGeneratorNV.SpawnPawn(skill, ab, null, false, global::NightVision.Defs_Rimworld.ShootSkill);
                                                             }
                                                         )
                                                     );
@@ -74,7 +74,7 @@ namespace NVIncidents
                                                                 global::Verse.DebugMenuOptionMode.Tool,
                                                                 delegate
                                                                 {
-                                                                    global::NVIncidents.PawnGeneratorNV.SpawnPawn(skill, ab, nvhediff, hediffMods.AffectsEye, global::NightVision.RwDefs.ShootSkill);
+                                                                    global::NVIncidents.PawnGeneratorNV.SpawnPawn(skill, ab, nvhediff, hediffMods.AffectsEye, global::NightVision.Defs_Rimworld.ShootSkill);
                                                                 }
                                                             )
                                                         );
@@ -130,7 +130,7 @@ namespace NVIncidents
                                                             global::Verse.DebugMenuOptionMode.Tool,
                                                             delegate
                                                             {
-                                                                global::NVIncidents.PawnGeneratorNV.SpawnPawn(skill, ab, null, false, global::NightVision.RwDefs.MeleeSkill);
+                                                                global::NVIncidents.PawnGeneratorNV.SpawnPawn(skill, ab, null, false, global::NightVision.Defs_Rimworld.MeleeSkill);
                                                             }
                                                         )
                                                     );
@@ -146,7 +146,7 @@ namespace NVIncidents
                                                                 global::Verse.DebugMenuOptionMode.Tool,
                                                                 delegate
                                                                 {
-                                                                    global::NVIncidents.PawnGeneratorNV.SpawnPawn(skill, ab, nvhediff, hediffMods.AffectsEye, global::NightVision.RwDefs.MeleeSkill);
+                                                                    global::NVIncidents.PawnGeneratorNV.SpawnPawn(skill, ab, nvhediff, hediffMods.AffectsEye, global::NightVision.Defs_Rimworld.MeleeSkill);
                                                                 }
                                                             )
                                                         );
@@ -173,7 +173,7 @@ namespace NVIncidents
                 "NightVision: Battle Royale Melee",
                 (global::System.Action) delegate
                 {
-                    global::NVIncidents.PawnGeneratorNV.PerformBattleRoyale(global::NightVision.RwDefs.MeleeSkill);
+                    global::NVIncidents.PawnGeneratorNV.PerformBattleRoyale(global::NightVision.Defs_Rimworld.MeleeSkill);
                 }
             ).GetValue();
             menuTraverse.Method(
@@ -181,7 +181,7 @@ namespace NVIncidents
                 "NightVision: Battle Royale ShootSkill",
                 (global::System.Action) delegate
                 {
-                    global::NVIncidents.PawnGeneratorNV.PerformBattleRoyale(global::NightVision.RwDefs.ShootSkill);
+                    global::NVIncidents.PawnGeneratorNV.PerformBattleRoyale(global::NightVision.Defs_Rimworld.ShootSkill);
                 }
             ).GetValue();
         }
@@ -216,7 +216,7 @@ namespace NVIncidents
             {
                 if (AffectsEye)
                 {
-                    foreach (var bpr in newPawn.RaceProps.body.GetPartsWithTag(RwDefs.EyeTag))
+                    foreach (var bpr in newPawn.RaceProps.body.GetPartsWithTag(Defs_Rimworld.EyeTag))
                     {
                         newPawn.health.AddHediff(hediffs, bpr, null, null);
                     }
@@ -321,7 +321,7 @@ namespace NVIncidents
 
 			    List<GlowTeam> Teams = ratings.Keys.ToList();
 			    AorB[] sides;
-			    if (skill == RwDefs.MeleeSkill)
+			    if (skill == Defs_Rimworld.MeleeSkill)
 			    {
 			        sides = ABMelee;
 			    }

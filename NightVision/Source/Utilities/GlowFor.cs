@@ -27,7 +27,7 @@ namespace NightVision
                 return comp.FactorFromGlow(glow);
             }
 
-            return CalcConstants.TrivialFactor;
+            return Constants_Calculations.TrivialFactor;
         }
 
         public static int cachedPawnHash;
@@ -59,7 +59,7 @@ namespace NightVision
                 return comp.FactorFromGlow(GlowAt(pawn));
             }
 
-            return CalcConstants.TrivialFactor;
+            return Constants_Calculations.TrivialFactor;
         }
     }
 }

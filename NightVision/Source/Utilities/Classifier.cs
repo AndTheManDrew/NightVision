@@ -45,12 +45,12 @@ namespace NightVision
                 }
 
                 if (Classifier.ZeroLightTurningPoints.Count == 0
-                    || modifier + CalcConstants.NVEpsilon                    < Classifier.ZeroLightTurningPoints[0])
+                    || modifier + Constants_Calculations.NVEpsilon                    < Classifier.ZeroLightTurningPoints[0])
                 {
                     return VisionType.NVNone;
                 }
 
-                if (modifier + CalcConstants.NVEpsilon < Classifier.ZeroLightTurningPoints[1])
+                if (modifier + Constants_Calculations.NVEpsilon < Classifier.ZeroLightTurningPoints[1])
                 {
                     return VisionType.NVNightVision;
                 }
@@ -63,7 +63,7 @@ namespace NightVision
                 Classifier.FullLightTurningPoint = Classifier.OffsetsList(false);
             }
 
-            if (Classifier.FullLightTurningPoint.Count == 0 || modifier - CalcConstants.NVEpsilon > Classifier.FullLightTurningPoint[0])
+            if (Classifier.FullLightTurningPoint.Count == 0 || modifier - Constants_Calculations.NVEpsilon > Classifier.FullLightTurningPoint[0])
             {
                 return VisionType.NVNone;
             }
@@ -84,25 +84,20 @@ namespace NightVision
                          {
                              (float) Math.Round(
                                                 LightModifiersBase.NVLightModifiers[offsetIndex],
-                                                CalcConstants.NumberOfDigits,
-                                                CalcConstants.Rounding
+                                                Constants_Calculations.NumberOfDigits,
+                                                Constants_Calculations.Rounding
                                                ),
                              (float) Math.Round(
                                                 LightModifiersBase.PSLightModifiers[offsetIndex],
-                                                CalcConstants.NumberOfDigits,
-                                                CalcConstants.Rounding
+                                                Constants_Calculations.NumberOfDigits,
+                                                Constants_Calculations.Rounding
                                                )
                          };
-#if DEBUG
-                        Log.Message($"NightVision.Classifier.OffsetsList: {result.ToStringSafeEnumerable()}");
-#endif
-
-
             for (int i = result.Count - 1; i >= 0; i--)
             {
-                if (Math.Abs(result[i]) < CalcConstants.NVEpsilon
-                    || forZeroLight  && result[i] + CalcConstants.NVEpsilon < 0
-                    || !forZeroLight && result[i] - CalcConstants.NVEpsilon > 0)
+                if (Math.Abs(result[i]) < Constants_Calculations.NVEpsilon
+                    || forZeroLight  && result[i] + Constants_Calculations.NVEpsilon < 0
+                    || !forZeroLight && result[i] - Constants_Calculations.NVEpsilon > 0)
                 {
                     result.RemoveAt(i);
                 }
@@ -118,10 +113,6 @@ namespace NightVision
             {
                 result[0] = LightModifiersBase.PSLightModifiers[offsetIndex] / 2;
             }
-#if DEBUG
-                        Log.Message($"NightVision.Classifier.OffsetsList: 112 {result.ToStringSafeEnumerable()}");
-#endif
-
             result.Sort();
 
             if (forZeroLight)
@@ -133,13 +124,13 @@ namespace NightVision
 
                 result = new List<float>
                          {
-                             (float) Math.Round(result[0]               / 2, CalcConstants.NumberOfDigits),
-                             (float) Math.Round((result[0] + result[1]) / 2, CalcConstants.NumberOfDigits)
+                             (float) Math.Round(result[0]               / 2, Constants_Calculations.NumberOfDigits),
+                             (float) Math.Round((result[0] + result[1]) / 2, Constants_Calculations.NumberOfDigits)
                          };
             }
             else
             {
-                result = new List<float> {(float) Math.Round(result[0] / 2, CalcConstants.NumberOfDigits)};
+                result = new List<float> {(float) Math.Round(result[0] / 2, Constants_Calculations.NumberOfDigits)};
             }
 
             return result;

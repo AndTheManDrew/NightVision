@@ -1,4 +1,5 @@
 ﻿using System;
+using Verse;
 
 namespace NightVision
 {
@@ -7,19 +8,35 @@ namespace NightVision
     /// </summary>
     public static class FloatExtensions
     {
+        public static bool ApproxEq<T>(this T value, T other)
+        {
+            if (value is float figure && other is float otherFigure)
+            {
+                return figure.ApproxEq(otherFigure);
+            }
+
+            if (value is FloatRange range && other is FloatRange otherRange)
+            {
+                return range.min.ApproxEq(otherRange.min) && range.max.ApproxEq(otherRange.max);
+            }
+
+            return value.Equals(other);
+        }
+
+
         public static bool GlowIsDarkOrBright(this float glow)
         {
-            return glow < CalcConstants.MinGlowNoGlow - CalcConstants.NVEpsilon || glow > CalcConstants.MaxGlowNoGlow + CalcConstants.NVEpsilon;
+            return glow < Constants_Calculations.MinGlowNoGlow - Constants_Calculations.NVEpsilon || glow > Constants_Calculations.MaxGlowNoGlow + Constants_Calculations.NVEpsilon;
         }
 
         public static bool GlowIsDarkness(this float glow)
         {
-            return glow < CalcConstants.MinGlowNoGlow - CalcConstants.NVEpsilon;
+            return glow < Constants_Calculations.MinGlowNoGlow - Constants_Calculations.NVEpsilon;
         }
 
         public static bool GlowIsBright(this float glow)
         {
-            return glow > CalcConstants.MaxGlowNoGlow + CalcConstants.NVEpsilon;
+            return glow > Constants_Calculations.MaxGlowNoGlow + Constants_Calculations.NVEpsilon;
         }
 
         public static bool GlowIsTrivial(this float glow)
@@ -34,22 +51,22 @@ namespace NightVision
 
         public static bool FactorIsTrivial(this float factor)
         {
-            return factor.ApproxEq(CalcConstants.TrivialFactor);
+            return factor.ApproxEq(Constants_Calculations.TrivialFactor);
         }
 
-        public static bool ApproxZero(this float value)
+        public static bool IsTrivial(this float value)
         {
-            return Math.Abs(value) < CalcConstants.NVEpsilon;
+            return Math.Abs(value) < Constants_Calculations.NVEpsilon;
         }
 
         public static bool ApproxEq(this float value, float other)
         {
-            return (value - other).ApproxZero();
+            return (value - other).IsTrivial();
         }
 
         public static bool IsNonTrivial(this float value)
         {
-            return !value.ApproxZero();
+            return !value.IsTrivial();
         }
     }
 }
