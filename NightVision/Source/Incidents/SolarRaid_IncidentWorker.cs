@@ -263,17 +263,7 @@ namespace NightVision
 
         public static float ChanceForFlareRaid(Map target)
         {
-            if (SolarRaid_StoryWorker.FlareRaidDef.chanceFactorByPopulationCurve == null || NVGameComponent.Evilness > 5)
-            {
                 return SolarRaid_StoryWorker.FlareRaidDef.baseChance;
-            }
-
-            int plPawnCount
-                        = target.mapPawns.FreeColonistsCount;
-
-            return SolarRaid_StoryWorker.FlareRaidDef.baseChance * SolarRaid_StoryWorker.FlareRaidDef.chanceFactorByPopulationCurve.Evaluate(plPawnCount);
-
-
         }
     }
 }

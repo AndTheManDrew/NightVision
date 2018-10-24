@@ -168,7 +168,7 @@ namespace NightVision
                                 def: nvAppDef,
                                 stuff: nvAppDef.MadeFromStuff ? GenStuff.RandomStuffByCommonalityFor(td: nvAppDef) : null
                             );
-
+                            PawnGenerator.PostProcessGeneratedGear(apparel, pawn);
                             pawn.apparel.Wear(newApparel: (Apparel) apparel, dropReplacedApparel: false);
                         }
                     }
@@ -176,14 +176,14 @@ namespace NightVision
                     break;
             }
 
-            if (Rand.Chance(chance: NVGameComponent.Evilness / 6f))
+            if (Rand.Chance(chance: NVGameComponent.Evilness / 8f))
             {
                 ThingDef shield = Defs_Rimworld.ShieldDef;
 
                 if (ApparelUtility.HasPartsToWear(p: pawn, apparel: shield))
                 {
                     Thing shieldBelt = ThingMaker.MakeThing(def: shield, stuff: shield.MadeFromStuff ? GenStuff.RandomStuffFor(td: shield) : null);
-
+                    PawnGenerator.PostProcessGeneratedGear(shieldBelt, pawn);
                     pawn.apparel.Wear(newApparel: (Apparel) shieldBelt, dropReplacedApparel: false);
                 }
             }

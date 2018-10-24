@@ -61,9 +61,8 @@ namespace NightVision
 
 
         #endregion
-
-        [TweakValue(category: "0 NV Incidents", 0, 10)]
-        public static int Evilness = 5;
+        
+        public static int Evilness => Find.Storyteller.difficulty.difficulty * 2;
 
         public static bool FlareRaidIsEnabled = true;
     }
