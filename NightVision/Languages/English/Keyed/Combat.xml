@@ -17,10 +17,11 @@
 
   
 
-  <NightVisionSurpriseAtkTitle>Surprise Attack</NightVisionSurpriseAtkTitle>
+  <NightVisionSurpriseAtkTitle>Sneak Attack</NightVisionSurpriseAtkTitle>
   <NightVisionSurpriseAtkSh>S.atk %</NightVisionSurpriseAtkSh>
-  <NightVisionSurpriseAtkDesc>A surprise melee attack (S.atk) never misses.</NightVisionSurpriseAtkDesc>
+  <NightVisionSurpriseAtkDesc>A sneak attack (S.atk) never misses.</NightVisionSurpriseAtkDesc>
   <NightVisionSurpriseAtkChance>S.atk % = 0.5 x ( character's L.M.  -  target's L.M.).</NightVisionSurpriseAtkChance>
+  <NightVisionSneakAtkMote>Sneak attack!</NightVisionSneakAtkMote>
 
 
   <NightVisionDodgeTitle>Dodge Chance</NightVisionDodgeTitle>

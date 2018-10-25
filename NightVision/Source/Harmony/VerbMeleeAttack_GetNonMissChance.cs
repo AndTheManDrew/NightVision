@@ -39,6 +39,7 @@ namespace NightVision.Harmony {
                 {
                     AccessTools.FieldRefAccess<Verb, bool>(__instance, "surpriseAttack") = true;
                     __result                                                             = 1f;
+                    MoteMaker.ThrowText(pawn.Position.ToVector3Shifted(), pawn.Map, "NightVisionSneakAtkMote".Translate(), 5f);
 
                     return;
                 }

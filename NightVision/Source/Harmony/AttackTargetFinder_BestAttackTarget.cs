@@ -21,7 +21,7 @@ namespace NightVision.Harmony
 
                 if (glowFactor.FactorIsNonTrivial())
                 {
-                    maxDist = maxDist * glowFactor * glowFactor * glowFactor;
+                    maxDist = maxDist * glowFactor * glowFactor;
                 }
             }
         }

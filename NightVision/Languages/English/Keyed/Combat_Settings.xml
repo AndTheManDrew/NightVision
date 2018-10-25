@@ -4,9 +4,9 @@
   <NightVisionCombatEnabled>Combat features enabled:</NightVisionCombatEnabled>
 
   <NightVisionMeleeHitEnabled>Melee hit chance effects enabled:</NightVisionMeleeHitEnabled>
-  <NightVisionMeleeHitTip>Effects melee hit chance, dodge chance, and gives a chance for a surprise attack (can be disabled separately)</NightVisionMeleeHitTip>
+  <NightVisionMeleeHitTip>Effects melee hit chance, dodge chance, and gives a chance for a sneak attack (can be disabled separately)</NightVisionMeleeHitTip>
 
-  <NightVisionSAtkChance>Surprise attack chance multiplier:</NightVisionSAtkChance>
+  <NightVisionSAtkChance>Sneak attack chance multiplier:</NightVisionSAtkChance>
 <NightVisionSAtkTip>A 100 % to hit, undodgeable attack.\nChance = this x (attacker's light multiplier - target's)</NightVisionSAtkTip>
 
   <NightVisionRangedHitEffectsEnabled>Ranged hit chance effects enabled:</NightVisionRangedHitEffectsEnabled>
