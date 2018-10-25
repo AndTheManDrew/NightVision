@@ -5,7 +5,7 @@ using Verse;
 namespace NightVision.Harmony {
     [HarmonyPatch(typeof(StatPart_Glow), nameof(StatPart_Glow.ExplanationPart))]
     public static class StatPartGlow_ExplanationPart {
-        public static void PostFix(
+        public static void Postfix(
             ref StatRequest req,
             ref string      __result
         )

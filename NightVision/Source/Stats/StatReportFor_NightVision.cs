@@ -84,7 +84,7 @@ namespace NightVision
                 Str.MaxAtGlow(glow: glow),
                 caps[2],
                 Str.NightVision
-            );
+            ).AppendLine();
 
             StringBuilder psexplanation = new StringBuilder().AppendFormat(
                 format: Str.ExpIntro,
@@ -92,7 +92,7 @@ namespace NightVision
                 Str.MaxAtGlow(glow: glow),
                 caps[3],
                 Str.Photosens
-            );
+            ).AppendLine();
 
 
             explanation.AppendLine();
@@ -119,7 +119,7 @@ namespace NightVision
                 }
             }
 
-            explanation.AppendFormat(format: Str.MultiplierLine, arg0: "StatsReport_BaseValue".Translate(), arg1: basevalue).AppendLine();
+            explanation.AppendFormat(format: "  " + Str.MultiplierLine, arg0: "StatsReport_BaseValue".Translate(), arg1: basevalue).AppendLine().AppendLine();
 
             #endregion
 
@@ -140,7 +140,7 @@ namespace NightVision
                     );
 
                     StringToAppend = string.Format(
-                        format: "  " + Str.ModifierLine,
+                        format: "    " + Str.ModifierLine,
                         arg0: $"{comp.ParentPawn.def.LabelCap} {comp.RaceSightParts.First().LabelShort} x{comp.NumberOfRemainingEyes}",
                         arg1: effect * comp.NumberOfRemainingEyes
                     );
@@ -183,7 +183,7 @@ namespace NightVision
                         {
                             foundSomething = true;
                             effect         = (float) Math.Round(value: effect, digits: Constants_Calculations.NumberOfDigits, mode: Constants_Calculations.Rounding);
-                            StringToAppend = string.Format(format: "  " + Str.ModifierLine, arg0: hediffDef.LabelCap, arg1: effect);
+                            StringToAppend = string.Format(format: "    " + Str.ModifierLine, arg0: hediffDef.LabelCap, arg1: effect);
 
                             switch (hediffSetting.IntSetting)
                             {
@@ -245,8 +245,7 @@ namespace NightVision
                 explanation.AppendFormat(format: Str.ModifierLine, arg0: "NVTotal".Translate() + " " + "NVModifier".Translate(), arg1: sum);
 
                 explanation.AppendLine();
-
-                explanation.AppendLine();
+                
 
                 var needed = true;
 

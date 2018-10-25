@@ -12,7 +12,7 @@ namespace NightVision.Harmony {
         private static readonly Stopwatch GlfactorTimer = new Stopwatch();
         private static          int       GlfactorTicks;
 #endif
-        public static void PostFix(Thing t, ref float __result)
+        public static void Postfix(Thing t, ref float __result)
         {
 #if DEBUG
             GlfactorTimer.Start();

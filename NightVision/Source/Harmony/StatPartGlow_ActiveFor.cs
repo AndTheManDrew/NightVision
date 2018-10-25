@@ -13,6 +13,7 @@ namespace NightVision.Harmony
     [HarmonyPatch(typeof(StatPart_Glow), "ActiveFor")]
     public static class StatPartGlow_ActiveFor
     {
+        [HarmonyPostfix]
         public static void Postfix(
             ref Thing t,
             ref bool  __result
