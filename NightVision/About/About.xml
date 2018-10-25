@@ -4,7 +4,7 @@
   <name>NightVision_DEV</name>
   <author>drumad</author>
   <url>https://github.com/AndTheManDrew/NightVision/releases</url>
-  <targetVersion>0.19.0</targetVersion>
+  <targetVersion>1.0.0</targetVersion>
   <description><![CDATA[
 -<b>Night vision:</b>
     No slow down in darkness (Apparel, Bionics, Races)
@@ -12,8 +12,7 @@
     Faster in darkness, slower in bright light (Bionics, Races;  Apparel can remove the debuff)
 -Includes corresponding positive or negative thoughts
 
-
--<b>[New]<b> Combat effects: light now affects ranged and melee hit chance, ranged cooldown, melee dodge, and adds a melee sneak attack chance.
+-<b>[New]</b> Combat effects: light now affects ranged and melee hit chance, ranged cooldown, melee dodge, and adds a melee sneak attack chance.
 
 
 -Supports Alien races (e.g. add natural photosensitivity to your favourite race)

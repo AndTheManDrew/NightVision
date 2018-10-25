@@ -21,7 +21,7 @@ The light multiplier (night vision in darkness, photosensitivity in bright light
 [*]Ranged and Melee Hit chance: e.g. shooting or striking a poorly lit target is harder without night vision, but easier with photosensitivity
 [*]Ranged Cooldown: cooldown after firing weapons is increased in darkness without nightvision, but decreased with photosensitivity. The changes depend on the shooter's skill: as skill increases the negative effect decreases while the positive effect increases.
 [*]Melee Dodge Chance: depends on the difference in vision between the attacker and target, e.g. if the attacker does not have night vision and the target does, the target's dodge chance will be increased; and vice-versa.
-[*]Adds a chance for a surprise attack: if the attacker has better vision than the target, there is chance the attack will be a surprise attack; i.e. 100% hit chance, and undodgeable.
+[*]Adds a chance for a sneak attack: if the attacker has better vision than the target, there is chance the attack will be a sneak attack; i.e. 100% hit chance, and undodgeable.
 [*]Enemies will now tend to prefer cover that is in darkness (if they use cover).
 [*]Humanoid enemy aggro range in darkness/bright light is now affected by their vision: i.e. if they don't have night vision, you can sneak closer to their outposts or seige camps at night.
 [*]Added a new raid: [spoiler]Late game drop pod raid. At night. Melee specialists with night vision. Can only trigger during a solar flare.[/spoiler]
@@ -63,7 +63,7 @@ Rather than all human-like pawns having the same 20% debuff to movement and work
  
 
 [u]Possible future plans:[/u]
-Find a job, or:
+Find a job, or:                                         
 Extend the day-night, light-darkness system with factions, incidents, world quests, night caravaning, night predators and anything else before I get sick of shadows and shades and buy a sun lamp. This mod is partly just a framework to set more interesting stuff up.
  
 
