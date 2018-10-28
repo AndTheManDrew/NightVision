@@ -36,8 +36,7 @@ namespace NightVision {
 
             Widgets.Label(
                 rowRect,
-                "NVMoveWorkSpeedMultipliers"
-                            .Translate(VisionType.NVNightVision.ToString().Translate())
+                "NightVisionNVSettingDesc".Translate()
                             .ToLower()
                             .CapitalizeFirst()
             );
@@ -114,8 +113,7 @@ namespace NightVision {
 
             Widgets.Label(
                 rowRect,
-                "NVMoveWorkSpeedMultipliers"
-                            .Translate(VisionType.NVPhotosensitivity.ToString().Translate())
+                "NightVisionPSSettingsDesc".Translate()
                             .ToLower()
                             .CapitalizeFirst()
             );

@@ -1,24 +1,8 @@
 [center][img]https://raw.githubusercontent.com/AndTheManDrew/NightVision/master/nightvision_images/promo_smaller.png[/img][/center]
 
 
-
-[center][b][u]1.1.[/u] Everybody was night-time fighting...du du du du duh duh duh duh duuuh[/center]
-[center]
-
-[size=14pt]
-[i]...on this fine and dark night, I, Private Cheek, will to teach you the sly and deadly art of night-time fighting,
-forged by the ancients of the first Sparta, tempered in the wars of antiquity, sharpened by Urb-World gangs, honed by...
-...yes?...
-...I don't give a [b]damn[/b] if I said I would teach you this two quadrums, two minutes or two years ago,
-when I say 'I will teach you', [u]what do you say[/u]??
-...Damn straight, you're honoured.
-[/i][/center]
-
-
-
 [center][b][u]1.0.[/u] or: How I Learned to Stop Worrying And Love The Dark[/center]
 [center]
-
 [size=14pt]
 [i]Attennn'shun Colonist…
 You've had your eyeballs removed and replaced by [b]mech-damn[/b] machinery,
@@ -32,20 +16,17 @@ You are worse than a wimp with the flu.
 
 
 
-[color=orange][b][u][size=18pt]New Features for NightVision 1.1:[/size][/u][/b][/color]
-[size=14pt]The light multiplier (night vision in darkness, photosensitivity in bright light) now affects:[/size]
-[list]
-[li][size=14pt][u]Ranged and Melee Hit chance:[/u] e.g. shooting or striking a poorly lit target is harder without night vision, but easier with photosensitivity.[/size][/li]
-[li][size=14pt][u]Ranged Cooldown:[/u] cooldown after firing weapons is increased in darkness without nightvision, but decreased with photosensitivity. The changes depend on the shooter's skill: as skill increases the negative effect decreases while the positive effect increases.[/size][/li]
-[li][size=14pt][u]Melee Dodge Chance:[/u] depends on the difference in vision between the attacker and target, e.g. if the attacker does not have night vision and the target does, the target's dodge chance will be increased; and vice-versa.[/size][/li]
-[li][size=14pt][u]Adds a chance for a sneak attack:[/u] if the attacker has better vision than the target, there is chance the attack will be a sneak attack; i.e. 100% hit chance, and undodgeable.[/size][/li]
-[li][size=14pt]Enemies will now tend to prefer cover that is in darkness (if they use cover).[/size][/li]
-[li][size=14pt]Humanoid enemy aggro range in darkness/bright light is now affected by their vision: i.e. if they don't have night vision, you can sneak closer to their outposts or seige camps at night.[/size][/li]
-[li][size=14pt]Added a new raid: [spoiler]Late game drop pod raid. At night. Melee specialists with night vision. Can only trigger during a solar flare.[/spoiler][/size][/li]
+[center][b][u]1.1.[/u] Everybody was night-time fighting...du du du du duh duh duh duh duuuh[/center]
+[center]
+[size=14pt]
+[i]...on this fine and dark night, I, Private Cheek, will to teach you the sly and deadly art of night-time fighting,
+forged by the ancients of the first Sparta, tempered in the wars of antiquity, sharpened by Urb-World gangs, honed by...
+...yes?...
+...I don't give a [b]damn[/b] if I said I would teach you this two quadrums, two minutes or two years ago,
+when I say 'I will teach you', [u]what do you say[/u]??
+...Damn straight, you're honoured.
+[/i][/center]
 
-
-[li][size=14pt]These features can be individually disabled if you choose.[/size][/li]
-[/list]
 
 
 [color=orange][b][u][size=18pt]Features:[/size][/u][/b][/color]
@@ -61,6 +42,22 @@ You are worse than a wimp with the flu.
 [li][size=14pt]Customisable settings for any bionics or health conditions that effect the eyes (e.g. remove night vision from bionic eyes, or make luciferium even more potent with a custom buff in both bright light and darkness)[/size]
 [/li]
 [/list]
+
+[color=orange][b][u][size=18pt]New Features for NightVision 1.1:[/size][/u][/b][/color]
+[size=14pt]The light multiplier (night vision in darkness, photosensitivity in bright light) now affects:[/size]
+[list]
+[li][size=14pt][u]Ranged and Melee Hit chance:[/u] e.g. shooting or striking a poorly lit target is harder without night vision, but easier with photosensitivity.[/size][/li]
+[li][size=14pt][u]Ranged Cooldown:[/u] cooldown after firing weapons is increased in darkness without nightvision, but decreased with photosensitivity. The changes depend on the shooter's skill: as skill increases the negative effect decreases while the positive effect increases.[/size][/li]
+[li][size=14pt][u]Melee Dodge Chance:[/u] depends on the difference in vision between the attacker and target, e.g. if the attacker does not have night vision and the target does, the target's dodge chance will be increased; and vice-versa.[/size][/li]
+[li][size=14pt][u]Adds a chance for a sneak attack:[/u] if the attacker has better vision than the target, there is chance the attack will be a sneak attack; i.e. 100% hit chance, and undodgeable.[/size][/li]
+
+[li][size=14pt]Enemies will now tend to prefer cover that is in darkness (if they use cover).[/size][/li]
+[li][size=14pt]Humanoid enemy aggro range in darkness/bright light is now affected by their vision: i.e. if they don't have night vision, you can sneak closer to their outposts or siege camps at night.[/size][/li]
+[li][size=14pt]Added a new raid: Late game. Can only trigger during a solar flare.[/size][/li]
+
+[li][size=14pt]These features can be individually disabled if you choose.[/size][/li]
+[/list]
+
 
 [color=orange][b][u][size=18pt]Download:[/size][/u][/b][/color]
 [size=18pt][url=https://github.com/AndTheManDrew/NightVision/releases]GitHub[/url]
@@ -96,6 +93,7 @@ Extend the day-night, light-darkness system with factions, incidents, world ques
 Clankwork for the art
 Pardeike for the Harmony library
 Marnador for the Rimworld font
+Madman666 for the combat features idea
 
 And thanks to all the Rimworld modders whose code I've perused and purloined in making this mod, including (though not limited to): ChJees, erdelf, XeoNovaDan, NoImageAvailable, Mehni, Jecrell ... and pretty much anyone else who has released a mod in the last couple months
 [/size]
@@ -104,6 +102,12 @@ And thanks to all the Rimworld modders whose code I've perused and purloined in 
 
 
 [code]
+[1.1.0]25/10/2018
+Rimworld version 0.19 => 1.0
+Combat Features added
+Fix: psych glow incorrectly triggering for photosensitive pawns
+Other stuff
+
 [1.0.2] 07/08/2018
 Changed Rimworld version from 1.0 to 0.19
 

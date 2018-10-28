@@ -62,6 +62,9 @@
   <NVMoveWorkSpeedMultipliers>{0} move and work speed multipliers</NVMoveWorkSpeedMultipliers>
   <NVMoveWorkSpeedModifiers>Move and Work speed offsets</NVMoveWorkSpeedModifiers>
 
+  <NightVisionNVSettingDesc>Night vision move and work speed multipliers (from apparel, health conditions, and race settings)</NightVisionNVSettingDesc>
+  <NightVisionPSSettingsDesc>Photosensitivity move and work speed multipliers (from health conditions, and race settings)</NightVisionPSSettingsDesc>
+
   <NVRaceNote>Note: to get the full effect of these settings the individual must have all their natural eyes. Losing an eye or replacing it with a prosthetic will affect the final result; implants that do not remove the eye will not, nor will injuries.</NVRaceNote>
   <NVRaceQualifier>Requires all eyes to be natural.</NVRaceQualifier>
 

@@ -20,10 +20,11 @@
   <StatDef>
     <defName>NightVision</defName>
     <workerClass>NightVision.NVStatWorker_NightVision</workerClass>
-    <label>night vision</label>
+    <label>Darkness multiplier</label>
     <description>The light multiplier when in darkness ( &lt; 30% light ).
       Effects work speed, move speed, and various combat stats.
-      Reaches the peak value listed here at 0% light.</description>
+      Reaches the peak value listed here at 0% light.
+      Generally affected by both night vision and photosensitivity granting health conditions,\n    apparel, and races.</description>
     <category>PawnMisc</category>
     <defaultBaseValue>0.8</defaultBaseValue>
     <minValue>0.01</minValue>
@@ -47,10 +48,11 @@
   <StatDef>
     <defName>LightSensitivity</defName>
     <workerClass>NightVision.NVStatWorker_LightSensitivity</workerClass>
-    <label>photosensitivity</label>
+    <label>Bright multiplier</label>
     <description>The light multiplier when in bright light ( &gt; 70% light ).
       Effects work speed, move speed, and various combat stats.
-      Reaches the peak value listed here at 100% light.</description>
+      Reaches the peak value listed here at 100% light.
+      Generally affected by photosensitivity granting health conditions\n     and races. Debuff is nullified by certain apparel.</description>
     <category>PawnMisc</category>
     <defaultBaseValue>1</defaultBaseValue>
     <minValue>0.01</minValue>

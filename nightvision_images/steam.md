@@ -1,10 +1,5 @@
-[h1]Everybody was night-time fighting...du du du du duh duh duh duh duuuh[/h1]
 
-[i]
-...on this fine and dark night, I, Private Cheek, am going to teach you the sly and deadly art of night-time fighting, forged by the ancients of the first Sparta, tempered in the wars of antiquity, sharpened by Urb-World gangs, honed by......yes?....I don't give a [b]damn[/b] if I said I would teach you this two quadrums, two minutes or two years ago...when I say 'I will teach you', what do you say????...Damn straight, you're honoured.
-[/i]
-
-[h1]or: How I Learned to Stop Worrying And Love The Dark[/h1]
+[h1]1.0. or: How I Learned to Stop Worrying And Love The Dark[/h1]
  
 [i]Attennn'shun Colonist…
 You've had your eyeballs removed and replaced by [b]mech-damn[/b] machinery,
@@ -14,21 +9,18 @@ I've seen you hit a squirrel with an autopistol at max range while riding backwa
 And yet, [b]why[/b] [u]in[/u] [b]the[/b] [u]hive[/u] do you keep slowing to a centipedean crawl whenever you touch the slightest bit of shadow? 
  
 You are worse than a wimp with the flu.[/i]
- 
-[b][u]New Features for NightVision 1.1:[/u][/b]
-The light multiplier (night vision in darkness, photosensitivity in bright light) now affects:
-[list]
-[*]Ranged and Melee Hit chance: e.g. shooting or striking a poorly lit target is harder without night vision, but easier with photosensitivity
-[*]Ranged Cooldown: cooldown after firing weapons is increased in darkness without nightvision, but decreased with photosensitivity. The changes depend on the shooter's skill: as skill increases the negative effect decreases while the positive effect increases.
-[*]Melee Dodge Chance: depends on the difference in vision between the attacker and target, e.g. if the attacker does not have night vision and the target does, the target's dodge chance will be increased; and vice-versa.
-[*]Adds a chance for a sneak attack: if the attacker has better vision than the target, there is chance the attack will be a sneak attack; i.e. 100% hit chance, and undodgeable.
-[*]Enemies will now tend to prefer cover that is in darkness (if they use cover).
-[*]Humanoid enemy aggro range in darkness/bright light is now affected by their vision: i.e. if they don't have night vision, you can sneak closer to their outposts or seige camps at night.
-[*]Added a new raid: [spoiler]Late game drop pod raid. At night. Melee specialists with night vision. Can only trigger during a solar flare.[/spoiler]
 
-[*]These features can be individually disabled if you choose.
+[h1]1.1. Everybody was night-time fighting...du du du du duh duh duh duh duuuh[/h1]
 
-[/list]
+[i]
+...on this fine and dark night, I, Private Cheek, am going to teach you the sly and deadly art of night-time fighting,
+ forged by the ancients of the first Sparta, tempered in the wars of antiquity, sharpened by Urb-World gangs, honed by...
+ ...yes?...
+ ...I don't give a [b]damn[/b] if I said I would teach you this two quadrums, two minutes or two years ago,
+ when I say 'I will teach you', what do you say??
+ ...Damn straight, you're honoured.
+[/i]
+
  
 [b][u]Features:[/u][/b]
 [list]
@@ -43,6 +35,23 @@ The light multiplier (night vision in darkness, photosensitivity in bright light
 [*]Customisable settings for any bionics or health conditions that effect the eyes (e.g. remove night vision from bionic eyes, or make luciferium even more potent with a custom buff in both bright light and darkness)
 [/list]
  
+
+[b][u]New Features for NightVision 1.1:[/u][/b]
+The light multiplier (night vision in darkness, photosensitivity in bright light) now affects:
+[list]
+[*]Ranged and Melee Hit chance: e.g. shooting or striking a poorly lit target is harder without night vision, but easier with photosensitivity.
+[*]Ranged Cooldown: cooldown after firing weapons is increased in darkness without nightvision, but decreased with photosensitivity. The changes depend on the shooter's skill: as skill increases the negative effect decreases while the positive effect increases.
+[*]Melee Dodge Chance: depends on the difference in vision between the attacker and target, e.g. if the attacker does not have night vision and the target does, the target's dodge chance will be increased; and vice-versa.
+[*]Adds a chance for a sneak attack: if the attacker has better vision than the target, there is chance the attack will be a sneak attack; i.e. 100% hit chance, and undodgeable.
+[*]Enemies will now tend to prefer cover that is in darkness (if they use cover).
+[*]Humanoid enemy aggro range in darkness/bright light is now affected by their vision: i.e. if they don't have night vision, you can sneak closer to their outposts or siege camps at night.
+[*]Added a new raid: [spoiler]Late game drop pod raid. At night. Melee specialists with night vision. Can only trigger during a solar flare.[/spoiler]
+
+[*]These features can be individually disabled if you choose.
+
+[/list]
+ 
+
 [u][b]Details:[/b][/u]
 Extends Rimworld's light and dark mechanics.
 Rather than all human-like pawns having the same 20% debuff to movement and work speed when in darkness, Night Vision uses three categories:
@@ -72,6 +81,7 @@ Extend the day-night, light-darkness system with factions, incidents, world ques
 Clankwork for the art
 Pardeike for the Harmony library
 Marnador for the Rimworld font
+Madman666 for the combat features idea
  
 And thanks to all the Rimworld modders whose code I've perused and purloined in making this mod, including (though not limited to): ChJees, erdelf, XeoNovaDan, NoImageAvailable, Mehni, Jecrell ... and pretty much anyone else who has released a mod in the last couple months
 
