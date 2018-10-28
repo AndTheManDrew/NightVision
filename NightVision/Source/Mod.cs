@@ -4,12 +4,15 @@
 // 
 // 21 07 2018
 
+using System.Reflection;
 using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 
+
 namespace NightVision
 {
+
     public class Mod : Verse.Mod
     {
         public static Mod Instance;
