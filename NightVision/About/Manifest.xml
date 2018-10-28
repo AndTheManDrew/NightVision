@@ -3,6 +3,6 @@
   <identifier>NightVision</identifier>
   <version>1.1.1.0</version>
   <showCrossPromotions>true</showCrossPromotions>
-  <manifestUri></manifestUri>
+  <manifestUri>https://github.com/AndTheManDrew/NightVision/blob/master/NightVision/About/Manifest.xml</manifestUri>
   <downloadUri>https://github.com/AndTheManDrew/NightVision/releases</downloadUri>
 </Manifest>
