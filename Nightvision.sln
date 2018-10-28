@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "About", "About", "{7FE9FA0E-31C4-48BF-A798-49D9151786F6}"
 	ProjectSection(SolutionItems) = preProject
 		NightVision\About\About.xml = NightVision\About\About.xml
+		NightVision\About\Manifest.xml = NightVision\About\Manifest.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{65DE852E-3F73-416D-90ED-B6C888515240}"
