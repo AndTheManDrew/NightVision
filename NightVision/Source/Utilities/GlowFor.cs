@@ -12,12 +12,13 @@ namespace NightVision
     {
         public static float GlowAt(Thing thing)
         {
-            return thing.Map.glowGrid.GameGlowAt(thing.Position);
+            
+            return thing?.Map?.glowGrid.GameGlowAt(thing.Position) ?? Constants_Calculations.TrivialGlow;
         }
 
         public static float GlowAt(Map map, IntVec3 pos)
         {
-            return map.glowGrid.GameGlowAt(pos);
+            return map?.glowGrid.GameGlowAt(pos) ?? Constants_Calculations.TrivialGlow;
         }
 
         public static float FactorOrFallBack(Pawn pawn, float glow)
