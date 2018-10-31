@@ -11,7 +11,7 @@ namespace NightVision.Harmony {
         [UsedImplicitly]
         public static void GetNonMissChance_Postfix(ref Verb __instance, ref float __result, LocalTargetInfo target)
         {
-            if (__result > 0.999f || !(__instance.CasterPawn is Pawn pawn) || !(pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp))
+            if (__result > 0.999f || !(__instance.CasterPawn is Pawn pawn) || !(pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp))
             {
                 CurrentStrike.GlowFactor = Constants_Calculations.TrivialFactor;
                 CurrentStrike.GlowDiff   = 0f;

@@ -64,6 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Combat\AICombatTweaks.cs" />
     <Compile Include="Combat\CurrentShot.cs" />
     <Compile Include="Combat\CurrentStrike.cs" />
     <Compile Include="Comps\CompProperties_NightVisionApparel.cs" />

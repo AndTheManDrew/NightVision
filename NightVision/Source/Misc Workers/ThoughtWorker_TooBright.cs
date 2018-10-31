@@ -11,7 +11,7 @@ namespace NightVision
                         Pawn pawn
                     )
         {
-            if (pawn?.GetComp<Comp_NightVision>() is Comp_NightVision comp)
+            if (pawn?.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
                 comp.LastDarkTick = Find.TickManager.TicksGame;
             }
@@ -20,6 +20,6 @@ namespace NightVision
         protected override ThoughtState CurrentStateInternal(
                         Pawn p
                     )
-            => p.Awake() && p.GetComp<Comp_NightVision>() is Comp_NightVision comp && comp.PsychBright;
+            => p.Awake() && p.TryGetComp<Comp_NightVision>() is Comp_NightVision comp && comp.PsychBright;
     }
 }

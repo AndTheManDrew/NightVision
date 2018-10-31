@@ -130,7 +130,7 @@ namespace NightVision {
                              + 200
                              * _allPawns
                                          .FindAll(
-                                             pawn => pawn.GetComp<Comp_NightVision>()
+                                             pawn => pawn.TryGetComp<Comp_NightVision>()
                                                      != null
                                          )
                                          .Count;
@@ -163,7 +163,7 @@ namespace NightVision {
                 {
                     Widgets.Label(rowRect.LeftPart(0.1f), pawn.Name.ToStringShort);
 
-                    if (pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
+                    if (pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
                     {
                         Rect rightRect = rowRect.RightPart(0.8f);
 

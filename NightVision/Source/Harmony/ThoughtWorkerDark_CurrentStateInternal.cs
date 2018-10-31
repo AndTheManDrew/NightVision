@@ -14,7 +14,7 @@ namespace NightVision.Harmony {
         {
             if (__result.Active)
             {
-                if (p.GetComp<Comp_NightVision>() is Comp_NightVision comp)
+                if (p.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
                 {
                     switch (comp.PsychDark)
                     {

@@ -36,11 +36,15 @@ namespace NightVision
 
         public static Comp_NightVision CompFor(Pawn pawn)
         {
-            if (pawn?.GetHashCode() == cachedPawnHash)
+            if (pawn == null)
+            {
+                return null;
+            }
+            if (pawn.GetHashCode() == cachedPawnHash)
             {
                 return cachedComp;
             }
-            else if (pawn?.GetComp<Comp_NightVision>() is Comp_NightVision comp)
+            else if (pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
                 cachedComp = comp;
                 cachedPawnHash = pawn.GetHashCode();
@@ -55,7 +59,7 @@ namespace NightVision
 
         public static float FactorOrFallBack(Pawn pawn)
         {
-            if (CompFor(pawn) is Comp_NightVision comp && pawn.Spawned)
+            if (CompFor(pawn) is Comp_NightVision comp && pawn?.Spawned == true)
             {
                 return comp.FactorFromGlow(GlowAt(pawn));
             }

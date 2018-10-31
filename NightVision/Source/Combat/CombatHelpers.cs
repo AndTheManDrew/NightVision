@@ -109,7 +109,7 @@ namespace NightVision
 
         public static float AdjustCooldownForGlow(float rangedCooldown, Pawn pawn)
         {
-            if (pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
+            if (pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
                 float glow = pawn.Map.glowGrid.GameGlowAt(c: pawn.Position);
                 

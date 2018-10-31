@@ -17,7 +17,7 @@ namespace NightVision.Harmony {
         {
             
 
-            if (caster is Pawn pawn && pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
+            if (caster is Pawn pawn && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
                 CurrentShot.Caster = caster;
                 CurrentShot.Verb   = verb;

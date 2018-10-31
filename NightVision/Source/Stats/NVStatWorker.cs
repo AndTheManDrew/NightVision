@@ -49,7 +49,7 @@ namespace NightVision {
         )
         {
             if (req.Thing is Pawn pawn
-                && pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
+                && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
                 return StatReportFor_NightVision.CompleteStatReport(Stat, RelevantField, comp, Glow);
             }
@@ -73,7 +73,7 @@ namespace NightVision {
         )
         {
             if (req.Thing is Pawn pawn
-                && pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
+                && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
                 return comp.FactorFromGlow(Glow);
             }
@@ -85,7 +85,7 @@ namespace NightVision {
             Thing thing
         )
         {
-            return !(thing is Pawn pawn) || pawn.GetComp<Comp_NightVision>() == null;
+            return !(thing is Pawn pawn) || pawn.TryGetComp<Comp_NightVision>() == null;
         }
 
         public override bool ShouldShowFor(StatRequest req)

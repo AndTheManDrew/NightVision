@@ -195,7 +195,7 @@ namespace NightVision
                     continue;
                 }
                 
-                if (pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
+                if (pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
                 {
                     comp.SetDirty();
                 }

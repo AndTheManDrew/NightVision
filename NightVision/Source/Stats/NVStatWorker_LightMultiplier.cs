@@ -39,7 +39,7 @@ namespace NightVision
         )
         {
             if (req.Thing is Pawn pawn
-                && pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
+                && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
                 float glow = GlowFor.GlowAt(pawn);
                 return StatReportFor_NightVision.CompleteStatReport(Stat, RelevantFieldForGlow(glow), comp, glow);
@@ -55,7 +55,7 @@ namespace NightVision
         {
             if (req.Thing is Pawn pawn)
             {
-                if (pawn.GetComp<Comp_NightVision>() is Comp_NightVision comp)
+                if (pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
                 {
                     float glow = GlowFor.GlowAt(pawn);
                     return comp.FactorFromGlow(glow);
