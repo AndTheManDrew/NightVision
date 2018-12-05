@@ -148,11 +148,11 @@ namespace NightVision
                 subListing.Gap();
                 MeleeSubListingHeight += 12f;
                 listing.EndSection(subListing);
-                listing.End();
+                
 
 
             }
-
+            listing.End();
             Text.Anchor = anchor;
         }
 

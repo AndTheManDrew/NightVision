@@ -15,23 +15,7 @@ using Verse.AI;
 
 namespace NightVision.Harmony
 {
-    //[HarmonyPatch(typeof(AttackTargetFinder), nameof(AttackTargetFinder.BestAttackTarget))]
-    //public static class AttackTargetFinder_BestAttackTarget
-    //{
-    //    public static void Prefix(IAttackTargetSearcher searcher, ref float maxDist)
-    //    {
-    //        if (maxDist.IsNonTrivial() && searcher is Pawn pawn)
-    //        {
-    //            float glowFactor = GlowFor.FactorOrFallBack(pawn);
 
-    //            if (glowFactor.FactorIsNonTrivial())
-    //            {
-    //                maxDist = maxDist * glowFactor * glowFactor;
-    //            }
-    //        }
-    //    }
-    //}
-    
     [HarmonyPatch(typeof(JobGiver_AIFightEnemy), "FindAttackTarget")]
     public static class JobGiverAIFightEnemy_FindAttackTarget
     {
@@ -63,8 +47,6 @@ namespace NightVision.Harmony
         [HarmonyTranspiler]
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            Log.Message($"The \"Is this even being called?\" question");
-            
             CodeInstruction ldfldPawn = null;
             CodeInstruction ldarg0 = null;
             CodeInstruction callNVModifyRadius = new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(AICombatTweaks), nameof(AICombatTweaks.ModifyTargetAcquireRadiusForGlow)));
