@@ -90,8 +90,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "About", "About", "{BB0195D9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{769DBBD3-31AA-490E-9B95-BA3E6DD300FC}"
 	ProjectSection(SolutionItems) = preProject
+		NVTesting\Defs\BaseKinds.xml = NVTesting\Defs\BaseKinds.xml
+		NVTesting\Defs\Factions.xml = NVTesting\Defs\Factions.xml
+		NVTesting\Defs\Melee.xml = NVTesting\Defs\Melee.xml
+		NVTesting\Defs\Shoot.xml = NVTesting\Defs\Shoot.xml
 		NVTesting\Defs\Stalker.xml = NVTesting\Defs\Stalker.xml
 		NVTesting\Defs\Stalker_DutyDef.xml = NVTesting\Defs\Stalker_DutyDef.xml
+		NVTesting\Defs\TestHediffs.xml = NVTesting\Defs\TestHediffs.xml
+		NVTesting\Defs\TestingMap.xml = NVTesting\Defs\TestingMap.xml
 		NVTesting\Defs\ThinkTree_Stalker.xml = NVTesting\Defs\ThinkTree_Stalker.xml
 	EndProjectSection
 EndProject
@@ -100,6 +106,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Textures", "Textures", "{FCC0CD0C-9D79-4270-B890-97ED86104D8A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{9ADDC20C-2280-4C47-9700-4521D7488B1B}"
+	ProjectSection(SolutionItems) = preProject
+		NVTesting\Patches\LongswordTag.xml = NVTesting\Patches\LongswordTag.xml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assemblies", "Assemblies", "{01BB6CC2-22B2-4BBB-BB21-A0951EEE386A}"
 EndProject

@@ -29,7 +29,7 @@
 
   <GameConditionDef>
     <defName>Darkness</defName>
-    <conditionClass>NightVision.GameCondition_Darkness</conditionClass>
+    <conditionClass>NVTesting.GameCondition_Darkness</conditionClass>
     <label>Darkness</label>
     <description>Dark.</description>
     <endMessage>Light.</endMessage>

@@ -1,23 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Harmony;
 using NightVision;
 using RimWorld;
 using RimWorld.BaseGen;
 using Verse;
 
-namespace NVIncidents
+namespace NVTesting
 {
         [StaticConstructorOnStartup]
     public class NViHarmonyPatcher
     {
         static NViHarmonyPatcher()
             {
-                var harmony = HarmonyInstance.Create("drumad.rimworld.mod.nvincidents");
+                var harmony = HarmonyInstance.Create("drumad.rimworld.mod.nvtesting");
                 harmony.PatchAll(Assembly.GetExecutingAssembly());
 
                 //TODO potentially throw error if nightvision is not present

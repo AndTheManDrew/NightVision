@@ -11,7 +11,7 @@ using Verse;
 using Verse.AI;
 using Verse.AI.Group;
 
-namespace NVIncidents
+namespace NVTesting
     {
         //Copy and paste but forced no mining non-mineables
         [UsedImplicitly]

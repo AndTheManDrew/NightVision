@@ -22,6 +22,8 @@ namespace NightVision
         public static readonly GameConditionDef SolarFlare = GameConditionDefOf.SolarFlare;
         public static readonly ThingDef ShieldDef = ThingDef.Named("Apparel_ShieldBelt");
         public static readonly PawnGroupKindDef CombatGroup = PawnGroupKindDefOf.Combat;
+
+        //fallback animals for tapetum lucidum injection
     }
     
 }

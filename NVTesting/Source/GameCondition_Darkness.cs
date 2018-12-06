@@ -2,7 +2,7 @@
 using UnityEngine;
 using Verse;
 
-namespace NVIncidents
+namespace NVTesting
 {
     public class GameCondition_Darkness : GameCondition
     {
@@ -10,8 +10,7 @@ namespace NVIncidents
         {
             return 1f;
         }
-
-        // Token: 0x06000D5A RID: 3418 RVA: 0x00074058 File Offset: 0x00072458
+        
         public override SkyTarget? SkyTarget(Map map)
         {
             SkyColorSet colorSet     = new SkyColorSet(new Color(SkyColorR, SkyColorG, SkyColorB), new Color(SkyShadowR, SkyShadowG, SkyShadowB), new Color(SkyOverlayR, SkyOverlayG, SkyOverlayB), SkySaturation);

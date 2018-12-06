@@ -84,6 +84,11 @@
     <Compile Include="Harmony\VerbMeleeAttack_GetNonMissChance.cs" />
     <Compile Include="Incidents\SolarRaidGroupMaker.cs" />
     <Compile Include="Harmony\PawnRecentMemory_RecentMemoryInterval.cs" />
+    <Compile Include="ModInit\Init_Apparel.cs" />
+    <Compile Include="ModInit\Init_Hediffs.cs" />
+    <Compile Include="ModInit\Init_Races.cs" />
+    <Compile Include="ModInit\Init_Research.cs" />
+    <Compile Include="ModInit\Init_TapetumAnimals.cs" />
     <Compile Include="Settings\CombatTab.cs" />
     <Compile Include="Settings\SettingOption.cs" />
     <Compile Include="Settings\Storage_Combat.cs" />
@@ -147,7 +152,7 @@
     <Compile Include="Comps\Comp_NightVisionApparel.cs" />
     <Compile Include="NVHarmonyPatcher.cs" />
     <Compile Include="Comps\CompProperties_NightVision.cs" />
-    <Compile Include="Initialiser.cs" />
+    <Compile Include="ModInit\Initialiser.cs" />
     <Compile Include="Mod.cs" />
     <Compile Include="Properties\NightVision.cs" />
     <Compile Include="Settings\Settings.cs" />

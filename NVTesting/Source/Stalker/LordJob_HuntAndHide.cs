@@ -9,7 +9,7 @@ using RimWorld;
 using Verse;
 using Verse.AI.Group;
 
-namespace NVIncidents
+namespace NVTesting
     {
         internal class LordJob_HuntAndHide : LordJob
             {

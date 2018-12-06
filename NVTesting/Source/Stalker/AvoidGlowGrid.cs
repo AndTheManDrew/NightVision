@@ -1,6 +1,6 @@
 ﻿using Verse;
 
-namespace NVIncidents
+namespace NVTesting
 {
     public class AvoidGlow
         {

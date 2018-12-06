@@ -1,7 +1,7 @@
 ﻿using Verse;
 using Verse.AI.Group;
 
-namespace NVIncidents
+namespace NVTesting
     {
         internal class LordToilData_MakeLairOrHideInIt : LordToilData
             {

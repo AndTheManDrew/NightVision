@@ -10,7 +10,7 @@ namespace NightVision
 {
     public static class FieldClearer
     {
-        public static List<FieldInfo> SettingsDependentFields;
+        public static List<FieldInfo> SettingsDependentFields = new List<FieldInfo>();
         
 
         public static void ResetSettingsDependentFields()
