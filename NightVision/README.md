@@ -11,7 +11,7 @@
 
 ### 1.1. Everybody was night-time fighting...du du du du duh duh duh duh duuuh
 
-*...on this fine and dark night, I, Private Cheek, am going to teach you the sly and deadly art of night-time fighting, forged by the ancients of the first Sparta, tempered in the wars of antiquity, sharpened by Urb-World gangs, honed by... ...yes?... ...I don't give a **damn** if I said I would teach you this two quadrums, two minutes or two years ago, when I say 'I will teach you', what do you say?? ...Damn straight, you're honoured. *
+*...on this fine and dark night, I, Private Cheek, am going to teach you the sly and deadly art of night-time fighting, forged by the ancients of the first Sparta, tempered in the wars of antiquity, sharpened by Urb-World gangs, honed by......yes?......I don't give a **damn** if I said I would teach you this two quadrums, two minutes or two years ago, when I say 'I will teach you', what do you say?? ...Damn straight, you're honoured.*
 
 ## Features:
 - Adds Night Vision: No slow down in darkness. No negative thoughts []Adds Photosensitivity: Faster in darkness. Slower in bright light
