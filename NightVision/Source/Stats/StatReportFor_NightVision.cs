@@ -1,8 +1,8 @@
 ﻿// Nightvision NightVision StatReportFor_NightVision.cs
 // 
-// 20 10 2018
+// 25 10 2018
 // 
-// 20 10 2018
+// 06 12 2018
 
 using System;
 using System.Collections.Generic;
@@ -16,13 +16,15 @@ namespace NightVision
 {
     public static class StatReportFor_NightVision
     {
+        #region  Members
+
         public static string CompleteStatReport(StatDef stat, FieldInfo relevantField, Comp_NightVision comp, float relevantGlow)
         {
-            float   factorFromGlow = comp.FactorFromGlow(relevantGlow);
+            float factorFromGlow = comp.FactorFromGlow(glow: relevantGlow);
 
             return BasicExplanation(glow: relevantGlow, usedApparelSetting: out bool UsedApparel, comp: comp)
                    + FinalValue(stat: stat, value: factorFromGlow)
-                   + (relevantField != null && UsedApparel ? ApparelPart(relevantField, comp: comp) : "");
+                   + (relevantField != null && UsedApparel ? ApparelPart(relevantField: relevantField, comp: comp) : "");
         }
 
         public static string ShortStatReport(float glow, Comp_NightVision comp)
@@ -30,11 +32,6 @@ namespace NightVision
             return BasicExplanation(glow: glow, usedApparelSetting: out _, comp: comp, needsFinalValue: true);
         }
 
-        private static string FinalValue(StatDef stat, float value)
-        {
-            return "StatsReport_FinalValue".Translate() + ": " + stat.ValueToString(val: value, numberSense: stat.toStringNumberSense) + "\n\n";
-        }
-        
 
         private static string ApparelPart(FieldInfo relevantField, Comp_NightVision comp)
         {
@@ -102,7 +99,9 @@ namespace NightVision
             if (lowLight)
             {
                 basevalue = Constants_Calculations.DefaultFullLightMultiplier
-                            + (Constants_Calculations.DefaultZeroLightMultiplier - Constants_Calculations.DefaultFullLightMultiplier) * (0.3f - glow) / 0.3f;
+                            + (Constants_Calculations.DefaultZeroLightMultiplier - Constants_Calculations.DefaultFullLightMultiplier)
+                            * (0.3f                                              - glow)
+                            / 0.3f;
 
                 if (comp.ApparelGrantsNV)
                 {
@@ -119,7 +118,8 @@ namespace NightVision
                 }
             }
 
-            explanation.AppendFormat(format: "  " + Str.MultiplierLine, arg0: "StatsReport_BaseValue".Translate(), arg1: basevalue).AppendLine().AppendLine();
+            explanation.AppendFormat(format: "  " + Str.MultiplierLine, arg0: "StatsReport_BaseValue".Translate(), arg1: basevalue).AppendLine()
+                        .AppendLine();
 
             #endregion
 
@@ -182,7 +182,13 @@ namespace NightVision
                         if (effect.IsNonTrivial())
                         {
                             foundSomething = true;
-                            effect         = (float) Math.Round(value: effect, digits: Constants_Calculations.NumberOfDigits, mode: Constants_Calculations.Rounding);
+
+                            effect = (float) Math.Round(
+                                value: effect,
+                                digits: Constants_Calculations.NumberOfDigits,
+                                mode: Constants_Calculations.Rounding
+                            );
+
                             StringToAppend = string.Format(format: "    " + Str.ModifierLine, arg0: hediffDef.LabelCap, arg1: effect);
 
                             switch (hediffSetting.IntSetting)
@@ -245,7 +251,7 @@ namespace NightVision
                 explanation.AppendFormat(format: Str.ModifierLine, arg0: "NVTotal".Translate() + " " + "NVModifier".Translate(), arg1: sum);
 
                 explanation.AppendLine();
-                
+
 
                 var needed = true;
 
@@ -306,5 +312,12 @@ namespace NightVision
 
             return string.Empty;
         }
+
+        private static string FinalValue(StatDef stat, float value)
+        {
+            return "StatsReport_FinalValue".Translate() + ": " + stat.ValueToString(val: value, numberSense: stat.toStringNumberSense) + "\n\n";
+        }
+
+        #endregion
     }
 }

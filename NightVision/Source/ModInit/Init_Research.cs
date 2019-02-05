@@ -12,7 +12,7 @@ namespace NightVision
     {
         #region  Members
         //Adds a marker to research projects that unlock NV stuff so people know how cool I am
-        public static void AddNightVisionToResearch()
+        public static void AddNightVisionMarkerToVanillaResearch()
         {
             ResearchProjectDef complexClothing  = ResearchProjectDef.Named(defName: "ComplexClothing");
             ResearchProjectDef microelectronics = ResearchProjectDef.Named(defName: "MicroelectronicsBasics");

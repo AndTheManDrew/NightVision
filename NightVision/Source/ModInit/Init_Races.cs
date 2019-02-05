@@ -13,7 +13,7 @@ namespace NightVision
     {
         #region  Members
 
-        public static void FindAllRelevantRaces()
+        public static void FindAllValidRaces()
         {
             //Check for compprops so that humanlike req can be overridden in xml
             List<ThingDef> raceDefList = DefDatabase<ThingDef>.AllDefsListForReading.FindAll(

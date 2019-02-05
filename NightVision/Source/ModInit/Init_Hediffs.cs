@@ -15,7 +15,7 @@ namespace NightVision
     {
         #region  Members
 
-        public static void FindAllRelevantHediffs()
+        public static void FindAllValidHediffs()
         {
             //Essentially we construct two collections: 
             //  the first contains all hediffs that affect sight/are applied to eyes/have our HediffComp_NightVision

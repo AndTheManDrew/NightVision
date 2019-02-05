@@ -68,5 +68,10 @@ namespace NightVision
         {
             return !value.IsTrivial();
         }
+
+        public static string ToStringSignedWholePercent(this float value)
+        {
+            return value.ToString("+0%;-0%;0%");
+        }
     }
 }

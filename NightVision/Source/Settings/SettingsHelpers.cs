@@ -175,7 +175,7 @@ namespace NightVision
                     result += "\n"
                               + "NVLoadedFromFile".Translate(
                                   hediffMods.DefaultSetting.ToString().Translate(),
-                                  lightModifiers.DefaultOffsets.ToStringSafeEnumerable()
+                                  DefaultValuesLine(hediffMods.DefaultOffsets, false)
                               );
                 }
             }
@@ -186,13 +186,26 @@ namespace NightVision
                 result += "\n"
                           + "NVLoadedFromFile".Translate(
                               Race_LightModifiers.GetSetting(rlm).ToString().Translate(),
-                              rlm.DefaultOffsets.ToStringSafeEnumerable()
+                              DefaultValuesLine(rlm.DefaultOffsets, true)
                           );
             }
 
             TipStringHolder[def] = result;
 
             return result;
+        }
+
+        public static string DefaultValuesLine(float[] offsets, bool addBaseValues)
+        {
+            float zeroValue = offsets[0];
+            float fullValue = offsets[1];
+            if (addBaseValues)
+            {
+                zeroValue += Constants_Calculations.DefaultZeroLightMultiplier;
+                fullValue += Constants_Calculations.DefaultFullLightMultiplier;
+            }
+
+            return $"\n  0% lit: {zeroValue.ToStringSignedWholePercent()}\n  100% lit: {fullValue.ToStringSignedWholePercent()}";
         }
 
         public static void DrawLightModifiersHeader(

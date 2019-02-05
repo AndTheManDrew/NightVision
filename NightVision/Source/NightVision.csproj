@@ -164,6 +164,7 @@
     <Compile Include="Utilities\AutoQualifier.cs" />
     <Compile Include="Utilities\Classifier.cs" />
     <Compile Include="Misc Workers\ThoughtWorker_TooBright.cs" />
+    <Compile Include="Utilities\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Testing\pawnGenTrialSchema.xsd">

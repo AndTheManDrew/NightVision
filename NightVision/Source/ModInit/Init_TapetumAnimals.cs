@@ -18,7 +18,7 @@ namespace NightVision
         #region  Members
         //Try to dynamically inject tapetum into large predators ensuring coverage of as many biomes as possible
         //Fallsback to adding to the same animals as vanilla rimworld
-        public static void TapetumInjector()
+        public static void AddTapetumRecipeToAnimals()
         {
             var                bestAnimals     = new List<ThingDef>();
             ResearchProjectDef tapetumResearch = ResearchProjectDef.Named(defName: "TapetumImplant");

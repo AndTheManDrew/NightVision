@@ -129,7 +129,7 @@ namespace NightVision
             AllEyeHediffs              = null;
             AllSightAffectingHediffs   = null;
             Log.Message(text: "NightVision.Storage.ResetAllSettings: Rebuilding Dictionaries");
-            Initialiser.BuildDictionaries();
+            Initialiser.FindDefsToAddNightVisionTo();
             SettingsCache.CacheInited = false;
             SettingsCache.DoPreWriteTasks();
             SettingsCache.Init();

@@ -13,7 +13,7 @@ namespace NightVision
     {
         #region  Members
 
-        public static void FindAllEyeCoveringApparel()
+        public static void FindAllValidApparel()
         {
             ThingCategoryDef headgearCategoryDef = ThingCategoryDef.Named(defName: "Headgear");
             BodyPartGroupDef fullHead            = Defs_Rimworld.Head;

@@ -20,18 +20,18 @@ namespace NightVision
         {
             FindSettingsDependentFields();
 
-            BuildDictionaries();
-            Init_TapetumAnimals.TapetumInjector();
-            Init_Research.AddNightVisionToResearch();
+            FindDefsToAddNightVisionTo();
+            Init_Research.AddNightVisionMarkerToVanillaResearch();
+            Init_TapetumAnimals.AddTapetumRecipeToAnimals();
 
 
         }
 
-        public static void BuildDictionaries()
+        public static void FindDefsToAddNightVisionTo()
         {
-            Init_Hediffs.FindAllRelevantHediffs();
-            Init_Races.FindAllRelevantRaces();
-            Init_Apparel.FindAllEyeCoveringApparel();
+            Init_Hediffs.FindAllValidHediffs();
+            Init_Races.FindAllValidRaces();
+            Init_Apparel.FindAllValidApparel();
         }
 
         
