@@ -66,6 +66,20 @@
     <Compile Include="Stalker\Stalker_Defs.cs" />
     <Compile Include="Stalker\Stalker_JobGiver_AISapper.cs" />
     <Compile Include="Stalker\Stalker_ModExtension.cs" />
+    <Compile Include="ThrownLights\CompEquipable_SecondaryThrown.cs" />
+    <Compile Include="ThrownLights\CompProperties_TransientLight.cs" />
+    <Compile Include="ThrownLights\CompProps_ChangeableProjectile_Thrown.cs" />
+    <Compile Include="ThrownLights\Comp_ChangeableProjectile_Thrown.cs" />
+    <Compile Include="ThrownLights\Comp_TransientLight.cs" />
+    <Compile Include="ThrownLights\DefOfs.cs" />
+    <Compile Include="ThrownLights\GlowCell.cs" />
+    <Compile Include="ThrownLights\JobDriver_ThrowLight.cs" />
+    <Compile Include="ThrownLights\MovingGlowCells.cs" />
+    <Compile Include="ThrownLights\MovingGlowFlooder.cs" />
+    <Compile Include="ThrownLights\MovingGlowFlooder_Patch.cs" />
+    <Compile Include="ThrownLights\Projectile_Spawn.cs" />
+    <Compile Include="ThrownLights\VerbTarget_ThrownLight.cs" />
+    <Compile Include="ThrownLights\Verb_ThrowLight.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\NightVision\Source\NightVision.csproj">
@@ -74,6 +88,7 @@
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

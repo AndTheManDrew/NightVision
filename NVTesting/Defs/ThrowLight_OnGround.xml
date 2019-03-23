@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ThingDef>
+
+    <defName>ThrownTorch</defName>
+    <thingClass>ThingWithComps</thingClass>
+    <label>thrown torch</label>
+    <description>A wooden torch for lighting an area.</description>
+    <graphicData>
+      <texPath>Things/Building/Misc/TorchLamp</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <onGroundRandomRotateAngle>35</onGroundRandomRotateAngle>
+    </graphicData>
+    <pathCost>0</pathCost>
+    <tickerType>Normal</tickerType>
+    <drawerType>RealtimeOnly</drawerType>
+    <statBases>
+      <MaxHitPoints>80</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <selectable>true</selectable>
+    <soundImpactDefault>BulletImpact_Ground</soundImpactDefault>
+    <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+    <comps>
+      <li Class="CompProperties_HeatPusher">
+        <compClass>CompHeatPusherPowered</compClass>
+        <heatPerSecond>3.5</heatPerSecond>
+        <heatPushMaxTemperature>23</heatPushMaxTemperature>
+      </li>
+      <li Class="CompProperties_FireOverlay">
+        <fireSize>0.4</fireSize>
+        <offset>(0,0,0.2)</offset>
+      </li>
+      <li Class="NVTesting.ThrownLights.CompProperties_TransientLight">
+        <compClass>NVTesting.ThrownLights.Comp_TransientLight</compClass>
+        <glowRadius>15</glowRadius>
+        <glowColor>(252,187,113,0.1)</glowColor>
+        <ticksToGlow>1000</ticksToGlow>
+        <finalGlowRadius>5</finalGlowRadius>
+
+      </li>
+    </comps>
+  </ThingDef>
+</Defs>

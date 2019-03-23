@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- ==================== Thrown Torch ========================== -->
+
+  <ThingDef>
+    <!-- from base weapon -->
+    <thingClass>ThingWithComps</thingClass>
+    <category>Item</category>
+    <drawGUIOverlay>true</drawGUIOverlay>
+    <altitudeLayer>Item</altitudeLayer>
+    <alwaysHaulable>true</alwaysHaulable>
+    <useHitPoints>true</useHitPoints>
+    <pathCost>10</pathCost>
+    <selectable>true</selectable>
+
+    <!--from basegrenade-->
+    <recipeMaker>
+      <workSpeedStat>SmithingSpeed</workSpeedStat>
+      <workSkill>Crafting</workSkill>
+      <effectWorking>Smith</effectWorking>
+      <soundWorking>Recipe_Smith</soundWorking>
+      <recipeUsers>
+        <li>TableMachining</li>
+      </recipeUsers>
+      <unfinishedThingDef>UnfinishedGun</unfinishedThingDef>
+    </recipeMaker>
+
+    <!-- so it can be equipped with a weapon -->
+    <equipmentType>None</equipmentType>
+
+    <defName>ThrowingTorch</defName>
+    <label>throwing torch</label>
+    <description>torch that is thrown</description>
+    <tickerType>Normal</tickerType>
+    <graphicData>
+      <onGroundRandomRotateAngle>35</onGroundRandomRotateAngle>
+      <texPath>Things/Item/Equipment/WeaponRanged/Grenades</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <soundInteract>Interact_Grenade</soundInteract>
+    <techLevel>Industrial</techLevel>
+    <statBases>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Flammability>1.0</Flammability>
+      <DeteriorationRate>2</DeteriorationRate>
+      <Beauty>-3</Beauty>
+      <SellPriceFactor>0.20</SellPriceFactor>
+      <Mass>1</Mass>
+      <RangedWeapon_Cooldown>2.66</RangedWeapon_Cooldown>
+      <WorkToMake>12000</WorkToMake>
+    </statBases>
+    <costList>
+      <Steel>20</Steel>
+      <Chemfuel>80</Chemfuel>
+    </costList>
+    <weaponTags>
+      <li>GrenadeDestructive</li>
+    </weaponTags>
+    <thingCategories>
+      <li>Grenades</li>
+    </thingCategories>
+    <verbs>
+      <li>
+        <label>throw torch</label>
+        <verbClass>Verb_LaunchProjectile</verbClass>
+        <!--NV: stops RW from creating attack verb --><hasStandardCommand>false</hasStandardCommand>
+        <range>12.9</range>
+        <warmupTime>0.5</warmupTime>
+        <noiseRadius>4</noiseRadius>
+        <!--NV-->
+        <ai_IsWeapon>false</ai_IsWeapon>
+        <onlyManualCast>true</onlyManualCast>
+        <soundCast>ThrowGrenade</soundCast>
+        <targetParams>
+          <canTargetLocations>true</canTargetLocations>
+        </targetParams>
+        <defaultProjectile>Proj_Torch</defaultProjectile>
+        <rangedFireRulepack>Combat_RangedFire_Thrown</rangedFireRulepack>
+      </li>
+    </verbs>
+    <comps>
+      <li Class="CompProperties_Forbiddable" />
+      <li>
+        <compClass>NVTesting.ThrownLights.CompEquipable_SecondaryThrown</compClass>
+      </li>
+      <li Class="NVTesting.ThrownLights.CompProps_ChangeableProjectile_Thrown">
+        <maxAmmo>5</maxAmmo>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef>
+    <category>Projectile</category>
+    <altitudeLayer>Projectile</altitudeLayer>
+    <defName>Proj_Torch</defName>
+    <label>torch</label>
+    <thingClass>NVTesting.ThrownLights.Projectile_Spawn</thingClass>
+    <graphicData>
+      <texPath>Things/Projectile/Grenade</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <tickerType>Normal</tickerType>
+    <useHitPoints>False</useHitPoints>
+    <neverMultiSelect>True</neverMultiSelect>
+    <projectile>
+      <speed>12</speed>
+      <flyOverhead>false</flyOverhead>
+    </projectile>
+    <modExtensions>
+      <li Class="NVTesting.ThrownLights.ProjectileSpawn_ModExt">
+        <thingToSpawn>ThrownTorch</thingToSpawn>
+      </li>
+    </modExtensions>
+  </ThingDef>
+</Defs>

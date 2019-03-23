@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<JobDef>
+		<defName>ThrowLight</defName>
+		<driverClass>NVTesting.ThrownLights.JobDriver_ThrowLight</driverClass>
+		<reportString>throwing light.</reportString>
+    <alwaysShowWeapon>true</alwaysShowWeapon>
+    <casualInterruptible>false</casualInterruptible>
+    <collideWithPawns>true</collideWithPawns>
+  </JobDef>
+</Defs>

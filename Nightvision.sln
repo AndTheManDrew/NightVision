@@ -99,6 +99,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{769DBBD3-3
 		NVTesting\Defs\TestHediffs.xml = NVTesting\Defs\TestHediffs.xml
 		NVTesting\Defs\TestingMap.xml = NVTesting\Defs\TestingMap.xml
 		NVTesting\Defs\ThinkTree_Stalker.xml = NVTesting\Defs\ThinkTree_Stalker.xml
+		NVTesting\Defs\Throw_Job.xml = NVTesting\Defs\Throw_Job.xml
+		NVTesting\Defs\ThrowLight_Equipment.xml = NVTesting\Defs\ThrowLight_Equipment.xml
+		NVTesting\Defs\ThrowLight_OnGround.xml = NVTesting\Defs\ThrowLight_OnGround.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Languages", "Languages", "{D895DC59-37A2-4A49-ABC7-52334D5B7691}"
