@@ -39,7 +39,11 @@ namespace NVTesting.ThrownLights
 
         private int mapSizeX;
 
+        public static Dictionary<int, Color32[]> originalGlowGrids = new Dictionary<int, Color32[]>();
+
         public MovingGlowCells movingCells;
+
+        public Mesh mesh;
 
         public MovingGlowFlooder(Map map, IntVec3 position, float glowRadius, ColorInt glowColor)
         {
@@ -48,6 +52,14 @@ namespace NVTesting.ThrownLights
             this.glowRadius = glowRadius;
             this.glowColor = glowColor;
             mapSizeX = map.Size.x;
+
+            if (!originalGlowGrids.ContainsKey(map.uniqueID))
+            {
+                Color32[] originalGlowgrid = new Color32[map.glowGrid.glowGrid.Length];
+                map.glowGrid.glowGrid.CopyTo(originalGlowgrid, 0);
+                originalGlowGrids[map.uniqueID] = originalGlowgrid;
+
+            }
             InitialiseGlow();
             ActiveGlowFlooders.Add(new WeakReference<MovingGlowFlooder>(this));
 
@@ -69,10 +81,20 @@ namespace NVTesting.ThrownLights
 
         private Stopwatch _timer = new Stopwatch();
         private int ticks;
-        
+        private bool loggedDraw;
+        public void Draw(Vector3 exactPos)
+        {
+            if (!loggedDraw)
+            {
+                Log.Message($"Drawing");
+                loggedDraw = true;
+            }
+            Graphics.DrawMesh(mesh, exactPos + offset, Quaternion.identity, MatBases.LightOverlay, 0);
+        }
 
         public void UpdatePosition(IntVec3 newPosition)
         {
+            
             if (newPosition == position)
             {
 
@@ -119,6 +141,74 @@ namespace NVTesting.ThrownLights
             
         }
 
+        private const int baseDist = 100;
+        private const int strDist = 100;
+        private const int diagDist = 141;
+        private static sbyte[,] rotT = new sbyte[4,2]
+                                                     {
+                                                         {1, 1},
+                                                         {-1,1},
+                                                         {1,-1},
+                                                         {-1,-1}
+                                                     };
+        public MovingGlowCells GenerateBaseCells(float radius, int mapXSize, int baseIndex)
+        {
+            var result = new MovingGlowCells(radius, mapXSize);
+            int intRad = Mathf.RoundToInt(radius * 100);
+            int maxCount = intRad / 100;
+            for (int x = 0; x <= maxCount; x++)
+            {
+                int distAlongDiag = baseDist + (x * diagDist);
+                for (int z = x; z <= maxCount; z++)
+                {
+                    int sumDist = distAlongDiag + (strDist * (z - x));
+
+                    if (sumDist <= intRad)
+                    {
+                        if (x == 0 && z == 0)
+                        {
+                            result.AddNew(baseIndex, sumDist);
+                        }
+                        else if (x == 0)
+                        {
+                            result.AddNew((z * mapXSize) + baseIndex, sumDist );
+                            result.AddNew(z + baseIndex, sumDist );
+                            result.AddNew((-z * mapXSize) + baseIndex, sumDist );
+                            result.AddNew(-z + baseIndex , sumDist );
+                        }
+                        else if (x==z)
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                result.AddNew((rotT[i,0] * x) + (rotT[i,1] * z * mapXSize) + baseIndex, sumDist );
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                result.AddNew((rotT[i,0] * x) + (rotT[i,1] * z * mapXSize) + baseIndex, sumDist );
+                                result.AddNew((rotT[i,0] * z) + (rotT[i,1] * x * mapXSize) + baseIndex, sumDist );
+                            }
+                        }
+                    }
+                }
+            }
+
+            result.Sort();
+            Log.Message($"result.ToStringIndices() = {result.ToStringIndices()}");
+            
+            //foreach (GlowCell movingCell in result)
+            //{
+            //    movingCell.index += baseIndex;
+            //}
+
+            //result.Sort();
+
+            return result;
+        }
+
+
         public void InitialiseGlow()
         {
             edifices = map.edificeGrid.InnerArray;
@@ -130,130 +220,133 @@ namespace NVTesting.ThrownLights
             int locIndex = CellIndices.CellToIndex(position);
             
             
-            movingCells = new MovingGlowCells(glowRadius, mapSizeX);
+            //movingCells = new MovingGlowCells(glowRadius, mapSizeX);
             
-            queue.Clear();
-            closedSetCellIndices.Clear();
-            activeSet.Clear();
+            //queue.Clear();
+            //closedSetCellIndices.Clear();
+            //activeSet.Clear();
 
 
-            queue.Push(locIndex);
-            activeSet[locIndex] = 100;
-            movingCells.Add(new GlowCell(){dist = 100, index = locIndex});
+            //queue.Push(locIndex);
+            //activeSet[locIndex] = 100;
+            //movingCells.Add(new GlowCell(){dist = 100, index = locIndex});
 
-            while (queue.Count != 0)
-            {
-                int currentCellIndex = queue.Pop();
-                IntVec3 cell = CellIndices.IndexToCell(currentCellIndex);
+            //while (queue.Count != 0)
+            //{
+            //    int currentCellIndex = queue.Pop();
+            //    IntVec3 cell = CellIndices.IndexToCell(currentCellIndex);
 
-                closedSetCellIndices.Add(currentCellIndex);
+            //    closedSetCellIndices.Add(currentCellIndex);
                 
                 
-                for (int nInd = 0; nInd < 8; nInd++)
-                {
-                    uint safex = (uint)(cell.x + (int)directions[nInd, 0]);
-                    uint safez = (uint)(cell.z + (int)directions[nInd, 1]);
+            //    for (int nInd = 0; nInd < 8; nInd++)
+            //    {
+            //        uint safex = (uint)(cell.x + (int)directions[nInd, 0]);
+            //        uint safez = (uint)(cell.z + (int)directions[nInd, 1]);
 
-                    if ((ulong) safex >= (ulong) ((long) map.Size.x) || (ulong) safez >= (ulong) ((long) map.Size.z))
-                    {
-                        continue;
-                    }
+            //        if ((ulong) safex >= (ulong) ((long) map.Size.x) || (ulong) safez >= (ulong) ((long) map.Size.z))
+            //        {
+            //            continue;
+            //        }
 
-                    int x = (int) safex;
-                    int z = (int) safez;
+            //        int x = (int) safex;
+            //        int z = (int) safez;
 
-                    int nCellIndex = CellIndices.CellToIndex(x, z);
-                    if (closedSetCellIndices.Contains(nCellIndex))
-                    {
-                        continue;
-                    }
+            //        int nCellIndex = CellIndices.CellToIndex(x, z);
+            //        if (closedSetCellIndices.Contains(nCellIndex))
+            //        {
+            //            continue;
+            //        }
 
-                    bool blocked = edifices[nCellIndex]?.def.blockLight == true;
+            //        bool blocked = edifices[nCellIndex]?.def.blockLight == true;
 
-                    if (nInd < 4)
-                    {
-                        blockedCells[nInd] = blocked;
-                    }
+            //        if (nInd < 4)
+            //        {
+            //            blockedCells[nInd] = blocked;
+            //        }
                     
-                    int dist = activeSet[currentCellIndex] + (nInd < 4 ? 100 : 141);
+            //        int dist = activeSet[currentCellIndex] + (nInd < 4 ? 100 : 141);
                     
-                    if (dist <= intRad)
-                    {
+            //        if (dist <= intRad)
+            //        {
                         
-                            if (!activeSet.ContainsKey(nCellIndex))
-                            {
-                                activeSet[nCellIndex] = 99999999;
-                            }
+            //                if (!activeSet.ContainsKey(nCellIndex))
+            //                {
+            //                    activeSet[nCellIndex] = 99999999;
+            //                }
 
-                            if (dist < activeSet[nCellIndex])
-                            {
-                                movingCells.AddOrUpdateCell(nCellIndex, dist);
+            //                if (dist < activeSet[nCellIndex])
+            //                {
+            //                    movingCells.AddOrUpdateCell(nCellIndex, dist);
 
-                                if (blocked)
-                                {
+            //                    if (blocked)
+            //                    {
                                     
-                                    continue;
-                                }
+            //                        continue;
+            //                    }
 
-                                switch (nInd)
-                                {
-                                    case 4:
+            //                    switch (nInd)
+            //                    {
+            //                        case 4:
 
-                                        if (blockedCells[0] && blockedCells[1])
-                                        {
-                                            continue;
-                                        }
+            //                            if (blockedCells[0] && blockedCells[1])
+            //                            {
+            //                                continue;
+            //                            }
 
-                                        break;
-                                    case 5:
+            //                            break;
+            //                        case 5:
 
-                                        if (blockedCells[1] && blockedCells[2])
-                                        {
-                                            continue;
-                                        }
+            //                            if (blockedCells[1] && blockedCells[2])
+            //                            {
+            //                                continue;
+            //                            }
 
-                                        break;
-                                    case 6:
+            //                            break;
+            //                        case 6:
 
-                                        if (blockedCells[2] && blockedCells[3])
-                                        {
-                                            continue;
-                                        }
+            //                            if (blockedCells[2] && blockedCells[3])
+            //                            {
+            //                                continue;
+            //                            }
 
-                                        break;
-                                    case 7:
+            //                            break;
+            //                        case 7:
 
-                                        if (blockedCells[0] && blockedCells[3])
-                                        {
-                                            continue;
-                                        }
+            //                            if (blockedCells[0] && blockedCells[3])
+            //                            {
+            //                                continue;
+            //                            }
 
-                                        break;
-                                }
-                                activeSet[nCellIndex] = dist;
-                                queue.Push(nCellIndex);
-                            }
+            //                            break;
+            //                    }
+            //                    activeSet[nCellIndex] = dist;
+            //                    queue.Push(nCellIndex);
+            //                }
 
                         
 
 
-                    }
+            //        }
 
 
 
-                }
+            //    }
 
 
-            }
+            //}
 
-            Log.Message($"movingCells.Count = {movingCells.NumRows * movingCells.NumCols}");
+
+            movingCells = GenerateBaseCells(glowRadius, mapSizeX, locIndex);
             
+            movingCells.Sort();
+            Log.Message($"movingCells = {movingCells}");
             SetUpGlowCells();
             map.mapDrawer.MapMeshDirty(position, MapMeshFlag.GroundGlow);
-            Log.Message($"movingCells = {movingCells}");
-            
-
+            mesh = DynamicLightingOverlay.MakeNewMesh(movingCells, locIndex, offset:out offset);
         }
+
+        public Vector3 offset;
 
         public void SetUpGlowCells()
         {

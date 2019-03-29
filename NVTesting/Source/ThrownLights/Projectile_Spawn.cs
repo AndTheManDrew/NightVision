@@ -26,6 +26,12 @@ namespace NVTesting.ThrownLights
             }
         }
 
+        public override void Draw()
+        {
+            base.Draw();
+            glowFlooder.Draw(DrawPos);
+        }
+
         public override void Tick()
         {
             base.Tick();
