@@ -40,10 +40,13 @@ namespace NVTesting.ThrownLights
         [TweakValue("_NV", 1, 50)]
         public static float glowRadius = 5;
 
+        [TweakValue("_NV", 1, 255)]
+        public static int alphaMovingGlow = 255;
+
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             base.SpawnSetup(map, respawningAfterLoad);
-            glowFlooder = new MovingGlowFlooder(map, Position, glowRadius, new ColorInt(200, 200, 200));
+            glowFlooder = new MovingGlowFlooder(map, Position, glowRadius, new ColorInt(255, 255, 255, alphaMovingGlow));
         }
 
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)

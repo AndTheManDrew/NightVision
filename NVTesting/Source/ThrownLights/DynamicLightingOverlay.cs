@@ -63,17 +63,183 @@ namespace NVTesting.ThrownLights
         //    }
 
         //}
+         public static Mesh MakeTestCircle(out Vector3 offset, Material mat)
+        {
+            int rowL = testColors.Length - 1;
+            var mesh = new Mesh();
+            float y = 0;
+            List<Vector3> verts = new List<Vector3>();
+            List<Color32> colours = new List<Color32>();
+            List<int> tris = new List<int>();
+            offset = Vector3.zero;
+            var baseColor = mat.color;
+            var glowColor = Color.green;
+            float tBase = rowL / 2.0f;
+            for (int z = 0; z < rowL; z++)
+            {
+                for (int x = 0; x < rowL; x++)
+                {
+                    int initial = verts.Count;
+                    Color32 centreColor = Color32.Lerp(baseColor, glowColor, (tBase - (float)Math.Sqrt((x-tBase)*(x-tBase) + (z-tBase)*(z-tBase)))/tBase);
+                    verts.Add(new Vector3(x * 4, y, z * 4));
+                    verts.Add(new Vector3((x+1f) * 4, y, z * 4));
+                    verts.Add(new Vector3(x * 4, y, (z + 1f) * 4));
+                    verts.Add(new Vector3((x+1f) * 4, y, (z+1f) * 4));
+                    verts.Add(new Vector3((x +0.5f) * 4, y, (z+0.5f) * 4));
+                    var tempColor = centreColor;
+                    tempColor.a = 0;
+                    colours.Add(tempColor);
+                    colours.Add(tempColor);
+                    colours.Add(tempColor);
+                    colours.Add(tempColor);
+                    colours.Add(tempColor);
 
-        public static Mesh MakeNewMesh(MovingGlowCells glowCells, int rootCellIndex, out Vector3 offset)
+                    tris.Add(initial);
+                    tris.Add(initial + 4);
+                    tris.Add(initial+1);
+
+                    tris.Add(initial);
+                    tris.Add(initial+2);
+                    tris.Add(initial+4);
+
+                    tris.Add(initial+2);
+                    tris.Add(initial+3);
+                    tris.Add(initial+4);
+
+                    tris.Add(initial+3);
+                    tris.Add(initial+1);
+                    tris.Add(initial+4);
+
+                }
+            }
+            
+
+            mesh.SetVertices(verts);
+            mesh.colors32 = colours.ToArray();
+            mesh.SetTriangles(tris, 0);
+            //mesh.SetColors(colours);
+
+            return mesh;
+
+        }
+
+        public static Color32[] testColors = new Color32[] {Color.clear, Color.white,Color.magenta, Color.red, Color.yellow, Color.cyan, Color.green, Color.blue};
+        public static Mesh MakeTestPalette(out Vector3 offset, Material mat)
+        {
+            int rowL = testColors.Length - 1;
+            var mesh = new Mesh();
+            float y = 0;
+            List<Vector3> verts = new List<Vector3>();
+            List<Color32> colours = new List<Color32>();
+            List<int> tris = new List<int>();
+            offset = Vector3.zero;
+            var testColor = mat.color;
+            //float t = rowL / 2.0f;
+            for (int z = 0; z < rowL; z++)
+            {
+                float zCoord = z + 0.1f;
+                Color32 testColor2 = testColors[z];
+                testColor2.r = (byte) (testColor2.r * 200 / 255);
+                testColor2.g = (byte) (testColor2.g * 200 / 255);
+                testColor2.b = (byte) (testColor2.b * 200 / 255);
+                testColor2.a = 100;
+                for (int x = 0; x < rowL; x++)
+                {
+                    int initial = verts.Count;
+                    float xCoord = x + 0.1f;
+
+                    Color32 centreColor = Color32.Lerp(testColor, testColor2, (float)x / rowL);
+                    verts.Add(new Vector3(xCoord * 4, y, zCoord * 4));
+                    verts.Add(new Vector3((xCoord+0.8f) * 4, y, zCoord * 4));
+                    verts.Add(new Vector3(xCoord * 4, y, (zCoord + 0.8f) * 4));
+                    verts.Add(new Vector3((xCoord+0.8f) * 4, y, (zCoord+0.8f) * 4));
+                    verts.Add(new Vector3((xCoord +0.4f) * 4, y, (zCoord+0.4f) * 4));
+                    var tempColor = centreColor;
+                    tempColor.a = 0;
+                    colours.Add(tempColor);
+                    colours.Add(tempColor);
+                    colours.Add(tempColor);
+                    colours.Add(tempColor);
+                    tempColor   = centreColor;
+                    tempColor.a = 100;
+                    colours.Add(tempColor);
+
+                    tris.Add(initial);
+                    tris.Add(initial + 4);
+                    tris.Add(initial+1);
+
+                    tris.Add(initial);
+                    tris.Add(initial+2);
+                    tris.Add(initial+4);
+
+                    tris.Add(initial+2);
+                    tris.Add(initial+3);
+                    tris.Add(initial+4);
+
+                    tris.Add(initial+3);
+                    tris.Add(initial+1);
+                    tris.Add(initial+4);
+
+                }
+            }
+            
+
+            mesh.SetVertices(verts);
+            mesh.colors32 = colours.ToArray();
+            mesh.SetTriangles(tris, 0);
+            //mesh.SetColors(colours);
+
+            return mesh;
+
+        }
+
+
+
+        private static int[,] cellOffsets = new int[4,2]
+                                             {
+                                                 {0,0},
+                                                 {-1,0},
+                                                 {0,-1},
+                                                 {-1,-1}
+                                             };
+
+        
+        [TweakValue("_NV", 1, 255)]
+        public static int alphaBaseGlow = 0;
+
+        public static Color32 clear = new Color32(255,255,255,0);
+
+        public static Mesh MakeNewMesh(MovingGlowCells glowCells, int rootCellIndex, int glowRadius, ColorInt glowColor, out Vector3 offset)
         {
             var mesh = new Mesh();
-            float y =  AltitudeLayer.LightingOverlay.AltitudeFor();
-
+            float y =  0;
+            
             List<Vector3> verts = new List<Vector3>();
+            List<Color32> colours = new List<Color32>();
 
             int[,] rowIndices = new int[glowCells.NumRows + 1, 2];
             int currentIndex = 0;
             offset = Vector3.zero;
+            
+            float AttenLinearSlope = -1f / glowRadius;
+            foreach (GlowCell glowCell in glowCells)
+            {
+                int dist      = glowCell.dist;
+
+                float    rad         = (float) dist / 100f;
+                //ColorInt addedColour = baseColour;
+                
+                    //float b = 1f / (rad * rad);
+                    //float a = 1f + AttenLinearSlope * rad;
+
+                    //addedColour += (glowColor - baseColour) * Math.Min(1 ,(0.8f * a) +( 0.2f * b));
+                    Color32 addedColour = Color32.Lerp(glowColor.ToColor32, clear, rad / glowRadius);
+                    glowCell.displayColour = addedColour;
+
+
+
+            }
+
             
             for (int z = 0; z <= glowCells.NumRows; z++)
             {
@@ -82,26 +248,39 @@ namespace NVTesting.ThrownLights
                 rowIndices[z,0] = currentIndex;
                 for (int x = 0; x <= rowLength; x++)
                 {
-                    if (glowCells[z,x] != null)
+
+                    if (glowCells[z,x] != null || glowCells[z - 1,x] != null || glowCells[z, x -1] != null || glowCells[z - 1, x - 1] != null)
                     {
-                        if (glowCells[z,x].index == rootCellIndex)
+                        ColorInt averageColour = default(ColorInt);
+
+                        for (int nCell = 0; nCell < 4; nCell++)
                         {
-                            offset = new Vector3(-x - 0.5f, y, -z - 0.5f);
+                            averageColour += glowCells[z + cellOffsets[nCell, 0],x + cellOffsets[nCell, 1]]?.displayColour ?? clear;
                         }
 
-                        if (!foundFirstCell)
+                        averageColour /= 4;
+                        averageColour.ClampToNonNegative();
+                        Log.Message($"averageColour = {averageColour.ToColor32}");
+
+                        colours.Add(averageColour.ToColor32);
+                        verts.Add(new Vector3(x, y, z));
+                        currentIndex++;
+
+                        if (glowCells[z,x] != null)
                         {
-                            foundFirstCell = true;
-                            rowIndices[z, 1] = x;
+                            if (glowCells[z, x].index == rootCellIndex)
+                            {
+                                offset = new Vector3(-x - 0.5f, y, -z - 0.5f);
+                            }
+
+                            if (!foundFirstCell)
+                            {
+                                foundFirstCell = true;
+                                rowIndices[z, 1] = x;
+                            }
                         }
-                        verts.Add(new Vector3(x, y, z));
-                        currentIndex++;
                     }
-                    else if (glowCells[z - 1,x] != null || glowCells[z, x-1] != null || glowCells[z - 1, x - 1] != null)
-                    {
-                        verts.Add(new Vector3(x, y, z));
-                        currentIndex++;
-                    }
+
                     
                 }
             }
@@ -118,6 +297,7 @@ namespace NVTesting.ThrownLights
                     if (row[x] != null)
                     {
                         verts.Add(new Vector3(x, y, z));
+                        colours.Add(glowCells[z,x].displayColour);
                     }
                 }
             }
@@ -160,18 +340,12 @@ namespace NVTesting.ThrownLights
                     }
                 }
             }
-
-            Color32[] colours = new Color32[verts.Count];
-
-            for (int i = 0; i < colours.Length; i++)
-            {
-                colours[i] = new Color32(100, 0, 0, 100);
-            }
+            
 
             mesh.SetVertices(verts);
+            mesh.colors32 = colours.ToArray();
             mesh.SetTriangles(tris, 0);
-            mesh.colors32 = colours;
-
+            //mesh.SetColors(colours);
 
             return mesh;
         }

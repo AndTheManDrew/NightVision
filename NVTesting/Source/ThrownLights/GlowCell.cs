@@ -13,6 +13,7 @@ namespace NVTesting.ThrownLights {
         public int     dist;
         public Color32 oldGlow;
         public Color32 addedColour;
+        public Color32 displayColour;
 
         public GlowCell() { }
 

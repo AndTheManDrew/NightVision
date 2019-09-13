@@ -225,6 +225,30 @@ namespace NVTesting.ThrownLights
             return sb.ToString();
         }
 
+        public string ToStringColour()
+        {
+            var sb = new StringBuilder(value: $"Moving glow cell matrix: h ={matrix.Count}\n");
+
+            foreach (List<GlowCell> glowCells in matrix)
+            {
+                foreach (GlowCell glowCell in glowCells)
+                {
+                    if (glowCell != null)
+                    {
+                        sb.Append(value: $"{glowCell.addedColour.ToString().PadLeft(totalWidth: 26, paddingChar: space)}{space}");
+                    }
+                    else
+                    {
+                        sb.Append(value: new string(c: space, count: 26));
+                    }
+                }
+
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
+        }
+
         public GlowCellsSafeEnumerator GetEnumerator()
         {
             Sort();
