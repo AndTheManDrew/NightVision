@@ -20,15 +20,20 @@ namespace NightVision
         [UsedImplicitly]
         public static Settings Settings;
 
+        public static Storage Store => Settings.Store;
+
+        public static SettingsCache Cache => Settings.Cache;
+        
+
         [UsedImplicitly]
         public Mod(
                         ModContentPack content
                     ) : base(content)
         {
-            Mod.Instance = this;
+            Instance = this;
 
             LongEventHandler.QueueLongEvent(
-                                            Mod.InitSettings,
+                                            InitSettings,
                                             "Initialising Night Vision Settings",
                                             false,
                                             null
@@ -50,18 +55,19 @@ namespace NightVision
         public override void WriteSettings()
         {
             Log.Message("Nightvision: WriteSettings called");
-            SettingsCache.DoPreWriteTasks();
+            Cache.DoPreWriteTasks();
             base.WriteSettings();
         }
 
-        private static void InitSettings()
+        private void InitSettings()
         {
-            Mod.Settings = Mod.Instance.GetSettings<Settings>();
-            Initialiser.Startup();
-
-            if (Storage.NullRefWhenLoading)
+            Settings = GetSettings<Settings>();
+            var initialise = new Initialiser();
+            initialise.Startup();
+            
+            if (Settings.Store.NullRefWhenLoading)
             {
-                Mod.Instance.WriteSettings();
+                WriteSettings();
             }
         }
     }

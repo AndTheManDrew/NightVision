@@ -17,6 +17,7 @@ namespace NightVision {
         {
             TextAnchor anchor    = Text.Anchor;
             float      rowHeight = Constants_Draw.GenRowHeight;
+            var cache = Mod.Cache;
 
             var rowRect = new Rect(
                 inRect.width  * 0.05f,
@@ -43,23 +44,23 @@ namespace NightVision {
 
             rowRect.y += rowHeight + Constants_Draw.RowGap;
 
-            SettingsCache.NVZeroCache = Widgets.HorizontalSlider(
+            cache.NVZeroCache = Widgets.HorizontalSlider(
                 rowRect,
-                (float) SettingsCache.NVZeroCache,
-                (float) SettingsCache.MinCache,
-                (float) SettingsCache.MaxCache,
+                (float) cache.NVZeroCache,
+                (float) cache.MinCache,
+                (float) cache.MaxCache,
                 true,
                 string.Format(
                     Str.ZeroMultiLabel,
-                    SettingsCache.NVZeroCache
+                    cache.NVZeroCache
                 ),
                 string.Format(
                     Str.XLabel,
-                    SettingsCache.MinCache
+                    cache.MinCache
                 ),
                 string.Format(
                     Str.XLabel,
-                    SettingsCache.MaxCache
+                    cache.MaxCache
                 ),
                 1
             );
@@ -68,30 +69,30 @@ namespace NightVision {
                 rowRect,
                 Constants_Calculations.DefaultZeroLightMultiplier,
                 Constants_Calculations.NVDefaultOffsets[0],
-                (float) SettingsCache.MinCache,
-                (float) SettingsCache.MaxCache,
+                (float) cache.MinCache,
+                (float) cache.MaxCache,
                 IndicatorTex.DefIndicator
             );
 
             rowRect.y += rowHeight * 1.5f;
 
-            SettingsCache.NVFullCache = Widgets.HorizontalSlider(
+            cache.NVFullCache = Widgets.HorizontalSlider(
                 rowRect,
-                (float) SettingsCache.NVFullCache,
-                (float) SettingsCache.MinCache,
-                (float) SettingsCache.MaxCache,
+                (float) cache.NVFullCache,
+                (float) cache.MinCache,
+                (float) cache.MaxCache,
                 true,
                 string.Format(
                     Str.FullMultiLabel,
-                    SettingsCache.NVFullCache
+                    cache.NVFullCache
                 ),
                 string.Format(
                     Str.XLabel,
-                    SettingsCache.MinCache
+                    cache.MinCache
                 ),
                 string.Format(
                     Str.XLabel,
-                    SettingsCache.MaxCache
+                    cache.MaxCache
                 ),
                 1
             );
@@ -100,8 +101,8 @@ namespace NightVision {
                 rowRect,
                 Constants_Calculations.DefaultFullLightMultiplier,
                 Constants_Calculations.NVDefaultOffsets[1],
-                (float) SettingsCache.MinCache,
-                (float) SettingsCache.MaxCache,
+                (float) cache.MinCache,
+                (float) cache.MaxCache,
                 IndicatorTex.DefIndicator
             );
 
@@ -120,23 +121,23 @@ namespace NightVision {
 
             rowRect.y += rowHeight * 1.5f;
 
-            SettingsCache.PSZeroCache = Widgets.HorizontalSlider(
+            cache.PSZeroCache = Widgets.HorizontalSlider(
                 rowRect,
-                (float) SettingsCache.PSZeroCache,
-                (float) SettingsCache.MinCache,
-                (float) SettingsCache.MaxCache,
+                (float) cache.PSZeroCache,
+                (float) cache.MinCache,
+                (float) cache.MaxCache,
                 true,
                 string.Format(
                     Str.ZeroMultiLabel,
-                    SettingsCache.PSZeroCache
+                    cache.PSZeroCache
                 ),
                 string.Format(
                     Str.XLabel,
-                    SettingsCache.MinCache
+                    cache.MinCache
                 ),
                 string.Format(
                     Str.XLabel,
-                    SettingsCache.MaxCache
+                    cache.MaxCache
                 ),
                 1
             );
@@ -145,30 +146,30 @@ namespace NightVision {
                 rowRect,
                 Constants_Calculations.DefaultZeroLightMultiplier,
                 Constants_Calculations.PSDefaultOffsets[0],
-                (float) SettingsCache.MinCache,
-                (float) SettingsCache.MaxCache,
+                (float) cache.MinCache,
+                (float) cache.MaxCache,
                 IndicatorTex.DefIndicator
             );
 
             rowRect.y += rowHeight * 1.5f;
 
-            SettingsCache.PSFullCache = Widgets.HorizontalSlider(
+            cache.PSFullCache = Widgets.HorizontalSlider(
                 rowRect,
-                (float) SettingsCache.PSFullCache,
-                (float) SettingsCache.MinCache,
-                (float) SettingsCache.MaxCache,
+                (float) cache.PSFullCache,
+                (float) cache.MinCache,
+                (float) cache.MaxCache,
                 true,
                 string.Format(
                     Str.FullMultiLabel,
-                    SettingsCache.PSFullCache
+                    cache.PSFullCache
                 ),
                 string.Format(
                     Str.XLabel,
-                    SettingsCache.MinCache
+                    cache.MinCache
                 ),
                 string.Format(
                     Str.XLabel,
-                    SettingsCache.MaxCache
+                    cache.MaxCache
                 ),
                 1
             );
@@ -177,8 +178,8 @@ namespace NightVision {
                 rowRect,
                 Constants_Calculations.DefaultFullLightMultiplier,
                 Constants_Calculations.PSDefaultOffsets[1],
-                (float) SettingsCache.MinCache,
-                (float) SettingsCache.MaxCache,
+                (float) cache.MinCache,
+                (float) cache.MaxCache,
                 IndicatorTex.DefIndicator
             );
 
@@ -206,7 +207,7 @@ namespace NightVision {
 
                 if (Widgets.ButtonText(rowRect, "NVConfirmReset".Translate()) && confirmTimer.ElapsedMilliseconds > 500)
                 {
-                    Storage.ResetAllSettings();
+                    Mod.Store.ResetAllSettings();
                     confirmTimer.Reset();
                 }
 

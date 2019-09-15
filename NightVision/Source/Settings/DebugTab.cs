@@ -38,7 +38,7 @@ namespace NightVision {
                 (StatPartGlow_FactorFromGlow.TotalGlFactorNanoSec / StatPartGlow_FactorFromGlow.TotalTicks).ToString("00 ns/tick")
             );
 
-            listing.Label($"1 tick = {1000000000 / 60:00} ns");
+            listing.Label($"1 tick = {16666666:00} ns");
             listing.GapLine();
             listingY = listing.CurHeight;
             listing.End();
@@ -52,10 +52,13 @@ namespace NightVision {
             );
 
             Text.Anchor = TextAnchor.MiddleLeft;
+            
+            var store = Mod.Store;
+            var cache = Mod.Cache;
             //Multiplier Limits
-            Widgets.CheckboxLabeled(rowRect, "NVCustomCapsEnabled".Translate(), ref Storage.CustomCapsEnabled);
+            Widgets.CheckboxLabeled(rowRect, "NVCustomCapsEnabled".Translate(), ref store.CustomCapsEnabled);
 
-            if (Storage.CustomCapsEnabled)
+            if (store.CustomCapsEnabled)
             {
                 rowRect.y += Constants_Draw.RowHeight;
                 Text.Font =  GameFont.Tiny;
@@ -63,13 +66,13 @@ namespace NightVision {
                 //Text.Font =  GameFont.Small;
                 rowRect.y += Constants_Draw.RowHeight /*+ Constants.RowGap*/;
 
-                SettingsCache.MinCache = Widgets.HorizontalSlider(
+                cache.MinCache = Widgets.HorizontalSlider(
                     rowRect,
-                    (float) SettingsCache.MinCache,
+                     cache.MinCache.Value,
                     1f,
                     100f,
                     true,
-                    "NVSettingsMinCapLabel".Translate(SettingsCache.MinCache.Value),
+                    "NVSettingsMinCapLabel".Translate(cache.MinCache.Value),
                     "1%",
                     "100%",
                     1
@@ -86,14 +89,14 @@ namespace NightVision {
 
                 rowRect.y += Constants_Draw.RowHeight;
 
-                SettingsCache.MaxCache = Widgets.HorizontalSlider(
+                cache.MaxCache = Widgets.HorizontalSlider(
                     rowRect,
-                    (float) SettingsCache.MaxCache,
+                    (float) cache.MaxCache,
                     100f,
                     200f,
                     true,
                     "NVSettingsMaxCapLabel".Translate(
-                        SettingsCache
+                        cache
                                     .MaxCache.Value
                     ),
                     "100%",
@@ -208,7 +211,7 @@ namespace NightVision {
 
                             foreach (HediffDef hediff in hedifflist.Value)
                             {
-                                if (Storage.HediffLightMods.TryGetValue(
+                                if (store.HediffLightMods.TryGetValue(
                                     hediff,
                                     out Hediff_LightModifiers value
                                 ))
@@ -237,7 +240,7 @@ namespace NightVision {
 
                         foreach (Apparel apparel in comp.PawnsNVApparel)
                         {
-                            if (Storage.NVApparel.TryGetValue(
+                            if (store.NVApparel.TryGetValue(
                                 apparel.def,
                                 out ApparelVisionSetting appSet
                             ))

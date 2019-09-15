@@ -17,12 +17,14 @@ namespace NightVision {
 
         public static void DrawTab(Rect inRect)
         {
-            int hediffcount = SettingsCache.GetAllHediffs.Count;
+            var cache = Mod.Cache;
+            var store = Mod.Store;
+            int hediffcount = cache.GetAllHediffs.Count;
 
             if (_numberOfCustomHediffs == null)
             {
                 _numberOfCustomHediffs =
-                            Storage.HediffLightMods.Count(hlm => hlm.Value.IntSetting == VisionType.NVCustom);
+                            store.HediffLightMods.Count(hlm => hlm.Value.IntSetting == VisionType.NVCustom);
             }
 
             inRect = inRect.AtZero();
@@ -49,10 +51,10 @@ namespace NightVision {
 
             for (var i = 0; i < hediffcount; i++)
             {
-                HediffDef hediffdef = SettingsCache.GetAllHediffs[i];
+                HediffDef hediffdef = cache.GetAllHediffs[i];
                 rowRect.y = num;
 
-                if (Storage.HediffLightMods.TryGetValue(hediffdef, out Hediff_LightModifiers hediffmods))
+                if (store.HediffLightMods.TryGetValue(hediffdef, out Hediff_LightModifiers hediffmods))
                 {
                     _numberOfCustomHediffs +=
                                 SettingsHelpers.DrawLightModifiersRow(
@@ -65,7 +67,7 @@ namespace NightVision {
                 }
                 else
                 {
-                    Hediff_LightModifiers temp = Storage.AllEyeHediffs.Contains(hediffdef)
+                    Hediff_LightModifiers temp = store.AllEyeHediffs.Contains(hediffdef)
                                 ? new Hediff_LightModifiers {AffectsEye = true}
                                 : new Hediff_LightModifiers();
 
@@ -81,7 +83,7 @@ namespace NightVision {
                     if (temp.IntSetting != VisionType.NVNone)
                     {
                         temp.InitialiseNewFromSettings(hediffdef);
-                        Storage.HediffLightMods[hediffdef] = temp;
+                        store.HediffLightMods[hediffdef] = temp;
                     }
                 }
 

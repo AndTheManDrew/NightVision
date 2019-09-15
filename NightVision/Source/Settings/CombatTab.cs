@@ -26,8 +26,9 @@ namespace NightVision
             {
                 if (bestAndWorstRangedCd[0].NullOrEmpty() && bestAndWorstRangedCd[1].NullOrEmpty())
                 {
-                    bestAndWorstRangedCd[0] = (1 / Storage.MultiplierCaps.max).ToStringPercent();
-                    bestAndWorstRangedCd[1] = (1 / Storage.MultiplierCaps.min).ToStringPercent();
+                    var caps = Mod.Store.MultiplierCaps;
+                    bestAndWorstRangedCd[0] = (1 / caps.max).ToStringPercent();
+                    bestAndWorstRangedCd[1] = (1 / caps.min).ToStringPercent();
                 }
 
                 return bestAndWorstRangedCd;

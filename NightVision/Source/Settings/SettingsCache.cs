@@ -12,34 +12,34 @@ using Verse;
 
 namespace NightVision
 {
-    public static class SettingsCache
+    public class SettingsCache
     {
         [CanBeNull]
-        private static List<HediffDef> _allHediffsCache;
+        private List<HediffDef> _allHediffsCache;
 
-        public static bool CacheInited;
+        public bool CacheInited;
 
         [CanBeNull]
-        private static List<ThingDef> _headgearCache;
+        private List<ThingDef> _headgearCache;
 
-        public static float? MaxCache;
+        public  float? MaxCache;
 
-        public static float? MinCache;
-        public static float? NVFullCache;
-        public static float? NVZeroCache;
-        public static float? PSFullCache;
-        public static float? PSZeroCache;
+        public  float? MinCache;
+        public  float? NVFullCache;
+        public  float? NVZeroCache;
+        public  float? PSFullCache;
+        public  float? PSZeroCache;
 
         [NotNull]
-        public static List<ThingDef> GetAllHeadgear
+        public  List<ThingDef> GetAllHeadgear
         {
             get
             {
                 if (_headgearCache == null || _headgearCache.Count == 0)
                 {
-                    _headgearCache = new List<ThingDef>(Storage.AllEyeCoveringHeadgearDefs);
+                    _headgearCache = new List<ThingDef>(Mod.Store.AllEyeCoveringHeadgearDefs);
 
-                    foreach (ThingDef appareldef in Storage.NVApparel.Keys)
+                    foreach (ThingDef appareldef in Mod.Store.NVApparel.Keys)
                     {
                         int appindex = _headgearCache.IndexOf(appareldef);
 
@@ -56,15 +56,15 @@ namespace NightVision
         }
 
         [NotNull]
-        public static List<HediffDef> GetAllHediffs
+        public  List<HediffDef> GetAllHediffs
         {
             get
             {
                 if (_allHediffsCache == null || _allHediffsCache.Count == 0)
                 {
-                    _allHediffsCache = new List<HediffDef>(Storage.AllSightAffectingHediffs);
+                    _allHediffsCache = new List<HediffDef>(Mod.Store.AllSightAffectingHediffs);
 
-                    foreach (HediffDef hediffdef in Storage.HediffLightMods.Keys)
+                    foreach (HediffDef hediffdef in Mod.Store.HediffLightMods.Keys)
                     {
                         int appindex = _allHediffsCache.IndexOf(hediffdef);
 
@@ -80,15 +80,15 @@ namespace NightVision
             }
         }
 
-        public static void Init()
+        public  void Init()
         {
             if (CacheInited)
             {
                 return;
             }
 
-            MinCache    = (float) Math.Round(Storage.MultiplierCaps.min * 100);
-            MaxCache    = (float) Math.Round(Storage.MultiplierCaps.max * 100);
+            MinCache    = (float) Math.Round(Mod.Store.MultiplierCaps.min * 100);
+            MaxCache    = (float) Math.Round(Mod.Store.MultiplierCaps.max * 100);
             NVZeroCache = SettingsHelpers.ModToMultiPercent(LightModifiersBase.NVLightModifiers[0], true);
 
             NVFullCache =
@@ -107,21 +107,27 @@ namespace NightVision
         ///     Clears all cached stuff
         ///     Runs when opening the settings menu and when closing it
         /// </summary>
-        public static void DoPreWriteTasks()
+        public  void DoPreWriteTasks()
         {
             // this check is required because this method is run on opening the menu
             if (CacheInited)
             {
                 FieldClearer.ResetSettingsDependentFields();
+                
+                var settingsStore = Mod.Store;
+                if (settingsStore.CustomCapsEnabled)
+                {
+                    if (MinCache.HasValue)
+                    {
+                        settingsStore.SetMinMultiplierCap(MinCache.Value);
+                    }
 
-                Storage.MultiplierCaps.min = MinCache != null && Storage.CustomCapsEnabled
-                            ? (float) Math.Round((float) MinCache / 100, Constants_Calculations.NumberOfDigits)
-                            : Storage.MultiplierCaps.min;
-
-                Storage.MultiplierCaps.max = MaxCache != null && Storage.CustomCapsEnabled
-                            ? (float) Math.Round((float) MaxCache / 100, Constants_Calculations.NumberOfDigits)
-                            : Storage.MultiplierCaps.max;
-
+                    if (MaxCache.HasValue)
+                    {
+                        settingsStore.SetMaxMultiplierCap(MaxCache.Value);
+                    }
+                }
+                
                 LightModifiersBase.NVLightModifiers.Offsets = new[]
                                                               {
                                                                   NVZeroCache != null
@@ -173,7 +179,7 @@ namespace NightVision
             _headgearCache?.Clear();
 
             SettingsHelpers.TipStringHolder.Clear();
-            Settings.ClearDrawVariables();
+            Mod.Settings.ClearDrawVariables();
 
 
             if (Current.ProgramState == ProgramState.Playing)
@@ -186,7 +192,7 @@ namespace NightVision
         /// <summary>
         ///     So that the comps will update with the new settings, sets all the comps dirty
         /// </summary>
-        public static void SetDirtyAllComps()
+        public  void SetDirtyAllComps()
         {
             foreach (Pawn pawn in PawnsFinder.AllMaps_Spawned)
             {
@@ -200,6 +206,13 @@ namespace NightVision
                     comp.SetDirty();
                 }
             }
+        }
+
+        public void Reset()
+        {
+            CacheInited = false;
+            DoPreWriteTasks();
+            Init();
         }
     }
 }

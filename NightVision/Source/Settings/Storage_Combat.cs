@@ -15,6 +15,9 @@ namespace NightVision
 {
     public static class Storage_Combat
     {
+        // TODO remove
+        public static FloatRange MultiplierCaps => new FloatRange(Constants_Calculations.DefaultMinCap, Constants_Calculations.DefaultMaxCap);
+        
         public static SettingOption<bool> CombatFeaturesEnabled = new SettingOption<bool>(Str_CombatSettings.CombatEnabled, true, null);
 
         public static SettingOption_WithPatch MeleeHitEffectsEnabled = new SettingOption_WithPatch(
@@ -74,13 +77,13 @@ namespace NightVision
         public static SettingOption<IntRange> RangedCooldownMinAndMax = new SettingOption<IntRange>(
             Str_CombatSettings.RangedCDMinMax,
             tooltip: Str_CombatSettings.RangedCDMinMaxTip,
-            value: new IntRange( (int)(100 / Storage.MultiplierCaps.max), (int)(100 / Storage.MultiplierCaps.min)),
+            value: new IntRange( (int)(100 / MultiplierCaps.max), (int)(100 / MultiplierCaps.min)),
             callBack:
             () =>
             {
                 if (RangedCooldownLinkedToCaps.Value)
                 {
-                    RangedCooldownMinAndMax.Value = new IntRange( (int)(100 / Storage.MultiplierCaps.max), (int)(100 / Storage.MultiplierCaps.min));
+                    RangedCooldownMinAndMax.Value = new IntRange( (int)(100 / MultiplierCaps.max), (int)(100 / MultiplierCaps.min));
                 }
             }
         );
@@ -207,13 +210,13 @@ namespace NightVision
         RangedCooldownMinAndMax = new SettingOption<IntRange>(
             Str_CombatSettings.RangedCDMinMax,
             tooltip: Str_CombatSettings.RangedCDMinMaxTip,
-            value: new IntRange( (int)(100 / Storage.MultiplierCaps.max), (int)(100 / Storage.MultiplierCaps.min)),
+            value: new IntRange( (int)(100 / MultiplierCaps.max), (int)(100 / MultiplierCaps.min)),
             callBack:
             () =>
             {
                 if (RangedCooldownLinkedToCaps.Value)
                 {
-                    RangedCooldownMinAndMax.Value = new IntRange( (int)(100 / Storage.MultiplierCaps.max), (int)(100 / Storage.MultiplierCaps.min));
+                    RangedCooldownMinAndMax.Value = new IntRange( (int)(100 / MultiplierCaps.max), (int)(100 / MultiplierCaps.min));
                 }
             }
         );

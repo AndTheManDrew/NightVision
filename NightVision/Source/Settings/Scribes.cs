@@ -58,7 +58,7 @@ namespace NightVision
                 if (removed > 0)
                 {
                     Log.Message("NVNullEntryLog".Translate(removed, nameof(dictionary)));
-                    Storage.NullRefWhenLoading = true;
+                    Mod.Store.NullRefWhenLoading = true;
                 }
             }
 
@@ -110,7 +110,7 @@ namespace NightVision
                 if (removed > 0)
                 {
                     Log.Message("NVNullEntryLog".Translate(removed, nameof(dictionary)));
-                    Storage.NullRefWhenLoading = true;
+                    Mod.Store.NullRefWhenLoading = true;
                 }
             }
         }

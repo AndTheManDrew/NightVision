@@ -177,14 +177,14 @@ namespace NightVision
             float maxcap;
             float nvcap;
             float pscap;
-
+            var caps = Mod.Store.MultiplierCaps;
             if (glow.GlowIsDarkness())
             {
-                mincap = (Storage.MultiplierCaps.min - Constants_Calculations.DefaultZeroLightMultiplier)
+                mincap = (caps.min - Constants_Calculations.DefaultZeroLightMultiplier)
                          * (0.3f                     - glow)
                          / 0.3f;
 
-                maxcap = (Storage.MultiplierCaps.max - Constants_Calculations.DefaultZeroLightMultiplier)
+                maxcap = (caps.max - Constants_Calculations.DefaultZeroLightMultiplier)
                          * (0.3f                     - glow)
                          / 0.3f;
 
@@ -193,11 +193,11 @@ namespace NightVision
             }
             else
             {
-                mincap = (Storage.MultiplierCaps.min - Constants_Calculations.DefaultFullLightMultiplier)
+                mincap = (caps.min - Constants_Calculations.DefaultFullLightMultiplier)
                          * (glow                     - 0.7f)
                          / 0.3f;
 
-                maxcap = (Storage.MultiplierCaps.max - Constants_Calculations.DefaultFullLightMultiplier)
+                maxcap = (caps.max - Constants_Calculations.DefaultFullLightMultiplier)
                          * (glow                     - 0.7f)
                          / 0.3f;
 

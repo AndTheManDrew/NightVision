@@ -17,12 +17,12 @@ namespace NightVision {
 
         public static void DrawTab(Rect inRect)
         {
-            int raceCount = Storage.RaceLightMods.Count;
+            int raceCount = Mod.Store.RaceLightMods.Count;
 
             if (_numberOfCustomRaces == null)
             {
                 _numberOfCustomRaces =
-                            Storage.RaceLightMods.Count(rlm => rlm.Value.IntSetting == VisionType.NVCustom);
+                    Mod.Store.RaceLightMods.Count(rlm => rlm.Value.IntSetting == VisionType.NVCustom);
             }
 
             inRect = inRect.AtZero();
@@ -55,7 +55,7 @@ namespace NightVision {
             Widgets.BeginScrollView(inRect, ref _raceScrollPosition, viewRect);
             var count = 0;
 
-            foreach (KeyValuePair<ThingDef, Race_LightModifiers> kvp in Storage.RaceLightMods)
+            foreach (KeyValuePair<ThingDef, Race_LightModifiers> kvp in Mod.Store.RaceLightMods)
             {
                 Color givenColor = GUI.color;
                 rowRect.y = num;

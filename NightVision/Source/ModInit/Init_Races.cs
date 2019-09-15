@@ -19,21 +19,20 @@ namespace NightVision
             List<ThingDef> raceDefList = DefDatabase<ThingDef>.AllDefsListForReading.FindAll(
                 match: rdef => rdef.race is RaceProperties race && (race.Humanlike || rdef.GetCompProperties<CompProperties_NightVision>() != null)
             );
-
-            if (Storage.RaceLightMods == null)
-            {
-                Storage.RaceLightMods = new Dictionary<ThingDef, Race_LightModifiers>();
-            }
-
+            var RaceLightMods =
+                Mod.Store.RaceLightMods ?? new Dictionary<ThingDef, Race_LightModifiers>();
+            
             foreach (ThingDef rdef in raceDefList)
             {
-                if (!Storage.RaceLightMods.TryGetValue(key: rdef, value: out Race_LightModifiers rLm) || rLm == null)
+                if (!RaceLightMods.TryGetValue(key: rdef, value: out Race_LightModifiers rLm) || rLm == null)
                 {
-                    Storage.RaceLightMods[key: rdef] = new Race_LightModifiers(raceDef: rdef);
+                    RaceLightMods[key: rdef] = new Race_LightModifiers(raceDef: rdef);
                 }
 
                 // Note: When dictionary is loaded and calls exposedata on the saved Race_LightModifiers the def & corresponding compProps are attached
             }
+
+            Mod.Store.RaceLightMods = RaceLightMods;
         }
 
         #endregion

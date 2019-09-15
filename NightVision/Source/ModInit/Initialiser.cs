@@ -14,9 +14,9 @@ using Verse;
 
 namespace NightVision
 {
-    public static class Initialiser
+    public class Initialiser
     {
-        public static void Startup()
+        public void Startup()
         {
             FindSettingsDependentFields();
 
@@ -27,7 +27,7 @@ namespace NightVision
 
         }
 
-        public static void FindDefsToAddNightVisionTo()
+        public void FindDefsToAddNightVisionTo()
         {
             Init_Hediffs.FindAllValidHediffs();
             Init_Races.FindAllValidRaces();
@@ -35,7 +35,7 @@ namespace NightVision
         }
 
         
-        public static void FindSettingsDependentFields()
+        public void FindSettingsDependentFields()
         {
             FieldClearer.SettingsDependentFields = GenTypes.AllTypesWithAttribute<NVHasSettingsDependentFieldAttribute>().SelectMany(
                 t => AccessTools.GetDeclaredFields(t).FindAll(fi => fi.HasAttribute<NVSettingsDependentFieldAttribute>())

@@ -13,8 +13,11 @@ namespace NightVision
     [NVHasSettingsDependentField]
     public static class CombatHelpers
     {
+
+        public static FloatRange MultiplierCaps => Mod.Store.MultiplierCaps;
+        
         [NVSettingsDependentField]
-        public static float _attXCoeff = Storage_Combat.HitCurviness.Value / Storage.MultiplierCaps.Span;
+        public static float _attXCoeff = Storage_Combat.HitCurviness.Value / MultiplierCaps.Span;
 
         public static float DodgeXCoeff
         {
@@ -22,7 +25,7 @@ namespace NightVision
             {
                 if (_dodgeXCoeff < 0)
                 {
-                    _dodgeXCoeff = Storage_Combat.DodgeCurviness.Value / Storage.MultiplierCaps.Span;
+                    _dodgeXCoeff = Storage_Combat.DodgeCurviness.Value / MultiplierCaps.Span;
                 }
                 return _dodgeXCoeff;
             }
@@ -38,7 +41,7 @@ namespace NightVision
             {
                 if (_attXCoeff < -1)
                 {
-                    _attXCoeff = Storage_Combat.HitCurviness.Value / Storage.MultiplierCaps.Span;;
+                    _attXCoeff = Storage_Combat.HitCurviness.Value / MultiplierCaps.Span;;
                 }
 
                 return _attXCoeff;
@@ -73,7 +76,7 @@ namespace NightVision
                 {
                     if (Storage_Combat.RangedCooldownLinkedToCaps.Value)
                     {
-                        _rangedCooldownMultiplierBad = 1 / Storage.MultiplierCaps.min;
+                        _rangedCooldownMultiplierBad = 1 / MultiplierCaps.min;
                     }
                     else
                     {
@@ -90,6 +93,7 @@ namespace NightVision
 
         public static float HitChanceGlowTransform(float hitChance, float attGlowFactor)
         {
+            
             return 1 / (1 + (1 / hitChance - 1) * (float) Math.Exp(d: -1 * AttXCoeff * (attGlowFactor - 1)));
         }
 
@@ -146,7 +150,7 @@ namespace NightVision
                 {
                     if (Storage_Combat.RangedCooldownLinkedToCaps.Value)
                     {
-                        _rangedCooldownMultiplierGood = 1 / Storage.MultiplierCaps.max;
+                        _rangedCooldownMultiplierGood = 1 / MultiplierCaps.max;
                     }
                     else
                     {
@@ -202,7 +206,7 @@ namespace NightVision
         }
 
         [NVSettingsDependentField]
-        public static float _dodgeXCoeff = Storage_Combat.DodgeCurviness.Value / Storage.MultiplierCaps.Span;
+        public static float _dodgeXCoeff = Storage_Combat.DodgeCurviness.Value / MultiplierCaps.Span;
 
 
         /// <param name="orgDodge">defenders dodge chance</param>

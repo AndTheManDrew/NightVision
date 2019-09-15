@@ -4,40 +4,41 @@
 // 
 // 24 10 2018
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
 
 namespace NightVision
 {
-    public static class Storage
+    public class Storage
     {
         public const float HighestCap = 2f;
 
         public const  float             LowestCap                  = 0.01f;
-        public static HashSet<ThingDef> AllEyeCoveringHeadgearDefs = new HashSet<ThingDef>();
+        public HashSet<ThingDef> AllEyeCoveringHeadgearDefs = new HashSet<ThingDef>();
 
         //AllEyeHediffs is a subset of AllSightAffectingHediffs
-        public static HashSet<HediffDef> AllEyeHediffs            = new HashSet<HediffDef>();
-        public static HashSet<HediffDef> AllSightAffectingHediffs = new HashSet<HediffDef>();
-        public static bool               CustomCapsEnabled;
-        public static bool               NullRefWhenLoading = false;
+        public  HashSet<HediffDef> AllEyeHediffs            = new HashSet<HediffDef>();
+        public  HashSet<HediffDef> AllSightAffectingHediffs = new HashSet<HediffDef>();
+        public  bool               CustomCapsEnabled;
+        public  bool               NullRefWhenLoading = false;
 
-        public static Dictionary<HediffDef, Hediff_LightModifiers> HediffLightMods = new Dictionary<HediffDef, Hediff_LightModifiers>();
+        public  Dictionary<HediffDef, Hediff_LightModifiers> HediffLightMods = new Dictionary<HediffDef, Hediff_LightModifiers>();
 
-        public static FloatRange MultiplierCaps = new FloatRange(
+        public  FloatRange MultiplierCaps = new FloatRange(
             min: Constants_Calculations.DefaultMinCap,
             max: Constants_Calculations.DefaultMaxCap
         );
 
-        public static Dictionary<ThingDef, ApparelVisionSetting> NVApparel = new Dictionary<ThingDef, ApparelVisionSetting>();
+        public  Dictionary<ThingDef, ApparelVisionSetting> NVApparel = new Dictionary<ThingDef, ApparelVisionSetting>();
 
-        public static bool NVEnabledForCE = true;
+        public  bool NVEnabledForCE = true;
 
 
-        public static Dictionary<ThingDef, Race_LightModifiers> RaceLightMods = new Dictionary<ThingDef, Race_LightModifiers>();
+        public  Dictionary<ThingDef, Race_LightModifiers> RaceLightMods = new Dictionary<ThingDef, Race_LightModifiers>();
 
-        public static void ExposeSettings()
+        public  void ExposeSettings()
         {
             Scribe_Values.Look(value: ref CustomCapsEnabled, label: "CustomLimitsEnabled");
 
@@ -102,7 +103,7 @@ namespace NightVision
             Scribes.ApparelDict(dictionary: ref NVApparel);
         }
 
-        public static void ResetAllSettings()
+        public  void ResetAllSettings()
         {
             Log.Message(text: "NightVision: Defaulting Settings");
 
@@ -129,11 +130,21 @@ namespace NightVision
             AllEyeHediffs              = null;
             AllSightAffectingHediffs   = null;
             Log.Message(text: "NightVision.Storage.ResetAllSettings: Rebuilding Dictionaries");
-            Initialiser.FindDefsToAddNightVisionTo();
-            SettingsCache.CacheInited = false;
-            SettingsCache.DoPreWriteTasks();
-            SettingsCache.Init();
+            var initialiser = new Initialiser();
+            initialiser.FindDefsToAddNightVisionTo();
+            
+            Mod.Cache.Reset();
             FieldClearer.ResetSettingsDependentFields();
+        }
+
+        public void SetMinMultiplierCap(float newMin)
+        {
+            MultiplierCaps.min = (float) Math.Round(newMin / 100, Constants_Calculations.NumberOfDigits);
+        }
+        
+        public void SetMaxMultiplierCap(float newMax)
+        {
+            MultiplierCaps.max = (float) Math.Round(newMax / 100, Constants_Calculations.NumberOfDigits);
         }
     }
 }

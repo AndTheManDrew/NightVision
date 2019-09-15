@@ -349,185 +349,189 @@ namespace NightVision
                 x += buttonwidth;
             }
 
-            if (lightMods.IsCustom())
+            if (!lightMods.IsCustom())
             {
-                num += Constants_Draw.RowHeight + Constants_Draw.RowGap;
+                return result;
+            }
 
-                var topRect = new Rect(
-                    labelRect.xMax + 2 * buttongap,
-                    num,
-                    rowRect.width - labelRect.width - 60f,
-                    Constants_Draw.RowHeight / 2
+            num += Constants_Draw.RowHeight + Constants_Draw.RowGap;
+
+            var topRect = new Rect(
+                labelRect.xMax + 2 * buttongap,
+                num,
+                rowRect.width - labelRect.width - 60f,
+                Constants_Draw.RowHeight / 2
+            );
+
+            var bottomRect = new Rect(
+                labelRect.xMax                  + 2                * buttongap,
+                topRect.yMax                    + Constants_Draw.RowGap * 2,
+                rowRect.width - labelRect.width - 60f,
+                Constants_Draw.RowHeight / 2
+            );
+
+            var explanationRect = new Rect(
+                labelRect.xMax - labelRect.width * 0.95f,
+                num,
+                labelRect.width * 0.9f,
+                Constants_Draw.RowHeight
+            );
+
+            Widgets.DrawLineVertical(
+                labelRect.xMax          + buttongap,
+                rowRect.y               + rowRect.height,
+                Constants_Draw.RowHeight * 2 - Constants_Draw.RowGap * 0.5f
+            );
+
+
+            var zeroModAsPercent = (float) Math.Round(
+                (lightMods.Offsets[0]
+               + (isRace ? Constants_Calculations.DefaultZeroLightMultiplier : 0))
+              * 100
+            );
+
+            var fullModAsPercent = (float) Math.Round(
+                (lightMods.Offsets[1]
+               + (isRace ? Constants_Calculations.DefaultFullLightMultiplier : 0))
+              * 100
+            );
+
+            var cache = Mod.Cache;
+            
+            if (isRace)
+            {
+                GameFont font = Text.Font;
+                Text.Font = GameFont.Tiny;
+
+                Widgets.Label(
+                    explanationRect,
+                    "NVMoveWorkSpeedMultipliers".Translate("").Trim().CapitalizeFirst()
+                  + "\n"
+                  + "NVRaceQualifier"
+                        .Translate()
+                        .CapitalizeFirst()
                 );
 
-                var bottomRect = new Rect(
-                    labelRect.xMax                  + 2                * buttongap,
-                    topRect.yMax                    + Constants_Draw.RowGap * 2,
-                    rowRect.width - labelRect.width - 60f,
-                    Constants_Draw.RowHeight / 2
-                );
+                Text.Font = font;
+                float min;
+                float max;
 
-                var explanationRect = new Rect(
-                    labelRect.xMax - labelRect.width * 0.95f,
-                    num,
-                    labelRect.width * 0.9f,
-                    Constants_Draw.RowHeight
-                );
-
-                Widgets.DrawLineVertical(
-                    labelRect.xMax          + buttongap,
-                    rowRect.y               + rowRect.height,
-                    Constants_Draw.RowHeight * 2 - Constants_Draw.RowGap * 0.5f
-                );
-
-
-                var zeroModAsPercent = (float) Math.Round(
-                    (lightMods.Offsets[0]
-                     + (isRace ? Constants_Calculations.DefaultZeroLightMultiplier : 0))
-                    * 100
-                );
-
-                var fullModAsPercent = (float) Math.Round(
-                    (lightMods.Offsets[1]
-                     + (isRace ? Constants_Calculations.DefaultFullLightMultiplier : 0))
-                    * 100
-                );
-
-                if (isRace)
+                if (((Race_LightModifiers) lightMods).CanCheat)
                 {
-                    GameFont font = Text.Font;
-                    Text.Font = GameFont.Tiny;
-
-                    Widgets.Label(
-                        explanationRect,
-                        "NVMoveWorkSpeedMultipliers".Translate("").Trim().CapitalizeFirst()
-                        + "\n"
-                        + "NVRaceQualifier"
-                                    .Translate()
-                                    .CapitalizeFirst()
-                    );
-
-                    Text.Font = font;
-                    float min;
-                    float max;
-
-                    if (((Race_LightModifiers) lightMods).CanCheat)
-                    {
-                        min = (float) Math.Round(Storage.LowestCap  * 100);
-                        max = (float) Math.Round(Storage.HighestCap * 100);
-                    }
-                    else
-                    {
-                        min = (float) SettingsCache.MinCache;
-                        max = (float) SettingsCache.MaxCache;
-                    }
-
-                    zeroModAsPercent = Widgets.HorizontalSlider(
-                        topRect,
-                        zeroModAsPercent,
-                        min,
-                        max,
-                        true,
-                        string.Format(
-                            Str.ZeroMultiLabel,
-                            zeroModAsPercent
-                        ),
-                        string.Format(Str.XLabel, min),
-                        string.Format(Str.XLabel, max),
-                        1
-                    );
-
-                    fullModAsPercent = Widgets.HorizontalSlider(
-                        bottomRect,
-                        fullModAsPercent,
-                        min,
-                        max,
-                        true,
-                        string.Format(
-                            Str.FullMultiLabel,
-                            fullModAsPercent
-                        ),
-                        string.Format(Str.XLabel, min),
-                        string.Format(Str.XLabel, max),
-                        1
-                    );
-
-                    DrawIndicators(topRect, bottomRect, lightMods, min, max, min, max);
+                    min = (float) Math.Round(Storage.LowestCap  * 100);
+                    max = (float) Math.Round(Storage.HighestCap * 100);
                 }
                 else
                 {
-                    GameFont font = Text.Font;
-                    Text.Font = GameFont.Tiny;
-
-                    Widgets.Label(
-                        explanationRect,
-                        "NVMoveWorkSpeedModifiers".Translate(def.LabelCap).CapitalizeFirst()
-                    );
-
-                    Text.Font = font;
-
-                    zeroModAsPercent = Widgets.HorizontalSlider(
-                        topRect,
-                        zeroModAsPercent,
-                        (float) SettingsCache.MinCache - 80,
-                        (float) SettingsCache.MaxCache - 80,
-                        true,
-                        string.Format(Str.ZeroLabel, zeroModAsPercent),
-                        string.Format(
-                            Str.Alabel,
-                            SettingsCache.MinCache - 80
-                        ),
-                        string.Format(
-                            Str.Alabel,
-                            SettingsCache.MaxCache - 80
-                        ),
-                        1
-                    );
-
-
-                    fullModAsPercent = Widgets.HorizontalSlider(
-                        bottomRect,
-                        fullModAsPercent,
-                        (float) SettingsCache.MinCache - 100,
-                        (float) SettingsCache.MaxCache - 100,
-                        true,
-                        string.Format(Str.FullLabel, fullModAsPercent),
-                        string.Format(
-                            Str.Alabel,
-                            SettingsCache.MinCache - 100
-                        ),
-                        string.Format(
-                            Str.Alabel,
-                            SettingsCache.MaxCache - 100
-                        ),
-                        1
-                    );
-
-                    DrawIndicators(
-                        topRect,
-                        bottomRect,
-                        lightMods,
-                        (float) SettingsCache.MinCache,
-                        (float) SettingsCache.MaxCache,
-                        (float) SettingsCache.MinCache,
-                        (float) SettingsCache.MaxCache
-                    );
+                    min = (float) cache.MinCache;
+                    max = (float) cache.MaxCache;
                 }
 
-                if (!Mathf.Approximately(zeroModAsPercent / 100, lightMods.Offsets[0]))
-                {
-                    lightMods[0] = zeroModAsPercent / 100
-                                   - (isRace ? Constants_Calculations.DefaultZeroLightMultiplier : 0);
-                }
+                zeroModAsPercent = Widgets.HorizontalSlider(
+                    topRect,
+                    zeroModAsPercent,
+                    min,
+                    max,
+                    true,
+                    string.Format(
+                        Str.ZeroMultiLabel,
+                        zeroModAsPercent
+                    ),
+                    string.Format(Str.XLabel, min),
+                    string.Format(Str.XLabel, max),
+                    1
+                );
 
-                if (!Mathf.Approximately(fullModAsPercent / 100, lightMods.Offsets[1]))
-                {
-                    lightMods[1] = fullModAsPercent / 100
-                                   - (isRace ? Constants_Calculations.DefaultFullLightMultiplier : 0);
-                }
+                fullModAsPercent = Widgets.HorizontalSlider(
+                    bottomRect,
+                    fullModAsPercent,
+                    min,
+                    max,
+                    true,
+                    string.Format(
+                        Str.FullMultiLabel,
+                        fullModAsPercent
+                    ),
+                    string.Format(Str.XLabel, min),
+                    string.Format(Str.XLabel, max),
+                    1
+                );
 
-                num += Constants_Draw.RowHeight * 0.9f /*+ rowGap*/;
+                DrawIndicators(topRect, bottomRect, lightMods, min, max, min, max);
             }
+            else
+            {
+                GameFont font = Text.Font;
+                Text.Font = GameFont.Tiny;
+
+                Widgets.Label(
+                    explanationRect,
+                    "NVMoveWorkSpeedModifiers".Translate(def.LabelCap).CapitalizeFirst()
+                );
+
+                Text.Font = font;
+
+                zeroModAsPercent = Widgets.HorizontalSlider(
+                    topRect,
+                    zeroModAsPercent,
+                    (float) cache.MinCache - 80,
+                    (float) cache.MaxCache - 80,
+                    true,
+                    string.Format(Str.ZeroLabel, zeroModAsPercent),
+                    string.Format(
+                        Str.Alabel,
+                        cache.MinCache - 80
+                    ),
+                    string.Format(
+                        Str.Alabel,
+                        cache.MaxCache - 80
+                    ),
+                    1
+                );
+
+
+                fullModAsPercent = Widgets.HorizontalSlider(
+                    bottomRect,
+                    fullModAsPercent,
+                    (float) cache.MinCache - 100,
+                    (float) cache.MaxCache - 100,
+                    true,
+                    string.Format(Str.FullLabel, fullModAsPercent),
+                    string.Format(
+                        Str.Alabel,
+                        cache.MinCache - 100
+                    ),
+                    string.Format(
+                        Str.Alabel,
+                        cache.MaxCache - 100
+                    ),
+                    1
+                );
+
+                DrawIndicators(
+                    topRect,
+                    bottomRect,
+                    lightMods,
+                    (float) cache.MinCache,
+                    (float) cache.MaxCache,
+                    (float) cache.MinCache,
+                    (float) cache.MaxCache
+                );
+            }
+
+            if (!Mathf.Approximately(zeroModAsPercent / 100, lightMods.Offsets[0]))
+            {
+                lightMods[0] = zeroModAsPercent / 100
+                             - (isRace ? Constants_Calculations.DefaultZeroLightMultiplier : 0);
+            }
+
+            if (!Mathf.Approximately(fullModAsPercent / 100, lightMods.Offsets[1]))
+            {
+                lightMods[1] = fullModAsPercent / 100
+                             - (isRace ? Constants_Calculations.DefaultFullLightMultiplier : 0);
+            }
+
+            num += Constants_Draw.RowHeight * 0.9f /*+ rowGap*/;
 
             return result;
         }

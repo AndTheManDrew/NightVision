@@ -37,10 +37,10 @@ namespace NightVision
         {
             var builder = new StringBuilder();
             builder.AppendLine(value: "StatsReport_RelevantGear".Translate());
-
+            var nvApparel = Mod.Store.NVApparel;
             foreach (Apparel app in comp.PawnsNVApparel ?? Enumerable.Empty<Apparel>())
             {
-                if (Storage.NVApparel.TryGetValue(key: app.def, value: out ApparelVisionSetting setting)
+                if (nvApparel.TryGetValue(key: app.def, value: out ApparelVisionSetting setting)
                     && (bool) relevantField.GetValue(obj: setting))
                 {
                     builder.AppendLine(value: app.LabelCap);
@@ -173,9 +173,10 @@ namespace NightVision
                     continue;
                 }
 
+                var hediffLightMods = Mod.Store.HediffLightMods;
                 foreach (HediffDef hediffDef in value)
                 {
-                    if (Storage.HediffLightMods.TryGetValue(key: hediffDef, value: out Hediff_LightModifiers hediffSetting))
+                    if (hediffLightMods.TryGetValue(key: hediffDef, value: out Hediff_LightModifiers hediffSetting))
                     {
                         effect = hediffSetting.GetEffectAtGlow(glow: glow, numOfEyesNormalisedFor: comp.EyeCount);
 

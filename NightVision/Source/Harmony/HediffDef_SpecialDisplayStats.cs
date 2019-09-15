@@ -19,47 +19,49 @@ namespace NightVision.Harmony {
                 yield return sDE;
             }
 
-            if (Storage.HediffLightMods.TryGetValue(__instance, out Hediff_LightModifiers hlm)
-                && hlm.HasAnyModifier())
+            if (!Mod.Store.HediffLightMods.TryGetValue(__instance, out Hediff_LightModifiers hlm)
+             || !hlm.HasAnyModifier())
             {
-                VisionType vt = hlm.Setting;
+                yield break;
+            }
 
-                if (vt < VisionType.NVCustom)
-                {
-                    yield return new StatDrawEntry(
-                        Defs_Rimworld.BasicStats,
-                        "NVGrantsVisionType".Translate(),
-                        vt.ToString().Translate(),
-                        0,
-                        hlm.AffectsEye ? "NVHediffQualifier".Translate() : ""
-                    );
-                }
-                else
-                {
-                    yield return new StatDrawEntry(
-                        Defs_Rimworld.BasicStats,
-                        "NVGrantsVisionType".Translate(),
-                        vt.ToString(),
-                        0,
-                        hlm.AffectsEye ? "NVHediffQualifier".Translate() : ""
-                    );
+            VisionType vt = hlm.Setting;
 
-                    yield return new StatDrawEntry(
-                        Defs_Rimworld.BasicStats,
-                        Defs_NightVision.NightVision,
-                        hlm[0],
-                        StatRequest.ForEmpty(),
-                        ToStringNumberSense.Offset
-                    );
+            if (vt < VisionType.NVCustom)
+            {
+                yield return new StatDrawEntry(
+                    Defs_Rimworld.BasicStats,
+                    "NVGrantsVisionType".Translate(),
+                    vt.ToString().Translate(),
+                    0,
+                    hlm.AffectsEye ? "NVHediffQualifier".Translate() : ""
+                );
+            }
+            else
+            {
+                yield return new StatDrawEntry(
+                    Defs_Rimworld.BasicStats,
+                    "NVGrantsVisionType".Translate(),
+                    vt.ToString(),
+                    0,
+                    hlm.AffectsEye ? "NVHediffQualifier".Translate() : ""
+                );
 
-                    yield return new StatDrawEntry(
-                        Defs_Rimworld.BasicStats,
-                        Defs_NightVision.LightSensitivity,
-                        hlm[1],
-                        StatRequest.ForEmpty(),
-                        ToStringNumberSense.Offset
-                    );
-                }
+                yield return new StatDrawEntry(
+                    Defs_Rimworld.BasicStats,
+                    Defs_NightVision.NightVision,
+                    hlm[0],
+                    StatRequest.ForEmpty(),
+                    ToStringNumberSense.Offset
+                );
+
+                yield return new StatDrawEntry(
+                    Defs_Rimworld.BasicStats,
+                    Defs_NightVision.LightSensitivity,
+                    hlm[1],
+                    StatRequest.ForEmpty(),
+                    ToStringNumberSense.Offset
+                );
             }
         }
     }

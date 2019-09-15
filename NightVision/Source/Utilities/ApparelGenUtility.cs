@@ -13,8 +13,9 @@ namespace NightVision {
 
         public static void BuildNullPSApparelLookup()
         {
-            // proudAF
-            var list = Storage.NVApparel.Where(appset => appset.Value.NullifiesPS && appset.Key.IsApparel)
+            var nvApparel = Mod.Store.NVApparel;
+            
+            var list = nvApparel.Where(appset => appset.Value.NullifiesPS && appset.Key.IsApparel)
                         .SelectMany(appset => appset.Key.apparel.tags.Select(tag => new {tag, thingDef = appset.Key}))
                         .ToLookup(anonT=> anonT.tag, anonT => anonT.thingDef) as Lookup<string, ThingDef>;
             
@@ -63,7 +64,8 @@ namespace NightVision {
 
         public static void BuildGiveNVApparelLookup()
         {
-            var list = Storage.NVApparel.Where(appset => appset.Value.GrantsNV && appset.Key.IsApparel)
+            var nvApparel = Mod.Store.NVApparel;
+            var list = nvApparel.Where(appset => appset.Value.GrantsNV && appset.Key.IsApparel)
                         .SelectMany(appset => appset.Key.apparel.tags.Select(tag => new {tag, thingDef = appset.Key}))
                         .ToLookup(anonT=> anonT.tag, anonT => anonT.thingDef) as Lookup<string, ThingDef>;
             

@@ -15,6 +15,8 @@ using UnityEngine;
 using Verse;
 using Verse.AI.Group;
 
+using Mod = NightVision.Mod;
+
 namespace NVTesting
 {
     [HarmonyPatch(declaringType: typeof(Dialog_DebugActionsMenu), methodName: "DoListingItems_AllModePlayActions")]
@@ -123,7 +125,7 @@ namespace NVTesting
                                                         )
                                                     );
 
-                                                    foreach (KeyValuePair<HediffDef, Hediff_LightModifiers> hediffDef in Storage.HediffLightMods)
+                                                    foreach (KeyValuePair<HediffDef, Hediff_LightModifiers> hediffDef in Mod.Store.HediffLightMods)
                                                     {
                                                         HediffDef             nvhediff   = hediffDef.Key;
                                                         Hediff_LightModifiers hediffMods = hediffDef.Value;
@@ -208,7 +210,7 @@ namespace NVTesting
                                                         )
                                                     );
 
-                                                    foreach (KeyValuePair<HediffDef, Hediff_LightModifiers> hediffDef in Storage.HediffLightMods)
+                                                    foreach (KeyValuePair<HediffDef, Hediff_LightModifiers> hediffDef in Mod.Store.HediffLightMods)
                                                     {
                                                         HediffDef             nvhediff   = hediffDef.Key;
                                                         Hediff_LightModifiers hediffMods = hediffDef.Value;

@@ -13,29 +13,32 @@ namespace NightVision
 {
     public class Settings : ModSettings
     {
-        private static Tab  _tab;
-        public static  bool CEDetected = false;
+        private Tab  _tab;
+        public  bool CEDetected = false;
 
 
-        [UsedImplicitly]
-        public static Settings Instance;
+        public Storage Store;
 
-        private static readonly List<TabRecord> TabsList = new List<TabRecord>();
+        public SettingsCache Cache;
+        
+
+        private readonly List<TabRecord> TabsList = new List<TabRecord>();
 
         [UsedImplicitly]
         public Settings()
         {
-            Instance = this;
+            Store = new Storage();
+            Cache = new SettingsCache();
         }
 
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Storage.ExposeSettings();
+            Store.ExposeSettings();
         }
 
-        public static void DoSettingsWindowContents(Rect inRect)
+        public /*static*/ void DoSettingsWindowContents(Rect inRect)
         {
             TabsList.Clear();
 
@@ -108,7 +111,7 @@ namespace NightVision
                 );
             }
 
-            SettingsCache.Init();
+            Cache.Init();
 
             inRect.yMin += 32f;
             Widgets.DrawMenuSection(inRect);
@@ -153,7 +156,7 @@ namespace NightVision
             GUI.EndGroup();
         }
 
-        public static void ClearDrawVariables()
+        public void ClearDrawVariables()
         {
             DebugTab.Clear();
             ApparelTab.Clear();

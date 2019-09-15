@@ -51,12 +51,13 @@ namespace NightVision
                             {
                                 if (_naturalLightModifiers == null)
                                     {
-                                        _naturalLightModifiers = Storage.RaceLightMods.TryGetValue(ParentPawn.def);
+                                        
+                                        _naturalLightModifiers = Mod.Store.RaceLightMods.TryGetValue(ParentPawn.def);
                                         if (_naturalLightModifiers == null)
                                             {
                                                 _naturalLightModifiers =
                                                             new Race_LightModifiers(ParentPawn.def);
-                                                Storage.RaceLightMods[ParentPawn.def] = _naturalLightModifiers;
+                                                Mod.Store.RaceLightMods[ParentPawn.def] = _naturalLightModifiers;
 
                                                 Log.Message(
                                                             $"Natural Light Modifiers could not be found for {ParentPawn} of race: {ParentPawn.def}. An entry has been generated."
@@ -383,6 +384,7 @@ namespace NightVision
                                 return;
                             }
 
+                        var allSightHediffs = Mod.Store.AllSightAffectingHediffs;
                         if (part != null)
                             {
                                 string partName = part.Label;
@@ -401,7 +403,7 @@ namespace NightVision
                                             {
                                                 //Check if there is a setting for it
                                                 HediffDef hediffDef = hediff.def;
-                                                if (Storage.HediffLightMods.ContainsKey(hediffDef))
+                                                if (Mod.Store.HediffLightMods.ContainsKey(hediffDef))
                                                     {
                                                         if (hediffDef.addedPartProps is AddedBodyPartProps abpp
                                                             && abpp.solid)
@@ -423,7 +425,7 @@ namespace NightVision
                                                         tempPartsHediffDefs = new List<HediffDef> {hediffDef};
                                                     }
                                                 //Check if it is a valid hediff
-                                                else if (Storage.AllSightAffectingHediffs.Contains(hediffDef))
+                                                else if (allSightHediffs.Contains(hediffDef))
                                                     {
                                                         if (!tempPartsHediffDefs.Contains(hediffDef))
                                                             {
@@ -441,12 +443,12 @@ namespace NightVision
                                         PawnsNVHediffs[partName] = tempPartsHediffDefs;
                                         CalculateHediffMod();
                                     }
-                                else if (Storage.AllSightAffectingHediffs.Contains(hediff.def))
+                                else if (allSightHediffs.Contains(hediff.def))
                                     {
                                         PawnsNVHediffs[partName] = new List<HediffDef> {hediff.def};
                                     }
                             }
-                        else if (Storage.AllSightAffectingHediffs.Contains(hediff.def))
+                        else if (allSightHediffs.Contains(hediff.def))
                             {
                                 if (PawnsNVHediffs.TryGetValue(Str.BodyKey, out List<HediffDef> value)
                                     && !value.Contains(hediff.def))
@@ -465,7 +467,7 @@ namespace NightVision
                                 return;
                             }
 
-                        if (Storage.NVApparel.TryGetValue(apparel.def, out ApparelVisionSetting value))
+                        if (Mod.Store.NVApparel.TryGetValue(apparel.def, out ApparelVisionSetting value))
                             {
                                 ApparelGrantsNV |= value.GrantsNV;
                                 ApparelNullsPS  |= value.NullifiesPS;
@@ -473,7 +475,7 @@ namespace NightVision
                                 ClearPsych();
                             }
                         //In case the user changes settings in game
-                        else if (Storage.AllEyeCoveringHeadgearDefs.Contains(apparel.def))
+                        else if (Mod.Store.AllEyeCoveringHeadgearDefs.Contains(apparel.def))
                             {
                                 PawnsNVApparel.Add(apparel);
                             }
@@ -516,9 +518,10 @@ namespace NightVision
                                         continue;
                                     }
 
+                                var hediffLightMods = Mod.Store.HediffLightMods;
                                 foreach (HediffDef hediffDef in value)
                                     {
-                                        if (Storage.HediffLightMods.TryGetValue(hediffDef,
+                                        if (hediffLightMods.TryGetValue(hediffDef,
                                             out Hediff_LightModifiers hediffSetting))
                                             {
                                                 int eyeNormalisingFactor = hediffSetting.AffectsEye ? eyeCount : 1;
@@ -603,8 +606,9 @@ namespace NightVision
                                 return (float) Math.Round(mod - Constants_Calculations.DefaultZeroLightMultiplier, Constants_Calculations.NumberOfDigits);
                             }
 
+                        var caps = Mod.Store.MultiplierCaps;
                         return (float) Math.Round(
-                            Mathf.Clamp(mod, Storage.MultiplierCaps.min, Storage.MultiplierCaps.max)
+                            Mathf.Clamp(mod, caps.min, caps.max)
                             - Constants_Calculations.DefaultZeroLightMultiplier,
                             Constants_Calculations.NumberOfDigits);
                     }
@@ -654,9 +658,10 @@ namespace NightVision
                             {
                                 return (float) Math.Round(mod - Constants_Calculations.DefaultFullLightMultiplier, Constants_Calculations.NumberOfDigits);
                             }
-
+                        
+                        var caps = Mod.Store.MultiplierCaps;
                         return (float) Math.Round(
-                            Mathf.Clamp(mod, Storage.MultiplierCaps.min, Storage.MultiplierCaps.max)
+                            Mathf.Clamp(mod, caps.min, caps.max)
                             - Constants_Calculations.DefaultFullLightMultiplier,
                             Constants_Calculations.NumberOfDigits);
                     }
@@ -710,15 +715,18 @@ namespace NightVision
                                 return;
                             }
 
+                        var nvApparel = Mod.Store.NVApparel;
+                        var allEyeGear = Mod.Store.AllEyeCoveringHeadgearDefs;
                         foreach (Apparel apparel in pawnsApparel)
                             {
-                                if (Storage.NVApparel.TryGetValue(apparel.def, out ApparelVisionSetting value))
+                                if (nvApparel.TryGetValue(apparel.def, out ApparelVisionSetting value))
                                     {
                                         ApparelGrantsNV |= value.GrantsNV;
                                         ApparelNullsPS  |= value.NullifiesPS;
                                         PawnsNVApparel.Add(apparel);
                                     }
-                                else if (Storage.AllEyeCoveringHeadgearDefs.Contains(apparel.def))
+                                //TODO rethink settings changing support
+                                else if (allEyeGear.Contains(apparel.def))
                                     {
                                         PawnsNVApparel.Add(apparel);
                                     }
@@ -734,9 +742,10 @@ namespace NightVision
                     {
                         ApparelGrantsNV = false;
                         ApparelNullsPS  = false;
+                        var nvApparel = Mod.Store.NVApparel;
                         foreach (Apparel apparel in PawnsNVApparel)
                             {
-                                if (!Storage.NVApparel.TryGetValue(apparel.def, out ApparelVisionSetting value))
+                                if (!nvApparel.TryGetValue(apparel.def, out ApparelVisionSetting value))
                                     {
                                         continue;
                                     }
