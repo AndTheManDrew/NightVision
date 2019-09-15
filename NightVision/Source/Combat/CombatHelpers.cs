@@ -93,7 +93,10 @@ namespace NightVision
 
         public static float HitChanceGlowTransform(float hitChance, float attGlowFactor)
         {
-            
+            if (hitChance + 0.001f > 1)
+            {
+                return hitChance;
+            }
             return 1 / (1 + (1 / hitChance - 1) * (float) Math.Exp(d: -1 * AttXCoeff * (attGlowFactor - 1)));
         }
 
