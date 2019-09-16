@@ -38,10 +38,9 @@ namespace NightVision
             Store.ExposeSettings();
         }
 
-        public /*static*/ void DoSettingsWindowContents(Rect inRect)
+        public void InitialiseWindow(Rect inRect)
         {
             TabsList.Clear();
-
             TabsList.Add(
                 new TabRecord(
                     "NVGeneralTab".Translate(),
@@ -49,7 +48,7 @@ namespace NightVision
                     {
                         _tab = Tab.General;
                     },
-                    _tab == Tab.General
+                    () => _tab == Tab.General
                 )
             );
 
@@ -60,7 +59,7 @@ namespace NightVision
                     {
                         _tab = Tab.Combat;
                     },
-                    _tab == Tab.Combat
+                    () => _tab == Tab.Combat
                 )
             );
 
@@ -71,7 +70,7 @@ namespace NightVision
                     {
                         _tab = Tab.Races;
                     },
-                    _tab == Tab.Races
+                    () => _tab == Tab.Races
                 )
             );
 
@@ -82,7 +81,7 @@ namespace NightVision
                     {
                         _tab = Tab.Apparel;
                     },
-                    _tab == Tab.Apparel
+                    () => _tab == Tab.Apparel
                 )
             );
 
@@ -93,7 +92,7 @@ namespace NightVision
                     {
                         _tab = Tab.Bionics;
                     },
-                    _tab == Tab.Bionics
+                    () => _tab == Tab.Bionics
                 )
             );
 
@@ -106,7 +105,7 @@ namespace NightVision
                         {
                             _tab = Tab.Debug;
                         },
-                        _tab == Tab.Debug
+                        () => _tab == Tab.Debug
                     )
                 );
             }
@@ -114,39 +113,60 @@ namespace NightVision
             Cache.Init();
 
             inRect.yMin += 32f;
-            Widgets.DrawMenuSection(inRect);
-            TabDrawer.DrawTabs(inRect, TabsList, 1);
+            menuRect = inRect;
+            tabRect = inRect.ContractedBy(17f);
+            
+            
+        }
 
-            inRect = inRect.ContractedBy(17f);
-            GUI.BeginGroup(inRect);
-            GameFont   font   = Text.Font;
-            TextAnchor anchor = Text.Anchor;
+        private Rect lastRect;
+
+        private bool initialised;
+        private Rect menuRect;
+        private Rect tabRect;
+        
+
+        public /*static*/ void DoSettingsWindowContents(Rect inRect)
+        {
+            if (!initialised || lastRect != inRect)
+            {
+                lastRect = inRect;
+                InitialiseWindow(inRect);
+                initialised = true;
+            }
+            
+            Widgets.DrawMenuSection(menuRect);
+            TabDrawer.DrawTabs(menuRect, TabsList, 1);
+
+            GUI.BeginGroup(tabRect);
+            var   font   = Text.Font;
+            var anchor = Text.Anchor;
             Text.Font   = GameFont.Small;
             Text.Anchor = TextAnchor.MiddleCenter;
 
             switch (_tab)
             {
                 default:
-                    GeneralTab.DrawTab(inRect);
+                    GeneralTab.DrawTab(tabRect);
 
                     break;
                 case Tab.Combat:
-                    CombatTab.DrawTab(inRect);
+                    CombatTab.DrawTab(tabRect);
                     break;
                 case Tab.Races:
-                    RaceTab.DrawTab(inRect);
+                    RaceTab.DrawTab(tabRect);
 
                     break;
                 case Tab.Apparel:
-                    ApparelTab.DrawTab(inRect);
+                    ApparelTab.DrawTab(tabRect);
 
                     break;
                 case Tab.Bionics:
-                    HediffTab.DrawTab(inRect);
+                    HediffTab.DrawTab(tabRect);
 
                     break;
                 case Tab.Debug:
-                    DebugTab.DrawTab(inRect);
+                    DebugTab.DrawTab(tabRect);
 
                     break;
             }
@@ -163,6 +183,7 @@ namespace NightVision
             RaceTab.Clear();
             GeneralTab.Clear();
             CombatTab.Clear();
+            initialised = false;
         }
     }
 }
