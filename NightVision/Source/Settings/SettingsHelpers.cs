@@ -156,7 +156,7 @@ namespace NightVision
                 return tip;
             }
 
-            string result = /*Confusing as it shows givenv or null ps and doesnt get updated immediately((ThingDef)def).DescriptionDetailed ??*/ def.description ?? def.LabelCap;
+            string result = def.description ?? def.LabelCap;
 
             if (lightModifiers is Hediff_LightModifiers hediffMods)
             {

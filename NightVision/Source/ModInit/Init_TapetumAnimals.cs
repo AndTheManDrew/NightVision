@@ -13,12 +13,11 @@ using Verse;
 
 namespace NightVision
 {
-    public static class Init_TapetumAnimals
+    public partial class Initialiser
     {
-        #region  Members
         //Try to dynamically inject tapetum into large predators ensuring coverage of as many biomes as possible
         //Fallsback to adding to the same animals as vanilla rimworld
-        public static void AddTapetumRecipeToAnimals()
+        public void AddTapetumRecipeToAnimals()
         {
             var                bestAnimals     = new List<ThingDef>();
             ResearchProjectDef tapetumResearch = ResearchProjectDef.Named(defName: "TapetumImplant");
@@ -60,13 +59,14 @@ namespace NightVision
             //Comment: 4 is the expected number of animals in vanilla TODO review hack
             if (bestAnimals.Count < 4)
             {
-                foreach (ThingDef animal in FallbackAnimals)
+                var fallback = FallbackAnimals();
+                foreach (ThingDef animal in fallback)
                 {
                     bestAnimals.AddDistinct(animal);
                 }
             }
 
-            foreach (ThingDef animal in bestAnimals)
+            foreach (var animal in bestAnimals)
             {
                 if (animal.recipes.NullOrEmpty())
                 {
@@ -80,9 +80,14 @@ namespace NightVision
             tapetumResearch.description += descAppendage.ToString();
         }
 
-        public static List<ThingDef> FallbackAnimals =
-                    new List<ThingDef> {ThingDef.Named("Bear_Grizzly"), ThingDef.Named("Bear_Polar"), ThingDef.Named("Cougar"), ThingDef.Named("Panther")};
-
-        #endregion
+        private IEnumerable<ThingDef> FallbackAnimals()
+        {
+            return 
+                new List<ThingDef>
+                {
+                    ThingDef.Named("Bear_Grizzly"), ThingDef.Named("Bear_Polar"), ThingDef.Named("Cougar"),
+                    ThingDef.Named("Panther")
+                };
+        }
     }
 }

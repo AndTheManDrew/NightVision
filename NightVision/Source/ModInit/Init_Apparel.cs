@@ -9,11 +9,11 @@ using Verse;
 
 namespace NightVision
 {
-    public static class Init_Apparel
+    public partial class Initialiser
     {
         #region  Members
 
-        public static void FindAllValidApparel()
+        public void FindAllValidApparel()
         {
             ThingCategoryDef headgearCategoryDef = ThingCategoryDef.Named(defName: "Headgear");
             BodyPartGroupDef fullHead            = Defs_Rimworld.Head;

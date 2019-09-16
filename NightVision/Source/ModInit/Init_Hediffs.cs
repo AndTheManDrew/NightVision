@@ -11,11 +11,10 @@ using Verse;
 
 namespace NightVision
 {
-    public static class Init_Hediffs
+    public partial class Initialiser
     {
-        #region  Members
 
-        public static void FindAllValidHediffs()
+        public void FindAllValidHediffs()
         {
             //Essentially we construct two collections: 
             //  the first contains all hediffs that affect sight/are applied to eyes/have our HediffComp_NightVision
@@ -79,15 +78,23 @@ namespace NightVision
             Mod.Store.AllSightAffectingHediffs = allSightAffectingHediffs;
             Mod.Store.AllEyeHediffs = allEyeHediffs;
 
-            InitialiseHediffLightMods(allSightAffectingHediffs.Except(second:allEyeHediffs).ToList(), allEyeHediffs.ToList());
+            InitialiseHediffLightMods(allSightAffectingHediffs.ToList(), allEyeHediffs.ToList());
         }
-
-        private static void InitialiseHediffLightMods(List<HediffDef> sightAffectingHediffs, List<HediffDef> eyeHediffs)
+        /// <summary>
+        /// Creates a hediff light modifier setting corresponding to sight affecting hediffs
+        /// - has special behaviour for hediffs that effect the eye directly
+        /// - takes lists to ensure data is copied
+        /// </summary>
+        /// <param name="sightAffectingHediffs"></param>
+        /// <param name="eyeHediffs"></param>
+        private void InitialiseHediffLightMods(List<HediffDef> sightAffectingHediffs, List<HediffDef> eyeHediffs)
         {
             var hediffLightMods = Mod.Store.HediffLightMods ?? new Dictionary<HediffDef, Hediff_LightModifiers>();
+
+            var sightNotEyeHediffs = sightAffectingHediffs.Except(eyeHediffs);
             
             //Check to see if any non eye hediffs have the right comp
-            foreach (HediffDef hediffDef in sightAffectingHediffs)
+            foreach (HediffDef hediffDef in sightNotEyeHediffs)
             {
                 if (!hediffLightMods.TryGetValue(key: hediffDef, value: out Hediff_LightModifiers value)
                  || value == null)
@@ -141,6 +148,6 @@ namespace NightVision
 
         
         
-        #endregion
+        
     }
 }

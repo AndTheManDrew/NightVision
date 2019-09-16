@@ -9,11 +9,10 @@ using Verse;
 
 namespace NightVision
 {
-    public static class Init_Races
+    public partial class Initialiser
+    
     {
-        #region  Members
-
-        public static void FindAllValidRaces()
+        public void FindAllValidRaces()
         {
             //Check for compprops so that humanlike req can be overridden in xml
             List<ThingDef> raceDefList = DefDatabase<ThingDef>.AllDefsListForReading.FindAll(
@@ -35,6 +34,5 @@ namespace NightVision
             Mod.Store.RaceLightMods = RaceLightMods;
         }
 
-        #endregion
     }
 }

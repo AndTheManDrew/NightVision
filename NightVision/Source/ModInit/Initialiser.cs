@@ -14,32 +14,61 @@ using Verse;
 
 namespace NightVision
 {
-    public class Initialiser
+    /// <summary>
+    /// Reads all loaded item definitions and builds maps for items that meet certain requirements
+    /// Greedy rather than efficient - to support options being changed at a later date
+    /// </summary>
+    public partial class Initialiser
     {
         public void Startup()
         {
-            FindSettingsDependentFields();
+            //FindSettingsDependentFields();
+            FieldClearer.FindSettingsDependentFields();
 
             FindDefsToAddNightVisionTo();
-            Init_Research.AddNightVisionMarkerToVanillaResearch();
-            Init_TapetumAnimals.AddTapetumRecipeToAnimals();
+            AddNightVisionMarkerToVanillaResearch();
+            AddTapetumRecipeToAnimals();
 
 
         }
 
         public void FindDefsToAddNightVisionTo()
         {
-            Init_Hediffs.FindAllValidHediffs();
-            Init_Races.FindAllValidRaces();
-            Init_Apparel.FindAllValidApparel();
+            FindAllValidHediffs();
+            FindAllValidRaces();
+            FindAllValidApparel();
         }
 
         
         public void FindSettingsDependentFields()
         {
+            /*
+
             FieldClearer.SettingsDependentFields = GenTypes.AllTypesWithAttribute<NVHasSettingsDependentFieldAttribute>().SelectMany(
                 t => AccessTools.GetDeclaredFields(t).FindAll(fi => fi.HasAttribute<NVSettingsDependentFieldAttribute>())
             ).ToList();
+            */
+
+            
+            var traverses = new List<Traverse>();
+
+            var markedTypes = GenTypes.AllTypesWithAttribute<NVHasSettingsDependentFieldAttribute>();
+            foreach (var type in markedTypes)
+            {
+                var fields = AccessTools.GetDeclaredFields(type)
+                    .FindAll(fi => fi.HasAttribute<NVHasSettingsDependentFieldAttribute>());
+
+                foreach (var info in fields)
+                {
+                    var traverse = new Traverse(type);
+                    traverse.Field(info.Name);
+                    
+                    traverses.Add(traverse);
+
+                }
+            }
+
+            FieldClearer.SettingsDependentFieldTraverses = traverses;
         }
     }
 }
