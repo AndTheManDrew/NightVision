@@ -64,7 +64,7 @@ namespace NightVision
 
         public override bool ShouldShowFor(StatRequest req)
         {
-            return base.ShouldShowFor(req) || !Storage_Combat.RangedCooldownEffectsEnabled.Value;
+            return base.ShouldShowFor(req) || !Mod.CombatStore.RangedCooldownEffectsEnabled.Value;
         }
 
         #endregion

@@ -40,12 +40,12 @@ namespace NightVision
 
         public override bool IsDisabledFor(Thing thing)
         {
-            return base.IsDisabledFor(thing) || !Storage_Combat.CombatFeaturesEnabled.Value;
+            return base.IsDisabledFor(thing) || !Mod.CombatStore.CombatFeaturesEnabled.Value;
         }
 
         public override bool ShouldShowFor(StatRequest req)
         {
-            return base.ShouldShowFor(req) || !Storage_Combat.CombatFeaturesEnabled.Value;
+            return base.ShouldShowFor(req) || !Mod.CombatStore.CombatFeaturesEnabled.Value;
         }
 
         #endregion

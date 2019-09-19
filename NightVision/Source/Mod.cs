@@ -23,6 +23,8 @@ namespace NightVision
         public static Storage Store => Settings.Store;
 
         public static SettingsCache Cache => Settings.Cache;
+
+        public static Storage_Combat CombatStore => Settings.CombatStore;
         
 
         [UsedImplicitly]

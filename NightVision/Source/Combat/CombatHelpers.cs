@@ -17,7 +17,7 @@ namespace NightVision
         public static FloatRange MultiplierCaps => Mod.Store.MultiplierCaps;
         
         [NVSettingsDependentField]
-        public static float _attXCoeff = Storage_Combat.HitCurviness.Value / MultiplierCaps.Span;
+        public static float _attXCoeff = Mod.CombatStore.HitCurviness.Value / MultiplierCaps.Span;
 
         public static float DodgeXCoeff
         {
@@ -25,7 +25,7 @@ namespace NightVision
             {
                 if (_dodgeXCoeff < 0)
                 {
-                    _dodgeXCoeff = Storage_Combat.DodgeCurviness.Value / MultiplierCaps.Span;
+                    _dodgeXCoeff = Mod.CombatStore.DodgeCurviness.Value / MultiplierCaps.Span;
                 }
                 return _dodgeXCoeff;
             }
@@ -41,7 +41,7 @@ namespace NightVision
             {
                 if (_attXCoeff < -1)
                 {
-                    _attXCoeff = Storage_Combat.HitCurviness.Value / MultiplierCaps.Span;;
+                    _attXCoeff = Mod.CombatStore.HitCurviness.Value / MultiplierCaps.Span;;
                 }
 
                 return _attXCoeff;
@@ -58,7 +58,7 @@ namespace NightVision
             {
                 if (_chanceOfSurpriseAttFactor < -1)
                 {
-                    _chanceOfSurpriseAttFactor = Storage_Combat.SurpriseAttackMultiplier.Value;
+                    _chanceOfSurpriseAttFactor = Mod.CombatStore.SurpriseAttackMultiplier.Value;
                 }
                 return _chanceOfSurpriseAttFactor;
             }
@@ -74,13 +74,13 @@ namespace NightVision
             {
                 if (_rangedCooldownMultiplierBad < -1)
                 {
-                    if (Storage_Combat.RangedCooldownLinkedToCaps.Value)
+                    if (Mod.CombatStore.RangedCooldownLinkedToCaps.Value)
                     {
                         _rangedCooldownMultiplierBad = 1 / MultiplierCaps.min;
                     }
                     else
                     {
-                        _rangedCooldownMultiplierBad = Storage_Combat.RangedCooldownMinAndMax.Value.max / 100f;
+                        _rangedCooldownMultiplierBad = Mod.CombatStore.RangedCooldownMinAndMax.Value.max / 100f;
                     }
                 }
                 return _rangedCooldownMultiplierBad;
@@ -151,13 +151,13 @@ namespace NightVision
             {
                 if (_rangedCooldownMultiplierGood < -1)
                 {
-                    if (Storage_Combat.RangedCooldownLinkedToCaps.Value)
+                    if (Mod.CombatStore.RangedCooldownLinkedToCaps.Value)
                     {
                         _rangedCooldownMultiplierGood = 1 / MultiplierCaps.max;
                     }
                     else
                     {
-                        _rangedCooldownMultiplierGood = Storage_Combat.RangedCooldownMinAndMax.Value.min / 100f;
+                        _rangedCooldownMultiplierGood = Mod.CombatStore.RangedCooldownMinAndMax.Value.min / 100f;
                     }
                 }
 
@@ -209,7 +209,7 @@ namespace NightVision
         }
 
         [NVSettingsDependentField]
-        public static float _dodgeXCoeff = Storage_Combat.DodgeCurviness.Value / MultiplierCaps.Span;
+        public static float _dodgeXCoeff = Mod.CombatStore.DodgeCurviness.Value / MultiplierCaps.Span;
 
 
         /// <param name="orgDodge">defenders dodge chance</param>
@@ -226,6 +226,6 @@ namespace NightVision
 
         #endregion
         [NVSettingsDependentField]
-        public static float _chanceOfSurpriseAttFactor = Storage_Combat.SurpriseAttackMultiplier.Value;
+        public static float _chanceOfSurpriseAttFactor = Mod.CombatStore.SurpriseAttackMultiplier.Value;
     }
 }

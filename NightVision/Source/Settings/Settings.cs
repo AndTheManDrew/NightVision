@@ -18,12 +18,13 @@ namespace NightVision
 
 
         public Storage Store;
+        public Storage_Combat CombatStore;
         public SettingsCache Cache;
 
         
         // tabs
         private Tab  _tab;
-        private readonly List<TabRecord> TabsList = new List<TabRecord>();
+        private List<TabRecord> TabsList = new List<TabRecord>();
         private GeneralTab _generalTab;
         private ApparelTab _apparelTab;
         private HediffTab _hediffTab;
@@ -43,6 +44,7 @@ namespace NightVision
         public Settings()
         {
             Store = new Storage();
+            CombatStore = new Storage_Combat();
             Cache = new SettingsCache();
         }
 
@@ -51,6 +53,8 @@ namespace NightVision
         {
             base.ExposeData();
             Store.ExposeSettings();
+            CombatStore.LoadSaveCommit();
+            
         }
         
         

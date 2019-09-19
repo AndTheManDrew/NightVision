@@ -37,7 +37,7 @@ namespace NightVision
 
 
         public  Dictionary<ThingDef, Race_LightModifiers> RaceLightMods = new Dictionary<ThingDef, Race_LightModifiers>();
-
+        
         public  void ExposeSettings()
         {
             Scribe_Values.Look(value: ref CustomCapsEnabled, label: "CustomLimitsEnabled");
@@ -70,7 +70,7 @@ namespace NightVision
 
             Scribe_Values.Look(value: ref NVGameComponent.FlareRaidIsEnabled, label: "flareRaidEnabled");
 
-            Storage_Combat.LoadSaveCommit();
+            //combatStore.LoadSaveCommit();
 
             Scribe_Values.Look(value: ref NVEnabledForCE, label: "EnabledForCombatExtended", defaultValue: true);
 
@@ -120,7 +120,7 @@ namespace NightVision
 
             LightModifiersBase.NVLightModifiers.Offsets = LightModifiersBase.NVLightModifiers.DefaultOffsets.ToArray();
 
-            Storage_Combat.ResetCombatSettings();
+            Mod.CombatStore.LoadDefaultSettings();
 
             Log.Message(text: "NightVision.Storage.ResetAllSettings: Clearing Dictionaries");
             RaceLightMods              = null;

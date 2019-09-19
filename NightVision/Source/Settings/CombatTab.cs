@@ -48,6 +48,7 @@ namespace NightVision
 
         public  void DrawTab(Rect inRect)
         {
+            var combatStore = Mod.CombatStore;
             Rect tabRect = inRect.AtZero();
             var anchor = Text.Anchor;
             Text.Anchor = TextAnchor.MiddleLeft;
@@ -56,23 +57,23 @@ namespace NightVision
             listing.Begin(tabRect);
             var subListing = listing.SubListing(LineHeight + 12f);
             subListing.Gap(6f);
-            subListing.CheckboxLabeled(CombatFeaturesEnabled.Label, ref CombatFeaturesEnabled.TempValue);
+            subListing.CheckboxLabeled(combatStore.CombatFeaturesEnabled.Label, ref combatStore.CombatFeaturesEnabled.TempValue);
             subListing.Gap(6f);
             listing.EndSection(subListing);
 
-            if (CombatFeaturesEnabled.TempValue)
+            if (combatStore.CombatFeaturesEnabled.TempValue)
             {
 
                 listing.Gap();
                 subListing = listing.SubListing(LineHeight * 2 + IntSliderHeight + 12f);
                 subListing.Gap(6f);
-                subListing.Label(HitCurviness.Label);
+                subListing.Label(combatStore.HitCurviness.Label);
                 subListing.Gap(6f);
                 var rowRect = subListing.GetRect(IntSliderHeight);
-                string hitCurStr = HitCurviness.TempValue.ToString();
-                float hitCurNum = HitCurviness.TempValue;
-                HitCurviness.TempValue = (int)Widgets.HorizontalSlider(rowRect, hitCurNum, 1f, 5f, true, hitCurStr, "Flat", "Extreme Changes", 1f);
-                TooltipHandler.TipRegion(rowRect, HitCurviness.Tooltip);
+                string hitCurStr = combatStore.HitCurviness.TempValue.ToString();
+                float hitCurNum = combatStore.HitCurviness.TempValue;
+                combatStore.HitCurviness.TempValue = (int)Widgets.HorizontalSlider(rowRect, hitCurNum, 1f, 5f, true, hitCurStr, "Flat", "Extreme Changes", 1f);
+                TooltipHandler.TipRegion(rowRect, combatStore.HitCurviness.Tooltip);
                 DrawIndicator(rowRect: rowRect, 1f / 4);
                 subListing.Gap(6f);
                 listing.EndSection(subListing);
@@ -83,28 +84,28 @@ namespace NightVision
                 RangedSubListingHeight = 0;
                 subListing.Gap();
                 RangedSubListingHeight += 12f;
-                subListing.CheckboxLabeled(RangedHitEffectsEnabled.Label, ref RangedHitEffectsEnabled.TempValue, RangedHitEffectsEnabled.Tooltip);
+                subListing.CheckboxLabeled(combatStore.RangedHitEffectsEnabled.Label, ref combatStore.RangedHitEffectsEnabled.TempValue, combatStore.RangedHitEffectsEnabled.Tooltip);
                 RangedSubListingHeight += Text.LineHeight + VerticalSpacing;
                 subListing.ShortGapLine();
                 RangedSubListingHeight += 12f;
-                subListing.CheckboxLabeled(RangedCooldownEffectsEnabled.Label, ref RangedCooldownEffectsEnabled.TempValue, RangedCooldownEffectsEnabled.Tooltip);
+                subListing.CheckboxLabeled(combatStore.RangedCooldownEffectsEnabled.Label, ref combatStore.RangedCooldownEffectsEnabled.TempValue, combatStore.RangedCooldownEffectsEnabled.Tooltip);
                 RangedSubListingHeight += Text.LineHeight + VerticalSpacing;
-                if (RangedCooldownEffectsEnabled.TempValue)
+                if (combatStore.RangedCooldownEffectsEnabled.TempValue)
                 {
                     subListing.ShortGapLine();
                     RangedSubListingHeight += 12f;
-                    subListing.CheckboxLabeled(RangedCooldownLinkedToCaps.Label + $"[best: {BestAndWorstRangedCd[0]}, worst: {BestAndWorstRangedCd[1]}]", ref RangedCooldownLinkedToCaps.TempValue, RangedCooldownLinkedToCaps.Tooltip);
+                    subListing.CheckboxLabeled(combatStore.RangedCooldownLinkedToCaps.Label + $"[best: {BestAndWorstRangedCd[0]}, worst: {BestAndWorstRangedCd[1]}]", ref combatStore.RangedCooldownLinkedToCaps.TempValue, combatStore.RangedCooldownLinkedToCaps.Tooltip);
                     RangedSubListingHeight += Text.LineHeight + VerticalSpacing;
-                    if (!RangedCooldownLinkedToCaps.TempValue)
+                    if (!combatStore.RangedCooldownLinkedToCaps.TempValue)
                     {
                         subListing.ShortGapLine();
                         RangedSubListingHeight += 12f;
-                        subListing.Label(RangedCooldownMinAndMax.Label, tooltip: RangedCooldownMinAndMax.Tooltip);
+                        subListing.Label(combatStore.RangedCooldownMinAndMax.Label, tooltip: combatStore.RangedCooldownMinAndMax.Tooltip);
                         RangedSubListingHeight += Text.LineHeight + VerticalSpacing;
-                        subListing.IntRange(ref RangedCooldownMinAndMax.TempValue, 1, 200);
+                        subListing.IntRange(ref combatStore.RangedCooldownMinAndMax.TempValue, 1, 200);
                         RangedSubListingHeight += IntSliderHeight;
 
-                        CheckIntRange(ref RangedCooldownMinAndMax.TempValue, 100);
+                        CheckIntRange(ref combatStore.RangedCooldownMinAndMax.TempValue, 100);
 
                     }
                 }
@@ -117,33 +118,33 @@ namespace NightVision
                 MeleeSubListingHeight = 0f;
                 subListing.Gap();
                 MeleeSubListingHeight += 12f;
-                subListing.CheckboxLabeled(MeleeHitEffectsEnabled.Label, ref MeleeHitEffectsEnabled.TempValue, MeleeHitEffectsEnabled.Tooltip);
+                subListing.CheckboxLabeled(combatStore.MeleeHitEffectsEnabled.Label, ref combatStore.MeleeHitEffectsEnabled.TempValue, combatStore.MeleeHitEffectsEnabled.Tooltip);
                 MeleeSubListingHeight += Text.LineHeight + VerticalSpacing;
 
-                if (MeleeHitEffectsEnabled.TempValue)
+                if (combatStore.MeleeHitEffectsEnabled.TempValue)
                 {
                     subListing.ShortGapLine();
                     MeleeSubListingHeight += 12f;
-                    subListing.Label(SurpriseAttackMultiplier.Label);
+                    subListing.Label(combatStore.SurpriseAttackMultiplier.Label);
                     MeleeSubListingHeight += Text.LineHeight + VerticalSpacing;
                     rowRect               =  subListing.GetRect(IntSliderHeight);
                     MeleeSubListingHeight += IntSliderHeight;
-                    string surpStr = SurpriseAttackMultiplier.TempValue.IsTrivial() ? "[Disabled]" : "x" + SurpriseAttackMultiplier.TempValue;
-                    float  surpNum = SurpriseAttackMultiplier.TempValue;
-                    SurpriseAttackMultiplier.TempValue = Widgets.HorizontalSlider(rowRect, surpNum, 0f, 2f, false, surpStr, "Disabled", "x2", 0.1f);
-                    TooltipHandler.TipRegion(rowRect, SurpriseAttackMultiplier.Tooltip);
+                    string surpStr = combatStore.SurpriseAttackMultiplier.TempValue.IsTrivial() ? "[Disabled]" : "x" + combatStore.SurpriseAttackMultiplier.TempValue;
+                    float  surpNum = combatStore.SurpriseAttackMultiplier.TempValue;
+                    combatStore.SurpriseAttackMultiplier.TempValue = Widgets.HorizontalSlider(rowRect, surpNum, 0f, 2f, false, surpStr, "Disabled", "x2", 0.1f);
+                    TooltipHandler.TipRegion(rowRect, combatStore.SurpriseAttackMultiplier.Tooltip);
                     DrawIndicator(rowRect: rowRect, 0.5f / 2f);
                 
                     subListing.ShortGapLine();
                     MeleeSubListingHeight += 12f;
-                    subListing.Label(DodgeCurviness.Label);
+                    subListing.Label(combatStore.DodgeCurviness.Label);
                     MeleeSubListingHeight += Text.LineHeight + VerticalSpacing;
                     rowRect               =  subListing.GetRect(IntSliderHeight);
                     MeleeSubListingHeight += IntSliderHeight;
-                    string dodgeCurStr = DodgeCurviness.TempValue.ToString();
-                    float  dodgeCurNum = DodgeCurviness.TempValue;
-                    DodgeCurviness.TempValue = (int)Widgets.HorizontalSlider(rowRect, dodgeCurNum, 1f, 5f, false, dodgeCurStr, "Flat", "Extreme Changes", 1f);
-                    TooltipHandler.TipRegion(rowRect, DodgeCurviness.Tooltip);
+                    string dodgeCurStr = combatStore.DodgeCurviness.TempValue.ToString();
+                    float  dodgeCurNum = combatStore.DodgeCurviness.TempValue;
+                    combatStore.DodgeCurviness.TempValue = (int)Widgets.HorizontalSlider(rowRect, dodgeCurNum, 1f, 5f, false, dodgeCurStr, "Flat", "Extreme Changes", 1f);
+                    TooltipHandler.TipRegion(rowRect, combatStore.DodgeCurviness.Tooltip);
                     DrawIndicator(rowRect: rowRect, 2f / 4);
                 }
                 subListing.Gap();
