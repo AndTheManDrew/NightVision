@@ -4,18 +4,18 @@ using UnityEngine;
 using Verse;
 
 namespace NightVision {
-    public static class RaceTab {
-        private static int?    _numberOfCustomRaces;
-        private static Vector2 _raceScrollPosition = Vector2.zero;
+    public class RaceTab {
+        private int?    _numberOfCustomRaces;
+        private Vector2 _raceScrollPosition = Vector2.zero;
 
-        public static void Clear()
+        public void Clear()
         {
-            NightVision.RaceTab._numberOfCustomRaces = null;
-            NightVision.RaceTab._raceScrollPosition = Vector2.zero;
+            _numberOfCustomRaces = null;
+            _raceScrollPosition = Vector2.zero;
         }
 
 
-        public static void DrawTab(Rect inRect)
+        public void DrawTab(Rect inRect)
         {
             int raceCount = Mod.Store.RaceLightMods.Count;
 
@@ -28,18 +28,6 @@ namespace NightVision {
             inRect = inRect.AtZero();
             SettingsHelpers.DrawLightModifiersHeader(ref inRect, "NVRaces".Translate(), "NVRaceNote".Translate());
 
-            //#region Tweaks
-
-            //Constants.RowHeight = Widgets.HorizontalSlider(new Rect(inRect.x, inRect.y, inRect.width, Constants.RowHeight),
-            //    Constants.RowHeight,
-            //    -100f,
-            //    +100f,
-            //    true,
-            //    $"Tweak RowHeight: {Constants.RowHeight}");
-            //inRect.y += 50f;
-
-
-            //#endregion
             float num = inRect.y + 3f;
 
             var viewRect = new Rect(

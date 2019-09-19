@@ -3,17 +3,17 @@ using UnityEngine;
 using Verse;
 
 namespace NightVision {
-    public static class GeneralTab {
-        public static bool _askToConfirmReset;
-        public static Stopwatch confirmTimer = new Stopwatch();
+    public class GeneralTab {
+        private bool _askToConfirmReset;
+        private Stopwatch confirmTimer = new Stopwatch();
 
-        public static void Clear()
+        public  void Clear()
         {
-            NightVision.GeneralTab._askToConfirmReset = false;
-            NightVision.GeneralTab.confirmTimer.Reset();
+            _askToConfirmReset = false;
+            confirmTimer.Reset();
         }
 
-        public static void DrawTab(Rect inRect)
+        public void DrawTab(Rect inRect)
         {
             TextAnchor anchor    = Text.Anchor;
             float      rowHeight = Constants_Draw.GenRowHeight;
@@ -48,7 +48,7 @@ namespace NightVision {
                 rowRect,
                 (float) cache.NVZeroCache,
                 (float) cache.MinCache,
-                (float) cache.MaxCache,
+                cache.MaxCache.Value,
                 true,
                 string.Format(
                     Str.ZeroMultiLabel,
@@ -110,7 +110,7 @@ namespace NightVision {
             Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
             rowRect.y += Constants_Draw.RowGap;
 
-            //Photosensitivity settings
+            // Photosensitivity settings
 
             Widgets.Label(
                 rowRect,

@@ -2,15 +2,15 @@ using UnityEngine;
 using Verse;
 
 namespace NightVision {
-    public static class ApparelTab {
-        private static Vector2 _apparelScrollPosition = Vector2.zero;
+    public class ApparelTab {
+        private Vector2 _apparelScrollPosition = Vector2.zero;
 
-        public static void Clear()
+        public void Clear()
         {
-            NightVision.ApparelTab._apparelScrollPosition = Vector2.zero;
+            _apparelScrollPosition = Vector2.zero;
         }
 
-        public static void DrawTab(Rect inRect)
+        public void DrawTab(Rect inRect)
         {
 
             var nvApparel = Mod.Store.NVApparel;

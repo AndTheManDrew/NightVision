@@ -12,15 +12,15 @@ using static NightVision.Storage_Combat;
 
 namespace NightVision
 {
-    public static class CombatTab
+    public class CombatTab
     {
-        public static float VerticalSpacing = 2f;
-        public static float IntSliderHeight = 28f;
+        public float VerticalSpacing = 2f;
+        public float IntSliderHeight = 28f;
 
-        public static string surpBuffer;
+        public string surpBuffer;
         
 
-        public static string[] BestAndWorstRangedCd
+        public string[] BestAndWorstRangedCd
         {
             get
             {
@@ -34,19 +34,19 @@ namespace NightVision
                 return bestAndWorstRangedCd;
             }
         }
-        public static string[] bestAndWorstRangedCd = new string[2];
+        public  string[] bestAndWorstRangedCd = new string[2];
         
-        public static float texRextXMod = 6f;
+        public  float texRextXMod = 6f;
         
-        public static float texRextYMod = 24f;
+        public  float texRextYMod = 24f;
         
-        public static float LineHeight = Text.LineHeight;
+        public  float LineHeight = Text.LineHeight;
 
-        public static float RangedSubListingHeight = 100f;
+        public  float RangedSubListingHeight = 100f;
 
-        public static float MeleeSubListingHeight = 100f;
+        public  float MeleeSubListingHeight = 100f;
 
-        public static void DrawTab(Rect inRect)
+        public  void DrawTab(Rect inRect)
         {
             Rect tabRect = inRect.AtZero();
             var anchor = Text.Anchor;
@@ -157,7 +157,7 @@ namespace NightVision
             Text.Anchor = anchor;
         }
 
-        private static void DrawIndicator(Rect rowRect, float fractionalPosition)
+        private  void DrawIndicator(Rect rowRect, float fractionalPosition)
         {
             rowRect.x += texRextXMod + (rowRect.width - texRextXMod * 2)* fractionalPosition -6f;
             rowRect.y += texRextYMod;
@@ -166,12 +166,12 @@ namespace NightVision
             Widgets.DrawTextureFitted(rowRect, IndicatorTex.DefIndicator, 1);
         }
 
-        public static void Clear()
+        public  void Clear()
         {
             bestAndWorstRangedCd = new string[2];
         }
 
-        public static bool CheckIntRange(ref IntRange range, int mustInclude)
+        public  bool CheckIntRange(ref IntRange range, int mustInclude)
         {
             if (range.TrueMax != range.max)
             {
@@ -196,31 +196,6 @@ namespace NightVision
             }
 
             return true;
-        }
-
-
-        public static Listing_Standard SubListing(this Listing_Standard listing, float height, float contract = 48f)
-        {
-            Rect subRect = listing.GetRect(height);
-            Widgets.DrawMenuSection(subRect);
-            subRect.xMin += contract / 2;
-            subRect.xMax -= contract / 2;
-            Listing_Standard result = new Listing_Standard();
-            result.Begin(subRect);
-
-            return result;
-
-        }
-
-        public static void ShortGapLine(this Listing_Standard listing, float gapHeight =  12f)
-        {
-            var rect = listing.GetRect(gapHeight);
-            float x = rect.x + 30f;
-            float y     = rect.y + gapHeight / 2f;
-            Color color = GUI.color;
-            GUI.color = color * new Color(1f, 1f, 1f, 0.4f);
-            Widgets.DrawLineHorizontal(x, y, listing.ColumnWidth - 60f);
-            GUI.color =  color;
         }
     }
 }

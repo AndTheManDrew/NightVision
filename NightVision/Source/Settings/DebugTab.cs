@@ -7,21 +7,21 @@ using UnityEngine;
 using Verse;
 
 namespace NightVision {
-    public static class DebugTab {
-        private static List<Pawn> _allPawns;
-        private static Vector2    _debugScrollPos = Vector2.zero;
-        private static float      _maxY;
+    public class DebugTab {
+        private List<Pawn> _allPawns;
+        private Vector2    _debugScrollPos = Vector2.zero;
+        private float      _maxY;
 
-        public static void Clear()
+        public void Clear()
         {
-            DebugTab._debugScrollPos = Vector2.zero;
+            _debugScrollPos = Vector2.zero;
 
 
-            DebugTab._allPawns = null;
-            DebugTab._maxY     = -1;
+            _allPawns = null;
+            _maxY     = -1;
         }
 
-        public static void DrawTab(Rect inRect)
+        public void DrawTab(Rect inRect)
         {
             bool playing = Current.ProgramState == ProgramState.Playing;
             inRect    = inRect.AtZero();

@@ -90,6 +90,7 @@
     <Compile Include="ModInit\Init_Research.cs" />
     <Compile Include="ModInit\Init_TapetumAnimals.cs" />
     <Compile Include="Settings\CombatTab.cs" />
+    <Compile Include="Settings\ListingExtensions.cs" />
     <Compile Include="Settings\SettingOption.cs" />
     <Compile Include="Settings\Storage_Combat.cs" />
     <Compile Include="Static variables\Str_Combat.cs" />

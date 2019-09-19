@@ -13,16 +13,31 @@ namespace NightVision
 {
     public class Settings : ModSettings
     {
-        private Tab  _tab;
+        private bool initialised;
         public  bool CEDetected = false;
 
 
         public Storage Store;
-
         public SettingsCache Cache;
-        
 
+        
+        // tabs
+        private Tab  _tab;
         private readonly List<TabRecord> TabsList = new List<TabRecord>();
+        private GeneralTab _generalTab;
+        private ApparelTab _apparelTab;
+        private HediffTab _hediffTab;
+        private RaceTab _raceTab;
+        private DebugTab _debugTab;
+        private CombatTab _combatTab;
+        
+        // draw rects
+        private Rect lastRect;
+        private Rect menuRect;
+        private Rect tabRect;
+
+
+        
 
         [UsedImplicitly]
         public Settings()
@@ -37,10 +52,16 @@ namespace NightVision
             base.ExposeData();
             Store.ExposeSettings();
         }
-
+        
+        
         public void InitialiseWindow(Rect inRect)
         {
             TabsList.Clear();
+
+            if (_generalTab == null)
+            {
+                _generalTab = new GeneralTab();
+            }
             TabsList.Add(
                 new TabRecord(
                     "NVGeneralTab".Translate(),
@@ -52,6 +73,12 @@ namespace NightVision
                 )
             );
 
+
+            if (_combatTab == null)
+            {
+                _combatTab = new CombatTab();
+                
+            }
             TabsList.Add(
                 new TabRecord(
                     "NVCombat".Translate(),
@@ -63,6 +90,10 @@ namespace NightVision
                 )
             );
 
+            if (_raceTab == null)
+            {
+                _raceTab = new RaceTab();
+            }
             TabsList.Add(
                 new TabRecord(
                     "NVRaces".Translate(),
@@ -73,7 +104,12 @@ namespace NightVision
                     () => _tab == Tab.Races
                 )
             );
-
+            
+            
+            if (_apparelTab == null)
+            {
+                _apparelTab = new ApparelTab();
+            }
             TabsList.Add(
                 new TabRecord(
                     "NVApparel".Translate(),
@@ -85,6 +121,10 @@ namespace NightVision
                 )
             );
 
+            if (_hediffTab == null)
+            {
+                _hediffTab = new HediffTab();
+            }
             TabsList.Add(
                 new TabRecord(
                     "NVHediffs".Translate(),
@@ -98,6 +138,10 @@ namespace NightVision
 
             if (Prefs.DevMode)
             {
+                if (_debugTab == null)
+                {
+                    _debugTab = new DebugTab();
+                }
                 TabsList.Add(
                     new TabRecord(
                         "NVDebugTab".Translate(),
@@ -118,13 +162,6 @@ namespace NightVision
             
             
         }
-
-        private Rect lastRect;
-
-        private bool initialised;
-        private Rect menuRect;
-        private Rect tabRect;
-        
 
         public /*static*/ void DoSettingsWindowContents(Rect inRect)
         {
@@ -147,26 +184,26 @@ namespace NightVision
             switch (_tab)
             {
                 default:
-                    GeneralTab.DrawTab(tabRect);
+                    _generalTab.DrawTab(tabRect);
 
                     break;
                 case Tab.Combat:
-                    CombatTab.DrawTab(tabRect);
+                    _combatTab.DrawTab(tabRect);
                     break;
                 case Tab.Races:
-                    RaceTab.DrawTab(tabRect);
+                    _raceTab.DrawTab(tabRect);
 
                     break;
                 case Tab.Apparel:
-                    ApparelTab.DrawTab(tabRect);
+                    _apparelTab.DrawTab(tabRect);
 
                     break;
                 case Tab.Bionics:
-                    HediffTab.DrawTab(tabRect);
+                    _hediffTab.DrawTab(tabRect);
 
                     break;
                 case Tab.Debug:
-                    DebugTab.DrawTab(tabRect);
+                    _debugTab.DrawTab(tabRect);
 
                     break;
             }
@@ -178,11 +215,12 @@ namespace NightVision
 
         public void ClearDrawVariables()
         {
-            DebugTab.Clear();
-            ApparelTab.Clear();
-            RaceTab.Clear();
-            GeneralTab.Clear();
-            CombatTab.Clear();
+            _debugTab.Clear();
+            _apparelTab.Clear();
+            _raceTab.Clear();
+            _generalTab.Clear();
+            _combatTab.Clear();
+            _hediffTab.Clear();
             initialised = false;
         }
     }

@@ -3,19 +3,19 @@ using UnityEngine;
 using Verse;
 
 namespace NightVision {
-    public static class HediffTab {
-        private static Vector2 _hediffScrollPosition = Vector2.zero;
-        private static int? _numberOfCustomHediffs;
+    public  class HediffTab {
+        private Vector2 _hediffScrollPosition = Vector2.zero;
+        private int? _numberOfCustomHediffs;
 
 
-        public static void Clear()
+        public  void Clear()
         {
-            NightVision.HediffTab._hediffScrollPosition  = Vector2.zero;
-            NightVision.HediffTab._numberOfCustomHediffs = null;
+            _hediffScrollPosition  = Vector2.zero;
+            _numberOfCustomHediffs = null;
         }
 
 
-        public static void DrawTab(Rect inRect)
+        public void DrawTab(Rect inRect)
         {
             var cache = Mod.Cache;
             var store = Mod.Store;
