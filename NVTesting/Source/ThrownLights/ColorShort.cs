@@ -1,4 +1,4 @@
-﻿// Nightvision NVTesting ColorShort.cs
+﻿// Nightvision NVExperiments ColorShort.cs
 // 
 // 23 03 2019
 // 
@@ -7,7 +7,7 @@
 using System;
 using UnityEngine;
 
-namespace NVTesting.ThrownLights
+namespace NVExperiments.ThrownLights
 {
     public struct ColorShort
     {

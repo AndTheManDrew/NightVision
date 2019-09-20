@@ -32,8 +32,8 @@
         <fireSize>0.4</fireSize>
         <offset>(0,0,0.2)</offset>
       </li>
-      <li Class="NVTesting.ThrownLights.CompProperties_TransientLight">
-        <compClass>NVTesting.ThrownLights.Comp_TransientLight</compClass>
+      <li Class="NVExperiments.ThrownLights.CompProperties_TransientLight">
+        <compClass>NVExperiments.ThrownLights.Comp_TransientLight</compClass>
         <glowRadius>15</glowRadius>
         <glowColor>(252,187,113,0.1)</glowColor>
         <ticksToGlow>1000</ticksToGlow>

@@ -13,7 +13,7 @@ namespace NightVision {
 
         public static void BuildNullPSApparelLookup()
         {
-            var nvApparel = Mod.Store.NVApparel;
+            var nvApparel = Settings.Store.NVApparel;
             
             var list = nvApparel.Where(appset => appset.Value.NullifiesPS && appset.Key.IsApparel)
                         .SelectMany(appset => appset.Key.apparel.tags.Select(tag => new {tag, thingDef = appset.Key}))
@@ -64,7 +64,7 @@ namespace NightVision {
 
         public static void BuildGiveNVApparelLookup()
         {
-            var nvApparel = Mod.Store.NVApparel;
+            var nvApparel = Settings.Store.NVApparel;
             var list = nvApparel.Where(appset => appset.Value.GrantsNV && appset.Key.IsApparel)
                         .SelectMany(appset => appset.Key.apparel.tags.Select(tag => new {tag, thingDef = appset.Key}))
                         .ToLookup(anonT=> anonT.tag, anonT => anonT.thingDef) as Lookup<string, ThingDef>;

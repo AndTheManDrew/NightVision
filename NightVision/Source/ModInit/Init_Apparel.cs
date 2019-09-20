@@ -27,7 +27,7 @@ namespace NightVision
                                        || adef.HasComp(compType: typeof(Comp_NightVisionApparel)))
                 )
             );
-            var NVApparel = Mod.Store.NVApparel ?? new Dictionary<ThingDef, ApparelVisionSetting>();
+            var NVApparel = Settings.Store.NVApparel ?? new Dictionary<ThingDef, ApparelVisionSetting>();
             
             //Add defs that have NV comp
             foreach (ThingDef apparel in AllEyeCoveringHeadgearDefs)
@@ -51,8 +51,8 @@ namespace NightVision
                 }
             }
 
-            Mod.Store.NVApparel = NVApparel;
-            Mod.Store.AllEyeCoveringHeadgearDefs = AllEyeCoveringHeadgearDefs;
+            Settings.Store.NVApparel = NVApparel;
+            Settings.Store.AllEyeCoveringHeadgearDefs = AllEyeCoveringHeadgearDefs;
         }
 
         #endregion

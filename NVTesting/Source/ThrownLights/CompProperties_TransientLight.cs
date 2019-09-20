@@ -1,4 +1,4 @@
-﻿// Nightvision NVTesting CompProperties_TransientLight.cs
+﻿// Nightvision NVExperiments CompProperties_TransientLight.cs
 // 
 // 19 03 2019
 // 
@@ -7,7 +7,7 @@
 using RimWorld;
 using Verse;
 
-namespace NVTesting.ThrownLights
+namespace NVExperiments.ThrownLights
 {
     public class CompProperties_TransientLight : CompProperties_Glower
     {

@@ -7,6 +7,9 @@ using Verse;
 
 namespace NightVision
 {
+    /// <summary>
+    /// General strings defined in xml file in nightvision/languages
+    /// </summary>
     public static class Str
     {
         public const string PhotoSTag = "Photosensitivity";

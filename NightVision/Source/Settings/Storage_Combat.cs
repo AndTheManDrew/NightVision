@@ -5,26 +5,28 @@
 // 24 10 2018
 
 using System;
+
 using Harmony;
+
 using NightVision.Harmony;
+
 using RimWorld;
+
 using Verse;
 using Verse.AI;
 
 namespace NightVision
 {
-    public  class Storage_Combat
+    public class Storage_Combat
     {
         /// <inheritdoc />
         public Storage_Combat()
         {
             LoadDefaultSettings();
+#if DEBUG
             ID = nextID++;
+#endif
         }
-
-
-        // TODO remove
-        public static FloatRange MultiplierCaps => new FloatRange(Constants_Calculations.DefaultMinCap, Constants_Calculations.DefaultMaxCap);
 
         public SettingOption<bool> CombatFeaturesEnabled;
 
@@ -42,19 +44,16 @@ namespace NightVision
         public SettingOption<int> HitCurviness;
 
         public SettingOption<int> DodgeCurviness;
-        
-        
-        #if DEBUG
-        private static int nextID = 0;
+
+
+#if DEBUG
+        private static int nextID;
         private int ID;
-        
-        #endif
-        
-        public  void LoadSaveCommit()
+
+#endif
+
+        public void LoadSaveCommit()
         {
-            Log.Message($"CombatStore r/w: ID:{ID}");
-            
-            
             if (Scribe.mode == LoadSaveMode.LoadingVars)
             {
                 Scribe_Values.Look(ref CombatFeaturesEnabled.TempValue, "CombatFeaturesEnabled", true);
@@ -68,14 +67,15 @@ namespace NightVision
                 Scribe_Values.Look(ref RangedCooldownEffectsEnabled.TempValue, "RangedCooldownEffectEnabled", true);
 
                 Scribe_Values.Look(ref RangedCooldownLinkedToCaps.TempValue, "RangedCooldownLinkedToCaps", true);
-                
-                Scribe_Values.Look(ref RangedCooldownMinAndMax.TempValue, "RangedCooldownMinMax", RangedCooldownMinAndMax.StoredValue);
+
+                Scribe_Values.Look(ref RangedCooldownMinAndMax.TempValue, "RangedCooldownMinMax",
+                    RangedCooldownMinAndMax.StoredValue);
 
                 Scribe_Values.Look(ref HitCurviness.TempValue, "HitCurviness", 2);
 
                 Scribe_Values.Look(ref DodgeCurviness.TempValue, "DodgeCurviness", 3);
             }
-            
+
             CombatFeaturesEnabled.Commit();
             MeleeHitEffectsEnabled.Commit();
             SurpriseAttackMultiplier.Commit();
@@ -99,14 +99,14 @@ namespace NightVision
                 Scribe_Values.Look(ref RangedCooldownEffectsEnabled.StoredValue, "RangedCooldownEffectEnabled", true);
 
                 Scribe_Values.Look(ref RangedCooldownLinkedToCaps.StoredValue, "RangedCooldownLinkedToCaps", true);
-                
-                Scribe_Values.Look(ref RangedCooldownMinAndMax.StoredValue, "RangedCooldownMinMax", LinkedRangedCooldownMinAndMax);
+
+                Scribe_Values.Look(ref RangedCooldownMinAndMax.StoredValue, "RangedCooldownMinMax",
+                    LinkedRangedCooldownMinAndMax);
 
                 Scribe_Values.Look(ref HitCurviness.StoredValue, "HitCurviness", 2);
 
                 Scribe_Values.Look(ref DodgeCurviness.StoredValue, "DodgeCurviness", 3);
             }
-            
         }
 
         public void LoadDefaultSettings()
@@ -202,10 +202,9 @@ namespace NightVision
             DodgeCurviness = new SettingOption<int>(Str_CombatSettings.DodgeCurve, 3,
                 tooltip: Str_CombatSettings.DodgeCurveTip);
         }
-        
-        
-        private IntRange LinkedRangedCooldownMinAndMax => new IntRange((int) (100 / MultiplierCaps.max),
-            (int) (100 / MultiplierCaps.min));
+
+
+        private IntRange LinkedRangedCooldownMinAndMax => new IntRange((int) (100 / Settings.Store.MultiplierCaps.max),
+            (int) (100 / Settings.Store.MultiplierCaps.min));
     }
-    
 }

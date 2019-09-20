@@ -38,7 +38,7 @@ public static class StatReportFor_NightVision_Combat
         stringbuilder.AppendLine(value: Str_Combat.HitChanceHeader());
 
 
-        if (Mod.CombatStore.RangedHitEffectsEnabled.Value)
+        if (Settings.CombatStore.RangedHitEffectsEnabled.Value)
         {
             stringbuilder.AppendLine(value: Str_Combat.ShootTargetAtGlow());
 
@@ -60,12 +60,12 @@ public static class StatReportFor_NightVision_Combat
             stringbuilder.AppendLine();
         }
 
-        if (!Mod.CombatStore.MeleeHitEffectsEnabled.Value)
+        if (!Settings.CombatStore.MeleeHitEffectsEnabled.Value)
         {
             return stringbuilder.ToString();
         }
 
-        var caps = Mod.Store.MultiplierCaps;
+        var caps = Settings.Store.MultiplierCaps;
         
         stringbuilder.AppendLine(value: Str_Combat.StrikeTargetAtGlow());
 

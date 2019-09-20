@@ -77,9 +77,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Indicators", "Indicators", 
 		NightVision\Textures\UI\Indicators\PSarrow.png = NightVision\Textures\UI\Indicators\PSarrow.png
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{7AD5CCCA-384A-429C-930A-CFD2A7A9EBA7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Experiments", "Experiments", "{7AD5CCCA-384A-429C-930A-CFD2A7A9EBA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NVTesting", "NVTesting\Source\NVTesting.csproj", "{53AD9AD3-A8B8-45C4-B8EA-954E82193B32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NVExperiments", "NVTesting\Source\NVExperiments.csproj", "{53AD9AD3-A8B8-45C4-B8EA-954E82193B32}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NightVision", "NightVision\Source\NightVision.csproj", "{EB253018-4E17-43AA-9868-16AC468F406A}"
 EndProject

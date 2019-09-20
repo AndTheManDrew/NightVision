@@ -1,4 +1,4 @@
-﻿// Nightvision NVTesting MovingGlowFlooder.cs
+﻿// Nightvision NVExperiments MovingGlowFlooder.cs
 // 
 // 20 03 2019
 // 
@@ -11,7 +11,7 @@ using System.Text;
 using UnityEngine;
 using Verse;
 
-namespace NVTesting.ThrownLights
+namespace NVExperiments.ThrownLights
 {
     public class MovingGlowFlooder
     {

@@ -2,7 +2,7 @@
 <Defs>
 	<JobDef>
 		<defName>ThrowLight</defName>
-		<driverClass>NVTesting.ThrownLights.JobDriver_ThrowLight</driverClass>
+		<driverClass>NVExperiments.ThrownLights.JobDriver_ThrowLight</driverClass>
 		<reportString>throwing light.</reportString>
     <alwaysShowWeapon>true</alwaysShowWeapon>
     <casualInterruptible>false</casualInterruptible>

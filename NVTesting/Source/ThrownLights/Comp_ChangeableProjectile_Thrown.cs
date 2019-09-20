@@ -1,4 +1,4 @@
-﻿// Nightvision NVTesting Comp_ChangeableProjectile_Thrown.cs
+﻿// Nightvision NVExperiments Comp_ChangeableProjectile_Thrown.cs
 // 
 // 19 03 2019
 // 
@@ -7,7 +7,7 @@
 using RimWorld;
 using Verse;
 
-namespace NVTesting.ThrownLights
+namespace NVExperiments.ThrownLights
 {
     public class Comp_ChangeableProjectile_Thrown : CompChangeableProjectile
     {

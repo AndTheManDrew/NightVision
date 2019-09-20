@@ -117,8 +117,7 @@
     <Compile Include="Settings\GeneralTab.cs" />
     <Compile Include="Settings\HediffTab.cs" />
     <Compile Include="Settings\RaceTab.cs" />
-    <Compile Include="Static variables\Constants_Calculations.cs" />
-    <Compile Include="Static variables\Constants_Draw.cs" />
+    <Compile Include="Static variables\Constants.cs" />
     <Compile Include="Harmony\StatPartGlow_ActiveFor.cs" />
     <Compile Include="Combat\CombatHelpers.cs" />
     <Compile Include="Harmony\ShotReport_AimOnTarget_Standard.cs" />
@@ -144,6 +143,7 @@
     <Compile Include="Utilities\GlowFor.cs" />
     <Compile Include="Utilities\NullOrBool.cs" />
     <Compile Include="Utilities\NVAttributes.cs" />
+    <Compile Include="Utilities\NVMaths.cs" />
     <Compile Include="Utilities\PawnGenUtility.cs" />
     <Compile Include="Stats\NVStatWorker_RangedCooldown.cs" />
     <Compile Include="Misc Workers\ExtractTapetum_RecipeWorker.cs" />

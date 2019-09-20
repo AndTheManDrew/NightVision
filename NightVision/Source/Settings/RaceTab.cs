@@ -17,36 +17,36 @@ namespace NightVision {
 
         public void DrawTab(Rect inRect)
         {
-            int raceCount = Mod.Store.RaceLightMods.Count;
+            var raceCount = Settings.Store.RaceLightMods.Count;
 
             if (_numberOfCustomRaces == null)
             {
                 _numberOfCustomRaces =
-                    Mod.Store.RaceLightMods.Count(rlm => rlm.Value.IntSetting == VisionType.NVCustom);
+                    Settings.Store.RaceLightMods.Count(rlm => rlm.Value.IntSetting == VisionType.NVCustom);
             }
 
             inRect = inRect.AtZero();
             SettingsHelpers.DrawLightModifiersHeader(ref inRect, "NVRaces".Translate(), "NVRaceNote".Translate());
 
-            float num = inRect.y + 3f;
+            var heightMarker = inRect.y + 3f;
 
             var viewRect = new Rect(
                 inRect.x,
                 inRect.y,
                 inRect.width * 0.9f,
                 raceCount
-                * (Constants_Draw.RowHeight + Constants_Draw.RowGap)
+                * (Constants.ROW_HEIGHT + Constants.ROW_GAP)
                 + (float) _numberOfCustomRaces * 100f
             );
 
-            var rowRect = new Rect(inRect.x + 6f, num, inRect.width - 12f, Constants_Draw.RowHeight);
+            var rowRect = new Rect(inRect.x + 6f, heightMarker, inRect.width - 12f, Constants.ROW_HEIGHT);
             Widgets.BeginScrollView(inRect, ref _raceScrollPosition, viewRect);
             var count = 0;
 
-            foreach (KeyValuePair<ThingDef, Race_LightModifiers> kvp in Mod.Store.RaceLightMods)
+            foreach (KeyValuePair<ThingDef, Race_LightModifiers> kvp in Settings.Store.RaceLightMods)
             {
-                Color givenColor = GUI.color;
-                rowRect.y = num;
+                var givenColor = GUI.color;
+                rowRect.y = heightMarker;
 
                 if (!kvp.Value.ShouldShowInSettings)
                 {
@@ -58,11 +58,11 @@ namespace NightVision {
                     GUI.color = Color.grey;
                     Widgets.Label(rowRect.TopPartPixels(20f), "NVDevModeOnly".Translate());
                     rowRect.y += 20;
-                    num       += 20;
+                    heightMarker       += 20;
                 }
 
                 _numberOfCustomRaces +=
-                            SettingsHelpers.DrawLightModifiersRow(kvp.Key, kvp.Value, rowRect, ref num, true);
+                            SettingsHelpers.DrawLightModifiersRow(kvp.Key, kvp.Value, rowRect, ref heightMarker, true);
 
                 if (!kvp.Value.ShouldShowInSettings)
                 {
@@ -70,11 +70,11 @@ namespace NightVision {
                 }
 
                 count++;
-                num += Constants_Draw.RowHeight + Constants_Draw.RowGap;
+                heightMarker += Constants.ROW_HEIGHT + Constants.ROW_GAP;
 
                 if (count < raceCount)
                 {
-                    Widgets.DrawLineHorizontal(rowRect.x + 6f, num - 5.5f, rowRect.width - 12f);
+                    Widgets.DrawLineHorizontal(rowRect.x + 6f, heightMarker - 5.5f, rowRect.width - 12f);
                 }
             }
 

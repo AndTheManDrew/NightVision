@@ -3,7 +3,7 @@
 namespace NightVision {
     public static class CurrentStrike
     {
-        public static float GlowFactor = Constants_Calculations.TrivialFactor;
+        public static float GlowFactor = Constants.TRIVIAL_FACTOR;
         public static float GlowDiff;
 
         public static bool SurpAtkSuccess

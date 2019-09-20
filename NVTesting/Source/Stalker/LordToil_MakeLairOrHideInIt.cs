@@ -11,7 +11,7 @@ using Verse;
 using Verse.AI;
 using Verse.AI.Group;
 
-namespace NVTesting
+namespace NVExperiments
     {
         internal class LordToil_MakeLairOrHideInIt : LordToil
             {

@@ -11,7 +11,7 @@ using Verse;
 using Verse.AI;
 using Verse.AI.Group;
 
-namespace NVTesting
+namespace NVExperiments
     {
         //Just used for testing - should assign lord in incident worker
         [UsedImplicitly]

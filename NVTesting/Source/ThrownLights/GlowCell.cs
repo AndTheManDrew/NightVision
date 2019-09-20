@@ -1,4 +1,4 @@
-﻿// Nightvision NVTesting GlowCell.cs
+﻿// Nightvision NVExperiments GlowCell.cs
 // 
 //   
 // 
@@ -6,7 +6,7 @@
 
 using UnityEngine;
 
-namespace NVTesting.ThrownLights {
+namespace NVExperiments.ThrownLights {
     public class GlowCell
     {
         public int     index;

@@ -19,24 +19,23 @@ namespace NightVision
             {
                 return range.min.ApproxEq(otherRange.min) && range.max.ApproxEq(otherRange.max);
             }
-
             return value.Equals(other);
         }
 
 
         public static bool GlowIsDarkOrBright(this float glow)
         {
-            return glow < Constants_Calculations.MinGlowNoGlow - Constants_Calculations.NVEpsilon || glow > Constants_Calculations.MaxGlowNoGlow + Constants_Calculations.NVEpsilon;
+            return GlowIsDarkness(glow) || GlowIsBright(glow);
         }
 
         public static bool GlowIsDarkness(this float glow)
         {
-            return glow < Constants_Calculations.MinGlowNoGlow - Constants_Calculations.NVEpsilon;
+            return glow < Constants.MIN_GLOW_NO_GLOW - Constants.NV_EPSILON;
         }
 
         public static bool GlowIsBright(this float glow)
         {
-            return glow > Constants_Calculations.MaxGlowNoGlow + Constants_Calculations.NVEpsilon;
+            return glow > Constants.MAX_GLOW_NO_GLOW + Constants.NV_EPSILON;
         }
 
         public static bool GlowIsTrivial(this float glow)
@@ -51,12 +50,12 @@ namespace NightVision
 
         public static bool FactorIsTrivial(this float factor)
         {
-            return factor.ApproxEq(Constants_Calculations.TrivialFactor);
+            return factor.ApproxEq(Constants.TRIVIAL_FACTOR);
         }
 
         public static bool IsTrivial(this float value)
         {
-            return Math.Abs(value) < Constants_Calculations.NVEpsilon;
+            return Math.Abs(value) < Constants.NV_EPSILON;
         }
 
         public static bool ApproxEq(this float value, float other)

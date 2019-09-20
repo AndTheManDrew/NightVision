@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+using JetBrains.Annotations;
+
 using RimWorld;
 using Verse;
 
 namespace NightVision
 {
+    
+    [UsedImplicitly]
     public class NVStatWorker_Combat : NVStatWorker
     {
         #region Overrides of NVStatWorker
@@ -40,12 +45,12 @@ namespace NightVision
 
         public override bool IsDisabledFor(Thing thing)
         {
-            return base.IsDisabledFor(thing) || !Mod.CombatStore.CombatFeaturesEnabled.Value;
+            return base.IsDisabledFor(thing) || !Settings.CombatStore.CombatFeaturesEnabled.Value;
         }
 
         public override bool ShouldShowFor(StatRequest req)
         {
-            return base.ShouldShowFor(req) || !Mod.CombatStore.CombatFeaturesEnabled.Value;
+            return base.ShouldShowFor(req) || !Settings.CombatStore.CombatFeaturesEnabled.Value;
         }
 
         #endregion

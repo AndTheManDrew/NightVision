@@ -1,4 +1,4 @@
-﻿// Nightvision NVTesting DefOfs.cs
+﻿// Nightvision NVExperiments DefOfs.cs
 // 
 // 19 03 2019
 // 
@@ -7,7 +7,7 @@
 using RimWorld;
 using Verse;
 
-namespace NVTesting.ThrownLights
+namespace NVExperiments.ThrownLights
 {
     [DefOf]
     public static class DefOfs

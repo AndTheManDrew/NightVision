@@ -19,7 +19,7 @@ namespace NightVision
                 match: rdef => rdef.race is RaceProperties race && (race.Humanlike || rdef.GetCompProperties<CompProperties_NightVision>() != null)
             );
             var RaceLightMods =
-                Mod.Store.RaceLightMods ?? new Dictionary<ThingDef, Race_LightModifiers>();
+                Settings.Store.RaceLightMods ?? new Dictionary<ThingDef, Race_LightModifiers>();
             
             foreach (ThingDef rdef in raceDefList)
             {
@@ -31,7 +31,7 @@ namespace NightVision
                 // Note: When dictionary is loaded and calls exposedata on the saved Race_LightModifiers the def & corresponding compProps are attached
             }
 
-            Mod.Store.RaceLightMods = RaceLightMods;
+            Settings.Store.RaceLightMods = RaceLightMods;
         }
 
     }

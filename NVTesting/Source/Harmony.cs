@@ -7,7 +7,7 @@ using RimWorld;
 using RimWorld.BaseGen;
 using Verse;
 
-namespace NVTesting
+namespace NVExperiments
 {
         [StaticConstructorOnStartup]
     public class NViHarmonyPatcher

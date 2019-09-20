@@ -19,7 +19,7 @@ namespace NightVision.Harmony {
                 yield return sDE;
             }
 
-            if (!Mod.Store.HediffLightMods.TryGetValue(__instance, out Hediff_LightModifiers hlm)
+            if (!Settings.Store.HediffLightMods.TryGetValue(__instance, out Hediff_LightModifiers hlm)
              || !hlm.HasAnyModifier())
             {
                 yield break;

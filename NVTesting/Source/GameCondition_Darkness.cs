@@ -2,7 +2,7 @@
 using UnityEngine;
 using Verse;
 
-namespace NVTesting
+namespace NVExperiments
 {
     public class GameCondition_Darkness : GameCondition
     {

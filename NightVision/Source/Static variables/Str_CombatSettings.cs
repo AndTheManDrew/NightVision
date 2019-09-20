@@ -8,6 +8,9 @@ using Verse;
 
 namespace NightVision
 {
+    /// <summary>
+    /// Combat stat report strings defined in xml file in nightvision/languages
+    /// </summary>
     public static class Str_CombatSettings
     {
         public static readonly string CombatEnabled = "NightVisionCombatEnabled".Translate();

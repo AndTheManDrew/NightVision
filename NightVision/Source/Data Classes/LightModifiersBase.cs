@@ -6,7 +6,9 @@
 
 using System;
 using System.Linq;
+
 using JetBrains.Annotations;
+
 using Verse;
 
 namespace NightVision
@@ -14,24 +16,24 @@ namespace NightVision
     public class LightModifiersBase : IExposable, ISaveCheck
     {
         public static LightModifiersBase NVLightModifiers = new LightModifiersBase
-                                                            {
-                                                                Offsets = new[]
-                                                                          {
-                                                                              Constants_Calculations.NVDefaultOffsets[0],
-                                                                              Constants_Calculations.NVDefaultOffsets[1]
-                                                                          },
-                                                                Initialised = true
-                                                            };
+        {
+            Offsets = new[]
+            {
+                Constants.NVDefaultOffsets[0],
+                Constants.NVDefaultOffsets[1]
+            },
+            Initialised = true
+        };
 
         public static LightModifiersBase PSLightModifiers = new LightModifiersBase
-                                                            {
-                                                                Offsets = new[]
-                                                                          {
-                                                                              Constants_Calculations.PSDefaultOffsets[0],
-                                                                              Constants_Calculations.PSDefaultOffsets[1]
-                                                                          },
-                                                                Initialised = true
-                                                            };
+        {
+            Offsets = new[]
+            {
+                Constants.PSDefaultOffsets[0],
+                Constants.PSDefaultOffsets[1]
+            },
+            Initialised = true
+        };
 
         public bool Initialised;
 
@@ -41,24 +43,24 @@ namespace NightVision
 
         [UsedImplicitly]
         public LightModifiersBase(
-                        bool isPhotosensitiveLm,
-                        bool isNightVisionLm
-                    )
+            bool isPhotosensitiveLm,
+            bool isNightVisionLm
+        )
         {
             if (isPhotosensitiveLm)
             {
-                LightModifiersBase.PSLightModifiers = this;
+                PSLightModifiers = this;
             }
             else if (isNightVisionLm)
 
             {
-                LightModifiersBase.NVLightModifiers = this;
+                NVLightModifiers = this;
             }
         }
 
         public virtual float this[
-                        int index
-                    ]
+            int index
+        ]
         {
             get => Offsets[index];
             set => Offsets[index] = value;
@@ -77,14 +79,14 @@ namespace NightVision
         {
             get
             {
-                if (this == LightModifiersBase.NVLightModifiers)
+                if (this == NVLightModifiers)
                 {
-                    return Constants_Calculations.NVDefaultOffsets;
+                    return Constants.NVDefaultOffsets;
                 }
 
-                if (this == LightModifiersBase.PSLightModifiers)
+                if (this == PSLightModifiers)
                 {
-                    return Constants_Calculations.PSDefaultOffsets;
+                    return Constants.PSDefaultOffsets;
                 }
 
                 return new float[2];
@@ -104,14 +106,14 @@ namespace NightVision
             {
                 if (Offsets == null)
                 {
-                    if (this == LightModifiersBase.NVLightModifiers)
+                    if (this == NVLightModifiers)
                     {
-                        Offsets = Constants_Calculations.NVDefaultOffsets.ToArray();
+                        Offsets = Constants.NVDefaultOffsets.ToArray();
                     }
 
-                    else if (this == LightModifiersBase.PSLightModifiers)
+                    else if (this == PSLightModifiers)
                     {
-                        Offsets = Constants_Calculations.PSDefaultOffsets.ToArray();
+                        Offsets = Constants.PSDefaultOffsets.ToArray();
                     }
                     else
                     {
@@ -126,100 +128,95 @@ namespace NightVision
         public virtual bool ShouldBeSaved() => true;
 
         public virtual float GetEffectAtGlow(
-                        float glow,
-                        int   numEyesNormalisedFor = 1
-                    )
+            float glow,
+            int numEyesNormalisedFor = 1
+        )
         {
             if (glow < 0.001)
             {
                 return (float) Math.Round(
-                                          this[0] / numEyesNormalisedFor,
-                                          Constants_Calculations.NumberOfDigits,
-                                          Constants_Calculations.Rounding
-                                         );
+                    this[0] / numEyesNormalisedFor,
+                    Constants.NUMBER_OF_DIGITS,
+                    Constants.ROUNDING
+                );
             }
 
             if (glow > 0.999)
             {
                 return (float) Math.Round(
-                                          this[1] / numEyesNormalisedFor,
-                                          Constants_Calculations.NumberOfDigits,
-                                          Constants_Calculations.Rounding
-                                         );
+                    this[1] / numEyesNormalisedFor,
+                    Constants.NUMBER_OF_DIGITS,
+                    Constants.ROUNDING
+                );
             }
 
             if (glow.GlowIsDarkness())
             {
                 return (float) Math.Round(
-                                          this[0] / numEyesNormalisedFor * (0.3f - glow) / 0.3f,
-                                          Constants_Calculations.NumberOfDigits,
-                                          Constants_Calculations.Rounding
-                                         );
+                    this[0] / numEyesNormalisedFor * (0.3f - glow) / 0.3f,
+                    Constants.NUMBER_OF_DIGITS,
+                    Constants.ROUNDING
+                );
             }
 
             if (glow.GlowIsBright())
             {
                 return (float) Math.Round(
-                                          this[1] / numEyesNormalisedFor * (glow - 0.7f) / 0.3f,
-                                          Constants_Calculations.NumberOfDigits,
-                                          Constants_Calculations.Rounding
-                                         );
+                    this[1] / numEyesNormalisedFor * (glow - 0.7f) / 0.3f,
+                    Constants.NUMBER_OF_DIGITS,
+                    Constants.ROUNDING
+                );
             }
 
             return 0;
         }
 
         public static float[] GetCapsAtGlow(
-                        float glow
-                    )
+            float glow
+        )
         {
             float mincap;
             float maxcap;
             float nvcap;
             float pscap;
-            var caps = Mod.Store.MultiplierCaps;
+            var caps = Settings.Store.MultiplierCaps;
+
             if (glow.GlowIsDarkness())
             {
-                mincap = (caps.min - Constants_Calculations.DefaultZeroLightMultiplier)
-                         * (0.3f                     - glow)
-                         / 0.3f;
+                mincap = (caps.min - Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER)
+                       * (0.3f - glow)
+                       / 0.3f;
 
-                maxcap = (caps.max - Constants_Calculations.DefaultZeroLightMultiplier)
-                         * (0.3f                     - glow)
-                         / 0.3f;
+                maxcap = (caps.max - Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER)
+                       * (0.3f - glow)
+                       / 0.3f;
 
-                pscap = LightModifiersBase.PSLightModifiers[0] * (0.3f - glow) / 0.3f;
-                nvcap = LightModifiersBase.NVLightModifiers[0] * (0.3f - glow) / 0.3f;
+                pscap = PSLightModifiers[0] * (0.3f - glow) / 0.3f;
+                nvcap = NVLightModifiers[0] * (0.3f - glow) / 0.3f;
             }
             else
             {
-                mincap = (caps.min - Constants_Calculations.DefaultFullLightMultiplier)
-                         * (glow                     - 0.7f)
-                         / 0.3f;
+                mincap = (caps.min - Constants.DEFAULT_FULL_LIGHT_MULTIPLIER)
+                       * (glow - 0.7f)
+                       / 0.3f;
 
-                maxcap = (caps.max - Constants_Calculations.DefaultFullLightMultiplier)
-                         * (glow                     - 0.7f)
-                         / 0.3f;
+                maxcap = (caps.max - Constants.DEFAULT_FULL_LIGHT_MULTIPLIER)
+                       * (glow - 0.7f)
+                       / 0.3f;
 
-                pscap = LightModifiersBase.PSLightModifiers[1] * (glow - 0.7f) / 0.3f;
-                nvcap = LightModifiersBase.NVLightModifiers[1] * (glow - 0.7f) / 0.3f;
+                pscap = PSLightModifiers[1] * (glow - 0.7f) / 0.3f;
+                nvcap = NVLightModifiers[1] * (glow - 0.7f) / 0.3f;
             }
-            
-            return new[]
-                   {
-                       (float) Math.Round(maxcap, Constants_Calculations.NumberOfDigits, Constants_Calculations.Rounding)
-                       ,
-                        ((float) Math.Round(mincap, Constants_Calculations.NumberOfDigits, Constants_Calculations.Rounding))
-                       ,
-                        (float)Math.Round(nvcap, Constants_Calculations.NumberOfDigits, Constants_Calculations.Rounding)
-                       , 
-                       (float)Math.Round(pscap, Constants_Calculations.NumberOfDigits, Constants_Calculations.Rounding)
-                       
-                   };
 
+            return new[]
+            {
+                (float) Math.Round(maxcap, Constants.NUMBER_OF_DIGITS, Constants.ROUNDING),
+                ((float) Math.Round(mincap, Constants.NUMBER_OF_DIGITS, Constants.ROUNDING)),
+                (float) Math.Round(nvcap, Constants.NUMBER_OF_DIGITS, Constants.ROUNDING),
+                (float) Math.Round(pscap, Constants.NUMBER_OF_DIGITS, Constants.ROUNDING)
+            };
         }
 
-        //public bool HasAnyModifier() => Math.Abs(this[0]) > 0.001 && <- HAHAHAHA took me too long to find that Math.Abs(this[1]) > 0.001;
         public bool HasAnyModifier() => Math.Abs(this[0]) > 0.001 || Math.Abs(this[1]) > 0.001;
 
         public bool HasAnyCustomModifier() => Math.Abs(Offsets[0]) > 0.001 || Math.Abs(Offsets[1]) > 0.001;
@@ -228,14 +225,14 @@ namespace NightVision
         public bool IsCustom() => Setting == VisionType.NVCustom;
 
         public void ChangeSetting(
-                        VisionType newsetting
-                    )
+            VisionType newsetting
+        )
         {
             if (Setting != newsetting)
             {
                 if (newsetting == VisionType.NVCustom && !HasAnyCustomModifier())
                 {
-                    float[] defaultValues = this.DefaultOffsets;
+                    float[] defaultValues = DefaultOffsets;
 
                     if (Math.Abs(defaultValues[0]) > 0.001 && Math.Abs(defaultValues[1]) > 0.001)
                     {
@@ -243,16 +240,23 @@ namespace NightVision
                     }
                     else if (Setting == VisionType.NVNightVision)
                     {
-                        Offsets = LightModifiersBase.NVLightModifiers.Offsets.ToArray();
+                        Offsets = NVLightModifiers.Offsets.ToArray();
                     }
                     else if (Setting == VisionType.NVPhotosensitivity)
                     {
-                        Offsets = LightModifiersBase.PSLightModifiers.Offsets.ToArray();
+                        Offsets = PSLightModifiers.Offsets.ToArray();
                     }
                 }
             }
 
             Setting = newsetting;
+        }
+
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return $"LightMod::[ 0%: {Offsets[0]}, 100%: {Offsets[1]}]";
         }
     }
 }

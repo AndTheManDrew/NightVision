@@ -55,13 +55,13 @@ namespace NightVision
             {
                 if (_naturalLightModifiers == null)
                 {
-                    _naturalLightModifiers = Mod.Store.RaceLightMods.TryGetValue(ParentPawn.def);
+                    _naturalLightModifiers = Settings.Store.RaceLightMods.TryGetValue(ParentPawn.def);
 
                     if (_naturalLightModifiers == null)
                     {
                         _naturalLightModifiers =
                             new Race_LightModifiers(ParentPawn.def);
-                        Mod.Store.RaceLightMods[ParentPawn.def] = _naturalLightModifiers;
+                        Settings.Store.RaceLightMods[ParentPawn.def] = _naturalLightModifiers;
 
                         Log.Message(
                             $"Natural Light Modifiers could not be found for {ParentPawn} of race: {ParentPawn.def}. An entry has been generated."
@@ -160,7 +160,7 @@ namespace NightVision
                     _zeroLightModifier = CalcZeroLightModifier();
                 }
 
-                if (ApparelGrantsNV && _zeroLightModifier + Constants_Calculations.NVEpsilon
+                if (ApparelGrantsNV && _zeroLightModifier + Constants.NV_EPSILON
                   < LightModifiersBase.NVLightModifiers[0])
                 {
                     return LightModifiersBase.NVLightModifiers[0];
@@ -195,7 +195,7 @@ namespace NightVision
                     _fullLightModifier = CalcFullLightModifier();
                 }
 
-                if (ApparelNullsPS && _fullLightModifier + Constants_Calculations.NVEpsilon < 0f)
+                if (ApparelNullsPS && _fullLightModifier + Constants.NV_EPSILON < 0f)
                 {
                     return 0f;
                 }
@@ -225,8 +225,8 @@ namespace NightVision
             //If glow is approx. 0%
             if (glow.IsTrivial())
             {
-                return (float) Math.Round(Constants_Calculations.DefaultZeroLightMultiplier + ZeroLightModifier,
-                    Constants_Calculations.NumberOfDigits);
+                return (float) Math.Round(Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER + ZeroLightModifier,
+                    Constants.NUMBER_OF_DIGITS);
             }
             //If glow is approx. 100% and the pawns full light modifier is not approx 0
 
@@ -235,29 +235,29 @@ namespace NightVision
                 if (FullLightModifier.IsNonTrivial())
                 {
                     return (float) Math.Round(
-                        Constants_Calculations.DefaultFullLightMultiplier + FullLightModifier,
-                        Constants_Calculations.NumberOfDigits);
+                        Constants.DEFAULT_FULL_LIGHT_MULTIPLIER + FullLightModifier,
+                        Constants.NUMBER_OF_DIGITS);
                 }
 
-                return Constants_Calculations.TrivialFactor;
+                return Constants.TRIVIAL_FACTOR;
             }
             //Else linear interpolation
 
             if (glow.GlowIsDarkness())
             {
                 return (float) Math.Round(
-                    1f + (Constants_Calculations.MinGlowNoGlow - glow) * (ZeroLightModifier - 0.2f) / 0.3f,
-                    Constants_Calculations.NumberOfDigits);
+                    1f + (Constants.MIN_GLOW_NO_GLOW - glow) * (ZeroLightModifier - 0.2f) / 0.3f,
+                    Constants.NUMBER_OF_DIGITS);
             }
 
             if (glow.GlowIsBright() && FullLightModifier.IsNonTrivial())
             {
                 return (float) Math.Round(
-                    1f + (glow - Constants_Calculations.MaxGlowNoGlow) * FullLightModifier / 0.3f,
-                    Constants_Calculations.NumberOfDigits);
+                    1f + (glow - Constants.MAX_GLOW_NO_GLOW) * FullLightModifier / 0.3f,
+                    Constants.NUMBER_OF_DIGITS);
             }
 
-            return Constants_Calculations.TrivialFactor;
+            return Constants.TRIVIAL_FACTOR;
         }
 
         public override void CompTickRare()
@@ -391,7 +391,7 @@ namespace NightVision
                 return;
             }
 
-            var allSightHediffs = Mod.Store.AllSightAffectingHediffs;
+            var allSightHediffs = Settings.Store.AllSightAffectingHediffs;
 
             if (part != null)
             {
@@ -413,7 +413,7 @@ namespace NightVision
                         //Check if there is a setting for it
                         HediffDef hediffDef = hediff.def;
 
-                        if (Mod.Store.HediffLightMods.ContainsKey(hediffDef))
+                        if (Settings.Store.HediffLightMods.ContainsKey(hediffDef))
                         {
                             if (hediffDef.addedPartProps is AddedBodyPartProps abpp
                              && abpp.solid)
@@ -477,7 +477,7 @@ namespace NightVision
                 return;
             }
 
-            if (Mod.Store.NVApparel.TryGetValue(apparel.def, out ApparelVisionSetting value))
+            if (Settings.Store.NVApparel.TryGetValue(apparel.def, out ApparelVisionSetting value))
             {
                 ApparelGrantsNV |= value.GrantsNV;
                 ApparelNullsPS |= value.NullifiesPS;
@@ -485,7 +485,7 @@ namespace NightVision
                 ClearPsych();
             }
             //In case the user changes settings in game
-            else if (Mod.Store.AllEyeCoveringHeadgearDefs.Contains(apparel.def))
+            else if (Settings.Store.AllEyeCoveringHeadgearDefs.Contains(apparel.def))
             {
                 PawnsNVApparel.Add(apparel);
             }
@@ -494,22 +494,20 @@ namespace NightVision
         public void RemoveApparel(
             Apparel apparel)
         {
-            if (ParentPawn.Dead || !ParentPawn.Spawned || apparel == null)
+            if (ParentPawn.Dead || !ParentPawn.Spawned || apparel == null || !PawnsNVApparel.Contains(apparel))
             {
                 return;
             }
 
-            if (PawnsNVApparel.Contains(apparel))
+            PawnsNVApparel.Remove(apparel);
+
+            if (!(ApparelGrantsNV || ApparelNullsPS))
             {
-                PawnsNVApparel.Remove(apparel);
-
-                if (!(ApparelGrantsNV || ApparelNullsPS))
-                {
-                    return;
-                }
-
-                QuickRecheckApparel();
+                return;
             }
+
+            QuickRecheckApparel();
+        
         }
 
         private void CalculateHediffMod()
@@ -529,7 +527,7 @@ namespace NightVision
                     continue;
                 }
 
-                var hediffLightMods = Mod.Store.HediffLightMods;
+                var hediffLightMods = Settings.Store.HediffLightMods;
 
                 foreach (HediffDef hediffDef in value)
                 {
@@ -575,7 +573,7 @@ namespace NightVision
 
         private float CalcZeroLightModifier()
         {
-            float mod = Constants_Calculations.DefaultZeroLightMultiplier;
+            float mod = Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER;
             var setting = (byte) NaturalLightModifiers.IntSetting;
 
             switch (setting)
@@ -617,20 +615,20 @@ namespace NightVision
 
             if (CanCheat)
             {
-                return (float) Math.Round(mod - Constants_Calculations.DefaultZeroLightMultiplier,
-                    Constants_Calculations.NumberOfDigits);
+                return (float) Math.Round(mod - Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER,
+                    Constants.NUMBER_OF_DIGITS);
             }
 
-            var caps = Mod.Store.MultiplierCaps;
+            var caps = Settings.Store.MultiplierCaps;
             return (float) Math.Round(
                 Mathf.Clamp(mod, caps.min, caps.max)
-              - Constants_Calculations.DefaultZeroLightMultiplier,
-                Constants_Calculations.NumberOfDigits);
+              - Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER,
+                Constants.NUMBER_OF_DIGITS);
         }
 
         private float CalcFullLightModifier()
         {
-            float mod = Constants_Calculations.DefaultFullLightMultiplier;
+            float mod = Constants.DEFAULT_FULL_LIGHT_MULTIPLIER;
             var setting = (byte) NaturalLightModifiers.IntSetting;
 
             switch (setting)
@@ -672,15 +670,15 @@ namespace NightVision
 
             if (CanCheat)
             {
-                return (float) Math.Round(mod - Constants_Calculations.DefaultFullLightMultiplier,
-                    Constants_Calculations.NumberOfDigits);
+                return (float) Math.Round(mod - Constants.DEFAULT_FULL_LIGHT_MULTIPLIER,
+                    Constants.NUMBER_OF_DIGITS);
             }
 
-            var caps = Mod.Store.MultiplierCaps;
+            var caps = Settings.Store.MultiplierCaps;
             return (float) Math.Round(
                 Mathf.Clamp(mod, caps.min, caps.max)
-              - Constants_Calculations.DefaultFullLightMultiplier,
-                Constants_Calculations.NumberOfDigits);
+              - Constants.DEFAULT_FULL_LIGHT_MULTIPLIER,
+                Constants.NUMBER_OF_DIGITS);
         }
 
         /// <summary>
@@ -735,8 +733,8 @@ namespace NightVision
                 return;
             }
 
-            var nvApparel = Mod.Store.NVApparel;
-            var allEyeGear = Mod.Store.AllEyeCoveringHeadgearDefs;
+            var nvApparel = Settings.Store.NVApparel;
+            var allEyeGear = Settings.Store.AllEyeCoveringHeadgearDefs;
 
             foreach (Apparel apparel in pawnsApparel)
             {
@@ -746,7 +744,7 @@ namespace NightVision
                     ApparelNullsPS |= value.NullifiesPS;
                     PawnsNVApparel.Add(apparel);
                 }
-                //TODO rethink settings changing support
+                // proof against night vision settings being changed during play??
                 else if (allEyeGear.Contains(apparel.def))
                 {
                     PawnsNVApparel.Add(apparel);
@@ -763,7 +761,7 @@ namespace NightVision
         {
             ApparelGrantsNV = false;
             ApparelNullsPS = false;
-            var nvApparel = Mod.Store.NVApparel;
+            var nvApparel = Settings.Store.NVApparel;
 
             foreach (Apparel apparel in PawnsNVApparel)
             {
@@ -821,7 +819,7 @@ namespace NightVision
                     BrightLightPsych = Classifier.ClassifyModifier(FullLightModifier, false);
                 }
 
-                return TicksSinceLastDark > Constants_Calculations.ThoughtActiveTicksPast
+                return TicksSinceLastDark > Constants.THOUGHT_ACTIVE_TICKS_PAST
                     && BrightLightPsych == VisionType.NVPhotosensitivity;
             }
         }

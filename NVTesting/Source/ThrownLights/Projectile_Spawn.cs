@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Verse;
 
-namespace NVTesting.ThrownLights
+namespace NVExperiments.ThrownLights
 {
     public class ProjectileSpawn_ModExt : DefModExtension
     {

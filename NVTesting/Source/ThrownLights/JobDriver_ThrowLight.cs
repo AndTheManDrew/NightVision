@@ -1,4 +1,4 @@
-﻿// Nightvision NVTesting JobDriver_ThrowLight.cs
+﻿// Nightvision NVExperiments JobDriver_ThrowLight.cs
 // 
 // 19 03 2019
 // 
@@ -9,7 +9,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace NVTesting.ThrownLights
+namespace NVExperiments.ThrownLights
 {
     public class JobDriver_ThrowLight : JobDriver_AttackStatic
     {

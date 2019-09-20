@@ -27,8 +27,8 @@ namespace NightVision
         public  Dictionary<HediffDef, Hediff_LightModifiers> HediffLightMods = new Dictionary<HediffDef, Hediff_LightModifiers>();
 
         public  FloatRange MultiplierCaps = new FloatRange(
-            min: Constants_Calculations.DefaultMinCap,
-            max: Constants_Calculations.DefaultMaxCap
+            min: Constants.DEFAULT_MIN_CAP,
+            max: Constants.DEFAULT_MAX_CAP
         );
 
         public  Dictionary<ThingDef, ApparelVisionSetting> NVApparel = new Dictionary<ThingDef, ApparelVisionSetting>();
@@ -85,7 +85,7 @@ namespace NightVision
                 {
                     LightModifiersBase.PSLightModifiers = new LightModifiersBase
                                                           {
-                                                              Offsets = Constants_Calculations.PSDefaultOffsets.ToArray(), Initialised = true
+                                                              Offsets = Constants.PSDefaultOffsets.ToArray(), Initialised = true
                                                           };
                 }
 
@@ -93,14 +93,15 @@ namespace NightVision
                 {
                     LightModifiersBase.NVLightModifiers = new LightModifiersBase
                                                           {
-                                                              Offsets = Constants_Calculations.NVDefaultOffsets.ToArray(), Initialised = true
+                                                              Offsets = Constants.NVDefaultOffsets.ToArray(), Initialised = true
                                                           };
                 }
             }
-
-            Scribes.LightModifiersDict(dictionary: ref RaceLightMods,   label: "Races");
-            Scribes.LightModifiersDict(dictionary: ref HediffLightMods, label: "Hediffs");
-            Scribes.ApparelDict(dictionary: ref NVApparel);
+            var nullRef  = Scribes.LightModifiersDict(dictionary: ref RaceLightMods,   label: "Races");
+            nullRef |= Scribes.LightModifiersDict(dictionary: ref HediffLightMods, label: "Hediffs");
+            nullRef |= Scribes.ApparelDict(dictionary: ref NVApparel);
+            NullRefWhenLoading = nullRef;
+            //FieldClearer.ResetSettingsDependentFields();
         }
 
         public  void ResetAllSettings()
@@ -110,8 +111,8 @@ namespace NightVision
             CustomCapsEnabled = false;
 
             MultiplierCaps = new FloatRange(
-                min: Constants_Calculations.DefaultMinCap,
-                max: Constants_Calculations.DefaultMaxCap
+                min: Constants.DEFAULT_MIN_CAP,
+                max: Constants.DEFAULT_MAX_CAP
             );
 
             NVEnabledForCE                              = true;
@@ -120,7 +121,7 @@ namespace NightVision
 
             LightModifiersBase.NVLightModifiers.Offsets = LightModifiersBase.NVLightModifiers.DefaultOffsets.ToArray();
 
-            Mod.CombatStore.LoadDefaultSettings();
+            Settings.CombatStore.LoadDefaultSettings();
 
             Log.Message(text: "NightVision.Storage.ResetAllSettings: Clearing Dictionaries");
             RaceLightMods              = null;
@@ -133,18 +134,18 @@ namespace NightVision
             var initialiser = new Initialiser();
             initialiser.FindDefsToAddNightVisionTo();
             
-            Mod.Cache.Reset();
+            Settings.Cache.Reset();
             FieldClearer.ResetSettingsDependentFields();
         }
 
         public void SetMinMultiplierCap(float newMin)
         {
-            MultiplierCaps.min = (float) Math.Round(newMin / 100, Constants_Calculations.NumberOfDigits);
+            MultiplierCaps.min = (float) Math.Round(newMin / 100, Constants.NUMBER_OF_DIGITS);
         }
         
         public void SetMaxMultiplierCap(float newMax)
         {
-            MultiplierCaps.max = (float) Math.Round(newMax / 100, Constants_Calculations.NumberOfDigits);
+            MultiplierCaps.max = (float) Math.Round(newMax / 100, Constants.NUMBER_OF_DIGITS);
         }
     }
 }

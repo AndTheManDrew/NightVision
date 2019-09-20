@@ -1,4 +1,4 @@
-﻿// Nightvision NVTesting MovingGlowFlooder_Patch.cs
+﻿// Nightvision NVExperiments MovingGlowFlooder_Patch.cs
 // 
 // 20 03 2019
 // 
@@ -8,7 +8,7 @@ using System.Diagnostics;
 using Harmony;
 using Verse;
 
-namespace NVTesting.ThrownLights
+namespace NVExperiments.ThrownLights
 {
     [HarmonyPatch(typeof(GlowGrid), nameof(GlowGrid.GlowGridUpdate_First))]
     public static class MovingGlowFlooder_Patch

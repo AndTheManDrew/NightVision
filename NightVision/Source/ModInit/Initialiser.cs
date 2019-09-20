@@ -22,14 +22,10 @@ namespace NightVision
     {
         public void Startup()
         {
-            //FindSettingsDependentFields();
             FieldClearer.FindSettingsDependentFields();
-
             FindDefsToAddNightVisionTo();
             AddNightVisionMarkerToVanillaResearch();
             AddTapetumRecipeToAnimals();
-
-
         }
 
         public void FindDefsToAddNightVisionTo()
@@ -37,38 +33,6 @@ namespace NightVision
             FindAllValidHediffs();
             FindAllValidRaces();
             FindAllValidApparel();
-        }
-
-        
-        public void FindSettingsDependentFields()
-        {
-            /*
-
-            FieldClearer.SettingsDependentFields = GenTypes.AllTypesWithAttribute<NVHasSettingsDependentFieldAttribute>().SelectMany(
-                t => AccessTools.GetDeclaredFields(t).FindAll(fi => fi.HasAttribute<NVSettingsDependentFieldAttribute>())
-            ).ToList();
-            */
-
-            
-            var traverses = new List<Traverse>();
-
-            var markedTypes = GenTypes.AllTypesWithAttribute<NVHasSettingsDependentFieldAttribute>();
-            foreach (var type in markedTypes)
-            {
-                var fields = AccessTools.GetDeclaredFields(type)
-                    .FindAll(fi => fi.HasAttribute<NVHasSettingsDependentFieldAttribute>());
-
-                foreach (var info in fields)
-                {
-                    var traverse = new Traverse(type);
-                    traverse.Field(info.Name);
-                    
-                    traverses.Add(traverse);
-
-                }
-            }
-
-            FieldClearer.SettingsDependentFieldTraverses = traverses;
         }
     }
 }

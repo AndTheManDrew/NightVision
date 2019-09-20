@@ -1,4 +1,4 @@
-﻿// Nightvision NVTesting Verb_ThrowLight.cs
+﻿// Nightvision NVExperiments Verb_ThrowLight.cs
 // 
 // 19 03 2019
 // 
@@ -6,7 +6,7 @@
 
 using Verse;
 
-namespace NVTesting.ThrownLights
+namespace NVExperiments.ThrownLights
 {
     public class Verb_ThrowLight : Verb_LaunchProjectile
     {

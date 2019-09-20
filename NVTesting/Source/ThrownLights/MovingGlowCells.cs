@@ -1,4 +1,4 @@
-﻿// Nightvision NVTesting MovingGlowCells.cs
+﻿// Nightvision NVExperiments MovingGlowCells.cs
 // 
 // 22 03 2019
 // 
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using Verse;
 
-namespace NVTesting.ThrownLights
+namespace NVExperiments.ThrownLights
 {
     public class MovingGlowCells
     {

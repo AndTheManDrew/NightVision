@@ -82,9 +82,9 @@
     <comps>
       <li Class="CompProperties_Forbiddable" />
       <li>
-        <compClass>NVTesting.ThrownLights.CompEquipable_SecondaryThrown</compClass>
+        <compClass>NVExperiments.ThrownLights.CompEquipable_SecondaryThrown</compClass>
       </li>
-      <li Class="NVTesting.ThrownLights.CompProps_ChangeableProjectile_Thrown">
+      <li Class="NVExperiments.ThrownLights.CompProps_ChangeableProjectile_Thrown">
         <maxAmmo>5</maxAmmo>
       </li>
     </comps>
@@ -95,7 +95,7 @@
     <altitudeLayer>Projectile</altitudeLayer>
     <defName>Proj_Torch</defName>
     <label>torch</label>
-    <thingClass>NVTesting.ThrownLights.Projectile_Spawn</thingClass>
+    <thingClass>NVExperiments.ThrownLights.Projectile_Spawn</thingClass>
     <graphicData>
       <texPath>Things/Projectile/Grenade</texPath>
       <graphicClass>Graphic_Single</graphicClass>
@@ -108,7 +108,7 @@
       <flyOverhead>false</flyOverhead>
     </projectile>
     <modExtensions>
-      <li Class="NVTesting.ThrownLights.ProjectileSpawn_ModExt">
+      <li Class="NVExperiments.ThrownLights.ProjectileSpawn_ModExt">
         <thingToSpawn>ThrownTorch</thingToSpawn>
       </li>
     </modExtensions>

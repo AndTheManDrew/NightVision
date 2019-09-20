@@ -75,8 +75,8 @@ namespace NightVision
             
             allSightAffectingHediffs.UnionWith(other: allEyeHediffs);
 
-            Mod.Store.AllSightAffectingHediffs = allSightAffectingHediffs;
-            Mod.Store.AllEyeHediffs = allEyeHediffs;
+            Settings.Store.AllSightAffectingHediffs = allSightAffectingHediffs;
+            Settings.Store.AllEyeHediffs = allEyeHediffs;
 
             InitialiseHediffLightMods(allSightAffectingHediffs.ToList(), allEyeHediffs.ToList());
         }
@@ -89,7 +89,7 @@ namespace NightVision
         /// <param name="eyeHediffs"></param>
         private void InitialiseHediffLightMods(List<HediffDef> sightAffectingHediffs, List<HediffDef> eyeHediffs)
         {
-            var hediffLightMods = Mod.Store.HediffLightMods ?? new Dictionary<HediffDef, Hediff_LightModifiers>();
+            var hediffLightMods = Settings.Store.HediffLightMods ?? new Dictionary<HediffDef, Hediff_LightModifiers>();
 
             var sightNotEyeHediffs = sightAffectingHediffs.Except(eyeHediffs);
             
@@ -142,7 +142,7 @@ namespace NightVision
                 }
             }
 
-            Mod.Store.HediffLightMods = hediffLightMods;
+            Settings.Store.HediffLightMods = hediffLightMods;
         }
 
 

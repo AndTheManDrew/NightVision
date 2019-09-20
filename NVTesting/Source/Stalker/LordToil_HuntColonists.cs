@@ -1,6 +1,6 @@
 ﻿using Verse.AI.Group;
 
-namespace NVTesting
+namespace NVExperiments
     {
         internal class LordToil_HuntColonists : LordToil
             {

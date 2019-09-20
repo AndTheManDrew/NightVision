@@ -8,7 +8,7 @@ using Verse;
 using Verse.AI;
 using Verse.Sound;
 
-namespace NVTesting.ThrownLights
+namespace NVExperiments.ThrownLights
 {
     class VerbTarget_ThrownLight : Command_VerbTarget
     {

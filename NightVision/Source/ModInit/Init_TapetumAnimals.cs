@@ -15,16 +15,19 @@ namespace NightVision
 {
     public partial class Initialiser
     {
+        private const int EXPECTED_NUM_ANIMALS = 4;
+        
+        
         //Try to dynamically inject tapetum into large predators ensuring coverage of as many biomes as possible
         //Fallsback to adding to the same animals as vanilla rimworld
         public void AddTapetumRecipeToAnimals()
         {
             var                bestAnimals     = new List<ThingDef>();
-            ResearchProjectDef tapetumResearch = ResearchProjectDef.Named(defName: "TapetumImplant");
+            var tapetumResearch = ResearchProjectDef.Named(defName: "TapetumImplant");
             var                descAppendage   = new StringBuilder();
 
 
-            foreach (BiomeDef biome in DefDatabase<BiomeDef>.AllDefs)
+            foreach (var biome in DefDatabase<BiomeDef>.AllDefs)
             {
                 try
                 {
@@ -41,7 +44,7 @@ namespace NightVision
                         continue;
                     }
 
-                    ThingDef bestAnimal = possibleAnimals.Aggregate(
+                    var bestAnimal = possibleAnimals.Aggregate(
                         func: (best, next) => best.RaceProps.baseBodySize > next.RaceProps.baseBodySize ? best : next
                     ).race;
 
@@ -56,11 +59,11 @@ namespace NightVision
                 }
             }
 
-            //Comment: 4 is the expected number of animals in vanilla TODO review hack
-            if (bestAnimals.Count < 4)
+            //Comment: 4 is the expected number of animals in vanilla
+            if (bestAnimals.Count < EXPECTED_NUM_ANIMALS)
             {
                 var fallback = FallbackAnimals();
-                foreach (ThingDef animal in fallback)
+                foreach (var animal in fallback)
                 {
                     bestAnimals.AddDistinct(animal);
                 }

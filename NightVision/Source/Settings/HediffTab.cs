@@ -17,8 +17,8 @@ namespace NightVision {
 
         public void DrawTab(Rect inRect)
         {
-            var cache = Mod.Cache;
-            var store = Mod.Store;
+            var cache = Settings.Cache;
+            var store = Settings.Store;
             int hediffcount = cache.GetAllHediffs.Count;
 
             if (_numberOfCustomHediffs == null)
@@ -42,11 +42,11 @@ namespace NightVision {
                 inRect.y,
                 inRect.width * 0.9f,
                 hediffcount
-                * (Constants_Draw.RowHeight + Constants_Draw.RowGap)
+                * (Constants.ROW_HEIGHT + Constants.ROW_GAP)
                 + (float) _numberOfCustomHediffs * 100f
             );
 
-            var rowRect = new Rect(inRect.x + 6f, num, inRect.width - 12f, Constants_Draw.RowHeight);
+            var rowRect = new Rect(inRect.x + 6f, num, inRect.width - 12f, Constants.ROW_HEIGHT);
             Widgets.BeginScrollView(inRect, ref _hediffScrollPosition, viewRect);
 
             for (var i = 0; i < hediffcount; i++)
@@ -87,13 +87,13 @@ namespace NightVision {
                     }
                 }
 
-                num += Constants_Draw.RowHeight + Constants_Draw.RowGap;
+                num += Constants.ROW_HEIGHT + Constants.ROW_GAP;
 
                 if (i < hediffcount)
                 {
                     Widgets.DrawLineHorizontal(
                         rowRect.x     + 6f,
-                        num           - (Constants_Draw.RowGap / 2 - 0.5f),
+                        num           - (Constants.ROW_GAP / 2 - 0.5f),
                         rowRect.width - 12f
                     );
                 }

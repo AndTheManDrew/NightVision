@@ -23,8 +23,8 @@ namespace NightVision
         public HediffCompProperties_NightVision() => compClass = typeof(HediffComp_NightVision);
 
         public bool IsDefault()
-            => Math.Abs(ZeroLightMod)    < Constants_Calculations.NVEpsilon
-               && Math.Abs(FullLightMod) < Constants_Calculations.NVEpsilon
+            => Math.Abs(ZeroLightMod)    < Constants.NV_EPSILON
+               && Math.Abs(FullLightMod) < Constants.NV_EPSILON
                && !(GrantsNightVision || GrantsPhotosensitivity);
     }
 }

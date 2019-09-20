@@ -13,17 +13,17 @@ namespace NightVision.Harmony {
         {
             if (__result > 0.999f || !(__instance.CasterPawn is Pawn pawn) || !(pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp))
             {
-                CurrentStrike.GlowFactor = Constants_Calculations.TrivialFactor;
+                CurrentStrike.GlowFactor = Constants.TRIVIAL_FACTOR;
                 CurrentStrike.GlowDiff   = 0f;
 
                 return;
             }
 
-            float glow = pawn.Map != null? GlowFor.GlowAt(pawn.Map, target.Cell) : Constants_Calculations.TrivialGlow;
+            float glow = pawn.Map != null? GlowFor.GlowAt(pawn.Map, target.Cell) : Constants.TRIVIAL_GLOW;
 
             if (!glow.GlowIsDarkOrBright())
             {
-                CurrentStrike.GlowFactor = Constants_Calculations.TrivialFactor;
+                CurrentStrike.GlowFactor = Constants.TRIVIAL_FACTOR;
                 CurrentStrike.GlowDiff   = 0f;
 
                 return;

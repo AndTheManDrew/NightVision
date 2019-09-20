@@ -10,6 +10,9 @@ using Verse;
 
 namespace NightVision
 {
+    /// <summary>
+    /// Textures for the mod settings menu
+    /// </summary>
     [StaticConstructorOnStartup]
     [UsedImplicitly]
     public class IndicatorTex

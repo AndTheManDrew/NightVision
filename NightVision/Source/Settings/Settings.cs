@@ -13,14 +13,18 @@ namespace NightVision
 {
     public class Settings : ModSettings
     {
-        private bool initialised;
+        private bool _isWindowSetup;
         public  bool CEDetected = false;
 
+        public static Settings Instance;
 
-        public Storage Store;
-        public Storage_Combat CombatStore;
-        public SettingsCache Cache;
+        public static Storage Store => Instance._store;
+        public static Storage_Combat CombatStore => Instance._combatStore;
+        public static SettingsCache Cache => Instance._cache;
 
+        private Storage _store;
+        private Storage_Combat _combatStore;
+        private SettingsCache _cache;
         
         // tabs
         private Tab  _tab;
@@ -43,18 +47,31 @@ namespace NightVision
         [UsedImplicitly]
         public Settings()
         {
-            Store = new Storage();
-            CombatStore = new Storage_Combat();
-            Cache = new SettingsCache();
+            Instance = this;
+            _store = new Storage();
+            _combatStore = new Storage_Combat();
+            _cache = new SettingsCache();
         }
 
 
         public override void ExposeData()
         {
             base.ExposeData();
+            Cache.DoPreWriteTasks();
             Store.ExposeSettings();
             CombatStore.LoadSaveCommit();
             
+        }
+
+        public void Initialise()
+        {
+            var initialise = new Initialiser();
+            initialise.Startup();
+
+            if (Store.NullRefWhenLoading)
+            {
+                Write();
+            }
         }
         
         
@@ -169,11 +186,11 @@ namespace NightVision
 
         public /*static*/ void DoSettingsWindowContents(Rect inRect)
         {
-            if (!initialised || lastRect != inRect)
+            if (!_isWindowSetup || lastRect != inRect)
             {
                 lastRect = inRect;
                 InitialiseWindow(inRect);
-                initialised = true;
+                _isWindowSetup = true;
             }
             
             Widgets.DrawMenuSection(menuRect);
@@ -219,13 +236,20 @@ namespace NightVision
 
         public void ClearDrawVariables()
         {
-            _debugTab.Clear();
+            /*_debugTab.Clear();
             _apparelTab.Clear();
             _raceTab.Clear();
             _generalTab.Clear();
             _combatTab.Clear();
             _hediffTab.Clear();
-            initialised = false;
+            initialised = false;*/
+            _debugTab = null;
+            _apparelTab = null;
+            _raceTab = null;
+            _generalTab = null;
+            _combatTab = null;
+            _hediffTab = null;
+            _isWindowSetup = false;
         }
     }
 }

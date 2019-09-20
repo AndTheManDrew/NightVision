@@ -7,7 +7,7 @@
 using JetBrains.Annotations;
 using Verse;
 
-namespace NVTesting
+namespace NVExperiments
     {
         [UsedImplicitly]
         public class Stalker_ModExtension : DefModExtension { }

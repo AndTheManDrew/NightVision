@@ -14,7 +14,7 @@ namespace NightVision
         {
             Glow = 1f;
             RelevantField = AccessTools.Field(typeof(ApparelVisionSetting), nameof(ApparelVisionSetting.NullifiesPS));
-            DefaultStatValue = Constants_Calculations.DefaultFullLightMultiplier;
+            DefaultStatValue = Constants.DEFAULT_FULL_LIGHT_MULTIPLIER;
             Acronym = Str.PS;
         }
     }

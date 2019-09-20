@@ -6,21 +6,21 @@
 
 namespace NightVision
 {
+    /// <summary>
+    /// Three valued bool
+    /// </summary>
     public enum TriBool : sbyte
     {
-        Null = -1,
         False = 0,
         True = 1,
         Undefined = -1
     }
 
+    /// <summary>
+    /// Extensions for the TriBool enum.
+    /// </summary>
     public static class TriBoolExtensions
     {
-        public static bool IsNull(this TriBool val)
-        {
-            return val == TriBool.Null;
-        }
-
         public static bool IsUndefined(this TriBool val)
         {
             return val == TriBool.Undefined;
@@ -31,16 +31,18 @@ namespace NightVision
             return val == TriBool.True;
         }
 
+        /// <returns>True if val == (False OR Undefined)</returns>
         public static bool IsNotTrue(this TriBool val)
         {
             return val != TriBool.True;
         }
-
+        
         public static bool IsFalse(this TriBool val)
         {
             return val == TriBool.False;
         }
 
+        /// <returns>True if val == (True OR Undefined)</returns>
         public static bool IsNotFalse(this TriBool val)
         {
             return val != TriBool.False;

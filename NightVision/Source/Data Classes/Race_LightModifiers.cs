@@ -58,7 +58,7 @@ namespace NightVision
                         +1f    + 0.2f * (1 - index)
                     ),
                     2,
-                    Constants_Calculations.Rounding
+                    Constants.ROUNDING
                 );
         }
 
@@ -80,9 +80,9 @@ namespace NightVision
                             return new[]
                                    {
                                        _nvCompProps.ZeroLightMultiplier
-                                       - Constants_Calculations.DefaultZeroLightMultiplier,
+                                       - Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER,
                                        _nvCompProps.FullLightMultiplier
-                                       - Constants_Calculations.DefaultFullLightMultiplier
+                                       - Constants.DEFAULT_FULL_LIGHT_MULTIPLIER
                                    };
                     }
                 }
@@ -187,16 +187,16 @@ namespace NightVision
 
                     return !(Math.Abs(
                                  _nvCompProps.FullLightMultiplier
-                                 - Constants_Calculations.DefaultFullLightMultiplier
+                                 - Constants.DEFAULT_FULL_LIGHT_MULTIPLIER
                                  - Offsets[1]
                              )
-                             < Constants_Calculations.NVEpsilon)
+                             < Constants.NV_EPSILON)
                            || !(Math.Abs(
                                     _nvCompProps.ZeroLightMultiplier
-                                    - Constants_Calculations.DefaultZeroLightMultiplier
+                                    - Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER
                                     - Offsets[0]
                                 )
-                                < Constants_Calculations.NVEpsilon);
+                                < Constants.NV_EPSILON);
             }
         }
 
@@ -215,7 +215,7 @@ namespace NightVision
 
                 IntSetting = GetSetting(_nvCompProps);
 
-                Offsets = new[] {_nvCompProps.ZeroLightMultiplier - Constants_Calculations.DefaultZeroLightMultiplier, _nvCompProps.FullLightMultiplier - Constants_Calculations.DefaultFullLightMultiplier};
+                Offsets = new[] {_nvCompProps.ZeroLightMultiplier - Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER, _nvCompProps.FullLightMultiplier - Constants.DEFAULT_FULL_LIGHT_MULTIPLIER};
 
                 Initialised = true;
             }

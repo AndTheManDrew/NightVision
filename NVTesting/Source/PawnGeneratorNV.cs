@@ -1,4 +1,4 @@
-﻿// Nightvision NVTesting PawnGeneratorNV.cs
+﻿// Nightvision NVExperiments PawnGeneratorNV.cs
 // 
 // 25 10 2018
 // 
@@ -17,7 +17,7 @@ using Verse.AI.Group;
 
 using Mod = NightVision.Mod;
 
-namespace NVTesting
+namespace NVExperiments
 {
     [HarmonyPatch(declaringType: typeof(Dialog_DebugActionsMenu), methodName: "DoListingItems_AllModePlayActions")]
     public static class PawnGeneratorNV
@@ -125,7 +125,7 @@ namespace NVTesting
                                                         )
                                                     );
 
-                                                    foreach (KeyValuePair<HediffDef, Hediff_LightModifiers> hediffDef in Mod.Store.HediffLightMods)
+                                                    foreach (KeyValuePair<HediffDef, Hediff_LightModifiers> hediffDef in Settings.Store.HediffLightMods)
                                                     {
                                                         HediffDef             nvhediff   = hediffDef.Key;
                                                         Hediff_LightModifiers hediffMods = hediffDef.Value;
@@ -210,7 +210,7 @@ namespace NVTesting
                                                         )
                                                     );
 
-                                                    foreach (KeyValuePair<HediffDef, Hediff_LightModifiers> hediffDef in Mod.Store.HediffLightMods)
+                                                    foreach (KeyValuePair<HediffDef, Hediff_LightModifiers> hediffDef in Settings.Store.HediffLightMods)
                                                     {
                                                         HediffDef             nvhediff   = hediffDef.Key;
                                                         Hediff_LightModifiers hediffMods = hediffDef.Value;

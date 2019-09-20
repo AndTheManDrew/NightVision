@@ -1,5 +1,8 @@
 ﻿namespace NightVision
 {
+    /// <summary>
+    /// Night vision categories
+    /// </summary>
     public enum VisionType : byte
     {
         NVNone = 0,

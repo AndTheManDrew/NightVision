@@ -5,7 +5,7 @@ using System.Text;
 using Harmony;
 using Verse;
 
-namespace NVTesting.ThrownLights
+namespace NVExperiments.ThrownLights
 {
     public class CompEquipable_SecondaryThrown : CompEquippable
     {

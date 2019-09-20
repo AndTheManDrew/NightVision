@@ -32,7 +32,7 @@ namespace NightVision
             if (AnyPSHediffsExist.IsUndefined())
             {
                 var query =
-                            from entry in Mod.Store.HediffLightMods
+                            from entry in Settings.Store.HediffLightMods
                             where Classifier.ClassifyModifier(entry.Value[0], true) == VisionType.NVPhotosensitivity
                                   && entry.Value.AffectsEye
                                   && !ManuallyDisallowedHediffs.Contains(entry.Key.defName) select entry.Value;

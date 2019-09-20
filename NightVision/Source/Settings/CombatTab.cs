@@ -26,7 +26,7 @@ namespace NightVision
             {
                 if (bestAndWorstRangedCd[0].NullOrEmpty() && bestAndWorstRangedCd[1].NullOrEmpty())
                 {
-                    var caps = Mod.Store.MultiplierCaps;
+                    var caps = Settings.Store.MultiplierCaps;
                     bestAndWorstRangedCd[0] = (1 / caps.max).ToStringPercent();
                     bestAndWorstRangedCd[1] = (1 / caps.min).ToStringPercent();
                 }
@@ -48,7 +48,7 @@ namespace NightVision
 
         public  void DrawTab(Rect inRect)
         {
-            var combatStore = Mod.CombatStore;
+            var combatStore = Settings.CombatStore;
             Rect tabRect = inRect.AtZero();
             var anchor = Text.Anchor;
             Text.Anchor = TextAnchor.MiddleLeft;

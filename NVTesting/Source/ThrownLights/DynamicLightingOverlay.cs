@@ -1,4 +1,4 @@
-﻿// Nightvision NVTesting DynamicLightingOverlay.cs
+﻿// Nightvision NVExperiments DynamicLightingOverlay.cs
 // 
 // 25 03 2019
 // 
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
-namespace NVTesting.ThrownLights
+namespace NVExperiments.ThrownLights
 {
     public class DynamicLightingOverlay
     {

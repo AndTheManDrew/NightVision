@@ -13,8 +13,8 @@ namespace NightVision {
         public void DrawTab(Rect inRect)
         {
 
-            var nvApparel = Mod.Store.NVApparel;
-            var cachedHeadgear = Mod.Cache.GetAllHeadgear;
+            var nvApparel = Settings.Store.NVApparel;
+            var cachedHeadgear = Settings.Cache.GetAllHeadgear;
             
             Text.Anchor = TextAnchor.LowerCenter;
             int apparelCount = cachedHeadgear.Count;
