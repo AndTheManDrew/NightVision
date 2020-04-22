@@ -2,48 +2,110 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
+
 using Harmony;
+
+using UnityEngine;
+
 using Verse;
 
 namespace NightVision
 {
     public static class FieldClearer
     {
-        public static List<FieldInfo> SettingsDependentFields = new List<FieldInfo>();
-        
+
+        public static List<Traverse> SettingsDependentFieldTraverses = new List<Traverse>();
+
+        public static void FindSettingsDependentFields()
+        {
+#if DEBUG
+
+            Log.Message("Finding settings dependant fields");
+#endif
+            var traverses = new List<Traverse>();
+
+            var markedTypes = GenTypes.AllTypesWithAttribute<NVHasSettingsDependentFieldAttribute>();
+
+            foreach (var type in markedTypes)
+            {
+                var fields = AccessTools.GetDeclaredFields(type)
+                    .FindAll(fi => fi.HasAttribute<NVSettingsDependentFieldAttribute>());
+
+#if DEBUG
+
+                Log.Message($"Type: {type}");
+#endif
+                foreach (var info in fields)
+                {
+                    var traverse = new Traverse(type);
+                    traverse = traverse.Field(info.Name);
+                    
+
+#if DEBUG
+
+                    Log.Message($"Field: {info.Name}");
+#endif
+
+                    traverses.Add(traverse);
+                }
+            }
+
+
+            SettingsDependentFieldTraverses = traverses;
+        }
+
 
         public static void ResetSettingsDependentFields()
         {
-            foreach (FieldInfo field in SettingsDependentFields)
+            try
             {
+                if (SettingsDependentFieldTraverses.Count == 0)
+                {
+#if DEBUG
 
-                
-                if (field.IsStatic)
-                {
-                    
-                    if (field.FieldType == typeof(TriBool))
-                    {
-                        field.SetValue(null, TriBool.Undefined);
-                    }
-                    else if (field.FieldType.IsClass)
-                    {
-                        field.SetValue(null, null);
-                    }
-                    else if (field.FieldType == typeof(int))
-                    {
-                        field.SetValue(null, -9999);
-                    }
-                    else if (field.FieldType == typeof(float))
-                    {
-                        field.SetValue(null, -9999f);
-                    }
-                    
+                    Log.Message("No fields to reset found.");
+#endif
+                    return;
                 }
-                else
+
+                foreach (var fieldTraverse in SettingsDependentFieldTraverses)
                 {
-                    Log.Warning("Tried to clear non-static field. Either make field static or remove attribute.");
+                    if (!fieldTraverse.FieldExists())
+                    {
+                        Log.Warning($"SettingsDependentFieldTraverses included a field that did not exist.");
+                        continue;
+                    }
+
+                    var type = fieldTraverse.GetValueType();
+
+                    if (type == typeof(TriBool))
+                    {
+                        fieldTraverse.SetValue(TriBool.Undefined);
+                    }
+                    else if (type == typeof(int))
+                    {
+                        fieldTraverse.SetValue(-9999);
+                    }
+                    else if (type == typeof(float))
+                    {
+                        fieldTraverse.SetValue(-9999f);
+                    }
+                    else if (type.IsClass)
+                    {
+                        fieldTraverse.SetValue(null);
+                    }
+                    else
+                    {
+                        Log.Warning(
+                            $"FieldClearer: unsupported settings type. {fieldTraverse.GetValueType()}, {fieldTraverse.GetValue()}");
+                    }
+
                 }
+            }
+            catch
+            {
                 
             }
         }

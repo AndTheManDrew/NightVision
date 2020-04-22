@@ -11,7 +11,7 @@
           <targetKeepRadius>15</targetKeepRadius>
           <needLOSToAcquireNonPawnTargets>true</needLOSToAcquireNonPawnTargets>
         </li>
-        <li Class="NVTesting.Stalker_JobGiver_AISapper" />
+        <li Class="NVExperiments.Stalker_JobGiver_AISapper" />
         <li Class="JobGiver_Idle" />
       </subNodes>
     </thinkNode>

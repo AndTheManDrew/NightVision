@@ -6,11 +6,15 @@
 
 using System.Reflection;
 using Harmony;
+
+using JetBrains.Annotations;
+
 using RimWorld;
 using Verse;
 
 namespace NightVision
 {
+    [UsedImplicitly]
     public class NVStatWorker_LightMultiplier :NVStatWorker
     {
         #region Overrides of NVStatWorker

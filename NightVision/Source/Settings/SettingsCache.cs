@@ -6,40 +6,43 @@
 
 using System;
 using System.Collections.Generic;
+
 using JetBrains.Annotations;
+
 using RimWorld;
+
 using Verse;
 
 namespace NightVision
 {
-    public static class SettingsCache
+    public class SettingsCache
     {
         [CanBeNull]
-        private static List<HediffDef> _allHediffsCache;
+        private List<HediffDef> _allHediffsCache;
 
-        public static bool CacheInited;
+        public bool CacheInited;
 
         [CanBeNull]
-        private static List<ThingDef> _headgearCache;
+        private List<ThingDef> _headgearCache;
 
-        public static float? MaxCache;
+        public float? MaxCache;
 
-        public static float? MinCache;
-        public static float? NVFullCache;
-        public static float? NVZeroCache;
-        public static float? PSFullCache;
-        public static float? PSZeroCache;
+        public float? MinCache;
+        public float? NVFullCache;
+        public float? NVZeroCache;
+        public float? PSFullCache;
+        public float? PSZeroCache;
 
         [NotNull]
-        public static List<ThingDef> GetAllHeadgear
+        public List<ThingDef> GetAllHeadgear
         {
             get
             {
                 if (_headgearCache == null || _headgearCache.Count == 0)
                 {
-                    _headgearCache = new List<ThingDef>(Storage.AllEyeCoveringHeadgearDefs);
+                    _headgearCache = new List<ThingDef>(Settings.Store.AllEyeCoveringHeadgearDefs);
 
-                    foreach (ThingDef appareldef in Storage.NVApparel.Keys)
+                    foreach (ThingDef appareldef in Settings.Store.NVApparel.Keys)
                     {
                         int appindex = _headgearCache.IndexOf(appareldef);
 
@@ -56,15 +59,15 @@ namespace NightVision
         }
 
         [NotNull]
-        public static List<HediffDef> GetAllHediffs
+        public List<HediffDef> GetAllHediffs
         {
             get
             {
                 if (_allHediffsCache == null || _allHediffsCache.Count == 0)
                 {
-                    _allHediffsCache = new List<HediffDef>(Storage.AllSightAffectingHediffs);
+                    _allHediffsCache = new List<HediffDef>(Settings.Store.AllSightAffectingHediffs);
 
-                    foreach (HediffDef hediffdef in Storage.HediffLightMods.Keys)
+                    foreach (HediffDef hediffdef in Settings.Store.HediffLightMods.Keys)
                     {
                         int appindex = _allHediffsCache.IndexOf(hediffdef);
 
@@ -80,24 +83,24 @@ namespace NightVision
             }
         }
 
-        public static void Init()
+        public void Init()
         {
             if (CacheInited)
             {
                 return;
             }
 
-            MinCache    = (float) Math.Round(Storage.MultiplierCaps.min * 100);
-            MaxCache    = (float) Math.Round(Storage.MultiplierCaps.max * 100);
+            MinCache = (float) Math.Round(Settings.Store.MultiplierCaps.min * 100);
+            MaxCache = (float) Math.Round(Settings.Store.MultiplierCaps.max * 100);
             NVZeroCache = SettingsHelpers.ModToMultiPercent(LightModifiersBase.NVLightModifiers[0], true);
 
             NVFullCache =
-                        SettingsHelpers.ModToMultiPercent(LightModifiersBase.NVLightModifiers[1], false);
+                SettingsHelpers.ModToMultiPercent(LightModifiersBase.NVLightModifiers[1], false);
 
             PSZeroCache = SettingsHelpers.ModToMultiPercent(LightModifiersBase.PSLightModifiers[0], true);
 
             PSFullCache =
-                        SettingsHelpers.ModToMultiPercent(LightModifiersBase.PSLightModifiers[1], false);
+                SettingsHelpers.ModToMultiPercent(LightModifiersBase.PSLightModifiers[1], false);
 
             CacheInited = true;
         }
@@ -107,73 +110,48 @@ namespace NightVision
         ///     Clears all cached stuff
         ///     Runs when opening the settings menu and when closing it
         /// </summary>
-        public static void DoPreWriteTasks()
+        public void DoPreWriteTasks()
         {
             // this check is required because this method is run on opening the menu
             if (CacheInited)
             {
                 FieldClearer.ResetSettingsDependentFields();
 
-                Storage.MultiplierCaps.min = MinCache != null && Storage.CustomCapsEnabled
-                            ? (float) Math.Round((float) MinCache / 100, Constants_Calculations.NumberOfDigits)
-                            : Storage.MultiplierCaps.min;
+                var settingsStore = Settings.Store;
 
-                Storage.MultiplierCaps.max = MaxCache != null && Storage.CustomCapsEnabled
-                            ? (float) Math.Round((float) MaxCache / 100, Constants_Calculations.NumberOfDigits)
-                            : Storage.MultiplierCaps.max;
+                if (settingsStore.CustomCapsEnabled)
+                {
+                    if (MinCache.HasValue)
+                    {
+                        settingsStore.SetMinMultiplierCap(MinCache.Value);
+                    }
 
-                LightModifiersBase.NVLightModifiers.Offsets = new[]
-                                                              {
-                                                                  NVZeroCache != null
-                                                                              ? SettingsHelpers.MultiPercentToMod(
-                                                                                  (float
-                                                                                  ) NVZeroCache,
-                                                                                  true
-                                                                              )
-                                                                              : LightModifiersBase.NVLightModifiers[0],
-                                                                  NVFullCache != null
-                                                                              ? SettingsHelpers.MultiPercentToMod(
-                                                                                  (float
-                                                                                  ) NVFullCache,
-                                                                                  false
-                                                                              )
-                                                                              : LightModifiersBase.NVLightModifiers[1]
-                                                              };
-
-                LightModifiersBase.PSLightModifiers.Offsets = new[]
-                                                              {
-                                                                  PSZeroCache != null
-                                                                              ? SettingsHelpers.MultiPercentToMod(
-                                                                                  (float
-                                                                                  ) PSZeroCache,
-                                                                                  true
-                                                                              )
-                                                                              : LightModifiersBase.PSLightModifiers[0],
-                                                                  PSFullCache != null
-                                                                              ? SettingsHelpers.MultiPercentToMod(
-                                                                                  (float
-                                                                                  ) PSFullCache,
-                                                                                  false
-                                                                              )
-                                                                              : LightModifiersBase.PSLightModifiers[1]
-                                                              };
-
+                    if (MaxCache.HasValue)
+                    {
+                        settingsStore.SetMaxMultiplierCap(MaxCache.Value);
+                    }
+                }
+                
+                SetLightModifier(LightModifiersBase.NVLightModifiers, NVZeroCache, NVFullCache);
+                SetLightModifier(LightModifiersBase.PSLightModifiers, PSZeroCache, PSFullCache);
+                
                 Classifier.ZeroLightTurningPoints = null;
-                Classifier.FullLightTurningPoint  = null;
+                Classifier.FullLightTurningPoint = null;
 
-                MinCache    = null;
-                MaxCache    = null;
+                MinCache = null;
+                MaxCache = null;
                 NVZeroCache = null;
                 NVFullCache = null;
                 PSZeroCache = null;
                 PSFullCache = null;
             }
+
             CacheInited = false;
             _allHediffsCache?.Clear();
             _headgearCache?.Clear();
 
             SettingsHelpers.TipStringHolder.Clear();
-            Settings.ClearDrawVariables();
+            Mod.Settings.ClearDrawVariables();
 
 
             if (Current.ProgramState == ProgramState.Playing)
@@ -186,7 +164,7 @@ namespace NightVision
         /// <summary>
         ///     So that the comps will update with the new settings, sets all the comps dirty
         /// </summary>
-        public static void SetDirtyAllComps()
+        public void SetDirtyAllComps()
         {
             foreach (Pawn pawn in PawnsFinder.AllMaps_Spawned)
             {
@@ -194,12 +172,33 @@ namespace NightVision
                 {
                     continue;
                 }
-                
+
                 if (pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
                 {
                     comp.SetDirty();
                 }
             }
         }
+
+        public void Reset()
+        {
+            CacheInited = false;
+            DoPreWriteTasks();
+            Init();
+        }
+
+        private void SetLightModifier(LightModifiersBase modifier, float? zeroVal, float? fullVal)
+        {
+            if (zeroVal.HasValue)
+            {
+                modifier.Offsets[0] = SettingsHelpers.MultiPercentToMod(zeroVal.Value, true);
+            }
+
+            if (fullVal.HasValue)
+            {
+                modifier.Offsets[1] = SettingsHelpers.MultiPercentToMod(fullVal.Value, false);
+            }
+        }
+        
     }
 }

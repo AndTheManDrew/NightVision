@@ -62,7 +62,7 @@
       </li>
     </comps>
     <modExtensions>
-      <li Class="NVTesting.Stalker_ModExtension" />
+      <li Class="NVExperiments.Stalker_ModExtension" />
       <li Class="NightVision.Stealth_ModExtension">
         <lowlightbodysizefactor>0.5</lowlightbodysizefactor>
       </li>

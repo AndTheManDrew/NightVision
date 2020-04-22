@@ -5,11 +5,16 @@
 // 17 10 2018
 
 using System;
+
+using JetBrains.Annotations;
+
 using RimWorld;
 using Verse;
 
 namespace NightVision
 {
+    
+    [UsedImplicitly]
     public class NVStatWorker_RangedCooldown : NVStatWorker
     {
 
@@ -44,7 +49,7 @@ namespace NightVision
                 }
             }
 
-            return Constants_Calculations.TrivialFactor;
+            return Constants.TRIVIAL_FACTOR;
         }
 
         #region Overrides of StatWorker
@@ -64,7 +69,7 @@ namespace NightVision
 
         public override bool ShouldShowFor(StatRequest req)
         {
-            return base.ShouldShowFor(req) || !Storage_Combat.RangedCooldownEffectsEnabled.Value;
+            return base.ShouldShowFor(req) || !Settings.CombatStore.RangedCooldownEffectsEnabled.Value;
         }
 
         #endregion

@@ -7,7 +7,9 @@
 using NightVision;
 using RimWorld;
 using Verse;
-
+/// <summary>
+/// Combat strings defined in xml file in nightvision/languages
+/// </summary>
 public static class Str_Combat
 {
     

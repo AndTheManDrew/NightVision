@@ -26,9 +26,9 @@ namespace NightVision
         /// <param name="isZeroLightMod"></param>
         /// <returns></returns>
         public static VisionType ClassifyModifier(
-                        float modifier,
-                        bool  isZeroLightMod
-                    )
+            float modifier,
+            bool isZeroLightMod
+        )
         {
             //If the effect is negligible or is <= 0 for Zero mod
             //The latter because we don't have a thought that corresponds to worse night vision then default
@@ -39,18 +39,18 @@ namespace NightVision
 
             if (isZeroLightMod)
             {
-                if (Classifier.ZeroLightTurningPoints == null)
+                if (ZeroLightTurningPoints == null)
                 {
-                    Classifier.ZeroLightTurningPoints = Classifier.OffsetsList(true);
+                    ZeroLightTurningPoints = OffsetsList(true);
                 }
 
-                if (Classifier.ZeroLightTurningPoints.Count == 0
-                    || modifier + Constants_Calculations.NVEpsilon                    < Classifier.ZeroLightTurningPoints[0])
+                if (ZeroLightTurningPoints.Count == 0
+                 || modifier + Constants.NV_EPSILON < ZeroLightTurningPoints[0])
                 {
                     return VisionType.NVNone;
                 }
 
-                if (modifier + Constants_Calculations.NVEpsilon < Classifier.ZeroLightTurningPoints[1])
+                if (modifier + Constants.NV_EPSILON < ZeroLightTurningPoints[1])
                 {
                     return VisionType.NVNightVision;
                 }
@@ -58,12 +58,13 @@ namespace NightVision
                 return VisionType.NVPhotosensitivity;
             }
 
-            if (Classifier.FullLightTurningPoint == null)
+            if (FullLightTurningPoint == null)
             {
-                Classifier.FullLightTurningPoint = Classifier.OffsetsList(false);
+                FullLightTurningPoint = OffsetsList(false);
             }
 
-            if (Classifier.FullLightTurningPoint.Count == 0 || modifier - Constants_Calculations.NVEpsilon > Classifier.FullLightTurningPoint[0])
+            if (FullLightTurningPoint.Count == 0
+             || modifier - Constants.NV_EPSILON > FullLightTurningPoint[0])
             {
                 return VisionType.NVNone;
             }
@@ -74,30 +75,31 @@ namespace NightVision
 
         // Pretty sure there are better ways of doing this but eh
         private static List<float> OffsetsList(
-                        bool forZeroLight
-                    )
+            bool forZeroLight
+        )
         {
             //for accessing the offsets [zerolightmod, fulllightmod]
             int offsetIndex = forZeroLight ? 0 : 1;
 
             var result = new List<float>
-                         {
-                             (float) Math.Round(
-                                                LightModifiersBase.NVLightModifiers[offsetIndex],
-                                                Constants_Calculations.NumberOfDigits,
-                                                Constants_Calculations.Rounding
-                                               ),
-                             (float) Math.Round(
-                                                LightModifiersBase.PSLightModifiers[offsetIndex],
-                                                Constants_Calculations.NumberOfDigits,
-                                                Constants_Calculations.Rounding
-                                               )
-                         };
+            {
+                (float) Math.Round(
+                    LightModifiersBase.NVLightModifiers[offsetIndex],
+                    Constants.NUMBER_OF_DIGITS,
+                    Constants.ROUNDING
+                ),
+                (float) Math.Round(
+                    LightModifiersBase.PSLightModifiers[offsetIndex],
+                    Constants.NUMBER_OF_DIGITS,
+                    Constants.ROUNDING
+                )
+            };
+
             for (int i = result.Count - 1; i >= 0; i--)
             {
-                if (Math.Abs(result[i]) < Constants_Calculations.NVEpsilon
-                    || forZeroLight  && result[i] + Constants_Calculations.NVEpsilon < 0
-                    || !forZeroLight && result[i] - Constants_Calculations.NVEpsilon > 0)
+                if (Math.Abs(result[i]) < Constants.NV_EPSILON
+                 || forZeroLight && result[i] + Constants.NV_EPSILON < 0
+                 || !forZeroLight && result[i] - Constants.NV_EPSILON > 0)
                 {
                     result.RemoveAt(i);
                 }
@@ -113,6 +115,7 @@ namespace NightVision
             {
                 result[0] = LightModifiersBase.PSLightModifiers[offsetIndex] / 2;
             }
+
             result.Sort();
 
             if (forZeroLight)
@@ -123,14 +126,14 @@ namespace NightVision
                 }
 
                 result = new List<float>
-                         {
-                             (float) Math.Round(result[0]               / 2, Constants_Calculations.NumberOfDigits),
-                             (float) Math.Round((result[0] + result[1]) / 2, Constants_Calculations.NumberOfDigits)
-                         };
+                {
+                    (float) Math.Round(result[0] / 2, Constants.NUMBER_OF_DIGITS),
+                    (float) Math.Round((result[0] + result[1]) / 2, Constants.NUMBER_OF_DIGITS)
+                };
             }
             else
             {
-                result = new List<float> {(float) Math.Round(result[0] / 2, Constants_Calculations.NumberOfDigits)};
+                result = new List<float> {(float) Math.Round(result[0] / 2, Constants.NUMBER_OF_DIGITS)};
             }
 
             return result;

@@ -6,21 +6,24 @@
 
 using System.Collections.Generic;
 using System.Linq;
+
 using JetBrains.Annotations;
+
 using Verse;
 
 namespace NightVision
 {
     public static class Scribes
     {
-        public static void ApparelDict(
-                        ref Dictionary<ThingDef, ApparelVisionSetting> dictionary
-                    )
+        public static bool ApparelDict(ref Dictionary<ThingDef, ApparelVisionSetting> dictionary)
         {
+            var anyNullRef = false;
+
             if (dictionary == null)
             {
-                return;
+                return false;
             }
+
 
             var tempList = new List<ApparelSaveLoadClass>();
 
@@ -58,7 +61,7 @@ namespace NightVision
                 if (removed > 0)
                 {
                     Log.Message("NVNullEntryLog".Translate(removed, nameof(dictionary)));
-                    Storage.NullRefWhenLoading = true;
+                    anyNullRef = true;
                 }
             }
 
@@ -66,69 +69,72 @@ namespace NightVision
             {
                 tempList?.Clear();
             }
+
+            return anyNullRef;
         }
 
-        public static void LightModifiersDict<TK, TV>(
-                        ref Dictionary<TK, TV> dictionary,
-                        string                 label
-                    ) where TK : Def where TV : LightModifiersBase
+        public static bool LightModifiersDict<TK, TV>(
+            ref Dictionary<TK, TV> dictionary,
+            string label) where TK : Def where TV : LightModifiersBase
         {
             List<TV> tempList;
+            var anyNullRef = false;
 
-            if (Scribe.mode == LoadSaveMode.Saving)
-            {
-                if (dictionary == null || dictionary.Count == 0)
-                {
-                    return;
-                }
+            switch (Scribe.mode) {
+                case LoadSaveMode.Saving when dictionary == null || dictionary.Count == 0:
+                    return false;
+                case LoadSaveMode.Saving:
+                    tempList = dictionary.Values.ToList();
+                    tempList.RemoveAll(lm => lm == null || !lm.ShouldBeSaved());
+                    Scribe_Collections.Look(ref tempList, label, LookMode.Deep);
+                    break;
+                case LoadSaveMode.LoadingVars: {
+                    tempList = new List<TV>();
+                    Scribe_Collections.Look(ref tempList, label, LookMode.Deep);
 
-                tempList = dictionary.Values.ToList();
-                tempList.RemoveAll(lm => lm == null || !lm.ShouldBeSaved());
-                Scribe_Collections.Look(ref tempList, label, LookMode.Deep);
-            }
-            else if (Scribe.mode == LoadSaveMode.LoadingVars)
-            {
-                tempList = new List<TV>();
-                Scribe_Collections.Look(ref tempList, label, LookMode.Deep);
-                
                     dictionary = new Dictionary<TK, TV>();
-                var removed = 0;
+                    var removed = 0;
 
-                for (int i = tempList.Count - 1; i >= 0; i--)
-                {
-                    if (tempList[i] != null && tempList[i].ParentDef != null)
+                    for (int i = tempList.Count - 1; i >= 0; i--)
                     {
-                        dictionary[(TK) tempList[i].ParentDef] = tempList[i];
+                        if (tempList[i] != null && tempList[i].ParentDef != null)
+                        {
+                            dictionary[(TK) tempList[i].ParentDef] = tempList[i];
+                        }
+                        else
+                        {
+                            tempList.RemoveAt(i);
+                            removed++;
+                        }
                     }
-                    else
-                    {
-                        tempList.RemoveAt(i);
-                        removed++;
-                    }
-                }
 
-                if (removed > 0)
-                {
-                    Log.Message("NVNullEntryLog".Translate(removed, nameof(dictionary)));
-                    Storage.NullRefWhenLoading = true;
+                    if (removed > 0)
+                    {
+                        Log.Message("NVNullEntryLog".Translate(removed, nameof(dictionary)));
+                        anyNullRef = true;
+                    }
+
+                    break;
                 }
             }
+
+            return anyNullRef;
         }
 
         public class ApparelSaveLoadClass : IExposable
         {
-            public ThingDef             Key;
+            public ThingDef Key;
             public ApparelVisionSetting Value;
 
             [UsedImplicitly]
             public ApparelSaveLoadClass() { }
 
             public ApparelSaveLoadClass(
-                            ThingDef             key,
-                            ApparelVisionSetting value
-                        )
+                ThingDef key,
+                ApparelVisionSetting value
+            )
             {
-                Key   = key;
+                Key = key;
                 Value = value;
             }
 

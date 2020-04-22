@@ -3,19 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+
 using Harmony;
+
 using UnityEngine;
+
 using Verse;
 
 namespace NightVision
 {
+    /// <summary>
+    /// Container class for settings. Including presentation strings and callback on changed
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class SettingOption<T>
     {
-        public string Label;
+        public readonly string Label;
 
         public T TempValue;
 
-        public string Tooltip;
+        public readonly string Tooltip;
 
         public SettingOption(string label, T value, Action callBack = null, string tooltip = "")
         {
@@ -27,16 +34,12 @@ namespace NightVision
 
         public T Value
         {
-            get
-            {
-                return StoredValue;
-            }
+            get { return StoredValue; }
             set
             {
                 if (!value.ApproxEq(StoredValue))
                 {
-                    ValueChanged = true;
-
+                    _valueChanged = true;
                 }
 
                 StoredValue = TempValue = value;
@@ -44,29 +47,32 @@ namespace NightVision
         }
 
         public T StoredValue;
-        
-        public Action CallBackOnValueChanged;
 
-        public bool ValueChanged;
-        
+        protected Action CallBackOnValueChanged;
+
+        private bool _valueChanged;
+
 
         public void Commit()
         {
             Value = TempValue;
-            if (ValueChanged)
+
+            if (_valueChanged)
             {
                 CallBackOnValueChanged?.Invoke();
             }
         }
-        
-
     }
 
+    /// <summary>
+    /// Container class for settings that require patches. Value determines if patching is applied.
+    /// </summary>
     public class SettingOption_WithPatch : SettingOption<bool>
     {
-
         public SettingOption_WithPatch
-                    (string label, bool value, string tooltip, MethodInfo[] targets, HarmonyPatchType[] patchTypes, MethodInfo[] patches) : base(label, value, tooltip: tooltip)
+        (
+            string label, bool value, string tooltip, MethodInfo[] targets, HarmonyPatchType[] patchTypes,
+            MethodInfo[] patches) : base(label, value, tooltip: tooltip)
         {
             int minCount = Math.Min(targets.Length, patchTypes.Length);
             minCount = Math.Min(minCount, patches.Length);
@@ -98,7 +104,7 @@ namespace NightVision
                 for (int i = 0; i < minCount; i++)
                 {
                     Log.Message($"----");
-                    
+
                     Log.Message($"targets = {targets[i]}");
                     Log.Message($"patchs = {patches[i]}");
                     Log.Message($"Result: ");
@@ -108,17 +114,20 @@ namespace NightVision
                     Log.Message($"Post = {results.Postfixes.ToStringSafeEnumerable()}");
                     Log.Message($"Trans = {results.Transpilers.ToStringSafeEnumerable()}");
                     Log.Message($"----");
-                    
                 }
+
                 Log.Message(new string('-', 20));
 
 #endif
             };
         }
 
-        public SettingOption_WithPatch(string label, bool value, string tooltip, MethodInfo target, HarmonyPatchType patchType, MethodInfo patch) : base(label, value, tooltip: tooltip)
+        public SettingOption_WithPatch(
+            string label, bool value, string tooltip, MethodInfo target, HarmonyPatchType patchType, MethodInfo patch) :
+            base(label, value, tooltip: tooltip)
         {
-            CallBackOnValueChanged = () => {
+            CallBackOnValueChanged = () =>
+            {
                 if (StoredValue)
                 {
                     ApplyPatch(target: target, patchType: patchType, patch: patch);
@@ -147,12 +156,12 @@ namespace NightVision
             };
         }
 
-        public static void RemovePatch(MethodInfo target, MethodInfo patch)
+        private static void RemovePatch(MethodInfo target, MethodInfo patch)
         {
             NVHarmonyPatcher.NVHarmony.Unpatch(target, patch);
         }
 
-        public static void ApplyPatch(MethodInfo target, HarmonyPatchType patchType, MethodInfo patch)
+        private static void ApplyPatch(MethodInfo target, HarmonyPatchType patchType, MethodInfo patch)
         {
             var harmonyMethod = new HarmonyMethod(patch);
 
@@ -170,7 +179,6 @@ namespace NightVision
                     NVHarmonyPatcher.NVHarmony.Patch(target, transpiler: harmonyMethod);
 
                     break;
-                default: break;
             }
         }
     }

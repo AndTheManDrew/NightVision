@@ -14,32 +14,25 @@ using Verse;
 
 namespace NightVision
 {
-    public static class Initialiser
+    /// <summary>
+    /// Reads all loaded item definitions and builds maps for items that meet certain requirements
+    /// Greedy rather than efficient - to support options being changed at a later date
+    /// </summary>
+    public partial class Initialiser
     {
-        public static void Startup()
+        public void Startup()
         {
-            FindSettingsDependentFields();
-
-            BuildDictionaries();
-            Init_TapetumAnimals.TapetumInjector();
-            Init_Research.AddNightVisionToResearch();
-
-
+            FieldClearer.FindSettingsDependentFields();
+            FindDefsToAddNightVisionTo();
+            AddNightVisionMarkerToVanillaResearch();
+            AddTapetumRecipeToAnimals();
         }
 
-        public static void BuildDictionaries()
+        public void FindDefsToAddNightVisionTo()
         {
-            Init_Hediffs.FindAllRelevantHediffs();
-            Init_Races.FindAllRelevantRaces();
-            Init_Apparel.FindAllEyeCoveringApparel();
-        }
-
-        
-        public static void FindSettingsDependentFields()
-        {
-            FieldClearer.SettingsDependentFields = GenTypes.AllTypesWithAttribute<NVHasSettingsDependentFieldAttribute>().SelectMany(
-                t => AccessTools.GetDeclaredFields(t).FindAll(fi => fi.HasAttribute<NVSettingsDependentFieldAttribute>())
-            ).ToList();
+            FindAllValidHediffs();
+            FindAllValidRaces();
+            FindAllValidApparel();
         }
     }
 }

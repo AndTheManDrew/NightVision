@@ -1,8 +1,8 @@
 ﻿// Nightvision NightVision StatReportFor_NightVision.cs
 // 
-// 20 10 2018
+// 25 10 2018
 // 
-// 20 10 2018
+// 06 12 2018
 
 using System;
 using System.Collections.Generic;
@@ -16,13 +16,15 @@ namespace NightVision
 {
     public static class StatReportFor_NightVision
     {
+        #region  Members
+
         public static string CompleteStatReport(StatDef stat, FieldInfo relevantField, Comp_NightVision comp, float relevantGlow)
         {
-            float   factorFromGlow = comp.FactorFromGlow(relevantGlow);
+            float factorFromGlow = comp.FactorFromGlow(glow: relevantGlow);
 
             return BasicExplanation(glow: relevantGlow, usedApparelSetting: out bool UsedApparel, comp: comp)
                    + FinalValue(stat: stat, value: factorFromGlow)
-                   + (relevantField != null && UsedApparel ? ApparelPart(relevantField, comp: comp) : "");
+                   + (relevantField != null && UsedApparel ? ApparelPart(relevantField: relevantField, comp: comp) : "");
         }
 
         public static string ShortStatReport(float glow, Comp_NightVision comp)
@@ -30,20 +32,15 @@ namespace NightVision
             return BasicExplanation(glow: glow, usedApparelSetting: out _, comp: comp, needsFinalValue: true);
         }
 
-        private static string FinalValue(StatDef stat, float value)
-        {
-            return "StatsReport_FinalValue".Translate() + ": " + stat.ValueToString(val: value, numberSense: stat.toStringNumberSense) + "\n\n";
-        }
-        
 
         private static string ApparelPart(FieldInfo relevantField, Comp_NightVision comp)
         {
             var builder = new StringBuilder();
             builder.AppendLine(value: "StatsReport_RelevantGear".Translate());
-
+            var nvApparel = Settings.Store.NVApparel;
             foreach (Apparel app in comp.PawnsNVApparel ?? Enumerable.Empty<Apparel>())
             {
-                if (Storage.NVApparel.TryGetValue(key: app.def, value: out ApparelVisionSetting setting)
+                if (nvApparel.TryGetValue(key: app.def, value: out ApparelVisionSetting setting)
                     && (bool) relevantField.GetValue(obj: setting))
                 {
                     builder.AppendLine(value: app.LabelCap);
@@ -101,8 +98,10 @@ namespace NightVision
 
             if (lowLight)
             {
-                basevalue = Constants_Calculations.DefaultFullLightMultiplier
-                            + (Constants_Calculations.DefaultZeroLightMultiplier - Constants_Calculations.DefaultFullLightMultiplier) * (0.3f - glow) / 0.3f;
+                basevalue = Constants.DEFAULT_FULL_LIGHT_MULTIPLIER
+                            + (Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER - Constants.DEFAULT_FULL_LIGHT_MULTIPLIER)
+                            * (0.3f                                              - glow)
+                            / 0.3f;
 
                 if (comp.ApparelGrantsNV)
                 {
@@ -111,7 +110,7 @@ namespace NightVision
             }
             else
             {
-                basevalue = Constants_Calculations.DefaultFullLightMultiplier;
+                basevalue = Constants.DEFAULT_FULL_LIGHT_MULTIPLIER;
 
                 if (comp.ApparelNullsPS)
                 {
@@ -119,7 +118,8 @@ namespace NightVision
                 }
             }
 
-            explanation.AppendFormat(format: "  " + Str.MultiplierLine, arg0: "StatsReport_BaseValue".Translate(), arg1: basevalue).AppendLine().AppendLine();
+            explanation.AppendFormat(format: "  " + Str.MultiplierLine, arg0: "StatsReport_BaseValue".Translate(), arg1: basevalue).AppendLine()
+                        .AppendLine();
 
             #endregion
 
@@ -135,8 +135,8 @@ namespace NightVision
 
                     var NumToAdd = (float) Math.Round(
                         value: effect * comp.NumberOfRemainingEyes,
-                        digits: Constants_Calculations.NumberOfDigits,
-                        mode: Constants_Calculations.Rounding
+                        digits: Constants.NUMBER_OF_DIGITS,
+                        mode: Constants.ROUNDING
                     );
 
                     StringToAppend = string.Format(
@@ -173,16 +173,23 @@ namespace NightVision
                     continue;
                 }
 
+                var hediffLightMods = Settings.Store.HediffLightMods;
                 foreach (HediffDef hediffDef in value)
                 {
-                    if (Storage.HediffLightMods.TryGetValue(key: hediffDef, value: out Hediff_LightModifiers hediffSetting))
+                    if (hediffLightMods.TryGetValue(key: hediffDef, value: out Hediff_LightModifiers hediffSetting))
                     {
                         effect = hediffSetting.GetEffectAtGlow(glow: glow, numOfEyesNormalisedFor: comp.EyeCount);
 
                         if (effect.IsNonTrivial())
                         {
                             foundSomething = true;
-                            effect         = (float) Math.Round(value: effect, digits: Constants_Calculations.NumberOfDigits, mode: Constants_Calculations.Rounding);
+
+                            effect = (float) Math.Round(
+                                value: effect,
+                                digits: Constants.NUMBER_OF_DIGITS,
+                                mode: Constants.ROUNDING
+                            );
+
                             StringToAppend = string.Format(format: "    " + Str.ModifierLine, arg0: hediffDef.LabelCap, arg1: effect);
 
                             switch (hediffSetting.IntSetting)
@@ -245,13 +252,13 @@ namespace NightVision
                 explanation.AppendFormat(format: Str.ModifierLine, arg0: "NVTotal".Translate() + " " + "NVModifier".Translate(), arg1: sum);
 
                 explanation.AppendLine();
-                
+
 
                 var needed = true;
 
                 if (!comp.CanCheat)
                 {
-                    if (sum - Constants_Calculations.NVEpsilon > caps[0] || sum + Constants_Calculations.NVEpsilon < caps[1])
+                    if (sum - Constants.NV_EPSILON > caps[0] || sum + Constants.NV_EPSILON < caps[1])
                     {
                         AppendPreSumIfNeeded(needed: ref needed);
 
@@ -265,17 +272,17 @@ namespace NightVision
                         explanation.AppendLine();
                     }
 
-                    if (lowLight && comp.ApparelGrantsNV && sum + Constants_Calculations.NVEpsilon < caps[2])
+                    if (lowLight && comp.ApparelGrantsNV && sum + Constants.NV_EPSILON < caps[2])
                     {
                         AppendPreSumIfNeeded(needed: ref needed);
                         explanation.Append(value: "NVGearPresent".Translate(arg1: $"{basevalue + caps[2]:0%}"));
                         usedApparelSetting = true;
                         sum                = caps[2];
                     }
-                    else if (comp.ApparelNullsPS && sum + Constants_Calculations.NVEpsilon < 0)
+                    else if (comp.ApparelNullsPS && sum + Constants.NV_EPSILON < 0)
                     {
                         AppendPreSumIfNeeded(needed: ref needed);
-                        explanation.Append(value: "PSGearPresent".Translate(arg1: $"{Constants_Calculations.DefaultFullLightMultiplier:0%}"));
+                        explanation.Append(value: "PSGearPresent".Translate(arg1: $"{Constants.DEFAULT_FULL_LIGHT_MULTIPLIER:0%}"));
                         usedApparelSetting = true;
                         sum                = 0;
                     }
@@ -306,5 +313,12 @@ namespace NightVision
 
             return string.Empty;
         }
+
+        private static string FinalValue(StatDef stat, float value)
+        {
+            return "StatsReport_FinalValue".Translate() + ": " + stat.ValueToString(val: value, numberSense: stat.toStringNumberSense) + "\n\n";
+        }
+
+        #endregion
     }
 }

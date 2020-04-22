@@ -11,11 +11,10 @@ using Verse;
 
 namespace NightVision
 {
-    public static class Init_Hediffs
+    public partial class Initialiser
     {
-        #region  Members
 
-        public static void FindAllRelevantHediffs()
+        public void FindAllValidHediffs()
         {
             //Essentially we construct two collections: 
             //  the first contains all hediffs that affect sight/are applied to eyes/have our HediffComp_NightVision
@@ -25,10 +24,10 @@ namespace NightVision
             //  only one is required
             //  In both cases, we try and filter quite strictly
 
-
+            
 
             //Find all hediffs that effect sight
-            Storage.AllSightAffectingHediffs = new HashSet<HediffDef>(
+            var allSightAffectingHediffs = new HashSet<HediffDef>(
                 collection: DefDatabase<HediffDef>.AllDefsListForReading.FindAll(
                     match: hediffdef
                                 => hediffdef.stages != null
@@ -40,14 +39,14 @@ namespace NightVision
             );
 
             //Comps: allows for adding Comp_NightVision to hediffdef via xml even if hediffdef does not affect sight
-            Storage.AllSightAffectingHediffs.UnionWith(
+            allSightAffectingHediffs.UnionWith(
                 other: DefDatabase<HediffDef>.AllDefsListForReading.FindAll(
                     match: hediffdef => hediffdef.HasComp(compClass: typeof(HediffComp_NightVision))
                 )
             );
 
             //Recipes: only place where the target part is defined for bionic eyes, archotech eyes etc
-            Storage.AllEyeHediffs = new HashSet<HediffDef>(
+            var allEyeHediffs = new HashSet<HediffDef>(
                 collection: DefDatabase<RecipeDef>.AllDefsListForReading.FindAll(
                     match: recdef => recdef.addsHediff                 != null
                                      && recdef.appliedOnFixedBodyParts != null
@@ -59,7 +58,7 @@ namespace NightVision
             );
 
             //HediffGivers: i.e. cataracts from HediffGiver_Birthday
-            Storage.AllEyeHediffs.UnionWith(
+            allEyeHediffs.UnionWith(
                 other: DefDatabase<HediffGiverSetDef>.AllDefsListForReading.FindAll(match: hgsd => hgsd.hediffGivers != null).SelectMany(
                     selector: hgsd => hgsd.hediffGivers
                                 .Where(
@@ -70,27 +69,39 @@ namespace NightVision
             );
 
             
-            Storage.AllEyeHediffs.RemoveWhere(match: hdD => !typeof(HediffWithComps).IsAssignableFrom(c: hdD.hediffClass));
+            allEyeHediffs.RemoveWhere(match: hdD => !typeof(HediffWithComps).IsAssignableFrom(c: hdD.hediffClass));
 
-            Storage.AllSightAffectingHediffs.RemoveWhere(match: hdD => !typeof(HediffWithComps).IsAssignableFrom(c: hdD.hediffClass));
+            allSightAffectingHediffs.RemoveWhere(match: hdD => !typeof(HediffWithComps).IsAssignableFrom(c: hdD.hediffClass));
             
-            List<HediffDef> list = Storage.AllSightAffectingHediffs.Except(second: Storage.AllEyeHediffs).ToList();
+            allSightAffectingHediffs.UnionWith(other: allEyeHediffs);
 
-            Storage.AllSightAffectingHediffs.UnionWith(other: Storage.AllEyeHediffs);
+            Settings.Store.AllSightAffectingHediffs = allSightAffectingHediffs;
+            Settings.Store.AllEyeHediffs = allEyeHediffs;
 
-            if (Storage.HediffLightMods == null)
-            {
-                Storage.HediffLightMods = new Dictionary<HediffDef, Hediff_LightModifiers>();
-            }
+            InitialiseHediffLightMods(allSightAffectingHediffs.ToList(), allEyeHediffs.ToList());
+        }
+        /// <summary>
+        /// Creates a hediff light modifier setting corresponding to sight affecting hediffs
+        /// - has special behaviour for hediffs that effect the eye directly
+        /// - takes lists to ensure data is copied
+        /// </summary>
+        /// <param name="sightAffectingHediffs"></param>
+        /// <param name="eyeHediffs"></param>
+        private void InitialiseHediffLightMods(List<HediffDef> sightAffectingHediffs, List<HediffDef> eyeHediffs)
+        {
+            var hediffLightMods = Settings.Store.HediffLightMods ?? new Dictionary<HediffDef, Hediff_LightModifiers>();
 
+            var sightNotEyeHediffs = sightAffectingHediffs.Except(eyeHediffs);
+            
             //Check to see if any non eye hediffs have the right comp
-            foreach (HediffDef hediffDef in list)
+            foreach (HediffDef hediffDef in sightNotEyeHediffs)
             {
-                if (!Storage.HediffLightMods.TryGetValue(key: hediffDef, value: out Hediff_LightModifiers value) || value == null)
+                if (!hediffLightMods.TryGetValue(key: hediffDef, value: out Hediff_LightModifiers value)
+                 || value == null)
                 {
                     if (hediffDef.HasComp(compClass: typeof(HediffComp_NightVision)))
                     {
-                        Storage.HediffLightMods[key: hediffDef] = new Hediff_LightModifiers(hediffDef: hediffDef);
+                        hediffLightMods[key: hediffDef] = new Hediff_LightModifiers(hediffDef: hediffDef);
                     }
                 }
 
@@ -100,22 +111,23 @@ namespace NightVision
                 }
             }
 
-            list = Storage.AllEyeHediffs.ToList();
-
             //Do the same thing as above but for eye hediffs; 
-            foreach (HediffDef hediffDef in list)
+            foreach (HediffDef hediffDef in eyeHediffs)
             {
-                if (!Storage.HediffLightMods.TryGetValue(key: hediffDef, value: out Hediff_LightModifiers value) || value == null)
+                if (!hediffLightMods.TryGetValue(key: hediffDef, value: out Hediff_LightModifiers value)
+                 || value == null)
                 {
                     if (hediffDef.CompPropsFor(compClass: typeof(HediffComp_NightVision)) is HediffCompProperties_NightVision)
                     {
-                        Storage.HediffLightMods[key: hediffDef] = new Hediff_LightModifiers(hediffDef: hediffDef) {AffectsEye = true};
+                        hediffLightMods[key: hediffDef] = new Hediff_LightModifiers(hediffDef: hediffDef)
+                            {AffectsEye = true};
                     }
                     //bionic eyes and such are automatically assigned night vision, this can be individually overridden in the mod settings
                     else if (AutoQualifier.HediffCheck(hediffDef: hediffDef) is VisionType autoOptions)
                     {
-                        Storage.HediffLightMods[key: hediffDef] =
-                                    new Hediff_LightModifiers(hediffDef: hediffDef) {AffectsEye = true, AutoAssigned = true, Setting = autoOptions};
+                        hediffLightMods[key: hediffDef] =
+                            new Hediff_LightModifiers(hediffDef: hediffDef)
+                                {AffectsEye = true, AutoAssigned = true, Setting = autoOptions};
                     }
                 }
                 else if (hediffDef.CompPropsFor(compClass: typeof(HediffComp_NightVision)) is HediffCompProperties_NightVision)
@@ -129,8 +141,13 @@ namespace NightVision
                     value.AutoAssigned = true;
                 }
             }
+
+            Settings.Store.HediffLightMods = hediffLightMods;
         }
 
-        #endregion
+
+        
+        
+        
     }
 }

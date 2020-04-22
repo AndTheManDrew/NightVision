@@ -78,7 +78,7 @@ namespace NightVision.Harmony
 
             if (glow.GlowIsDarkness())
             {
-                return 1f + GlowCoverCoefficient * ((Constants_Calculations.MinGlowNoGlow - glow) / Constants_Calculations.MinGlowNoGlow);
+                return 1f + GlowCoverCoefficient * ((Constants.MIN_GLOW_NO_GLOW - glow) / Constants.MIN_GLOW_NO_GLOW);
             }
 
             return 1f;

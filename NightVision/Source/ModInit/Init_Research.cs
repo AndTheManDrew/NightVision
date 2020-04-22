@@ -8,11 +8,10 @@ using Verse;
 
 namespace NightVision
 {
-    public static class Init_Research
+    public partial class Initialiser
     {
-        #region  Members
         //Adds a marker to research projects that unlock NV stuff so people know how cool I am
-        public static void AddNightVisionToResearch()
+        public void AddNightVisionMarkerToVanillaResearch()
         {
             ResearchProjectDef complexClothing  = ResearchProjectDef.Named(defName: "ComplexClothing");
             ResearchProjectDef microelectronics = ResearchProjectDef.Named(defName: "MicroelectronicsBasics");
@@ -27,6 +26,5 @@ namespace NightVision
             powerArmour.description      += $"\n{"NVResPowerAddition".Translate()}";
         }
 
-        #endregion
     }
 }

@@ -9,17 +9,17 @@ using Verse;
 
 namespace NightVision
 {
-    public static class Init_Apparel
+    public partial class Initialiser
     {
         #region  Members
 
-        public static void FindAllEyeCoveringApparel()
+        public void FindAllValidApparel()
         {
             ThingCategoryDef headgearCategoryDef = ThingCategoryDef.Named(defName: "Headgear");
             BodyPartGroupDef fullHead            = Defs_Rimworld.Head;
             BodyPartGroupDef eyes                = Defs_Rimworld.Eyes;
 
-            Storage.AllEyeCoveringHeadgearDefs = new HashSet<ThingDef>(
+            var AllEyeCoveringHeadgearDefs = new HashSet<ThingDef>(
                 collection: DefDatabase<ThingDef>.AllDefsListForReading.FindAll(
                     match: adef => adef.IsApparel
                                    && ((adef.thingCategories?.Contains(item: headgearCategoryDef) ?? false)
@@ -27,20 +27,16 @@ namespace NightVision
                                        || adef.HasComp(compType: typeof(Comp_NightVisionApparel)))
                 )
             );
-
-            if (Storage.NVApparel == null)
-            {
-                Storage.NVApparel = new Dictionary<ThingDef, ApparelVisionSetting>();
-            }
-
+            var NVApparel = Settings.Store.NVApparel ?? new Dictionary<ThingDef, ApparelVisionSetting>();
+            
             //Add defs that have NV comp
-            foreach (ThingDef apparel in Storage.AllEyeCoveringHeadgearDefs)
+            foreach (ThingDef apparel in AllEyeCoveringHeadgearDefs)
             {
                 if (apparel.comps.Find(match: comp => comp is CompProperties_NightVisionApparel) is CompProperties_NightVisionApparel)
                 {
-                    if (!Storage.NVApparel.TryGetValue(key: apparel, value: out ApparelVisionSetting setting))
+                    if (!NVApparel.TryGetValue(key: apparel, value: out ApparelVisionSetting setting))
                     {
-                        Storage.NVApparel[key: apparel] = new ApparelVisionSetting(apparel: apparel);
+                        NVApparel[key: apparel] = new ApparelVisionSetting(apparel: apparel);
                     }
                     else
                     {
@@ -54,6 +50,9 @@ namespace NightVision
                     ApparelVisionSetting.CreateNewApparelVisionSetting(apparel: apparel);
                 }
             }
+
+            Settings.Store.NVApparel = NVApparel;
+            Settings.Store.AllEyeCoveringHeadgearDefs = AllEyeCoveringHeadgearDefs;
         }
 
         #endregion

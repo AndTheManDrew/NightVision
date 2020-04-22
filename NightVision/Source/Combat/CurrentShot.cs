@@ -2,7 +2,7 @@
 
 namespace NightVision {
     public static class CurrentShot {
-        public static float GlowFactor = Constants_Calculations.TrivialFactor;
+        public static float GlowFactor = Constants.TRIVIAL_FACTOR;
         public static Verb  Verb;
         public static Thing Caster;
         public static float OriginalHitOnStandardTarget;
@@ -12,7 +12,7 @@ namespace NightVision {
 
         public static void ClearLastShot()
         {
-            GlowFactor = Constants_Calculations.TrivialFactor;
+            GlowFactor = Constants.TRIVIAL_FACTOR;
             Verb       = null;
             Caster     = null;
         }

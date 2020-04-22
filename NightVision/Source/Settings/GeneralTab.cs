@@ -3,20 +3,21 @@ using UnityEngine;
 using Verse;
 
 namespace NightVision {
-    public static class GeneralTab {
-        public static bool _askToConfirmReset;
-        public static Stopwatch confirmTimer = new Stopwatch();
+    public class GeneralTab {
+        private bool _askToConfirmReset;
+        private Stopwatch confirmTimer = new Stopwatch();
 
-        public static void Clear()
+        public  void Clear()
         {
-            NightVision.GeneralTab._askToConfirmReset = false;
-            NightVision.GeneralTab.confirmTimer.Reset();
+            _askToConfirmReset = false;
+            confirmTimer.Reset();
         }
 
-        public static void DrawTab(Rect inRect)
+        public void DrawTab(Rect inRect)
         {
             TextAnchor anchor    = Text.Anchor;
-            float      rowHeight = Constants_Draw.GenRowHeight;
+            float      rowHeight = Constants.GEN_ROW_HEIGHT;
+            var cache = Settings.Cache;
 
             var rowRect = new Rect(
                 inRect.width  * 0.05f,
@@ -28,9 +29,9 @@ namespace NightVision {
             Text.Anchor = TextAnchor.MiddleLeft;
 
             Widgets.Label(rowRect, "NVVanillaMultiExp".Translate());
-            rowRect.y += rowHeight + Constants_Draw.RowGap;
+            rowRect.y += rowHeight + Constants.ROW_GAP;
             Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
-            rowRect.y += Constants_Draw.RowGap;
+            rowRect.y += Constants.ROW_GAP;
 
             //Night Vision Settings
 
@@ -41,75 +42,75 @@ namespace NightVision {
                             .CapitalizeFirst()
             );
 
-            rowRect.y += rowHeight + Constants_Draw.RowGap;
+            rowRect.y += rowHeight + Constants.ROW_GAP;
 
-            SettingsCache.NVZeroCache = Widgets.HorizontalSlider(
+            cache.NVZeroCache = Widgets.HorizontalSlider(
                 rowRect,
-                (float) SettingsCache.NVZeroCache,
-                (float) SettingsCache.MinCache,
-                (float) SettingsCache.MaxCache,
+                (float) cache.NVZeroCache,
+                (float) cache.MinCache,
+                cache.MaxCache.Value,
                 true,
                 string.Format(
                     Str.ZeroMultiLabel,
-                    SettingsCache.NVZeroCache
+                    cache.NVZeroCache
                 ),
                 string.Format(
                     Str.XLabel,
-                    SettingsCache.MinCache
+                    cache.MinCache
                 ),
                 string.Format(
                     Str.XLabel,
-                    SettingsCache.MaxCache
+                    cache.MaxCache
                 ),
                 1
             );
 
             SettingsHelpers.DrawIndicator(
                 rowRect,
-                Constants_Calculations.DefaultZeroLightMultiplier,
-                Constants_Calculations.NVDefaultOffsets[0],
-                (float) SettingsCache.MinCache,
-                (float) SettingsCache.MaxCache,
+                Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER,
+                Constants.NVDefaultOffsets[0],
+                (float) cache.MinCache,
+                (float) cache.MaxCache,
                 IndicatorTex.DefIndicator
             );
 
             rowRect.y += rowHeight * 1.5f;
 
-            SettingsCache.NVFullCache = Widgets.HorizontalSlider(
+            cache.NVFullCache = Widgets.HorizontalSlider(
                 rowRect,
-                (float) SettingsCache.NVFullCache,
-                (float) SettingsCache.MinCache,
-                (float) SettingsCache.MaxCache,
+                (float) cache.NVFullCache,
+                (float) cache.MinCache,
+                (float) cache.MaxCache,
                 true,
                 string.Format(
                     Str.FullMultiLabel,
-                    SettingsCache.NVFullCache
+                    cache.NVFullCache
                 ),
                 string.Format(
                     Str.XLabel,
-                    SettingsCache.MinCache
+                    cache.MinCache
                 ),
                 string.Format(
                     Str.XLabel,
-                    SettingsCache.MaxCache
+                    cache.MaxCache
                 ),
                 1
             );
 
             SettingsHelpers.DrawIndicator(
                 rowRect,
-                Constants_Calculations.DefaultFullLightMultiplier,
-                Constants_Calculations.NVDefaultOffsets[1],
-                (float) SettingsCache.MinCache,
-                (float) SettingsCache.MaxCache,
+                Constants.DEFAULT_FULL_LIGHT_MULTIPLIER,
+                Constants.NVDefaultOffsets[1],
+                (float) cache.MinCache,
+                (float) cache.MaxCache,
                 IndicatorTex.DefIndicator
             );
 
             rowRect.y += rowHeight * 2f;
             Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
-            rowRect.y += Constants_Draw.RowGap;
+            rowRect.y += Constants.ROW_GAP;
 
-            //Photosensitivity settings
+            // Photosensitivity settings
 
             Widgets.Label(
                 rowRect,
@@ -120,77 +121,77 @@ namespace NightVision {
 
             rowRect.y += rowHeight * 1.5f;
 
-            SettingsCache.PSZeroCache = Widgets.HorizontalSlider(
+            cache.PSZeroCache = Widgets.HorizontalSlider(
                 rowRect,
-                (float) SettingsCache.PSZeroCache,
-                (float) SettingsCache.MinCache,
-                (float) SettingsCache.MaxCache,
+                (float) cache.PSZeroCache,
+                (float) cache.MinCache,
+                (float) cache.MaxCache,
                 true,
                 string.Format(
                     Str.ZeroMultiLabel,
-                    SettingsCache.PSZeroCache
+                    cache.PSZeroCache
                 ),
                 string.Format(
                     Str.XLabel,
-                    SettingsCache.MinCache
+                    cache.MinCache
                 ),
                 string.Format(
                     Str.XLabel,
-                    SettingsCache.MaxCache
+                    cache.MaxCache
                 ),
                 1
             );
 
             SettingsHelpers.DrawIndicator(
                 rowRect,
-                Constants_Calculations.DefaultZeroLightMultiplier,
-                Constants_Calculations.PSDefaultOffsets[0],
-                (float) SettingsCache.MinCache,
-                (float) SettingsCache.MaxCache,
+                Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER,
+                Constants.PSDefaultOffsets[0],
+                (float) cache.MinCache,
+                (float) cache.MaxCache,
                 IndicatorTex.DefIndicator
             );
 
             rowRect.y += rowHeight * 1.5f;
 
-            SettingsCache.PSFullCache = Widgets.HorizontalSlider(
+            cache.PSFullCache = Widgets.HorizontalSlider(
                 rowRect,
-                (float) SettingsCache.PSFullCache,
-                (float) SettingsCache.MinCache,
-                (float) SettingsCache.MaxCache,
+                (float) cache.PSFullCache,
+                (float) cache.MinCache,
+                (float) cache.MaxCache,
                 true,
                 string.Format(
                     Str.FullMultiLabel,
-                    SettingsCache.PSFullCache
+                    cache.PSFullCache
                 ),
                 string.Format(
                     Str.XLabel,
-                    SettingsCache.MinCache
+                    cache.MinCache
                 ),
                 string.Format(
                     Str.XLabel,
-                    SettingsCache.MaxCache
+                    cache.MaxCache
                 ),
                 1
             );
 
             SettingsHelpers.DrawIndicator(
                 rowRect,
-                Constants_Calculations.DefaultFullLightMultiplier,
-                Constants_Calculations.PSDefaultOffsets[1],
-                (float) SettingsCache.MinCache,
-                (float) SettingsCache.MaxCache,
+                Constants.DEFAULT_FULL_LIGHT_MULTIPLIER,
+                Constants.PSDefaultOffsets[1],
+                (float) cache.MinCache,
+                (float) cache.MaxCache,
                 IndicatorTex.DefIndicator
             );
 
             rowRect.y += rowHeight * 2f;
             Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
-            rowRect.y += Constants_Draw.RowGap;
+            rowRect.y += Constants.ROW_GAP;
 
             
             Widgets.CheckboxLabeled(rowRect, "NightVisionFlareRaidEnabled".Translate(), ref NVGameComponent.FlareRaidIsEnabled);
             rowRect.y += rowHeight * 2f;
             Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
-            rowRect.y += Constants_Draw.RowGap;
+            rowRect.y += Constants.ROW_GAP;
  
 
 
@@ -206,7 +207,7 @@ namespace NightVision {
 
                 if (Widgets.ButtonText(rowRect, "NVConfirmReset".Translate()) && confirmTimer.ElapsedMilliseconds > 500)
                 {
-                    Storage.ResetAllSettings();
+                    Settings.Store.ResetAllSettings();
                     confirmTimer.Reset();
                 }
 

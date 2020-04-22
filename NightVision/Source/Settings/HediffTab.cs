@@ -3,26 +3,28 @@ using UnityEngine;
 using Verse;
 
 namespace NightVision {
-    public static class HediffTab {
-        private static Vector2 _hediffScrollPosition = Vector2.zero;
-        private static int? _numberOfCustomHediffs;
+    public  class HediffTab {
+        private Vector2 _hediffScrollPosition = Vector2.zero;
+        private int? _numberOfCustomHediffs;
 
 
-        public static void Clear()
+        public  void Clear()
         {
-            NightVision.HediffTab._hediffScrollPosition  = Vector2.zero;
-            NightVision.HediffTab._numberOfCustomHediffs = null;
+            _hediffScrollPosition  = Vector2.zero;
+            _numberOfCustomHediffs = null;
         }
 
 
-        public static void DrawTab(Rect inRect)
+        public void DrawTab(Rect inRect)
         {
-            int hediffcount = SettingsCache.GetAllHediffs.Count;
+            var cache = Settings.Cache;
+            var store = Settings.Store;
+            int hediffcount = cache.GetAllHediffs.Count;
 
             if (_numberOfCustomHediffs == null)
             {
                 _numberOfCustomHediffs =
-                            Storage.HediffLightMods.Count(hlm => hlm.Value.IntSetting == VisionType.NVCustom);
+                            store.HediffLightMods.Count(hlm => hlm.Value.IntSetting == VisionType.NVCustom);
             }
 
             inRect = inRect.AtZero();
@@ -40,19 +42,19 @@ namespace NightVision {
                 inRect.y,
                 inRect.width * 0.9f,
                 hediffcount
-                * (Constants_Draw.RowHeight + Constants_Draw.RowGap)
+                * (Constants.ROW_HEIGHT + Constants.ROW_GAP)
                 + (float) _numberOfCustomHediffs * 100f
             );
 
-            var rowRect = new Rect(inRect.x + 6f, num, inRect.width - 12f, Constants_Draw.RowHeight);
+            var rowRect = new Rect(inRect.x + 6f, num, inRect.width - 12f, Constants.ROW_HEIGHT);
             Widgets.BeginScrollView(inRect, ref _hediffScrollPosition, viewRect);
 
             for (var i = 0; i < hediffcount; i++)
             {
-                HediffDef hediffdef = SettingsCache.GetAllHediffs[i];
+                HediffDef hediffdef = cache.GetAllHediffs[i];
                 rowRect.y = num;
 
-                if (Storage.HediffLightMods.TryGetValue(hediffdef, out Hediff_LightModifiers hediffmods))
+                if (store.HediffLightMods.TryGetValue(hediffdef, out Hediff_LightModifiers hediffmods))
                 {
                     _numberOfCustomHediffs +=
                                 SettingsHelpers.DrawLightModifiersRow(
@@ -65,7 +67,7 @@ namespace NightVision {
                 }
                 else
                 {
-                    Hediff_LightModifiers temp = Storage.AllEyeHediffs.Contains(hediffdef)
+                    Hediff_LightModifiers temp = store.AllEyeHediffs.Contains(hediffdef)
                                 ? new Hediff_LightModifiers {AffectsEye = true}
                                 : new Hediff_LightModifiers();
 
@@ -81,17 +83,17 @@ namespace NightVision {
                     if (temp.IntSetting != VisionType.NVNone)
                     {
                         temp.InitialiseNewFromSettings(hediffdef);
-                        Storage.HediffLightMods[hediffdef] = temp;
+                        store.HediffLightMods[hediffdef] = temp;
                     }
                 }
 
-                num += Constants_Draw.RowHeight + Constants_Draw.RowGap;
+                num += Constants.ROW_HEIGHT + Constants.ROW_GAP;
 
                 if (i < hediffcount)
                 {
                     Widgets.DrawLineHorizontal(
                         rowRect.x     + 6f,
-                        num           - (Constants_Draw.RowGap / 2 - 0.5f),
+                        num           - (Constants.ROW_GAP / 2 - 0.5f),
                         rowRect.width - 12f
                     );
                 }

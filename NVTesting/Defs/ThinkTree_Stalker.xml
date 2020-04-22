@@ -67,7 +67,7 @@
         <li Class="ThinkNode_ConditionalHasLord">
           <invert>true</invert>
           <subNodes>
-            <li Class="NVTesting.JobGiver_MakeLord"></li>
+            <li Class="NVExperiments.JobGiver_MakeLord"></li>
           </subNodes>
         </li>
       </subNodes>
