@@ -1,9 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Harmony;
 using HarmonyLib;
-using NightVision;
 using RimWorld;
 using RimWorld.BaseGen;
 using Verse;
@@ -27,15 +25,15 @@ namespace NVExperiments
                                              && mi.GetParameters()[0].ParameterType == typeof(PawnKindDef)),
                     null,
                     new HarmonyMethod(typeof(NViHarmonyPatcher), nameof(MechanoidsFixerAncient)));
-
-                harmony.Patch(
-                    typeof(CompSpawnerMechanoidsOnDamaged)
-                                .GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
-                                .First(mi => mi.HasAttribute<CompilerGeneratedAttribute>()
-                                             && mi.ReturnType == typeof(bool) && mi.GetParameters().Length == 1
-                                             && mi.GetParameters()[0].ParameterType == typeof(PawnKindDef)),
-                    null,
-                    new HarmonyMethod(typeof(NVHarmonyPatcher), nameof(MechanoidsFixer)));
+                //TODO Check if below is still required in 1.1
+                //harmony.Patch(
+                //    typeof(CompSpawnerMechanoidsOnDamaged)
+                //                .GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+                //                .First(mi => mi.HasAttribute<CompilerGeneratedAttribute>()
+                //                             && mi.ReturnType == typeof(bool) && mi.GetParameters().Length == 1
+                //                             && mi.GetParameters()[0].ParameterType == typeof(PawnKindDef)),
+                //    null,
+                //    new HarmonyMethod(typeof(NVHarmonyPatcher), nameof(MechanoidsFixer)));
             }
 
         

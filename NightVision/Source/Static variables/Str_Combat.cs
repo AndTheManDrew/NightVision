@@ -4,15 +4,13 @@
 // 
 // 23 10 2018
 
-using NightVision;
-using RimWorld;
 using Verse;
 /// <summary>
 /// Combat strings defined in xml file in nightvision/languages
 /// </summary>
 public static class Str_Combat
 {
-    
+
 
     public const char NumSpace = '\u2007';
 
@@ -22,7 +20,7 @@ public static class Str_Combat
 
     public static readonly string HitChanceTitle = "NightVisionHitChanceTitle".Translate();
 
-    public static readonly string SurpriseAttackTitle= "NightVisionSurpriseAtkTitle".Translate();
+    public static readonly string SurpriseAttackTitle = "NightVisionSurpriseAtkTitle".Translate();
 
     public static readonly string DodgeTitle = "NightVisionDodgeTitle".Translate();
 
@@ -31,7 +29,7 @@ public static class Str_Combat
     {
         return "NightVisionShootTargetAtGlow".Translate();
     }
-    
+
 
     public static string ShotChanceTransform(float distance, float hitChance, float nvResult, float psResult)
     {
@@ -39,7 +37,7 @@ public static class Str_Combat
                     $"{"distance".Translate().CapitalizeFirst()} {distance.ToString().PadLeft(2, '\u2007')}, {hitChance.ToStringPercent("F1")} ==>".PadLeft(30, NumSpace) + $"{nvResult.ToStringPercent("F1").PadLeft(7, NumSpace)}  |  {psResult.ToStringPercent("F1")}";
     }
 
-    public static string StrikeChanceTransform( float hitChance, float nvResult, float psResult)
+    public static string StrikeChanceTransform(float hitChance, float nvResult, float psResult)
     {
         return $"{hitChance.ToStringPercent("F1")}  ==>".PadLeft(28, NumSpace) + $"{nvResult.ToStringPercent("F1").PadLeft(7, NumSpace)}  |  {psResult.ToStringPercent("F1")}";
     }
@@ -58,10 +56,10 @@ public static class Str_Combat
     {
         return "NightVisionSurpriseAtkDesc".Translate();
     }
-    
+
     public static string SurpriseAtkCalcHeader()
     {
-        return "NightVisionOurLM".Translate().RawText.PadLeft(20, NumSpace) + "  |" + "NightVisionTargetLM".Translate().RawText.PadLeft(12, NumSpace) + "  |"+ "NightVisionSurpriseAtkSh".Translate().RawText.PadLeft(10, NumSpace);
+        return "NightVisionOurLM".Translate().RawText.PadLeft(20, NumSpace) + "  |" + "NightVisionTargetLM".Translate().RawText.PadLeft(12, NumSpace) + "  |" + "NightVisionSurpriseAtkSh".Translate().RawText.PadLeft(10, NumSpace);
     }
 
     public static string SurpriseAtkCalcRow(float glow, float atkGlowF, float defGlowF, float chance)
@@ -69,12 +67,12 @@ public static class Str_Combat
         return
                     $"{glow.ToStringPercent("F0").PadLeft(5, NumSpace)} {"Lit".Translate()}:{atkGlowF.ToStringPercent().PadLeft(10, NumSpace)}  |{defGlowF.ToStringPercent().PadLeft(10, NumSpace)}  |{chance.ToStringPercent().PadLeft(6, NumSpace)}";
     }
-    
+
     public static string Dodge()
     {
         return "NightVisionDodge".Translate();
     }
-    
+
     public static string DodgeCalcHeader()
     {
         return "NightVisionOurLM".Translate().RawText.PadLeft(20, NumSpace) + "  |" + "NightVisionAtkLM".Translate().RawText.PadLeft(12, NumSpace) + "  |" + "NightVisionDodgeChanceShort".Translate().RawText.PadLeft(10, NumSpace);
@@ -82,7 +80,7 @@ public static class Str_Combat
 
     public static string DodgeCalcRow(float glow, float atkGlowF, float defGlowF, float dodge, float newDodge)
     {
-        
+
 
         return
                     $"{glow.ToStringPercent().PadLeft(5, NumSpace)} {"Lit".Translate()}:{defGlowF.ToStringPercent().PadLeft(10, NumSpace)}  |{atkGlowF.ToStringPercent().PadLeft(10, NumSpace)}  |{dodge.ToStringPercent("F1").PadLeft(6, NumSpace)} ==> {newDodge.ToStringPercent("F1")}";

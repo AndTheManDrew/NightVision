@@ -1,11 +1,13 @@
 ﻿using Verse;
 
-namespace NightVision.Harmony.Manual {
+namespace NightVision.Harmony.Manual
+{
 
-    public static class PawnHealthTracker_AddHediff {
+    public static class PawnHealthTracker_AddHediff
+    {
         public static void AddHediff_Postfix(
-            Hediff             hediff,
-            BodyPartRecord     part,
+            Hediff hediff,
+            BodyPartRecord part,
             Pawn ___pawn
         )
         {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using RimWorld;
-using Verse;
+﻿using Verse;
 
 namespace NightVision
 {
@@ -20,7 +15,7 @@ namespace NightVision
         public static readonly string Drk = "NightVisionDrk".Translate();
         public static readonly string BriL = "NightVisionBriL".Translate();
 
-        public static string AcronymDef(string  statName, string stAcronym) => "NightVisionAcronymDef".Translate(statName, stAcronym);
+        public static string AcronymDef(string statName, string stAcronym) => "NightVisionAcronymDef".Translate(statName, stAcronym);
 
         public static readonly string Darkness = "NightVisionDarkness".Translate();
         public static readonly string Bright = "NightVisionBright".Translate();

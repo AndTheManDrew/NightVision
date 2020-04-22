@@ -3,9 +3,11 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 
-namespace NightVision {
-    public class RaceTab {
-        private int?    _numberOfCustomRaces;
+namespace NightVision
+{
+    public class RaceTab
+    {
+        private int? _numberOfCustomRaces;
         private Vector2 _raceScrollPosition = Vector2.zero;
 
         public void Clear()
@@ -36,7 +38,7 @@ namespace NightVision {
                 inRect.width * 0.9f,
                 raceCount
                 * (Constants.ROW_HEIGHT + Constants.ROW_GAP)
-                + (float) _numberOfCustomRaces * 100f
+                + (float)_numberOfCustomRaces * 100f
             );
 
             var rowRect = new Rect(inRect.x + 6f, heightMarker, inRect.width - 12f, Constants.ROW_HEIGHT);
@@ -58,7 +60,7 @@ namespace NightVision {
                     GUI.color = Color.grey;
                     Widgets.Label(rowRect.TopPartPixels(20f), "NVDevModeOnly".Translate());
                     rowRect.y += 20;
-                    heightMarker       += 20;
+                    heightMarker += 20;
                 }
 
                 _numberOfCustomRaces +=

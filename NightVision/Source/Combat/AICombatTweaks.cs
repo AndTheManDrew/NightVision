@@ -24,7 +24,7 @@ namespace NightVision
             else
             {
                 Log.Message($"Odd Parameters for ModifyTargetAquireRadius: radius ={radius} with pawn={pawn}");
-                
+
             }
 
             return radius;

@@ -2,13 +2,15 @@
 using RimWorld;
 using Verse;
 
-namespace NightVision.Harmony {
+namespace NightVision.Harmony
+{
     [HarmonyPatch(typeof(ThoughtWorker_Dark), "CurrentStateInternal")]
-    public static class ThoughtWorkerDark_CurrentStateInternal {
+    public static class ThoughtWorkerDark_CurrentStateInternal
+    {
         private const int PhotosensDarkThoughtStage = 1;
 
         public static void Postfix(
-            Pawn             p,
+            Pawn p,
             ref ThoughtState __result
         )
         {

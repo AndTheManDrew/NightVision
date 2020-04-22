@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using HarmonyLib;
+using JetBrains.Annotations;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
-using HarmonyLib;
-using JetBrains.Annotations;
 using Verse;
 
 namespace NightVision.Harmony
@@ -37,10 +37,10 @@ namespace NightVision.Harmony
             for (int i = 0; i < instructionsList.Count; i++)
             {
                 var current = instructionsList[i];
-                
-                if (current.opcode == OpCodes.Call && current.operand == signifyingMethodInfo)
+
+                if (current.Is(OpCodes.Call, signifyingMethodInfo)/*current.opcode == OpCodes.Call && current.OperandIs(signifyingMethodInfo) *//*current.operand == signifyingMethodInfo*/)
                 {
-                    
+
                     yield return current;
 
                     i++;

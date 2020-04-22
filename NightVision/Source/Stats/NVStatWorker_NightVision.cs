@@ -1,9 +1,5 @@
-﻿using System.Linq;
-using System.Text;
-using HarmonyLib;
+﻿using HarmonyLib;
 using JetBrains.Annotations;
-using RimWorld;
-using Verse;
 
 namespace NightVision
 {

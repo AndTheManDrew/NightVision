@@ -4,34 +4,17 @@
 // 
 // 21 07 2018
 
+using JetBrains.Annotations;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using JetBrains.Annotations;
-
-using RimWorld;
-
-using UnityEngine;
-
 using Verse;
 
 namespace NightVision
 {
     public class Comp_NightVision : ThingComp
     {
-        public bool ApparelGrantsNV;
-        public bool ApparelNullsPS;
-
-        public int LastDarkTick;
-
-        public List<Apparel> PawnsNVApparel = new List<Apparel>();
-        public Dictionary<string, List<HediffDef>> PawnsNVHediffs = new Dictionary<string, List<HediffDef>>();
-        public float[] HediffMods = new float[2];
-        public float[] NvhediffMods = new float[2];
-        public float[] PshediffMods = new float[2];
-
         private bool _apparelNeedsChecking;
         private float _fullLightModifier = -1;
 
@@ -44,6 +27,16 @@ namespace NightVision
         private List<Hediff> _pawnsHediffs;
         public List<BodyPartRecord> _raceSightParts;
         private float _zeroLightModifier = -1;
+        public bool ApparelGrantsNV;
+        public bool ApparelNullsPS;
+        public float[] HediffMods = new float[2];
+
+        public int LastDarkTick;
+        public float[] NvhediffMods = new float[2];
+
+        public List<Apparel> PawnsNVApparel = new List<Apparel>();
+        public Dictionary<string, List<HediffDef>> PawnsNVHediffs = new Dictionary<string, List<HediffDef>>();
+        public float[] PshediffMods = new float[2];
 
         /// <summary>
         ///     The glow mods of the pawns races eyes
@@ -83,8 +76,7 @@ namespace NightVision
 
         public int TicksSinceLastDark => Find.TickManager.TicksGame - LastDarkTick;
 
-        [UsedImplicitly]
-        public CompProperties_NightVision Props => (CompProperties_NightVision) props;
+        [UsedImplicitly] public CompProperties_NightVision Props => (CompProperties_NightVision)props;
 
         public Pawn ParentPawn => _intParentPawn ?? (_intParentPawn = parent as Pawn);
 
@@ -161,7 +153,7 @@ namespace NightVision
                 }
 
                 if (ApparelGrantsNV && _zeroLightModifier + Constants.NV_EPSILON
-                  < LightModifiersBase.NVLightModifiers[0])
+                    < LightModifiersBase.NVLightModifiers[0])
                 {
                     return LightModifiersBase.NVLightModifiers[0];
                 }
@@ -225,7 +217,7 @@ namespace NightVision
             //If glow is approx. 0%
             if (glow.IsTrivial())
             {
-                return (float) Math.Round(Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER + ZeroLightModifier,
+                return (float)Math.Round(Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER + ZeroLightModifier,
                     Constants.NUMBER_OF_DIGITS);
             }
             //If glow is approx. 100% and the pawns full light modifier is not approx 0
@@ -234,7 +226,7 @@ namespace NightVision
             {
                 if (FullLightModifier.IsNonTrivial())
                 {
-                    return (float) Math.Round(
+                    return (float)Math.Round(
                         Constants.DEFAULT_FULL_LIGHT_MULTIPLIER + FullLightModifier,
                         Constants.NUMBER_OF_DIGITS);
                 }
@@ -245,14 +237,14 @@ namespace NightVision
 
             if (glow.GlowIsDarkness())
             {
-                return (float) Math.Round(
+                return (float)Math.Round(
                     1f + (Constants.MIN_GLOW_NO_GLOW - glow) * (ZeroLightModifier - 0.2f) / 0.3f,
                     Constants.NUMBER_OF_DIGITS);
             }
 
             if (glow.GlowIsBright() && FullLightModifier.IsNonTrivial())
             {
-                return (float) Math.Round(
+                return (float)Math.Round(
                     1f + (glow - Constants.MAX_GLOW_NO_GLOW) * FullLightModifier / 0.3f,
                     Constants.NUMBER_OF_DIGITS);
             }
@@ -273,12 +265,12 @@ namespace NightVision
                 Log.Message("NightVisionComp: " + ParentPawn.Name);
                 Log.Message("Hediffs: ");
 
-                foreach (KeyValuePair<string, List<HediffDef>> hedifflist in PawnsNVHediffs)
+                foreach (var hedifflist in PawnsNVHediffs)
                 {
                     Log.Message(new string('-', 20));
                     Log.Message(hedifflist.Key + "has:");
 
-                    foreach (HediffDef hediff in hedifflist.Value)
+                    foreach (var hediff in hedifflist.Value)
                     {
                         Log.Message(hediff.LabelCap);
                     }
@@ -287,12 +279,12 @@ namespace NightVision
                 Log.Message(new string('-', 20));
                 Log.Message("NumberRemainingEyes: " + NumberOfRemainingEyes);
                 Log.Message("HediffLightModifiers: zero = " + HediffMods[0] + PshediffMods[0]
-                          + NvhediffMods[0] + ", full = " + HediffMods[0] + PshediffMods[0]
-                          + NvhediffMods[0]);
+                            + NvhediffMods[0] + ", full = " + HediffMods[0] + PshediffMods[0]
+                            + NvhediffMods[0]);
                 Log.Message("NaturalLightModifiers: zero = " + NaturalLightModifiers[0] + ", full = "
-                          + NaturalLightModifiers[1]);
+                            + NaturalLightModifiers[1]);
                 Log.Message("Total Glow Mods: zero = " + ZeroLightModifier + ", full = "
-                          + FullLightModifier);
+                            + FullLightModifier);
                 Log.Message(new string('*', 30));
             }
 #endif
@@ -368,8 +360,8 @@ namespace NightVision
                              && PawnsNVHediffs[part.Label].Remove(hediff.def))
             {
                 if (part.def.tags.Contains(Defs_Rimworld.EyeTag)
-                 && (hediff is Hediff_MissingPart
-                  || hediff.def.addedPartProps is AddedBodyPartProps abpp && abpp.solid))
+                    && (hediff is Hediff_MissingPart
+                        || hediff.def.addedPartProps is AddedBodyPartProps abpp && abpp.solid))
                 {
                     NumberOfRemainingEyes++;
                 }
@@ -395,9 +387,9 @@ namespace NightVision
 
             if (part != null)
             {
-                string partName = part.Label;
+                var partName = part.Label;
 
-                if (PawnsNVHediffs.TryGetValue(partName, out List<HediffDef> tempPartsHediffDefs))
+                if (PawnsNVHediffs.TryGetValue(partName, out var tempPartsHediffDefs))
                 {
                     //Categorise the hediff:
                     //MissingPart overrides everything
@@ -406,20 +398,20 @@ namespace NightVision
                     if (hediff is Hediff_MissingPart)
                     {
                         removedPart = true;
-                        tempPartsHediffDefs = new List<HediffDef> {HediffDefOf.MissingBodyPart};
+                        tempPartsHediffDefs = new List<HediffDef> { HediffDefOf.MissingBodyPart };
                     }
                     else
                     {
                         //Check if there is a setting for it
-                        HediffDef hediffDef = hediff.def;
+                        var hediffDef = hediff.def;
 
                         if (Settings.Store.HediffLightMods.ContainsKey(hediffDef))
                         {
                             if (hediffDef.addedPartProps is AddedBodyPartProps abpp
-                             && abpp.solid)
+                                && abpp.solid)
                             {
                                 removedPart = true;
-                                tempPartsHediffDefs = new List<HediffDef> {hediffDef};
+                                tempPartsHediffDefs = new List<HediffDef> { hediffDef };
                             }
                             else if (!tempPartsHediffDefs.Contains(hediffDef))
                             {
@@ -429,10 +421,10 @@ namespace NightVision
                         //Last two checks are in case the user changes settings later
                         //Is it a solid replacement?
                         else if (hediffDef.addedPartProps is AddedBodyPartProps abpp
-                              && abpp.solid)
+                                 && abpp.solid)
                         {
                             removedPart = true;
-                            tempPartsHediffDefs = new List<HediffDef> {hediffDef};
+                            tempPartsHediffDefs = new List<HediffDef> { hediffDef };
                         }
                         //Check if it is a valid hediff
                         else if (allSightHediffs.Contains(hediffDef))
@@ -455,13 +447,13 @@ namespace NightVision
                 }
                 else if (allSightHediffs.Contains(hediff.def))
                 {
-                    PawnsNVHediffs[partName] = new List<HediffDef> {hediff.def};
+                    PawnsNVHediffs[partName] = new List<HediffDef> { hediff.def };
                 }
             }
             else if (allSightHediffs.Contains(hediff.def))
             {
-                if (PawnsNVHediffs.TryGetValue(Str.BodyKey, out List<HediffDef> value)
-                 && !value.Contains(hediff.def))
+                if (PawnsNVHediffs.TryGetValue(Str.BodyKey, out var value)
+                    && !value.Contains(hediff.def))
                 {
                     PawnsNVHediffs[Str.BodyKey].Add(hediff.def);
                     CalculateHediffMod();
@@ -477,7 +469,7 @@ namespace NightVision
                 return;
             }
 
-            if (Settings.Store.NVApparel.TryGetValue(apparel.def, out ApparelVisionSetting value))
+            if (Settings.Store.NVApparel.TryGetValue(apparel.def, out var value))
             {
                 ApparelGrantsNV |= value.GrantsNV;
                 ApparelNullsPS |= value.NullifiesPS;
@@ -507,7 +499,6 @@ namespace NightVision
             }
 
             QuickRecheckApparel();
-        
         }
 
         private void CalculateHediffMod()
@@ -518,11 +509,11 @@ namespace NightVision
             var psFullMod = 0f;
             var nvZeroMod = 0f;
             var nvFullMod = 0f;
-            int eyeCount = RaceSightParts.Count;
-            
+            var eyeCount = RaceSightParts.Count;
+
             var hediffLightMods = Settings.Store.HediffLightMods;
 
-            foreach (List<HediffDef> value in PawnsNVHediffs.Values)
+            foreach (var value in PawnsNVHediffs.Values)
             {
                 if (value.NullOrEmpty())
                 {
@@ -530,12 +521,12 @@ namespace NightVision
                 }
 
 
-                foreach (HediffDef hediffDef in value)
+                foreach (var hediffDef in value)
                 {
                     if (hediffLightMods.TryGetValue(hediffDef,
-                        out Hediff_LightModifiers hediffSetting))
+                        out var hediffSetting))
                     {
-                        int eyeNormalisingFactor = hediffSetting.AffectsEye ? eyeCount : 1;
+                        var eyeNormalisingFactor = hediffSetting.AffectsEye ? eyeCount : 1;
 
                         switch (hediffSetting.Setting)
                         {
@@ -589,11 +580,12 @@ namespace NightVision
                     hdMod += NaturalLightModifiers[index] * _numRemainingEyes;
                     break;
             }
+
             var mod = index == 0 ? Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER : Constants.DEFAULT_FULL_LIGHT_MULTIPLIER;
             return NVMaths.ClampMods(mod, nvMod, psMod, hdMod, LightModifiersBase.NVLightModifiers[index],
                 LightModifiersBase.PSLightModifiers[index], CanCheat);
         }
-        
+
         private float CalcZeroLightModifier()
         {
             return SumModifier(0);
@@ -631,7 +623,7 @@ namespace NightVision
 
             if (!PawnHediffs.NullOrEmpty())
             {
-                foreach (Hediff hediff in PawnHediffs)
+                foreach (var hediff in PawnHediffs)
                 {
                     CheckAndAddHediff(hediff, hediff.Part);
                 }
@@ -659,9 +651,9 @@ namespace NightVision
             var nvApparel = Settings.Store.NVApparel;
             var allEyeGear = Settings.Store.AllEyeCoveringHeadgearDefs;
 
-            foreach (Apparel apparel in pawnsApparel)
+            foreach (var apparel in pawnsApparel)
             {
-                if (nvApparel.TryGetValue(apparel.def, out ApparelVisionSetting value))
+                if (nvApparel.TryGetValue(apparel.def, out var value))
                 {
                     ApparelGrantsNV |= value.GrantsNV;
                     ApparelNullsPS |= value.NullifiesPS;
@@ -686,9 +678,9 @@ namespace NightVision
             ApparelNullsPS = false;
             var nvApparel = Settings.Store.NVApparel;
 
-            foreach (Apparel apparel in PawnsNVApparel)
+            foreach (var apparel in PawnsNVApparel)
             {
-                if (!nvApparel.TryGetValue(apparel.def, out ApparelVisionSetting value))
+                if (!nvApparel.TryGetValue(apparel.def, out var value))
                 {
                     continue;
                 }
@@ -716,7 +708,7 @@ namespace NightVision
                     DarknessPsych = Classifier.ClassifyModifier(ZeroLightModifier, true);
                 }
 
-                return (VisionType) DarknessPsych;
+                return (VisionType)DarknessPsych;
             }
         }
 
@@ -743,7 +735,7 @@ namespace NightVision
                 }
 
                 return TicksSinceLastDark > Constants.THOUGHT_ACTIVE_TICKS_PAST
-                    && BrightLightPsych == VisionType.NVPhotosensitivity;
+                       && BrightLightPsych == VisionType.NVPhotosensitivity;
             }
         }
 

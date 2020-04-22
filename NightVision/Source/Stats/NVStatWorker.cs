@@ -1,12 +1,9 @@
-﻿using System.Linq;
+﻿using RimWorld;
 using System.Reflection;
-using System.Text;
-using HarmonyLib;
-using RimWorld;
-using UnityEngine;
 using Verse;
 
-namespace NightVision {
+namespace NightVision
+{
     public class NVStatWorker : StatWorker
     {
         public float _glow;
@@ -44,7 +41,7 @@ namespace NightVision {
         }
 
         public override string GetExplanationUnfinalized(
-            StatRequest         req,
+            StatRequest req,
             ToStringNumberSense numberSense
         )
         {
@@ -57,7 +54,7 @@ namespace NightVision {
             return string.Empty;
         }
 
-        public override string GetStatDrawEntryLabel(StatDef stat, float value, ToStringNumberSense numberSense, StatRequest optionalReq,
+        public override string GetStatDrawEntryLabel(StatDef pStat, float value, ToStringNumberSense numberSense, StatRequest optionalReq,
             bool finalized = true)
         {
             return $"x{GetValueUnfinalized(optionalReq).ToStringPercent()}";
@@ -66,7 +63,7 @@ namespace NightVision {
 
         public override float GetValueUnfinalized(
             StatRequest req,
-            bool        applyPostProcess = true
+            bool applyPostProcess = true
         )
         {
             if (req.Thing is Pawn pawn

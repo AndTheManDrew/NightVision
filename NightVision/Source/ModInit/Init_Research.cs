@@ -13,17 +13,17 @@ namespace NightVision
         //Adds a marker to research projects that unlock NV stuff so people know how cool I am
         public void AddNightVisionMarkerToVanillaResearch()
         {
-            ResearchProjectDef complexClothing  = ResearchProjectDef.Named(defName: "ComplexClothing");
+            ResearchProjectDef complexClothing = ResearchProjectDef.Named(defName: "ComplexClothing");
             ResearchProjectDef microelectronics = ResearchProjectDef.Named(defName: "MicroelectronicsBasics");
-            ResearchProjectDef powerArmour      = ResearchProjectDef.Named(defName: "PoweredArmor");
+            ResearchProjectDef powerArmour = ResearchProjectDef.Named(defName: "PoweredArmor");
 
-            complexClothing.label  += " NV+";
+            complexClothing.label += " NV+";
             microelectronics.label += " NV+";
-            powerArmour.label      += " NV+";
+            powerArmour.label += " NV+";
 
-            complexClothing.description  += $"\n{"NVResClothAddition".Translate()}";
+            complexClothing.description += $"\n{"NVResClothAddition".Translate()}";
             microelectronics.description += $"\n{"NVResMicroAddition".Translate()}";
-            powerArmour.description      += $"\n{"NVResPowerAddition".Translate()}";
+            powerArmour.description += $"\n{"NVResPowerAddition".Translate()}";
         }
 
     }

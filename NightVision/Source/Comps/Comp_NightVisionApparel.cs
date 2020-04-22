@@ -4,8 +4,8 @@
 // 
 // 21 07 2018
 
-using System.Text;
 using JetBrains.Annotations;
+using System.Text;
 using Verse;
 
 namespace NightVision
@@ -13,7 +13,7 @@ namespace NightVision
     public class Comp_NightVisionApparel : ThingComp
     {
         [UsedImplicitly]
-        public CompProperties_NightVisionApparel Props => (CompProperties_NightVisionApparel) props;
+        public CompProperties_NightVisionApparel Props => (CompProperties_NightVisionApparel)props;
 
         public override string GetDescriptionPart()
         {

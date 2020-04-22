@@ -16,7 +16,7 @@ namespace NightVision.Harmony
         [HarmonyPostfix]
         public static void Postfix(
             ref Thing t,
-            ref bool  __result
+            ref bool __result
         )
         {
             if (__result || !t.Spawned) { }

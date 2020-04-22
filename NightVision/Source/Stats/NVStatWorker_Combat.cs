@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 using JetBrains.Annotations;
 
 using RimWorld;
@@ -10,7 +6,7 @@ using Verse;
 
 namespace NightVision
 {
-    
+
     [UsedImplicitly]
     public class NVStatWorker_Combat : NVStatWorker
     {
@@ -18,7 +14,7 @@ namespace NightVision
 
         public override string GetExplanationUnfinalized(StatRequest req, ToStringNumberSense numberSense)
         {
-            
+
             Pawn pawn = req.Thing as Pawn;
             if (GlowFor.CompFor(pawn) is Comp_NightVision comp)
             {
@@ -28,7 +24,7 @@ namespace NightVision
             return "";
         }
 
-        public override string GetStatDrawEntryLabel(StatDef statDef, float value, ToStringNumberSense numberSense, StatRequest optionalReq, bool finalized)
+        public override string GetStatDrawEntryLabel(StatDef statDef, float value, ToStringNumberSense numberSense, StatRequest optionalReq, bool finalized = true)
         {
             return "...";
         }
@@ -37,7 +33,7 @@ namespace NightVision
         {
             return 0;
         }
-        
+
         public override string GetExplanationFinalizePart(StatRequest req, ToStringNumberSense numberSense, float finalVal)
         {
             return "";
@@ -59,7 +55,7 @@ namespace NightVision
 
         public override void FinalizeValue(StatRequest req, ref float val, bool applyPostProcess)
         {
-            
+
         }
 
         #endregion

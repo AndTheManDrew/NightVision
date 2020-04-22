@@ -2,15 +2,17 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 
-namespace NightVision {
-    public  class HediffTab {
+namespace NightVision
+{
+    public class HediffTab
+    {
         private Vector2 _hediffScrollPosition = Vector2.zero;
         private int? _numberOfCustomHediffs;
 
 
-        public  void Clear()
+        public void Clear()
         {
-            _hediffScrollPosition  = Vector2.zero;
+            _hediffScrollPosition = Vector2.zero;
             _numberOfCustomHediffs = null;
         }
 
@@ -43,7 +45,7 @@ namespace NightVision {
                 inRect.width * 0.9f,
                 hediffcount
                 * (Constants.ROW_HEIGHT + Constants.ROW_GAP)
-                + (float) _numberOfCustomHediffs * 100f
+                + (float)_numberOfCustomHediffs * 100f
             );
 
             var rowRect = new Rect(inRect.x + 6f, num, inRect.width - 12f, Constants.ROW_HEIGHT);
@@ -68,7 +70,7 @@ namespace NightVision {
                 else
                 {
                     Hediff_LightModifiers temp = store.AllEyeHediffs.Contains(hediffdef)
-                                ? new Hediff_LightModifiers {AffectsEye = true}
+                                ? new Hediff_LightModifiers { AffectsEye = true }
                                 : new Hediff_LightModifiers();
 
                     _numberOfCustomHediffs +=
@@ -92,8 +94,8 @@ namespace NightVision {
                 if (i < hediffcount)
                 {
                     Widgets.DrawLineHorizontal(
-                        rowRect.x     + 6f,
-                        num           - (Constants.ROW_GAP / 2 - 0.5f),
+                        rowRect.x + 6f,
+                        num - (Constants.ROW_GAP / 2 - 0.5f),
                         rowRect.width - 12f
                     );
                 }

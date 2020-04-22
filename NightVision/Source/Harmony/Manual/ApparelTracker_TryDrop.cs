@@ -1,12 +1,14 @@
 ﻿using RimWorld;
 using Verse;
 
-namespace NightVision.Harmony.Manual {
-    public static class ApparelTracker_TryDrop {
+namespace NightVision.Harmony.Manual
+{
+    public static class ApparelTracker_TryDrop
+    {
         public static void Postfix(
-            Apparel             ap,
+            Apparel ap,
             Pawn_ApparelTracker __instance,
-            ref bool            __result
+            ref bool __result
         )
         {
             if (__result

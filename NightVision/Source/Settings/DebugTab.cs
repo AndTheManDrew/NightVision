@@ -1,16 +1,18 @@
+using NightVision.Harmony;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NightVision.Harmony;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace NightVision {
-    public class DebugTab {
+namespace NightVision
+{
+    public class DebugTab
+    {
         private List<Pawn> _allPawns;
-        private Vector2    _debugScrollPos = Vector2.zero;
-        private float      _maxY;
+        private Vector2 _debugScrollPos = Vector2.zero;
+        private float _maxY;
 
         public void Clear()
         {
@@ -18,13 +20,13 @@ namespace NightVision {
 
 
             _allPawns = null;
-            _maxY     = -1;
+            _maxY = -1;
         }
 
         public void DrawTab(Rect inRect)
         {
             bool playing = Current.ProgramState == ProgramState.Playing;
-            inRect    = inRect.AtZero();
+            inRect = inRect.AtZero();
             Text.Font = GameFont.Tiny;
             float listingY = default;
 #if DEBUG
@@ -52,7 +54,7 @@ namespace NightVision {
             );
 
             Text.Anchor = TextAnchor.MiddleLeft;
-            
+
             var store = Settings.Store;
             var cache = Settings.Cache;
             //Multiplier Limits
@@ -61,18 +63,18 @@ namespace NightVision {
             if (store.CustomCapsEnabled)
             {
                 rowRect.y += Constants.ROW_HEIGHT;
-                Text.Font =  GameFont.Tiny;
+                Text.Font = GameFont.Tiny;
                 Widgets.Label(rowRect, "NVCapsExp".Translate());
                 //Text.Font =  GameFont.Small;
                 rowRect.y += Constants.ROW_HEIGHT /*+ Constants.RowGap*/;
 
                 cache.MinCache = Widgets.HorizontalSlider(
                     rowRect,
-                     cache.MinCache.Value,
+                     cache.MinCache.GetValueOrDefault(),
                     1f,
                     100f,
                     true,
-                    "NVSettingsMinCapLabel".Translate(cache.MinCache.Value),
+                    "NVSettingsMinCapLabel".Translate(cache.MinCache.GetValueOrDefault()),
                     "1%",
                     "100%",
                     1
@@ -91,7 +93,7 @@ namespace NightVision {
 
                 cache.MaxCache = Widgets.HorizontalSlider(
                     rowRect,
-                    (float) cache.MaxCache,
+                    (float)cache.MaxCache,
                     100f,
                     200f,
                     true,
@@ -153,8 +155,8 @@ namespace NightVision {
                 var viewRect = new Rect(remainRect.x + 6f, remainRect.y, remainRect.width - 12f, height);
 
                 rowRect = new Rect(
-                    remainRect.x     + 10f,
-                    remainRect.y     + 3f,
+                    remainRect.x + 10f,
+                    remainRect.y + 3f,
                     remainRect.width - 20f,
                     Constants.ROW_HEIGHT / 2
                 );
@@ -260,7 +262,7 @@ namespace NightVision {
                         }
 
                         rightRect.y += Constants.ROW_HEIGHT / 2;
-                        rowRect.y   =  rightRect.y;
+                        rowRect.y = rightRect.y;
                     }
                     else
                     {

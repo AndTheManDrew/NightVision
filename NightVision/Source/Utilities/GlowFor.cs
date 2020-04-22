@@ -19,7 +19,7 @@ namespace NightVision
         /// <returns>glow as float [0, 1]</returns>
         public static float GlowAt(Thing thing)
         {
-            
+
             return thing?.Map?.glowGrid.GameGlowAt(thing.Position) ?? Constants.TRIVIAL_GLOW;
         }
         /// <summary>
@@ -30,7 +30,7 @@ namespace NightVision
         {
             return map?.glowGrid.GameGlowAt(pos) ?? Constants.TRIVIAL_GLOW;
         }
-        
+
         /// <summary>
         /// Calculates the factor from glow for the given pawn at its current position
         /// </summary>
@@ -44,10 +44,10 @@ namespace NightVision
 
             return Constants.TRIVIAL_FACTOR;
         }
-/// <summary>
-/// Calculates the factor from glow for the given pawn with the given glow
-/// </summary>
-/// <returns>multiplier, capped by settings</returns>
+        /// <summary>
+        /// Calculates the factor from glow for the given pawn with the given glow
+        /// </summary>
+        /// <returns>multiplier, capped by settings</returns>
         public static float FactorOrFallBack(Pawn pawn, float glow)
         {
             if (CompFor(pawn) is Comp_NightVision comp)
@@ -58,16 +58,16 @@ namespace NightVision
             return Constants.TRIVIAL_FACTOR;
         }
 
-// cache last value as repeated requests are common
+        // cache last value as repeated requests are common
         public static int cachedPawnHash;
         public static Comp_NightVision cachedComp;
-        
-/// <summary>
-/// Tries to find the nightvision comp of the given pawn.
-/// Returns null if the pawn is null or pawn does not have comp. 
-/// </summary>
-/// <param name="pawn"></param>
-/// <returns>the pawn's comp or NULL</returns>
+
+        /// <summary>
+        /// Tries to find the nightvision comp of the given pawn.
+        /// Returns null if the pawn is null or pawn does not have comp. 
+        /// </summary>
+        /// <param name="pawn"></param>
+        /// <returns>the pawn's comp or NULL</returns>
         public static Comp_NightVision CompFor(Pawn pawn)
         {
             if (pawn == null)
@@ -76,7 +76,7 @@ namespace NightVision
             }
             if (pawn.GetHashCode() == cachedPawnHash)
             {
-                
+
                 return cachedComp;
             }
             else if (pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)

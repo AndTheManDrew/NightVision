@@ -1,13 +1,15 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using RimWorld;
 using Verse;
 
-namespace NightVision {
-    public static class SolarRaidGroupMaker {
+namespace NightVision
+{
+    public static class SolarRaidGroupMaker
+    {
         public static int PointMultiplier = 1;
-        
+
         public static int MaxPawnCostMultiplier = 4;
 
         private static readonly SimpleCurve WeightingPreferPawnsCloseToHighestCost = new SimpleCurve
@@ -33,15 +35,16 @@ namespace NightVision {
             }
 
             IEnumerable<PawnGroupMaker> source =
-                        from gm in parms.faction.def.pawnGroupMakers where gm.kindDef == parms.groupKind && gm.CanGenerateFrom(parms: parms)
+                        from gm in parms.faction.def.pawnGroupMakers
+                        where gm.kindDef == parms.groupKind && gm.CanGenerateFrom(parms: parms)
                         select gm;
 
             bool result = source.TryRandomElementByWeight(weightSelector: gm => gm.commonality, result: out pawnGroupMaker);
 
-            if (source.Count() == 0)
+            if (!source.Any())
             {
                 Log.Message($"Found no pawn groups fit for purpose");
-                
+
             }
             if (parms.seed != null)
             {
@@ -71,13 +74,13 @@ namespace NightVision {
                                     groupKind: groupParms.groupKind
                                 );
 
-            var   candidates  = new List<PawnGenOption>();
-            var   bestOptions = new List<PawnGenOption>();
-            float remTotal    = pointsTotal * PointMultiplier;
-            var   foundLeader = false;
+            var candidates = new List<PawnGenOption>();
+            var bestOptions = new List<PawnGenOption>();
+            float remTotal = pointsTotal * PointMultiplier;
+            var foundLeader = false;
             float highestCost = -1f;
 
-            for (;;)
+            for (; ; )
             {
                 candidates.Clear();
 
@@ -106,7 +109,7 @@ namespace NightVision {
                     break;
                 }
 
-                Func<PawnGenOption, float> weightSelector = delegate(PawnGenOption gr)
+                Func<PawnGenOption, float> weightSelector = delegate (PawnGenOption gr)
                 {
                     float selectionWeight = gr.selectionWeight;
 

@@ -4,13 +4,10 @@
 // 
 // 16 10 2018
 
+using JetBrains.Annotations;
+using RimWorld;
 using System;
 using System.Collections.Generic;
-
-using JetBrains.Annotations;
-
-using RimWorld;
-
 using Verse;
 
 namespace NightVision
@@ -90,8 +87,8 @@ namespace NightVision
                 return;
             }
 
-            MinCache = (float) Math.Round(Settings.Store.MultiplierCaps.min * 100);
-            MaxCache = (float) Math.Round(Settings.Store.MultiplierCaps.max * 100);
+            MinCache = (float)Math.Round(Settings.Store.MultiplierCaps.min * 100);
+            MaxCache = (float)Math.Round(Settings.Store.MultiplierCaps.max * 100);
             NVZeroCache = SettingsHelpers.ModToMultiPercent(LightModifiersBase.NVLightModifiers[0], true);
 
             NVFullCache =
@@ -131,10 +128,10 @@ namespace NightVision
                         settingsStore.SetMaxMultiplierCap(MaxCache.Value);
                     }
                 }
-                
+
                 SetLightModifier(LightModifiersBase.NVLightModifiers, NVZeroCache, NVFullCache);
                 SetLightModifier(LightModifiersBase.PSLightModifiers, PSZeroCache, PSFullCache);
-                
+
                 Classifier.ZeroLightTurningPoints = null;
                 Classifier.FullLightTurningPoint = null;
 
@@ -199,6 +196,6 @@ namespace NightVision
                 modifier.Offsets[1] = SettingsHelpers.MultiPercentToMod(fullVal.Value, false);
             }
         }
-        
+
     }
 }

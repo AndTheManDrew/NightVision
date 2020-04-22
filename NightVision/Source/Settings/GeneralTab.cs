@@ -2,12 +2,14 @@ using System.Diagnostics;
 using UnityEngine;
 using Verse;
 
-namespace NightVision {
-    public class GeneralTab {
+namespace NightVision
+{
+    public class GeneralTab
+    {
         private bool _askToConfirmReset;
         private Stopwatch confirmTimer = new Stopwatch();
 
-        public  void Clear()
+        public void Clear()
         {
             _askToConfirmReset = false;
             confirmTimer.Reset();
@@ -15,14 +17,14 @@ namespace NightVision {
 
         public void DrawTab(Rect inRect)
         {
-            TextAnchor anchor    = Text.Anchor;
-            float      rowHeight = Constants.GEN_ROW_HEIGHT;
+            TextAnchor anchor = Text.Anchor;
+            float rowHeight = Constants.GEN_ROW_HEIGHT;
             var cache = Settings.Cache;
 
             var rowRect = new Rect(
-                inRect.width  * 0.05f,
+                inRect.width * 0.05f,
                 inRect.height * 0.05f,
-                inRect.width  * 0.9f,
+                inRect.width * 0.9f,
                 rowHeight
             );
 
@@ -46,9 +48,9 @@ namespace NightVision {
 
             cache.NVZeroCache = Widgets.HorizontalSlider(
                 rowRect,
-                (float) cache.NVZeroCache,
-                (float) cache.MinCache,
-                cache.MaxCache.Value,
+                 cache.NVZeroCache.GetValueOrDefault(),
+                 cache.MinCache.GetValueOrDefault(),
+                cache.MaxCache.GetValueOrDefault(),
                 true,
                 string.Format(
                     Str.ZeroMultiLabel,
@@ -69,8 +71,8 @@ namespace NightVision {
                 rowRect,
                 Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER,
                 Constants.NVDefaultOffsets[0],
-                (float) cache.MinCache,
-                (float) cache.MaxCache,
+                cache.MinCache.GetValueOrDefault(),
+                cache.MaxCache.GetValueOrDefault(),
                 IndicatorTex.DefIndicator
             );
 
@@ -78,9 +80,9 @@ namespace NightVision {
 
             cache.NVFullCache = Widgets.HorizontalSlider(
                 rowRect,
-                (float) cache.NVFullCache,
-                (float) cache.MinCache,
-                (float) cache.MaxCache,
+                (float)cache.NVFullCache.GetValueOrDefault(),
+                (float)cache.MinCache.GetValueOrDefault(),
+                (float)cache.MaxCache.GetValueOrDefault(),
                 true,
                 string.Format(
                     Str.FullMultiLabel,
@@ -101,8 +103,8 @@ namespace NightVision {
                 rowRect,
                 Constants.DEFAULT_FULL_LIGHT_MULTIPLIER,
                 Constants.NVDefaultOffsets[1],
-                (float) cache.MinCache,
-                (float) cache.MaxCache,
+                (float)cache.MinCache.GetValueOrDefault(),
+                (float)cache.MaxCache.GetValueOrDefault(),
                 IndicatorTex.DefIndicator
             );
 
@@ -123,9 +125,9 @@ namespace NightVision {
 
             cache.PSZeroCache = Widgets.HorizontalSlider(
                 rowRect,
-                (float) cache.PSZeroCache,
-                (float) cache.MinCache,
-                (float) cache.MaxCache,
+                (float)cache.PSZeroCache,
+                (float)cache.MinCache,
+                (float)cache.MaxCache,
                 true,
                 string.Format(
                     Str.ZeroMultiLabel,
@@ -146,8 +148,8 @@ namespace NightVision {
                 rowRect,
                 Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER,
                 Constants.PSDefaultOffsets[0],
-                (float) cache.MinCache,
-                (float) cache.MaxCache,
+                (float)cache.MinCache,
+                (float)cache.MaxCache,
                 IndicatorTex.DefIndicator
             );
 
@@ -155,9 +157,9 @@ namespace NightVision {
 
             cache.PSFullCache = Widgets.HorizontalSlider(
                 rowRect,
-                (float) cache.PSFullCache,
-                (float) cache.MinCache,
-                (float) cache.MaxCache,
+                (float)cache.PSFullCache.GetValueOrDefault(),
+                (float)cache.MinCache.GetValueOrDefault(),
+                (float)cache.MaxCache.GetValueOrDefault(),
                 true,
                 string.Format(
                     Str.FullMultiLabel,
@@ -178,8 +180,8 @@ namespace NightVision {
                 rowRect,
                 Constants.DEFAULT_FULL_LIGHT_MULTIPLIER,
                 Constants.PSDefaultOffsets[1],
-                (float) cache.MinCache,
-                (float) cache.MaxCache,
+                (float)cache.MinCache,
+                (float)cache.MaxCache,
                 IndicatorTex.DefIndicator
             );
 
@@ -187,12 +189,12 @@ namespace NightVision {
             Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
             rowRect.y += Constants.ROW_GAP;
 
-            
+
             Widgets.CheckboxLabeled(rowRect, "NightVisionFlareRaidEnabled".Translate(), ref NVGameComponent.FlareRaidIsEnabled);
             rowRect.y += rowHeight * 2f;
             Widgets.DrawLineHorizontal(rowRect.x + 24f, rowRect.y, rowRect.width - 48f);
             rowRect.y += Constants.ROW_GAP;
- 
+
 
 
             if (_askToConfirmReset)

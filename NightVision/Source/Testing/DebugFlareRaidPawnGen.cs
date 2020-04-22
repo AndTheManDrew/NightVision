@@ -4,16 +4,16 @@
 // 
 // 18 10 2018
 
+using RimWorld;
 using System;
 using System.Linq;
 using System.Text;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace NightVision.Testing
 {
-    [HasDebugOutput]
+    //[HasDebugOutput] - obsolete as of 1.1
     public class DebugFlareRaidPawnGen
     {
         [DebugOutput("NightVision")]
@@ -21,18 +21,18 @@ namespace NightVision.Testing
         public static void FlareRaidPawnGroupsMade()
         {
             Dialog_DebugOptionListLister.ShowSimpleDebugMenu(
-                elements: from fac in Find.FactionManager.AllFactions 
-                where !fac.def.pawnGroupMakers.NullOrEmpty() && fac.def.humanlikeFaction && fac.def.techLevel >= TechLevel.Industrial
-                select fac,
+                elements: from fac in Find.FactionManager.AllFactions
+                          where !fac.def.pawnGroupMakers.NullOrEmpty() && fac.def.humanlikeFaction && fac.def.techLevel >= TechLevel.Industrial
+                          select fac,
                 label: fac => fac.Name + " (" + fac.def.defName + ")",
-                chosen: delegate(Faction fac)
+                chosen: delegate (Faction fac)
                 {
                     var sb = new StringBuilder();
                     sb.AppendLine($"Point multiplier = ;{SolarRaidGroupMaker.PointMultiplier};;Max pawn cost multiplier = ;{SolarRaidGroupMaker.MaxPawnCostMultiplier};;");
                     float minPointsToGen = fac.def.MinPointsToGeneratePawnGroup(groupKind: PawnGroupKindDefOf.Combat);
                     sb.AppendLine($"Faction =;{fac.def.defName};;Min pts to gen CombatGroup = ;{minPointsToGen};;");
 
-                    Action<float> action = delegate(float points)
+                    Action<float> action = delegate (float points)
                     {
                         if (points < fac.def.MinPointsToGeneratePawnGroup(groupKind: PawnGroupKindDefOf.Combat))
                         {
@@ -47,12 +47,14 @@ namespace NightVision.Testing
                             fac,
                             PawnGroupKindDefOf.Combat
                         );
-                        var pawnGroupMakerParms = new PawnGroupMakerParms();
-                        pawnGroupMakerParms.groupKind = PawnGroupKindDefOf.Combat;
-                        pawnGroupMakerParms.tile      = Find.CurrentMap.Tile;
-                        pawnGroupMakerParms.points    = points;
-                        pawnGroupMakerParms.faction   = fac;
-                        pawnGroupMakerParms.raidStrategy = RaidStrategyDefOf.ImmediateAttack;
+                        var pawnGroupMakerParms = new PawnGroupMakerParms
+                        {
+                            groupKind = PawnGroupKindDefOf.Combat,
+                            tile = Find.CurrentMap.Tile,
+                            points = points,
+                            faction = fac,
+                            raidStrategy = RaidStrategyDefOf.ImmediateAttack
+                        };
                         pawnGroupMakerParms.groupKind = PawnGroupKindDefOf.Combat;
 
 
@@ -64,7 +66,7 @@ namespace NightVision.Testing
                             groupKind: PawnGroupKindDefOf.Combat
                         );
                         sb.AppendLine(
-                            value: 
+                            value:
                                 $"Adjusted Points =;{pawnGroupMakerParms.points};Original points;{originalPoints};Max pawn cost;{maxPawnCost};");
 
                         //Points: X; MaxPawnCost:
@@ -75,17 +77,17 @@ namespace NightVision.Testing
                         Log.Message(new string('-', 20));
                         Log.Message($"Random group maker result:");
                         Log.Message($"points = {points}");
-                        
-                        Log.Message($"groupMaker. = {groupMaker.options.ConvertAll(opt=> opt.kind.LabelCap).ToStringSafeEnumerable()}");
+
+                        Log.Message($"groupMaker. = {groupMaker.options.ConvertAll(opt => opt.kind.LabelCap).ToStringSafeEnumerable()}");
                         Log.Message(new string('-', 20));
-                        
+
 
                         foreach (Pawn pawn in SolarRaid_PawnGenerator.GeneratePawns(parms: pawnGroupMakerParms, groupMaker, false)
                                     .OrderBy(keySelector: pa => pa.kindDef.combatPower))
                         {
 
                             sb.Append($"  {pawn.kindDef.combatPower.ToString(format: "F0").PadRight(totalWidth: 6)};{pawn.kindDef.LabelCap};");
-                            
+
                             if (pawn.equipment.Primary != null)
                             {
                                 pawn.equipment.AllEquipmentListForReading.Aggregate(sb, (builder, comps) => builder.Append(comps.def.LabelCap + ","));
@@ -127,7 +129,7 @@ namespace NightVision.Testing
                             eyeWear = eyeWear.NullOrEmpty() ? "not bespectacled" : eyeWear.TrimEnd(' ', ',');
 
                             shield = shield.NullOrEmpty() ? "N" : shield;
-                            
+
 
                             sb.Append($"{shield};{torsoGear};{eyeWear};");
 
@@ -155,9 +157,9 @@ namespace NightVision.Testing
                     }
 
                     Log.Message(text: sb.ToString(), ignoreStopLoggingLimit: false);
-                    #if DEBUG
+#if DEBUG
                     GUIUtility.systemCopyBuffer = sb.ToString();
-                    #endif
+#endif
                 }
             );
         }

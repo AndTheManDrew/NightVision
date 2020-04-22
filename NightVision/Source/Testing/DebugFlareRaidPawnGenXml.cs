@@ -4,16 +4,16 @@
 // 
 // 18 10 2018
 
+using RimWorld;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
-using RimWorld;
 using Verse;
 
 namespace NightVision.Testing
 {
-    [HasDebugOutput]
+    //[HasDebugOutput] obsolete as of 1.1
     public class DebugFlareRaidPawnGenXml
     {
         public static RaidStrategyDef GetSmart()
@@ -35,7 +35,7 @@ namespace NightVision.Testing
         [DebugOutput("Nightvision")]
         public static void FlareRaidPawnGroupsMadeToXml()
         {
-            
+
             Dialog_DebugOptionListLister.ShowSimpleDebugMenu(
                 elements: new List<int>
                           {
@@ -57,29 +57,32 @@ namespace NightVision.Testing
                               44
                           },
                 label: i => $"Points x{i / 10} | MaxPawn x{i % 10}",
-                chosen: delegate(int multi)
+                chosen: delegate (int multi)
                 {
                     var trialData = new pawnGenTrial();
-                    SolarRaidGroupMaker.PointMultiplier       = multi / 10;
+                    SolarRaidGroupMaker.PointMultiplier = multi / 10;
                     SolarRaidGroupMaker.MaxPawnCostMultiplier = multi % 10;
-                    
-                    trialData.pointMultiplier       = SolarRaidGroupMaker.PointMultiplier;
+
+                    trialData.pointMultiplier = SolarRaidGroupMaker.PointMultiplier;
                     trialData.maxPawnCostMultiplier = SolarRaidGroupMaker.MaxPawnCostMultiplier;
-                    trialData.trialID               = $"{multi}PawnGenTrial{Rand.Int}";
+                    trialData.trialID = $"{multi}PawnGenTrial{Rand.Int}";
 
                     var factions = Find.FactionManager.AllFactions.Where(
                         fac => !fac.def.pawnGroupMakers.NullOrEmpty() && fac.def.humanlikeFaction && fac.def.techLevel >= TechLevel.Industrial
                     ).ToList();
-                    
+
                     int numTrials = factions.Count;
                     trialData.trial = new pawnGenTrialTrial[numTrials];
 
                     for (var ind = 0; ind < factions.Count; ind++)
                     {
-                        Faction           fac   = factions[ind];
-                        pawnGenTrialTrial trial = new pawnGenTrialTrial();
-                        trial.factionName               = fac.def.LabelCap;
-                        trial.minPointsToGenCombatGroup = fac.def.MinPointsToGeneratePawnGroup(groupKind: PawnGroupKindDefOf.Combat);
+                        Faction fac = factions[ind];
+                        pawnGenTrialTrial trial = new pawnGenTrialTrial
+                        {
+                            factionName = fac.def.LabelCap,
+                            minPointsToGenCombatGroup =
+                                fac.def.MinPointsToGeneratePawnGroup(groupKind: PawnGroupKindDefOf.Combat)
+                        };
 
 
                         List<float> floats = DebugActionsUtility.PointsOptions(extended: false).ToList();
@@ -95,7 +98,7 @@ namespace NightVision.Testing
                         trialData.trial[ind] = trial;
                     }
 
-                    XmlSerializer mySerializer = new   
+                    XmlSerializer mySerializer = new
                                 XmlSerializer(typeof(pawnGenTrial));
 
                     using (var writer = new StreamWriter("pawnGenData" + Rand.Int + ".xml"))
@@ -104,7 +107,7 @@ namespace NightVision.Testing
                     }
                 }
             );
-            
+
 
 
 
@@ -117,9 +120,8 @@ namespace NightVision.Testing
                 return null;
             }
 
-            pawnGenTrialTrialGroupGenerated groupGen = new pawnGenTrialTrialGroupGenerated();
+            pawnGenTrialTrialGroupGenerated groupGen = new pawnGenTrialTrialGroupGenerated { originalPoints = points };
 
-            groupGen.originalPoints = points;
             points = IncidentWorker_Raid.AdjustedRaidPoints(
                 points: points,
                 raidArrivalMode: PawnsArrivalModeDefOf.CenterDrop,
@@ -130,15 +132,17 @@ namespace NightVision.Testing
 
             groupGen.modifiedPoints = points;
 
-            var pawnGroupMakerParms = new PawnGroupMakerParms();
-            pawnGroupMakerParms.groupKind    = PawnGroupKindDefOf.Combat;
-            pawnGroupMakerParms.tile         = Find.CurrentMap.Tile;
-            pawnGroupMakerParms.points       = points;
-            pawnGroupMakerParms.faction      = fac;
-            pawnGroupMakerParms.raidStrategy = GetSmart();
-            pawnGroupMakerParms.groupKind    = PawnGroupKindDefOf.Combat;
+            var pawnGroupMakerParms = new PawnGroupMakerParms
+            {
+                groupKind = PawnGroupKindDefOf.Combat,
+                tile = Find.CurrentMap.Tile,
+                points = points,
+                faction = fac,
+                raidStrategy = GetSmart()
+            };
+            pawnGroupMakerParms.groupKind = PawnGroupKindDefOf.Combat;
             Log.Message($"raid strat. = {pawnGroupMakerParms.raidStrategy}");
-            
+
 
             float maxPawnCost = SolarRaidGroupMaker.MaxPawnCostMultiplier * PawnGroupMakerUtility.MaxPawnCost(
                 faction: fac,
@@ -160,16 +164,20 @@ namespace NightVision.Testing
 
             for (var index = 0; index < pawnCount; index++)
             {
-                Pawn                                pawn     = pawns[index];
-                pawnGenTrialTrialGroupGeneratedPawn pawnData = new pawnGenTrialTrialGroupGeneratedPawn();
-                pawnData.label       = pawn.KindLabel;
-                pawnData.combatPower = (int) pawn.kindDef.combatPower;
-                pawnData.primaryEq   = pawn.equipment.Primary != null ? pawn.equipment.Primary.LabelCapNoCount : "no weapon";
+                Pawn pawn = pawns[index];
+                pawnGenTrialTrialGroupGeneratedPawn pawnData = new pawnGenTrialTrialGroupGeneratedPawn
+                {
+                    label = pawn.KindLabel,
+                    combatPower = (int)pawn.kindDef.combatPower,
+                    primaryEq = pawn.equipment.Primary != null
+                        ? pawn.equipment.Primary.LabelCapNoCount
+                        : "no weapon"
+                };
 
 
                 List<Apparel> wornApparel = pawn.apparel.WornApparel;
-                var           torsoGear   = "";
-                var           eyeWear     = "";
+                var torsoGear = "";
+                var eyeWear = "";
 
                 foreach (Apparel apparel in wornApparel)
                 {
@@ -195,10 +203,10 @@ namespace NightVision.Testing
 
                 pawnData.apparelHead = eyeWear.NullOrEmpty() ? "not bespectacled" : eyeWear.TrimEnd(' ', ',');
 
-                
 
-                pawnData.hediffs =  pawn.health.hediffSet.hediffs.Where(hd=> !(hd is Hediff_MissingPart)).Select(hdf => hdf.LabelCap).ToCommaList();
-                pointsSpent     += pawn.kindDef.combatPower;
+
+                pawnData.hediffs = pawn.health.hediffSet.hediffs.Where(hd => !(hd is Hediff_MissingPart)).Select(hdf => hdf.LabelCap).ToCommaList();
+                pointsSpent += pawn.kindDef.combatPower;
 
                 groupGen.pawn[index] = pawnData;
             }

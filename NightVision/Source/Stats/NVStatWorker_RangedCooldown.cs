@@ -4,16 +4,14 @@
 // 
 // 17 10 2018
 
-using System;
-
 using JetBrains.Annotations;
-
 using RimWorld;
+using System;
 using Verse;
 
 namespace NightVision
 {
-    
+
     [UsedImplicitly]
     public class NVStatWorker_RangedCooldown : NVStatWorker
     {
@@ -32,7 +30,7 @@ namespace NightVision
             return String.Empty;
         }
 
-        public override string GetStatDrawEntryLabel(StatDef statDef, float value, ToStringNumberSense numberSense, StatRequest optionalReq, bool finalized)
+        public override string GetStatDrawEntryLabel(StatDef statDef, float value, ToStringNumberSense numberSense, StatRequest optionalReq, bool finalized = true)
         {
             return $"x{GetValueUnfinalized(optionalReq).ToStringPercent()}";
         }
@@ -56,7 +54,7 @@ namespace NightVision
 
         public override void FinalizeValue(StatRequest req, ref float val, bool applyPostProcess)
         {
-            
+
             base.FinalizeValue(req, ref val, applyPostProcess);
         }
 
@@ -64,7 +62,7 @@ namespace NightVision
 
         public override bool IsDisabledFor(Thing thing)
         {
-            return base.IsDisabledFor(thing) ||  !(thing is Pawn pawn && !pawn.skills.GetSkill(DerivedFrom).TotallyDisabled);
+            return base.IsDisabledFor(thing) || !(thing is Pawn pawn && !pawn.skills.GetSkill(DerivedFrom).TotallyDisabled);
         }
 
         public override bool ShouldShowFor(StatRequest req)

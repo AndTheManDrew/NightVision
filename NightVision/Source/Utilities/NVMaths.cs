@@ -25,9 +25,9 @@ namespace NightVision
             {
                 mod = Settings.Store.ClampToMultipliers(mod);
             }
-            return (float) Math.Round(mod - baseMod,
+            return (float)Math.Round(mod - baseMod,
                 Constants.NUMBER_OF_DIGITS);
-            
+
         }
     }
 }

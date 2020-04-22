@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Harmony;
+using HarmonyLib;
 using NightVision;
 using RimWorld;
 using RimWorld.Planet;

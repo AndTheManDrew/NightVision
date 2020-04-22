@@ -4,14 +4,13 @@
 // 
 // 20 10 2018
 
-using System.Collections.Generic;
-using System.Reflection;
-using System.Reflection.Emit;
 using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 using Verse;
-using Verse.AI;
 
 namespace NightVision.Harmony
 {
@@ -63,7 +62,7 @@ namespace NightVision.Harmony
                 {
                     ldfldPawn = instruction.Clone();
                 }
-                else if (callNVModifyRadius    != null
+                else if (callNVModifyRadius != null
                          && instruction.opcode == OpCodes.Ldfld
                          && instruction.operand is FieldInfo fi2
                          && fi2.FieldType == typeof(float))
@@ -75,7 +74,7 @@ namespace NightVision.Harmony
                     callNVModifyRadius = null;
                 }
             }
-            
+
         }
     }
 }

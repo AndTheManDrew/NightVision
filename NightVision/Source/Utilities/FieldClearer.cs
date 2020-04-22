@@ -1,14 +1,5 @@
-﻿using System;
+﻿using HarmonyLib;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
-
-using HarmonyLib;
-
-using UnityEngine;
-
 using Verse;
 
 namespace NightVision
@@ -41,7 +32,7 @@ namespace NightVision
                 {
                     var traverse = new Traverse(type);
                     traverse = traverse.Field(info.Name);
-                    
+
 
 #if DEBUG
 
@@ -106,7 +97,7 @@ namespace NightVision
             }
             catch
             {
-                
+
             }
         }
     }

@@ -4,9 +4,9 @@
 // 
 // 24 10 2018
 
+using RimWorld;
 using System;
 using System.Collections.Generic;
-using RimWorld;
 using Verse;
 
 namespace NightVision
@@ -59,11 +59,11 @@ namespace NightVision
                 groupParms: parms
             ))
             {
-                PawnKindDef     kind              = pawnGenOption.kind;
-                Faction         faction           = parms.faction;
-                int             tile              = parms.tile;
-                bool            allowFood         = canBringFood;
-                bool            inhabitants       = parms.inhabitants;
+                PawnKindDef kind = pawnGenOption.kind;
+                Faction faction = parms.faction;
+                int tile = parms.tile;
+                bool allowFood = canBringFood;
+                bool inhabitants = parms.inhabitants;
                 Predicate<Pawn> validatorPostGear = postGear;
 
                 var request = new PawnGenerationRequest(
@@ -99,9 +99,9 @@ namespace NightVision
 
                 if (parms.forceOneIncap && !madeOnePawnIncap)
                 {
-                    pawn.health.forceIncap           = true;
+                    pawn.health.forceIncap = true;
                     pawn.mindState.canFleeIndividual = false;
-                    madeOnePawnIncap                 = true;
+                    madeOnePawnIncap = true;
                 }
 
                 PawnFinaliser(pawn: pawn);
@@ -118,8 +118,8 @@ namespace NightVision
                 pawn.skills.GetSkill(skillDef: Defs_Rimworld.MeleeSkill).Level += Rand.RangeInclusive(min: 10 - meleeSkill, max: 10 - meleeSkill + 5);
             }
 
-            int[] choiceArray = {10 - NVGameComponent.Evilness, 5 + NVGameComponent.Evilness, 5 + NVGameComponent.Evilness};
-            var   indexes     = new[] {0, 1, 2};
+            int[] choiceArray = { 10 - NVGameComponent.Evilness, 5 + NVGameComponent.Evilness, 5 + NVGameComponent.Evilness };
+            var indexes = new[] { 0, 1, 2 };
 
             int choice = indexes.RandomElementByWeight(weightSelector: ind => choiceArray[ind]);
 
@@ -148,7 +148,7 @@ namespace NightVision
                                     stuff: appDef.MadeFromStuff ? GenStuff.RandomStuffByCommonalityFor(td: appDef) : null
                                 );
 
-                                pawn.apparel.Wear(newApparel: (Apparel) apparel, dropReplacedApparel: false);
+                                pawn.apparel.Wear(newApparel: (Apparel)apparel, dropReplacedApparel: false);
                             }
                         }
 
@@ -169,7 +169,7 @@ namespace NightVision
                                 stuff: nvAppDef.MadeFromStuff ? GenStuff.RandomStuffByCommonalityFor(td: nvAppDef) : null
                             );
                             PawnGenerator.PostProcessGeneratedGear(apparel, pawn);
-                            pawn.apparel.Wear(newApparel: (Apparel) apparel, dropReplacedApparel: false);
+                            pawn.apparel.Wear(newApparel: (Apparel)apparel, dropReplacedApparel: false);
                         }
                     }
 
@@ -184,7 +184,7 @@ namespace NightVision
                 {
                     Thing shieldBelt = ThingMaker.MakeThing(def: shield, stuff: shield.MadeFromStuff ? GenStuff.RandomStuffFor(td: shield) : null);
                     PawnGenerator.PostProcessGeneratedGear(shieldBelt, pawn);
-                    pawn.apparel.Wear(newApparel: (Apparel) shieldBelt, dropReplacedApparel: false);
+                    pawn.apparel.Wear(newApparel: (Apparel)shieldBelt, dropReplacedApparel: false);
                 }
             }
         }

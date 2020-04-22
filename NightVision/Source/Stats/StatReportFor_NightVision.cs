@@ -4,12 +4,12 @@
 // 
 // 06 12 2018
 
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using RimWorld;
 using Verse;
 
 namespace NightVision
@@ -41,7 +41,7 @@ namespace NightVision
             foreach (Apparel app in comp.PawnsNVApparel ?? Enumerable.Empty<Apparel>())
             {
                 if (nvApparel.TryGetValue(key: app.def, value: out ApparelVisionSetting setting)
-                    && (bool) relevantField.GetValue(obj: setting))
+                    && (bool)relevantField.GetValue(obj: setting))
                 {
                     builder.AppendLine(value: app.LabelCap);
                 }
@@ -54,7 +54,6 @@ namespace NightVision
         /// <summary>
         ///     For the pawn's stat inspect tab. Cleaned up a bit, still about as elegant as a panda doing the can-can
         /// </summary>
-        /// <param name="result"></param>
         /// <param name="glow"></param>
         /// <param name="usedApparelSetting">if apparel had an effect</param>
         /// <param name="comp"></param>
@@ -62,14 +61,14 @@ namespace NightVision
         /// <returns></returns>
         private static string BasicExplanation(float glow, out bool usedApparelSetting, Comp_NightVision comp, bool needsFinalValue = false)
         {
-            var     nvsum          = 0f;
-            var     pssum          = 0f;
-            var     sum            = 0f;
-            float[] caps           = LightModifiersBase.GetCapsAtGlow(glow: glow);
-            var     foundSomething = false;
-            float   effect;
-            var     basevalue = 0f;
-            bool    lowLight  = glow.GlowIsDarkness();
+            var nvsum = 0f;
+            var pssum = 0f;
+            var sum = 0f;
+            float[] caps = LightModifiersBase.GetCapsAtGlow(glow: glow);
+            var foundSomething = false;
+            float effect;
+            var basevalue = 0f;
+            bool lowLight = glow.GlowIsDarkness();
             usedApparelSetting = false;
 
 
@@ -100,7 +99,7 @@ namespace NightVision
             {
                 basevalue = Constants.DEFAULT_FULL_LIGHT_MULTIPLIER
                             + (Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER - Constants.DEFAULT_FULL_LIGHT_MULTIPLIER)
-                            * (0.3f                                              - glow)
+                            * (0.3f - glow)
                             / 0.3f;
 
                 if (comp.ApparelGrantsNV)
@@ -133,7 +132,7 @@ namespace NightVision
                 {
                     foundSomething = true;
 
-                    var NumToAdd = (float) Math.Round(
+                    var NumToAdd = (float)Math.Round(
                         value: effect * comp.NumberOfRemainingEyes,
                         digits: Constants.NUMBER_OF_DIGITS,
                         mode: Constants.ROUNDING
@@ -184,7 +183,7 @@ namespace NightVision
                         {
                             foundSomething = true;
 
-                            effect = (float) Math.Round(
+                            effect = (float)Math.Round(
                                 value: effect,
                                 digits: Constants.NUMBER_OF_DIGITS,
                                 mode: Constants.ROUNDING
@@ -225,7 +224,7 @@ namespace NightVision
                 explanation.AppendFormat(
                     format: Str.MultiplierLine,
                     arg0: "NVTotal".Translate() + " " + "NVMultiplier".Translate(),
-                    arg1: sum                         + basevalue
+                    arg1: sum + basevalue
                 );
 
                 explanation.AppendLine();
@@ -277,14 +276,14 @@ namespace NightVision
                         AppendPreSumIfNeeded(needed: ref needed);
                         explanation.Append(value: "NVGearPresent".Translate(arg1: $"{basevalue + caps[2]:0%}"));
                         usedApparelSetting = true;
-                        sum                = caps[2];
+                        sum = caps[2];
                     }
                     else if (comp.ApparelNullsPS && sum + Constants.NV_EPSILON < 0)
                     {
                         AppendPreSumIfNeeded(needed: ref needed);
                         explanation.Append(value: "PSGearPresent".Translate(arg1: $"{Constants.DEFAULT_FULL_LIGHT_MULTIPLIER:0%}"));
                         usedApparelSetting = true;
-                        sum                = 0;
+                        sum = 0;
                     }
                 }
 
@@ -298,7 +297,7 @@ namespace NightVision
                         format: Str.MultiplierLine,
                         arg0: "NVStatReport_FinalMulti".Translate(),
                         arg1: sum > caps[0] + basevalue ? caps[0] + basevalue :
-                        sum       < caps[1] + basevalue ? caps[1] + basevalue : sum
+                        sum < caps[1] + basevalue ? caps[1] + basevalue : sum
                     );
                 }
 

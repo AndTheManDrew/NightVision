@@ -27,6 +27,6 @@ namespace NightVision
         // Surgery Recipe that is added to animals 
         [UsedImplicitly]
         public static RecipeDef ExtractTapetumLucidum;
-        
+
     }
 }

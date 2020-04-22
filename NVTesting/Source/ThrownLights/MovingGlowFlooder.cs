@@ -10,12 +10,14 @@ using System.Diagnostics;
 using System.Text;
 using UnityEngine;
 using Verse;
+using WeakRefMovingGlowFlooder = Verse.WeakReference<NVExperiments.ThrownLights.MovingGlowFlooder>;
+
 
 namespace NVExperiments.ThrownLights
 {
     public class MovingGlowFlooder
     {
-        public static List<WeakReference<MovingGlowFlooder>> ActiveGlowFlooders = new List<WeakReference<MovingGlowFlooder>>();
+        public static List<WeakRefMovingGlowFlooder> ActiveGlowFlooders = new List<WeakRefMovingGlowFlooder>();
 
         public IntVec3 position;
 
@@ -66,7 +68,7 @@ namespace NVExperiments.ThrownLights
             }
 
             InitialiseGlow();
-            ActiveGlowFlooders.Add(new WeakReference<MovingGlowFlooder>(this));
+            ActiveGlowFlooders.Add(new WeakRefMovingGlowFlooder(this));
 
         }
 

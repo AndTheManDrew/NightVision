@@ -4,18 +4,16 @@
 // 
 // 24 10 2018
 
-using System.Reflection;
 using HarmonyLib;
-
 using JetBrains.Annotations;
-
 using RimWorld;
+using System.Reflection;
 using Verse;
 
 namespace NightVision
 {
     [UsedImplicitly]
-    public class NVStatWorker_LightMultiplier :NVStatWorker
+    public class NVStatWorker_LightMultiplier : NVStatWorker
     {
         #region Overrides of NVStatWorker
 
@@ -38,7 +36,7 @@ namespace NightVision
 
 
         public override string GetExplanationUnfinalized(
-            StatRequest         req,
+            StatRequest req,
             ToStringNumberSense numberSense
         )
         {
@@ -51,10 +49,10 @@ namespace NightVision
 
             return string.Empty;
         }
-        
+
         public override float GetValueUnfinalized(
             StatRequest req,
-            bool        applyPostProcess = true
+            bool applyPostProcess = true
         )
         {
             if (req.Thing is Pawn pawn)

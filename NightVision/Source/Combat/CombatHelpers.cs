@@ -15,7 +15,7 @@ namespace NightVision
     {
 
         public static FloatRange MultiplierCaps => Settings.Store.MultiplierCaps;
-        
+
         [NVSettingsDependentField]
         public static float _attXCoeff = Settings.CombatStore.HitCurviness.Value / MultiplierCaps.Span;
 
@@ -41,7 +41,7 @@ namespace NightVision
             {
                 if (_attXCoeff < -1)
                 {
-                    _attXCoeff = Settings.CombatStore.HitCurviness.Value / MultiplierCaps.Span;;
+                    _attXCoeff = Settings.CombatStore.HitCurviness.Value / MultiplierCaps.Span; ;
                 }
 
                 return _attXCoeff;
@@ -87,7 +87,7 @@ namespace NightVision
             }
             set
             {
-                RangedCooldownMultiplierBad = value;
+                _rangedCooldownMultiplierBad = value;
             }
         }
 
@@ -97,7 +97,7 @@ namespace NightVision
             {
                 return hitChance;
             }
-            return 1 / (1 + (1 / hitChance - 1) * (float) Math.Exp(d: -1 * AttXCoeff * (attGlowFactor - 1)));
+            return 1 / (1 + (1 / hitChance - 1) * (float)Math.Exp(d: -1 * AttXCoeff * (attGlowFactor - 1)));
         }
 
         public static string NightVisionTooltipElement(Thing target)
@@ -119,7 +119,7 @@ namespace NightVision
             if (pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
                 float glow = pawn.Map.glowGrid.GameGlowAt(c: pawn.Position);
-                
+
                 if (glow.GlowIsDarkOrBright())
                 {
                     float glF = comp.FactorFromGlow(glow: glow);
@@ -141,7 +141,7 @@ namespace NightVision
         }
 
         [NVSettingsDependentField]
-        public static float _rangedCooldownMultiplierBad; 
+        public static float _rangedCooldownMultiplierBad;
         [NVSettingsDependentField]
         public static float _rangedCooldownMultiplierGood;
 
@@ -178,12 +178,12 @@ namespace NightVision
         {
             if (glowFactor < 1f - Constants.NV_EPSILON)
             {
-                return 1 + (1 - glowFactor) * (RangedCooldownMultiplierBad) * (1 - (float) Math.Sqrt(d: 0.05f * skill));
+                return 1 + (1 - glowFactor) * (RangedCooldownMultiplierBad) * (1 - (float)Math.Sqrt(d: 0.05f * skill));
             }
 
             if (glowFactor > 1f + Constants.NV_EPSILON)
             {
-                return 1 + (1 - glowFactor) * (RangedCooldownMultiplierGood) * (float) Math.Sqrt(d: 0.05f * skill);
+                return 1 + (1 - glowFactor) * (RangedCooldownMultiplierGood) * (float)Math.Sqrt(d: 0.05f * skill);
             }
 
             return 1;
@@ -221,7 +221,7 @@ namespace NightVision
             {
                 return orgDodge;
             }
-            return 2 * orgDodge / (1 + (float) Math.Exp(d: DodgeXCoeff * glowFactorDelta));
+            return 2 * orgDodge / (1 + (float)Math.Exp(d: DodgeXCoeff * glowFactorDelta));
         }
 
         #endregion

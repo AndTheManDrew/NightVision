@@ -1,18 +1,19 @@
-﻿using System.Linq;
-using RimWorld;
+﻿using RimWorld;
+using System.Linq;
 using Verse;
 
 namespace NightVision
 {
-    public class SolarRaid_StoryWorker {
-        public static          int         MinTicksLeftToFireInc = 2500;
-        public static          int         MinTicksPassedToFire  = 2500;
-        public static          IncidentDef FlareRaidDef          = IncidentDef.Named("FlareRaid");
-        public                 int         GlobalLastFireTick    = -1;
-        public                 int         LastFlareStartTick    = -1;
-        public                 int         QueuedFiringTick  = -1;
-        public                 int         QueuedMapID       = -1;
-        public static readonly double      MaxSunGlowForRaid = 0.2;
+    public class SolarRaid_StoryWorker
+    {
+        public static int MinTicksLeftToFireInc = 2500;
+        public static int MinTicksPassedToFire = 2500;
+        public static IncidentDef FlareRaidDef = IncidentDef.Named("FlareRaid");
+        public int GlobalLastFireTick = -1;
+        public int LastFlareStartTick = -1;
+        public int QueuedFiringTick = -1;
+        public int QueuedMapID = -1;
+        public static readonly double MaxSunGlowForRaid = 0.2;
 
         public SolarRaid_StoryWorker() { }
 
@@ -33,7 +34,7 @@ namespace NightVision
                 {
                     Log.Message($"NVGameComp: found queued map but solar flare no longer active. Miscalculated?");
                     QueuedFiringTick = -1;
-                    QueuedMapID      = -1;
+                    QueuedMapID = -1;
                     return;
                 }
 
@@ -41,14 +42,14 @@ namespace NightVision
                 {
                     Log.Message($"NVGameComp: had queued map index, and solar flare is active but queued tick was -1. Error?");
                     QueuedFiringTick = -1;
-                    QueuedMapID      = -1;
+                    QueuedMapID = -1;
                     return;
                 }
 
                 Map map = Find.Maps.Find(mp => mp.uniqueID == QueuedMapID);
 
                 QueuedFiringTick = -1;
-                QueuedMapID      = -1;
+                QueuedMapID = -1;
 
                 if (map == null)
                 {
@@ -62,7 +63,7 @@ namespace NightVision
             {
                 Log.Message($"NVGameComp: found queued firing tick but queued mapID was -1.");
                 QueuedFiringTick = -1;
-                QueuedMapID      = -1;
+                QueuedMapID = -1;
             }
 
             if (Find.World.GameConditionManager.GetActiveCondition(def: Defs_Rimworld.SolarFlare) is GameCondition solarFlare
@@ -70,8 +71,9 @@ namespace NightVision
             {
                 LastFlareStartTick = solarFlare.startTick;
 
-                if (solarFlare.TicksLeft > MinTicksLeftToFireInc) {
-                    
+                if (solarFlare.TicksLeft > MinTicksLeftToFireInc)
+                {
+
                     var difficultyDef = Find.Storyteller.difficulty;
 
                     if (!difficultyDef.allowBigThreats)
@@ -79,7 +81,7 @@ namespace NightVision
                         return;
                     }
 
-                
+
                     var potentialTargets = Find.Maps.FindAll(map => map.IsPlayerHome);
 
                     if (potentialTargets.Count == 0)
@@ -89,9 +91,9 @@ namespace NightVision
 
                     int hourCount = 0;
                     // use tolist to force eval
-                    var anony = potentialTargets.Select(target => new {mapID = target.uniqueID, hours = CalcPotentialHoursToFire(target, solarFlare.TicksLeft, ref hourCount)}).Where(anon=> anon.hours != null).ToList();
-          
-                
+                    var anony = potentialTargets.Select(target => new { mapID = target.uniqueID, hours = CalcPotentialHoursToFire(target, solarFlare.TicksLeft, ref hourCount) }).Where(anon => anon.hours != null).ToList();
+
+
                     if (
                         hourCount == 0)
                     {
@@ -101,7 +103,7 @@ namespace NightVision
                     int ticksTillFireInHourTerms = -1250 + Rand.Range(0, hourCount * 2500);
 
                     int firingTick = -1;
-                    int mapId      = -1;
+                    int mapId = -1;
 
                     foreach (var mapHours in anony)
                     {
@@ -142,10 +144,10 @@ namespace NightVision
 
 
                     QueuedFiringTick = firingTick + Find.TickManager.TicksAbs;
-                    QueuedMapID      = mapId;
+                    QueuedMapID = mapId;
                 }
             }
-            
+
         }
 
         public void TryFireFlareRaid(Map map)
@@ -168,7 +170,7 @@ namespace NightVision
             {
                 return;
             }
-            
+
             Find.Storyteller.TryFire(new FiringIncident(FlareRaidDef, null, newParms));
         }
 
@@ -176,7 +178,7 @@ namespace NightVision
         {
             int currentTick = Find.TickManager.TicksAbs;
 
-            int numHoursFromNow =  (flareTicks / 2500);
+            int numHoursFromNow = (flareTicks / 2500);
 
             if (numHoursFromNow == 0)
             {
@@ -188,7 +190,7 @@ namespace NightVision
 
             for (int hoursFromNow = 1; hoursFromNow <= numHoursFromNow; hoursFromNow++)
             {
-                if (GenCelestial.CelestialSunGlow(map, currentTick + (2500 *hoursFromNow)) < MaxSunGlowForRaid)
+                if (GenCelestial.CelestialSunGlow(map, currentTick + (2500 * hoursFromNow)) < MaxSunGlowForRaid)
                 {
                     result[hoursFromNow - 1] = hoursFromNow;
                 }
@@ -202,9 +204,9 @@ namespace NightVision
         public void ExposeData()
         {
 
-            Scribe_Values.Look(ref this.LastFlareStartTick,                  "lastFlareStartTick", -1);
-            Scribe_Values.Look(ref this.QueuedFiringTick,                     "queuedFiringTick", -1);
-            Scribe_Values.Look(ref this.QueuedMapID,                          "queuedMapID", -1);
+            Scribe_Values.Look(ref this.LastFlareStartTick, "lastFlareStartTick", -1);
+            Scribe_Values.Look(ref this.QueuedFiringTick, "queuedFiringTick", -1);
+            Scribe_Values.Look(ref this.QueuedMapID, "queuedMapID", -1);
         }
     }
 }

@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using JetBrains.Annotations;
+using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Verse;
 
-namespace NightVision {
+namespace NightVision
+{
     [NVHasSettingsDependentField]
-    public static class ApparelGenUtility {
+    public static class ApparelGenUtility
+    {
         public static Lookup<string, ThingDef> NullPSApparelDefsByTag;
 
         [NVSettingsDependentField]
@@ -14,11 +16,11 @@ namespace NightVision {
         public static void BuildNullPSApparelLookup()
         {
             var nvApparel = Settings.Store.NVApparel;
-            
+
             var list = nvApparel.Where(appset => appset.Value.NullifiesPS && appset.Key.IsApparel)
-                        .SelectMany(appset => appset.Key.apparel.tags.Select(tag => new {tag, thingDef = appset.Key}))
-                        .ToLookup(anonT=> anonT.tag, anonT => anonT.thingDef) as Lookup<string, ThingDef>;
-            
+                        .SelectMany(appset => appset.Key.apparel.tags.Select(tag => new { tag, thingDef = appset.Key }))
+                        .ToLookup(anonT => anonT.tag, anonT => anonT.thingDef) as Lookup<string, ThingDef>;
+
             if (list == null || list.Count == 0)
             {
                 AnyNullPSApparelExists.MakeFalse();
@@ -66,9 +68,9 @@ namespace NightVision {
         {
             var nvApparel = Settings.Store.NVApparel;
             var list = nvApparel.Where(appset => appset.Value.GrantsNV && appset.Key.IsApparel)
-                        .SelectMany(appset => appset.Key.apparel.tags.Select(tag => new {tag, thingDef = appset.Key}))
-                        .ToLookup(anonT=> anonT.tag, anonT => anonT.thingDef) as Lookup<string, ThingDef>;
-            
+                        .SelectMany(appset => appset.Key.apparel.tags.Select(tag => new { tag, thingDef = appset.Key }))
+                        .ToLookup(anonT => anonT.tag, anonT => anonT.thingDef) as Lookup<string, ThingDef>;
+
             if (list == null || list.Count == 0)
             {
                 AnyGiveNVApparelExists.MakeFalse();

@@ -4,22 +4,23 @@
 // 
 // 21 07 2018
 
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
+using Debug = System.Diagnostics.Debug;
 
 namespace NightVision
 {
     public class Hediff_LightModifiers : LightModifiersBase
     {
-        public bool AffectsEye   = false;
+        public bool AffectsEye = false;
         public bool AutoAssigned = false;
 
         public VisionType IntSetting;
-        private  float[]    _defaultOffsets;
+        private float[] _defaultOffsets;
 
         [CanBeNull]
         private HediffCompProperties_NightVision _hediffCompProps;
@@ -44,18 +45,18 @@ namespace NightVision
             {
                 switch (IntSetting)
                 {
-                    default:                            return 0f;
-                    case VisionType.NVNightVision:      return LightModifiersBase.NVLightModifiers[index];
+                    default: return 0f;
+                    case VisionType.NVNightVision: return LightModifiersBase.NVLightModifiers[index];
                     case VisionType.NVPhotosensitivity: return LightModifiersBase.PSLightModifiers[index];
-                    case VisionType.NVCustom:           return Offsets[index];
+                    case VisionType.NVCustom: return Offsets[index];
                 }
             }
             set
-                => Offsets[index] = (float) Math.Round(
+                => Offsets[index] = (float)Math.Round(
                                                        Mathf.Clamp(
                                                                    value,
                                                                    -0.99f + 0.2f * (1 - index),
-                                                                   +1f    + 0.2f * (1 - index)
+                                                                   +1f + 0.2f * (1 - index)
                                                                   ),
                                                        2,
                                                        Constants.ROUNDING
@@ -96,12 +97,19 @@ namespace NightVision
                             break;
                         case VisionType.NVCustom:
 
-                            _defaultOffsets = new[]
-                                              {_hediffCompProps.ZeroLightMod, _hediffCompProps.FullLightMod};
+                            if (_hediffCompProps != null)
+                            {
+                                _defaultOffsets = new[]
+                                    {_hediffCompProps.ZeroLightMod, _hediffCompProps.FullLightMod};
+                            }
+                            else
+                            {
+                                _defaultOffsets = new float[2];
+                            }
 
                             break;
                     }
-                    
+
                 }
 
                 return _defaultOffsets;
@@ -132,8 +140,7 @@ namespace NightVision
         /// <returns>Normalised value if hediff is an eye hediff</returns>
         public override float GetEffectAtGlow(
                         float glow,
-                        int   numOfEyesNormalisedFor
-                    )
+                        int numOfEyesNormalisedFor = 1)
         {
             if (AffectsEye)
             {
@@ -148,7 +155,7 @@ namespace NightVision
                     )
         {
             Initialised = true;
-            _parentDef  = hediffDef;
+            _parentDef = hediffDef;
             AttachCompProps();
         }
 
@@ -159,15 +166,15 @@ namespace NightVision
             {
                 return IntSetting != AutoQualifier.HediffCheck(_parentDef);
             }
-
+            Debug.Assert(_hediffCompProps != null, nameof(_hediffCompProps) + " != null");
             switch (IntSetting)
             {
-                default:                            return !_hediffCompProps.IsDefault();
-                case VisionType.NVNightVision:      return !_hediffCompProps.GrantsNightVision;
+                default: return !_hediffCompProps.IsDefault();
+                case VisionType.NVNightVision: return !_hediffCompProps.GrantsNightVision;
                 case VisionType.NVPhotosensitivity: return !_hediffCompProps.GrantsPhotosensitivity;
                 case VisionType.NVCustom:
 
-                    return !(Math.Abs(_hediffCompProps.FullLightMod    - Offsets[1]) < Constants.NV_EPSILON)
+                    return !(Math.Abs(_hediffCompProps.FullLightMod - Offsets[1]) < Constants.NV_EPSILON)
                            || !(Math.Abs(_hediffCompProps.ZeroLightMod - Offsets[0]) < Constants.NV_EPSILON);
             }
         }
@@ -183,13 +190,13 @@ namespace NightVision
             if (_parentDef.CompPropsFor(typeof(HediffComp_NightVision)) is HediffCompProperties_NightVision
                         compProps)
             {
-                _hediffCompProps         = compProps;
+                _hediffCompProps = compProps;
                 compProps.LightModifiers = this;
 
                 if (!Initialised)
                 {
                     IntSetting = Hediff_LightModifiers.GetSetting(compProps);
-                    Offsets    = new[] {compProps.ZeroLightMod, compProps.FullLightMod};
+                    Offsets = new[] { compProps.ZeroLightMod, compProps.FullLightMod };
                 }
             }
             else
@@ -199,7 +206,7 @@ namespace NightVision
                     _parentDef.comps = new List<HediffCompProperties>();
                 }
 
-                _hediffCompProps = new HediffCompProperties_NightVision {LightModifiers = this};
+                _hediffCompProps = new HediffCompProperties_NightVision { LightModifiers = this };
                 _parentDef.comps.Add(_hediffCompProps);
                 Initialised = true;
             }

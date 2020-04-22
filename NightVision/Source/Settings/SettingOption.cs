@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using HarmonyLib;
+using System;
 using System.Reflection;
-using System.Text;
-
-using HarmonyLib;
-
-using UnityEngine;
-
 using Verse;
 
 namespace NightVision
@@ -108,7 +101,7 @@ namespace NightVision
                     Log.Message($"targets = {targets[i]}");
                     Log.Message($"patchs = {patches[i]}");
                     Log.Message($"Result: ");
-                    var results = NVHarmonyPatcher.NVHarmony.GetPatchInfo(targets[i]);
+                    var results = HarmonyLib.Harmony.GetPatchInfo(targets[i]);
 
                     Log.Message($"Pre: {results.Prefixes.ToStringSafeEnumerable()}");
                     Log.Message($"Post = {results.Postfixes.ToStringSafeEnumerable()}");
@@ -145,7 +138,7 @@ namespace NightVision
                 Log.Message($"target = {target}");
                 Log.Message($"patch = {patch}");
                 Log.Message($"Result: ");
-                var patches = NVHarmonyPatcher.NVHarmony.GetPatchInfo(target);
+                var patches = HarmonyLib.Harmony.GetPatchInfo(target);
 
                 Log.Message($"Pre: {patches.Prefixes.ToStringSafeEnumerable()}");
                 Log.Message($"Post = {patches.Postfixes.ToStringSafeEnumerable()}");

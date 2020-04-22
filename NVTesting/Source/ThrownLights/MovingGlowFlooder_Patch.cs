@@ -5,8 +5,9 @@
 // 20 03 2019
 
 using System.Diagnostics;
-using Harmony;
+using HarmonyLib;
 using Verse;
+using WeakRefMovingGlowFlooder = Verse.WeakReference<NVExperiments.ThrownLights.MovingGlowFlooder>;
 
 namespace NVExperiments.ThrownLights
 {
@@ -20,7 +21,7 @@ namespace NVExperiments.ThrownLights
             {
                 for (var index = MovingGlowFlooder.ActiveGlowFlooders.Count - 1; index >= 0; index--)
                 {
-                    WeakReference<MovingGlowFlooder> activeGlowFlooder = MovingGlowFlooder.ActiveGlowFlooders[index];
+                    WeakRefMovingGlowFlooder activeGlowFlooder = MovingGlowFlooder.ActiveGlowFlooders[index];
 
                     if (activeGlowFlooder.IsAlive)
                     {

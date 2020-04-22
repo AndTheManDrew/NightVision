@@ -1,6 +1,7 @@
 ﻿using Verse;
 
-namespace NightVision {
+namespace NightVision
+{
     public static class CurrentStrike
     {
         public static float GlowFactor = Constants.TRIVIAL_FACTOR;

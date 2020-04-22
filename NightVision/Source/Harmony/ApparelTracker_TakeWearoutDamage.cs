@@ -2,11 +2,13 @@
 using RimWorld;
 using Verse;
 
-namespace NightVision.Harmony {
+namespace NightVision.Harmony
+{
     [HarmonyPatch(typeof(Pawn_ApparelTracker), "TakeWearoutDamageForDay")]
-    public static class ApparelTracker_TakeWearoutDamage {
+    public static class ApparelTracker_TakeWearoutDamage
+    {
         public static void Postfix(
-            Thing               ap,
+            Thing ap,
             Pawn_ApparelTracker __instance
         )
         {

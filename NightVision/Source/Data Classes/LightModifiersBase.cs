@@ -4,11 +4,9 @@
 // 
 // 21 07 2018
 
+using JetBrains.Annotations;
 using System;
 using System.Linq;
-
-using JetBrains.Annotations;
-
 using Verse;
 
 namespace NightVision
@@ -134,7 +132,7 @@ namespace NightVision
         {
             if (glow < 0.001)
             {
-                return (float) Math.Round(
+                return (float)Math.Round(
                     this[0] / numEyesNormalisedFor,
                     Constants.NUMBER_OF_DIGITS,
                     Constants.ROUNDING
@@ -143,7 +141,7 @@ namespace NightVision
 
             if (glow > 0.999)
             {
-                return (float) Math.Round(
+                return (float)Math.Round(
                     this[1] / numEyesNormalisedFor,
                     Constants.NUMBER_OF_DIGITS,
                     Constants.ROUNDING
@@ -152,7 +150,7 @@ namespace NightVision
 
             if (glow.GlowIsDarkness())
             {
-                return (float) Math.Round(
+                return (float)Math.Round(
                     this[0] / numEyesNormalisedFor * (0.3f - glow) / 0.3f,
                     Constants.NUMBER_OF_DIGITS,
                     Constants.ROUNDING
@@ -161,7 +159,7 @@ namespace NightVision
 
             if (glow.GlowIsBright())
             {
-                return (float) Math.Round(
+                return (float)Math.Round(
                     this[1] / numEyesNormalisedFor * (glow - 0.7f) / 0.3f,
                     Constants.NUMBER_OF_DIGITS,
                     Constants.ROUNDING

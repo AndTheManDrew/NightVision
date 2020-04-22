@@ -2,11 +2,13 @@
 using UnityEngine;
 using Verse;
 
-namespace NightVision.Harmony {
+namespace NightVision.Harmony
+{
     [HarmonyPatch(typeof(Pawn), nameof(Pawn.BodySize), MethodType.Getter)]
-    public static class Pawn_BodySize {
+    public static class Pawn_BodySize
+    {
         public static void Postfix(
-            ref Pawn  __instance,
+            ref Pawn __instance,
             ref float __result
         )
         {

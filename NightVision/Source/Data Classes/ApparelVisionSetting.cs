@@ -4,8 +4,8 @@
 // 
 // 21 07 2018
 
-using System.Collections.Generic;
 using JetBrains.Annotations;
+using System.Collections.Generic;
 using Verse;
 
 namespace NightVision
@@ -18,7 +18,7 @@ namespace NightVision
         public void ExposeData()
         {
             Scribe_Values.Look(ref NullifiesPS, "nullifiesphotosens", CompNullifiesPS);
-            Scribe_Values.Look(ref GrantsNV,    "grantsnightvis",     CompGrantsNV);
+            Scribe_Values.Look(ref GrantsNV, "grantsnightvis", CompGrantsNV);
         }
 
         #region Fields
@@ -33,7 +33,7 @@ namespace NightVision
 
         //Corresponding ThingDef
 
-        public ThingDef                          ParentDef;
+        public ThingDef ParentDef;
         public CompProperties_NightVisionApparel CompProps;
 
         #endregion
@@ -56,7 +56,7 @@ namespace NightVision
             ParentDef = apparel;
             AttachComp();
             NullifiesPS = CompNullifiesPS;
-            GrantsNV    = CompGrantsNV;
+            GrantsNV = CompGrantsNV;
         }
 
         private void AttachComp()
@@ -71,8 +71,8 @@ namespace NightVision
             if (ParentDef.GetCompProperties<CompProperties_NightVisionApparel>() is
                         CompProperties_NightVisionApparel props)
             {
-                CompNullifiesPS        = props.NullifiesPhotosensitivity;
-                CompGrantsNV           = props.GrantsNightVision;
+                CompNullifiesPS = props.NullifiesPhotosensitivity;
+                CompGrantsNV = props.GrantsNightVision;
                 props.AppVisionSetting = this;
             }
             else
@@ -82,10 +82,10 @@ namespace NightVision
                     ParentDef.comps = new List<CompProperties>();
                 }
 
-                CompProps = new CompProperties_NightVisionApparel {AppVisionSetting = this};
+                CompProps = new CompProperties_NightVisionApparel { AppVisionSetting = this };
                 ParentDef.comps.Add(CompProps);
                 CompNullifiesPS = false;
-                CompGrantsNV    = false;
+                CompGrantsNV = false;
             }
         }
 
@@ -104,7 +104,7 @@ namespace NightVision
                         ThingDef apparel
                     )
         {
-            var newAppSetting = new ApparelVisionSetting {ParentDef = apparel};
+            var newAppSetting = new ApparelVisionSetting { ParentDef = apparel };
             newAppSetting.AttachComp();
 
             if (newAppSetting.ParentDef != apparel)

@@ -1,12 +1,14 @@
 ﻿using HarmonyLib;
 using Verse;
 
-namespace NightVision.Harmony {
+namespace NightVision.Harmony
+{
 
     //HediffWithComps - because this class, derived from Hediff, doesn't use base.PostAdd
 
     [HarmonyPatch(typeof(Hediff), nameof(Hediff.PostRemoved))]
-    public static class Hediff_PostRemoved {
+    public static class Hediff_PostRemoved
+    {
         public static void Postfix(
             Hediff __instance
         )

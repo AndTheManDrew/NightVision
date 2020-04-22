@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using HarmonyLib;
+﻿using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -35,7 +34,8 @@ namespace NightVision
                             from entry in Settings.Store.HediffLightMods
                             where Classifier.ClassifyModifier(entry.Value[0], true) == VisionType.NVPhotosensitivity
                                   && entry.Value.AffectsEye
-                                  && !ManuallyDisallowedHediffs.Contains(entry.Key.defName) select entry.Value;
+                                  && !ManuallyDisallowedHediffs.Contains(entry.Key.defName)
+                            select entry.Value;
                 PSHediffLightMods = query.ToList();
 
                 if (PSHediffLightMods.Count == 0)
@@ -80,13 +80,13 @@ namespace NightVision
 
                 cachedConvertedPawnKindDefs[key: original.defName] = original;
             }
-            
+
             result.apparelColor = new Color(r: Rand.Range(0.33f, 0.43f), g: Rand.Range(0.33f, 0.43f), b: Rand.Range(0.33f, 0.43f));
-            result.apparelMoney.max           *= 1.2f;
-            result.apparelMoney.min           *= 1.1f;
-            result.itemQuality                =  QualityCategory.Normal;
-            result.gearHealthRange            =  new FloatRange(min: 0.8f, max: 1.4f);
-            result.fleeHealthThresholdRange   =  FloatRange.Zero;
+            result.apparelMoney.max *= 1.2f;
+            result.apparelMoney.min *= 1.1f;
+            result.itemQuality = QualityCategory.Normal;
+            result.gearHealthRange = new FloatRange(min: 0.8f, max: 1.4f);
+            result.fleeHealthThresholdRange = FloatRange.Zero;
 
             cachedConvertedPawnKindDefs[key: original.defName] = result;
 

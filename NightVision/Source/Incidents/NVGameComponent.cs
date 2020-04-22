@@ -4,19 +4,21 @@
 // 
 // 19 10 2018
 
+using JetBrains.Annotations;
 using Verse;
 
 namespace NightVision
 {
+    [UsedImplicitly]
     public class NVGameComponent : GameComponent
     {
-        public static NVGameComponent Instance;
+        [UsedImplicitly] public static NVGameComponent Instance;
 
         public NVGameComponent(Game game)
         {
             Instance = this;
         }
-        
+
         public SolarRaid_StoryWorker SolarRaidStoryWorker;
 
         #region Overrides of GameComponent
@@ -48,7 +50,7 @@ namespace NightVision
                 SolarRaidStoryWorker.ExposeData();
             }
         }
-        
+
         public override void FinalizeInit()
         {
             if (FlareRaidIsEnabled)
@@ -61,7 +63,7 @@ namespace NightVision
 
 
         #endregion
-        
+
         public static int Evilness => Find.Storyteller.difficulty.difficulty * 2;
 
         public static bool FlareRaidIsEnabled = true;

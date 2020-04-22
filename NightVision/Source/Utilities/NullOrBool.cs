@@ -36,7 +36,7 @@ namespace NightVision
         {
             return val != TriBool.True;
         }
-        
+
         public static bool IsFalse(this TriBool val)
         {
             return val == TriBool.False;

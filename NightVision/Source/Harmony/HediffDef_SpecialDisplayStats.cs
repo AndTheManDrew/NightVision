@@ -1,15 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
+using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
-namespace NightVision.Harmony {
+namespace NightVision.Harmony
+{
     [HarmonyPatch(typeof(HediffDef), nameof(HediffDef.SpecialDisplayStats))]
-    public static class HediffDef_SpecialDisplayStats {
+    public static class HediffDef_SpecialDisplayStats
+    {
         public static IEnumerable<StatDrawEntry> Postfix(
             IEnumerable<StatDrawEntry> statdrawentries,
-            HediffDef                  __instance
+            HediffDef __instance
         )
         {
             List<StatDrawEntry> statDrawEntryList = statdrawentries.ToList();
@@ -33,7 +35,7 @@ namespace NightVision.Harmony {
                     Defs_Rimworld.BasicStats,
                     "NVGrantsVisionType".Translate().RawText,
                     vt.ToString().Translate().RawText,
-                    
+
                     hlm.AffectsEye ? "NVHediffQualifier".Translate().RawText : "",
                     0
                 );

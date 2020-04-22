@@ -4,12 +4,11 @@
 // 
 // 18 10 2018
 
-using System;
+using JetBrains.Annotations;
+using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using JetBrains.Annotations;
-using RimWorld;
 using Verse;
 
 namespace NightVision
@@ -35,7 +34,7 @@ namespace NightVision
 
         protected override bool CanFireNowSub(IncidentParms parms)
         {
-            var map = (Map) parms.target;
+            var map = (Map)parms.target;
 
             return Find.World.GameConditionManager.ConditionIsActive(def: Defs_Rimworld.SolarFlare)
                    && (parms.faction != null || CandidateFactions(map: map, desperate: false).Any());
@@ -50,7 +49,7 @@ namespace NightVision
             if (!TryResolveRaidFaction(parms: parms))
             {
                 Log.Message(text: "Failed solar raid: no faction found.");
-                
+
                 return false;
             }
 
@@ -91,12 +90,12 @@ namespace NightVision
 
             foreach (Pawn pawn in list)
             {
-                string str = pawn.equipment == null || pawn.equipment.Primary == null ? "unarmed" : pawn.equipment.Primary.LabelCap;
+                string str = pawn.equipment?.Primary == null ? "unarmed" : pawn.equipment.Primary.LabelCap;
                 stringBuilder.AppendLine(value: pawn.KindLabel + " - " + str);
             }
 
             TaggedString letterLabel = GetLetterLabel(parms: parms);
-            TaggedString letterText  = GetLetterText(parms: parms, pawns: list);
+            TaggedString letterText = GetLetterText(parms: parms, pawns: list);
 
             PawnRelationUtility.Notify_PawnsSeenByPlayer_Letter(
                 seenPawns: list,
@@ -167,10 +166,10 @@ namespace NightVision
 
             return true;
         }
-        
+
         protected override bool TryResolveRaidFaction(IncidentParms parms)
         {
-            var map = (Map) parms.target;
+            var map = (Map)parms.target;
 
             if (parms.faction != null)
             {
@@ -211,7 +210,7 @@ namespace NightVision
                 return;
             }
 
-            var map = (Map) parms.target;
+            var map = (Map)parms.target;
 
             if (!(from d in DefDatabase<RaidStrategyDef>.AllDefs where d.Worker.CanUseWith(parms: parms, groupKind: groupKind) select d)
                         .TryRandomElementByWeight(
@@ -219,7 +218,7 @@ namespace NightVision
                             result: out parms.raidStrategy
                         ))
             {
-                    parms.raidStrategy = RaidStrategyDefOf.ImmediateAttack;
+                parms.raidStrategy = RaidStrategyDefOf.ImmediateAttack;
             }
         }
 
@@ -245,7 +244,7 @@ namespace NightVision
                     arg3: pawn.Named(label: "LEADER")
                 );
             }
-            
+
             return text;
         }
 
@@ -263,7 +262,7 @@ namespace NightVision
 
         public static float ChanceForFlareRaid(Map target)
         {
-                return SolarRaid_StoryWorker.FlareRaidDef.baseChance;
+            return SolarRaid_StoryWorker.FlareRaidDef.baseChance;
         }
     }
 }

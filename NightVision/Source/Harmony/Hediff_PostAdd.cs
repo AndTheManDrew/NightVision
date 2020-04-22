@@ -1,9 +1,11 @@
 ﻿using HarmonyLib;
 using Verse;
 
-namespace NightVision.Harmony {
+namespace NightVision.Harmony
+{
     [HarmonyPatch(typeof(Hediff), nameof(Hediff.PostAdd))]
-    public static class Hediff_PostAdd {
+    public static class Hediff_PostAdd
+    {
         public static void Postfix(
             Hediff __instance
         )

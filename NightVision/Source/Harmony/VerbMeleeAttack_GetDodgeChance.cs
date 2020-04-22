@@ -2,7 +2,8 @@
 using JetBrains.Annotations;
 using RimWorld;
 
-namespace NightVision.Harmony {
+namespace NightVision.Harmony
+{
     [HarmonyPatch(typeof(Verb_MeleeAttack), "GetDodgeChance")]
     public static class VerbMeleeAttack_GetDodgeChance
     {
@@ -16,7 +17,7 @@ namespace NightVision.Harmony {
             {
                 return;
             }
-            
+
             __result = CombatHelpers.DodgeChanceFunction(__result, CurrentStrike.GlowDiff);
         }
     }

@@ -4,236 +4,260 @@
 // 
 // 06 12 2018
 
-using System.Text;
 using NightVision;
 using RimWorld;
+using System.Text;
 using Verse;
-
-using Mod = NightVision.Mod;
+using Verse.Noise;
 
 public static class StatReportFor_NightVision_Combat
 {
-    #region  Members
+    private class CombatStatStrHelper
+    {
+        private static StringBuilder sb;
+        public CombatStatStrHelper()
+        {
+
+            if (sb == null)
+            {
+                sb = new StringBuilder();
+            }
+            else
+            {
+                sb.Clear();
+            }
+        }
+
+        public void NextLine()
+        {
+            sb.AppendLine();
+        }
+
+        public void AddLine(string line)
+        {
+            sb.AppendLine(line);
+        }
+
+        public void AddMainHeader()
+        {
+            AddLine(Str_Combat.LMDef);
+            AddLine(Str_Combat.AnimalAndMechNote);
+            NextLine();
+            AddLine(Str_Combat.HitChanceTitle.PadLeft(totalWidth: 20, paddingChar: '-').PadRight(totalWidth: 30, paddingChar: '-'));
+            AddLine(Str_Combat.HitChanceHeader());
+
+        }
+
+        public void AddSurpriseAttackHeader()
+        {
+            AddLine(
+                Str_Combat.SurpriseAttackTitle.PadLeft(totalWidth: 20, paddingChar: '-').PadRight(totalWidth: 30, paddingChar: '-')
+            );
+
+            AddLine(Str_Combat.SurpriseAtkDesc());
+            AddLine(Str_Combat.SurpriseAtkChance());
+            NextLine();
+            AddLine(Str_Combat.SurpriseAtkCalcHeader());
+        }
+
+        public void AddSurpriseAttackRow(float glow, float atkLM, float defLM)
+        {
+            float chance = CombatHelpers.SurpriseAttackChance(atkLM, defGlowFactor: defLM);
+            AddLine(Str_Combat.SurpriseAtkCalcRow(glow, atkLM, defLM, chance));
+        }
+
+        public void AddDodgeHeader()
+        {
+            AddLine( Str_Combat.DodgeTitle.PadLeft(totalWidth: 20, paddingChar: '-').PadRight(totalWidth: 30, paddingChar: '-')
+            );
+
+            AddLine( Str_Combat.Dodge());
+            NextLine();
+
+            AddLine(Str_Combat.DodgeCalcHeader());
+
+        }
+
+        public void AddDodgeRow(float glow, float atkLM, float defLM, float baseDodge)
+        {
+            AddLine(Str_Combat.DodgeCalcRow(glow, atkLM, defLM, baseDodge, CombatHelpers.DodgeChanceFunction(baseDodge, atkLM-defLM)));
+        }
+
+        public void AddRangedCdRow(float glow, int skill, float glowFactor)
+        {
+            AddLine(Str_Combat.RangedCooldown(glow, skill, CombatHelpers.RangedCooldownMultiplier(skill, glowFactor)));
+        }
+
+        public void AddRangedCdDemo(float glow, int skill, float glowFactor)
+        {
+            AddLine(Str_Combat.RangedCooldownDemo(glow, CombatHelpers.RangedCooldownMultiplier(skill, glowFactor)));
+        }
+
+
+        public override string ToString()
+        {
+            return sb.ToString();
+        }
+    }
 
     public static string CombatPart(Pawn pawn, Comp_NightVision comp)
     {
-        var stringbuilder = new StringBuilder();
 
-        float nvFactor     = comp.FactorFromGlow(glow: 0);
-        float psFactor     = comp.FactorFromGlow(glow: 1);
+        var strHelper = new CombatStatStrHelper();
+        const float NoLight = 0f;
+        const float FullLight = 1f;
+        float noLightFactor = comp.FactorFromGlow(glow: NoLight);
+        float fullLightFactor = comp.FactorFromGlow(glow: FullLight);
         float pawnDodgeVal = pawn.GetStatValue(stat: Defs_Rimworld.MeleeDodgeStat);
-        float meleeHit     = pawn.GetStatValue(stat: Defs_Rimworld.MeleeHitStat, applyPostProcess: true);
+        float meleeHit = pawn.GetStatValue(stat: Defs_Rimworld.MeleeHitStat, applyPostProcess: true);
 
-        stringbuilder.AppendLine(value: Str_Combat.LMDef);
-
-        stringbuilder.AppendLine(value: Str_Combat.AnimalAndMechNote);
-
-        //Hit Chance
-        stringbuilder.AppendLine();
-
-        stringbuilder.AppendLine(
-            value: Str_Combat.HitChanceTitle.PadLeft(totalWidth: 20, paddingChar: '-').PadRight(totalWidth: 30, paddingChar: '-')
-        );
-
-        stringbuilder.AppendLine(value: Str_Combat.HitChanceHeader());
-
+        strHelper.AddMainHeader();
 
         if (Settings.CombatStore.RangedHitEffectsEnabled.Value)
         {
-            stringbuilder.AppendLine(value: Str_Combat.ShootTargetAtGlow());
+
+            strHelper.AddLine(Str_Combat.ShootTargetAtGlow());
 
 
             for (var i = 1; i <= 4; i++)
             {
                 float hit = ShotReport.HitFactorFromShooter(caster: pawn, distance: i * 5);
 
-                stringbuilder.AppendLine(
-                    value: Str_Combat.ShotChanceTransform(
+                strHelper.AddLine(
+                    Str_Combat.ShotChanceTransform(
                         distance: i * 5,
                         hitChance: hit,
-                        nvResult: CombatHelpers.HitChanceGlowTransform(hitChance: hit, attGlowFactor: nvFactor),
-                        psResult: CombatHelpers.HitChanceGlowTransform(hitChance: hit, attGlowFactor: psFactor)
+                        nvResult: CombatHelpers.HitChanceGlowTransform(hitChance: hit, attGlowFactor: noLightFactor),
+                        psResult: CombatHelpers.HitChanceGlowTransform(hitChance: hit, attGlowFactor: fullLightFactor)
                     )
                 );
             }
 
-            stringbuilder.AppendLine();
+            strHelper.NextLine();
         }
 
         if (!Settings.CombatStore.MeleeHitEffectsEnabled.Value)
         {
-            return stringbuilder.ToString();
+            return strHelper.ToString();
         }
 
         var caps = Settings.Store.MultiplierCaps;
-        
-        stringbuilder.AppendLine(value: Str_Combat.StrikeTargetAtGlow());
+
+        strHelper.AddLine(Str_Combat.StrikeTargetAtGlow());
 
 
-        stringbuilder.AppendLine(
-            value: Str_Combat.StrikeChanceTransform(
+        strHelper.AddLine(
+            Str_Combat.StrikeChanceTransform(
                 hitChance: meleeHit,
-                nvResult: CombatHelpers.HitChanceGlowTransform(hitChance: meleeHit, attGlowFactor: nvFactor),
-                psResult: CombatHelpers.HitChanceGlowTransform(hitChance: meleeHit, attGlowFactor: psFactor)
+                nvResult: CombatHelpers.HitChanceGlowTransform(hitChance: meleeHit, attGlowFactor: noLightFactor),
+                psResult: CombatHelpers.HitChanceGlowTransform(hitChance: meleeHit, attGlowFactor: fullLightFactor)
             )
         );
 
-        stringbuilder.AppendLine();
+        strHelper.NextLine();
 
-        stringbuilder.AppendLine(
-            value: Str_Combat.SurpriseAttackTitle.PadLeft(totalWidth: 20, paddingChar: '-').PadRight(totalWidth: 30, paddingChar: '-')
-        );
+        strHelper.AddSurpriseAttackHeader();
 
-        stringbuilder.AppendLine(value: Str_Combat.SurpriseAtkDesc());
-        stringbuilder.AppendLine(value: Str_Combat.SurpriseAtkChance());
-        float nvSAtk = CombatHelpers.SurpriseAttackChance(atkGlowFactor: nvFactor, defGlowFactor: caps.min);
-        float psSAtk = CombatHelpers.SurpriseAttackChance(atkGlowFactor: psFactor, defGlowFactor: caps.min);
-        stringbuilder.AppendLine();
-        stringbuilder.AppendLine(value: Str_Combat.SurpriseAtkCalcHeader());
+        ///////////////////////////////////////////
+        //// Surprise attack stats at 0% light ////
+       
+        float noLightSurpAttChance = CombatHelpers.SurpriseAttackChance(atkGlowFactor: noLightFactor, defGlowFactor: caps.min);
+            // attack vs pawn with minimum LM
+        strHelper.AddSurpriseAttackRow(NoLight, noLightFactor, caps.min);
 
-        stringbuilder.AppendLine(
-            value: Str_Combat.SurpriseAtkCalcRow(glow: 0f, atkGlowF: nvFactor, defGlowF: caps.min, chance: nvSAtk)
-        );
-
+        // skip if we need more room to show dodge stats
         if (pawnDodgeVal.IsTrivial())
         {
-            if (nvSAtk.IsNonTrivial())
+            //skip if chance was 0% vs pawn with min LM (as it won't be different
+            if (noLightSurpAttChance.IsNonTrivial())
             {
-                nvSAtk = CombatHelpers.SurpriseAttackChance(atkGlowFactor: nvFactor, defGlowFactor: 1f);
-                stringbuilder.AppendLine(value: Str_Combat.SurpriseAtkCalcRow(glow: 0f, atkGlowF: nvFactor, defGlowF: 1f, chance: nvSAtk));
+                // attack vs pawn with normal LM
+                noLightSurpAttChance = CombatHelpers.SurpriseAttackChance(atkGlowFactor: noLightFactor, defGlowFactor: 1f);
 
-                if (nvSAtk.IsNonTrivial())
+                strHelper.AddSurpriseAttackRow(NoLight, noLightFactor, 1);
+
+                // skip as above
+                if (noLightSurpAttChance.IsNonTrivial())
                 {
-                    nvSAtk = CombatHelpers.SurpriseAttackChance(atkGlowFactor: nvFactor, defGlowFactor: caps.max);
-
-                    stringbuilder.AppendLine(
-                        value: Str_Combat.SurpriseAtkCalcRow(glow: 0f, atkGlowF: nvFactor, defGlowF: caps.max, chance: nvSAtk)
-                    );
+                    // attack vs pawn with max LM
+                    strHelper.AddSurpriseAttackRow(0, noLightFactor, caps.max);
                 }
             }
         }
-
-        stringbuilder.AppendLine(value: Str_Combat.SurpriseAtkCalcRow(glow: 1f, atkGlowF: psFactor, defGlowF: 1f, chance: psSAtk));
-
+        ////////////////////////////////////////////
+        
+        /////////////////////////////////////////////
+        //// Surprise attack stats at 100% light ////
+        
+        float psSAtk;
+        // skip if we need more room to show dodge stats
         if (pawnDodgeVal.IsTrivial())
         {
-            psSAtk = CombatHelpers.SurpriseAttackChance(atkGlowFactor: psFactor, defGlowFactor: caps.min);
-
-            stringbuilder.AppendLine(
-                value: Str_Combat.SurpriseAtkCalcRow(
-                    glow: caps.min,
-                    atkGlowF: psFactor,
-                    defGlowF: caps.min,
-                    chance: psSAtk
-                )
-            );
+            // attack vs pawn with min LM
+            strHelper.AddSurpriseAttackRow(fullLightFactor, fullLightFactor, caps.min);
         }
 
+        // attack vs pawn with normal LM
+        strHelper.AddSurpriseAttackRow(fullLightFactor, fullLightFactor, 1f);
+        strHelper.NextLine();
+        /////////////////////////////////////////////
 
-        stringbuilder.AppendLine();
+        /////////////////////////////////////////////
+        ////             Dodge Stats             ////
 
-        stringbuilder.AppendLine(
-            value: Str_Combat.DodgeTitle.PadLeft(totalWidth: 20, paddingChar: '-').PadRight(totalWidth: 30, paddingChar: '-')
-        );
 
-        stringbuilder.AppendLine(value: Str_Combat.Dodge());
-        stringbuilder.AppendLine();
+        strHelper.AddDodgeHeader();
 
-        stringbuilder.AppendLine(value: Str_Combat.DodgeCalcHeader());
+        // This pawns chance to dodge when attacked
 
-        stringbuilder.AppendLine(
-            value: Str_Combat.DodgeCalcRow(
-                glow: 0f,
-                atkGlowF: caps.min,
-                defGlowF: nvFactor,
-                dodge: pawnDodgeVal,
-                newDodge: CombatHelpers.DodgeChanceFunction(orgDodge: pawnDodgeVal, glowFactorDelta: caps.min - nvFactor)
-            )
-        );
+        // attacked by pawn with min LM in no light
+        strHelper.AddDodgeRow(NoLight, caps.min, noLightFactor, pawnDodgeVal);
 
+        // skip if pawns dodge value is zero
         if (pawnDodgeVal.IsNonTrivial())
         {
-            stringbuilder.AppendLine(
-                value: Str_Combat.DodgeCalcRow(
-                    glow: 0f,
-                    atkGlowF: 1f,
-                    defGlowF: nvFactor,
-                    dodge: pawnDodgeVal,
-                    newDodge: CombatHelpers.DodgeChanceFunction(orgDodge: pawnDodgeVal, glowFactorDelta: 1f - nvFactor)
-                )
-            );
+            // attacked by pawn with normal LM in no light
+            strHelper.AddDodgeRow(NoLight, 1f, noLightFactor, pawnDodgeVal);
 
-            stringbuilder.AppendLine(
-                value: Str_Combat.DodgeCalcRow(
-                    glow: 0f,
-                    atkGlowF: caps.max,
-                    defGlowF: nvFactor,
-                    dodge: pawnDodgeVal,
-                    newDodge: CombatHelpers.DodgeChanceFunction(orgDodge: pawnDodgeVal, glowFactorDelta: caps.max - nvFactor)
-                )
-            );
+            // attacked by pawn with max LM in no light
+            strHelper.AddDodgeRow(NoLight, caps.max, noLightFactor, pawnDodgeVal);
 
-            stringbuilder.AppendLine(
-                value: Str_Combat.DodgeCalcRow(
-                    glow: 1f,
-                    atkGlowF: caps.min,
-                    defGlowF: psFactor,
-                    dodge: pawnDodgeVal,
-                    newDodge: CombatHelpers.DodgeChanceFunction(orgDodge: pawnDodgeVal, glowFactorDelta: caps.min - psFactor)
-                )
-            );
+            // attacked by pawn with min LM in no light
+            strHelper.AddDodgeRow(FullLight, caps.min, fullLightFactor, pawnDodgeVal);
+
+
         }
-
-        stringbuilder.AppendLine(
-            value: Str_Combat.DodgeCalcRow(
-                glow: 1f,
-                atkGlowF: 1f,
-                defGlowF: psFactor,
-                dodge: pawnDodgeVal,
-                newDodge: CombatHelpers.DodgeChanceFunction(orgDodge: pawnDodgeVal, glowFactorDelta: 1f - psFactor)
-            )
-        );
+        //attacked by pawn with normal LM in full light
+        strHelper.AddDodgeRow(FullLight, 1, fullLightFactor, pawnDodgeVal);
 
 
-        return stringbuilder.ToString();
+        return strHelper.ToString();
     }
 
     public static string RangedCoolDown(Pawn pawn, int skillLevel)
     {
-        var   stringBuilder = new StringBuilder();
-        float glow          = GlowFor.GlowAt(thing: pawn);
-        float glowFactor    = GlowFor.FactorOrFallBack(pawn: pawn, glow: glow);
+        var strHelper = new CombatStatStrHelper();
+        float glow = GlowFor.GlowAt(thing: pawn);
+        float glowFactor = GlowFor.FactorOrFallBack(pawn: pawn, glow: glow);
 
-        stringBuilder.AppendLine(
-            value: Str_Combat.RangedCooldown(
-                glow: glow,
-                skill: skillLevel,
-                result: CombatHelpers.RangedCooldownMultiplier(skill: skillLevel, glowFactor: glowFactor)
-            )
-        );
+        strHelper.AddRangedCdRow(glow, skillLevel, glowFactor);
 
-        glow       = 1f;
+        glow = 1f;
         glowFactor = GlowFor.FactorOrFallBack(pawn: pawn, glow: glow);
 
-        stringBuilder.AppendLine(
-            value: Str_Combat.RangedCooldownDemo(
-                glow: glow,
-                result: CombatHelpers.RangedCooldownMultiplier(skill: skillLevel, glowFactor: glowFactor)
-            )
-        );
+        strHelper.AddRangedCdRow(glow, skillLevel, glowFactor);
 
-        glow       = 0f;
+        glow = 0f;
         glowFactor = GlowFor.FactorOrFallBack(pawn: pawn, glow: glow);
 
-        stringBuilder.AppendLine(
-            value: Str_Combat.RangedCooldownDemo(
-                glow: glow,
-                result: CombatHelpers.RangedCooldownMultiplier(skill: skillLevel, glowFactor: glowFactor)
-            )
-        );
+        strHelper.AddRangedCdRow(glow, skillLevel, glowFactor);
 
-        return stringBuilder.ToString();
+
+
+        return strHelper.ToString();
     }
 
-    #endregion
+
+
+
 }

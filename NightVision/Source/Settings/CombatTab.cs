@@ -4,11 +4,8 @@
 // 
 // 24 10 2018
 
-using System;
-using RimWorld;
 using UnityEngine;
 using Verse;
-using static NightVision.Storage_Combat;
 
 namespace NightVision
 {
@@ -18,7 +15,7 @@ namespace NightVision
         public float IntSliderHeight = 28f;
 
         public string surpBuffer;
-        
+
 
         public string[] BestAndWorstRangedCd
         {
@@ -34,26 +31,25 @@ namespace NightVision
                 return bestAndWorstRangedCd;
             }
         }
-        public  string[] bestAndWorstRangedCd = new string[2];
-        
-        public  float texRextXMod = 6f;
-        
-        public  float texRextYMod = 24f;
-        
-        public  float LineHeight = Text.LineHeight;
+        public string[] bestAndWorstRangedCd = new string[2];
 
-        public  float RangedSubListingHeight = 100f;
+        public float texRextXMod = 6f;
 
-        public  float MeleeSubListingHeight = 100f;
+        public float texRextYMod = 24f;
 
-        public  void DrawTab(Rect inRect)
+        public float LineHeight = Text.LineHeight;
+
+        public float RangedSubListingHeight = 100f;
+
+        public float MeleeSubListingHeight = 100f;
+
+        public void DrawTab(Rect inRect)
         {
             var combatStore = Settings.CombatStore;
             Rect tabRect = inRect.AtZero();
             var anchor = Text.Anchor;
             Text.Anchor = TextAnchor.MiddleLeft;
-            var listing = new Listing_Standard(GameFont.Small);
-            listing.verticalSpacing = VerticalSpacing;
+            var listing = new Listing_Standard(GameFont.Small) { verticalSpacing = VerticalSpacing };
             listing.Begin(tabRect);
             var subListing = listing.SubListing(LineHeight + 12f);
             subListing.Gap(6f);
@@ -127,22 +123,22 @@ namespace NightVision
                     MeleeSubListingHeight += 12f;
                     subListing.Label(combatStore.SurpriseAttackMultiplier.Label);
                     MeleeSubListingHeight += Text.LineHeight + VerticalSpacing;
-                    rowRect               =  subListing.GetRect(IntSliderHeight);
+                    rowRect = subListing.GetRect(IntSliderHeight);
                     MeleeSubListingHeight += IntSliderHeight;
                     string surpStr = combatStore.SurpriseAttackMultiplier.TempValue.IsTrivial() ? "[Disabled]" : "x" + combatStore.SurpriseAttackMultiplier.TempValue;
-                    float  surpNum = combatStore.SurpriseAttackMultiplier.TempValue;
+                    float surpNum = combatStore.SurpriseAttackMultiplier.TempValue;
                     combatStore.SurpriseAttackMultiplier.TempValue = Widgets.HorizontalSlider(rowRect, surpNum, 0f, 2f, false, surpStr, "Disabled", "x2", 0.1f);
                     TooltipHandler.TipRegion(rowRect, combatStore.SurpriseAttackMultiplier.Tooltip);
                     DrawIndicator(rowRect: rowRect, 0.5f / 2f);
-                
+
                     subListing.ShortGapLine();
                     MeleeSubListingHeight += 12f;
                     subListing.Label(combatStore.DodgeCurviness.Label);
                     MeleeSubListingHeight += Text.LineHeight + VerticalSpacing;
-                    rowRect               =  subListing.GetRect(IntSliderHeight);
+                    rowRect = subListing.GetRect(IntSliderHeight);
                     MeleeSubListingHeight += IntSliderHeight;
                     string dodgeCurStr = combatStore.DodgeCurviness.TempValue.ToString();
-                    float  dodgeCurNum = combatStore.DodgeCurviness.TempValue;
+                    float dodgeCurNum = combatStore.DodgeCurviness.TempValue;
                     combatStore.DodgeCurviness.TempValue = (int)Widgets.HorizontalSlider(rowRect, dodgeCurNum, 1f, 5f, false, dodgeCurStr, "Flat", "Extreme Changes", 1f);
                     TooltipHandler.TipRegion(rowRect, combatStore.DodgeCurviness.Tooltip);
                     DrawIndicator(rowRect: rowRect, 2f / 4);
@@ -150,7 +146,7 @@ namespace NightVision
                 subListing.Gap();
                 MeleeSubListingHeight += 12f;
                 listing.EndSection(subListing);
-                
+
 
 
             }
@@ -158,21 +154,21 @@ namespace NightVision
             Text.Anchor = anchor;
         }
 
-        private  void DrawIndicator(Rect rowRect, float fractionalPosition)
+        private void DrawIndicator(Rect rowRect, float fractionalPosition)
         {
-            rowRect.x += texRextXMod + (rowRect.width - texRextXMod * 2)* fractionalPosition -6f;
+            rowRect.x += texRextXMod + (rowRect.width - texRextXMod * 2) * fractionalPosition - 6f;
             rowRect.y += texRextYMod;
-            rowRect.width  =  12f;
-            rowRect.height =  12f;
+            rowRect.width = 12f;
+            rowRect.height = 12f;
             Widgets.DrawTextureFitted(rowRect, IndicatorTex.DefIndicator, 1);
         }
 
-        public  void Clear()
+        public void Clear()
         {
             bestAndWorstRangedCd = new string[2];
         }
 
-        public  bool CheckIntRange(ref IntRange range, int mustInclude)
+        public bool CheckIntRange(ref IntRange range, int mustInclude)
         {
             if (range.TrueMax != range.max)
             {

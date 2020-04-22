@@ -4,8 +4,8 @@
 // 
 // 16 10 2018
 
-using System.Collections.Generic;
 using JetBrains.Annotations;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -14,7 +14,7 @@ namespace NightVision
     public class Settings : ModSettings
     {
         private bool _isWindowSetup;
-        public  bool CEDetected = false;
+        public bool CEDetected = false;
 
         public static Settings Instance;
 
@@ -25,9 +25,9 @@ namespace NightVision
         private Storage _store;
         private Storage_Combat _combatStore;
         private SettingsCache _cache;
-        
+
         // tabs
-        private Tab  _tab;
+        private Tab _tab;
         private readonly List<TabRecord> _tabsList = new List<TabRecord>();
         private GeneralTab _generalTab;
         private ApparelTab _apparelTab;
@@ -35,14 +35,14 @@ namespace NightVision
         private RaceTab _raceTab;
         private DebugTab _debugTab;
         private CombatTab _combatTab;
-        
+
         // draw rects
         private Rect lastRect;
         private Rect menuRect;
         private Rect tabRect;
 
 
-        
+
 
         [UsedImplicitly]
         public Settings()
@@ -60,7 +60,7 @@ namespace NightVision
             Cache.DoPreWriteTasks();
             Store.ExposeSettings();
             CombatStore.LoadSaveCommit();
-            
+
         }
 
         public void Initialise()
@@ -98,7 +98,7 @@ namespace NightVision
             if (_combatTab == null)
             {
                 _combatTab = new CombatTab();
-                
+
             }
             _tabsList.Add(
                 new TabRecord(
@@ -125,8 +125,8 @@ namespace NightVision
                     () => _tab == Tab.Races
                 )
             );
-            
-            
+
+
             if (_apparelTab == null)
             {
                 _apparelTab = new ApparelTab();
@@ -180,8 +180,8 @@ namespace NightVision
             inRect.yMin += 32f;
             menuRect = inRect;
             tabRect = inRect.ContractedBy(17f);
-            
-            
+
+
         }
 
         public void DoSettingsWindowContents(Rect inRect)
@@ -192,14 +192,14 @@ namespace NightVision
                 InitialiseWindow(inRect);
                 _isWindowSetup = true;
             }
-            
+
             Widgets.DrawMenuSection(menuRect);
             TabDrawer.DrawTabs(menuRect, _tabsList, 1);
 
             GUI.BeginGroup(tabRect);
-            var   font   = Text.Font;
+            var font = Text.Font;
             var anchor = Text.Anchor;
-            Text.Font   = GameFont.Small;
+            Text.Font = GameFont.Small;
             Text.Anchor = TextAnchor.MiddleCenter;
 
             switch (_tab)
@@ -229,7 +229,7 @@ namespace NightVision
                     break;
             }
 
-            Text.Font   = font;
+            Text.Font = font;
             Text.Anchor = anchor;
             GUI.EndGroup();
         }

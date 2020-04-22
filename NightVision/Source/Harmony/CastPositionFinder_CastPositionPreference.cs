@@ -4,12 +4,11 @@
 // 
 // 20 10 2018
 
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using HarmonyLib;
 using Verse;
 using Verse.AI;
 
@@ -19,7 +18,7 @@ namespace NightVision.Harmony
     public static class CastPositionFinder_CastPositionPreference
     {
         public static float GlowCoverCoefficient = 0.5f;
-        
+
 
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
@@ -49,13 +48,13 @@ namespace NightVision.Harmony
                         loadIntVecArg = instr;
                     }
                     else if (instr.opcode == OpCodes.Ldsflda && instr.operand is FieldInfo fi && fi.FieldType == typeof(CastPositionRequest)
-                             && instrList[index + 1].opcode == OpCodes.Ldfld && instrList[index+ 1].operand is FieldInfo fi2 && fi2.FieldType == typeof(Pawn))
+                             && instrList[index + 1].opcode == OpCodes.Ldfld && instrList[index + 1].operand is FieldInfo fi2 && fi2.FieldType == typeof(Pawn))
                     {
                         loadCastPositionReq = new CodeInstruction(instr);
                         loadCasterPawnFromReq = new CodeInstruction(instrList[index + 1]);
                     }
 
-                    else if (instr.opcode                       == OpCodes.Mul
+                    else if (instr.opcode == OpCodes.Mul
                              && instrList[index: index - 1].opcode == OpCodes.Ldc_R4
                              && instrList[index: index + 1].opcode == OpCodes.Add)
                     {

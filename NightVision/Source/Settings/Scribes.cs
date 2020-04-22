@@ -4,11 +4,9 @@
 // 
 // 21 07 2018
 
+using JetBrains.Annotations;
 using System.Collections.Generic;
 using System.Linq;
-
-using JetBrains.Annotations;
-
 using Verse;
 
 namespace NightVision
@@ -80,7 +78,8 @@ namespace NightVision
             List<TV> tempList;
             var anyNullRef = false;
 
-            switch (Scribe.mode) {
+            switch (Scribe.mode)
+            {
                 case LoadSaveMode.Saving when dictionary == null || dictionary.Count == 0:
                     return false;
                 case LoadSaveMode.Saving:
@@ -88,34 +87,35 @@ namespace NightVision
                     tempList.RemoveAll(lm => lm == null || !lm.ShouldBeSaved());
                     Scribe_Collections.Look(ref tempList, label, LookMode.Deep);
                     break;
-                case LoadSaveMode.LoadingVars: {
-                    tempList = new List<TV>();
-                    Scribe_Collections.Look(ref tempList, label, LookMode.Deep);
-
-                    dictionary = new Dictionary<TK, TV>();
-                    var removed = 0;
-
-                    for (int i = tempList.Count - 1; i >= 0; i--)
+                case LoadSaveMode.LoadingVars:
                     {
-                        if (tempList[i] != null && tempList[i].ParentDef != null)
-                        {
-                            dictionary[(TK) tempList[i].ParentDef] = tempList[i];
-                        }
-                        else
-                        {
-                            tempList.RemoveAt(i);
-                            removed++;
-                        }
-                    }
+                        tempList = new List<TV>();
+                        Scribe_Collections.Look(ref tempList, label, LookMode.Deep);
 
-                    if (removed > 0)
-                    {
-                        Log.Message("NVNullEntryLog".Translate(removed, nameof(dictionary)));
-                        anyNullRef = true;
-                    }
+                        dictionary = new Dictionary<TK, TV>();
+                        var removed = 0;
 
-                    break;
-                }
+                        for (int i = tempList.Count - 1; i >= 0; i--)
+                        {
+                            if (tempList[i] != null && tempList[i].ParentDef != null)
+                            {
+                                dictionary[(TK)tempList[i].ParentDef] = tempList[i];
+                            }
+                            else
+                            {
+                                tempList.RemoveAt(i);
+                                removed++;
+                            }
+                        }
+
+                        if (removed > 0)
+                        {
+                            Log.Message("NVNullEntryLog".Translate(removed, nameof(dictionary)));
+                            anyNullRef = true;
+                        }
+
+                        break;
+                    }
             }
 
             return anyNullRef;

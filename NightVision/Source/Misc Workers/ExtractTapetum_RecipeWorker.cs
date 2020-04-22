@@ -4,10 +4,10 @@
 // 
 // 21 07 2018
 
-using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 using RimWorld;
+using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace NightVision
@@ -19,11 +19,11 @@ namespace NightVision
         private static readonly ThingDef ExtractedTapetum = ThingDef.Named("NV_TapetumRaw");
 
         public override void ApplyOnPawn(
-                        Pawn           pawn,
+                        Pawn pawn,
                         BodyPartRecord part,
-                        Pawn           billDoer,
-                        List<Thing>    ingredients,
-                        Bill           bill
+                        Pawn billDoer,
+                        List<Thing> ingredients,
+                        Bill bill
                     )
         {
             if (billDoer != null)
@@ -37,9 +37,9 @@ namespace NightVision
                 GenSpawn.Spawn(ExtractTapetum_RecipeWorker.ExtractedTapetum, billDoer.Position, billDoer.Map);
             }
 
-            DamageDef surgicalCut      = DamageDefOf.SurgicalCut;
-            var       amount           = 99999f;
-            var       armorPenetration = 999f;
+            DamageDef surgicalCut = DamageDefOf.SurgicalCut;
+            var amount = 99999f;
+            var armorPenetration = 999f;
 
             pawn.TakeDamage(
                             new DamageInfo(
@@ -54,9 +54,9 @@ namespace NightVision
 
             if (pawn.Faction != null && billDoer?.Faction != null)
             {
-                Faction faction        = pawn.Faction;
-                Faction faction2       = billDoer.Faction;
-                int     goodwillChange = -15;
+                Faction faction = pawn.Faction;
+                Faction faction2 = billDoer.Faction;
+                int goodwillChange = -15;
 
                 string reason =
                             "GoodwillChangedReason_RemovedBodyPart".Translate(part.LabelShort);
@@ -67,13 +67,13 @@ namespace NightVision
         }
 
         public override string GetLabelWhenUsedOn(
-                        Pawn           pawn,
+                        Pawn pawn,
                         BodyPartRecord part
                     )
             => "HarvestOrgan".Translate() + " " + "NVTapetum".Translate();
 
         public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(
-                        Pawn      pawn,
+                        Pawn pawn,
                         RecipeDef recipeDef
                     )
         {

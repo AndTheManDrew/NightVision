@@ -1,16 +1,18 @@
-﻿using System.Diagnostics;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
+using System.Diagnostics;
 using Verse;
 
-namespace NightVision.Harmony {
+namespace NightVision.Harmony
+{
     [HarmonyPatch(typeof(StatPart_Glow), "FactorFromGlow")]
-    public static class StatPartGlow_FactorFromGlow {
+    public static class StatPartGlow_FactorFromGlow
+    {
 #if DEBUG
-        public static           double    TotalGlFactorNanoSec;
-        public static           long      TotalTicks;
+        public static double TotalGlFactorNanoSec;
+        public static long TotalTicks;
         private static readonly Stopwatch GlfactorTimer = new Stopwatch();
-        private static          int       GlfactorTicks;
+        private static int GlfactorTicks;
 #endif
         public static void Postfix(Thing t, ref float __result)
         {
@@ -29,9 +31,9 @@ namespace NightVision.Harmony {
             if (Find.TickManager.TicksGame - GlfactorTicks > 600)
             {
                 int elapsedTicks = Find.TickManager.TicksGame - GlfactorTicks;
-                GlfactorTicks        =  Find.TickManager.TicksGame;
+                GlfactorTicks = Find.TickManager.TicksGame;
                 TotalGlFactorNanoSec += GlfactorTimer.ElapsedMilliseconds * 1000000;
-                TotalTicks           += elapsedTicks;
+                TotalTicks += elapsedTicks;
                 GlfactorTimer.Reset();
             }
 #endif

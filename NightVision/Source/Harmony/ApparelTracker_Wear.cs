@@ -2,11 +2,13 @@
 using RimWorld;
 using Verse;
 
-namespace NightVision.Harmony {
+namespace NightVision.Harmony
+{
     [HarmonyPatch(typeof(Pawn_ApparelTracker), nameof(Pawn_ApparelTracker.Wear))]
-    public static class ApparelTracker_Wear {
+    public static class ApparelTracker_Wear
+    {
         public static void Postfix(
-            Apparel             newApparel,
+            Apparel newApparel,
             Pawn_ApparelTracker __instance
         )
         {

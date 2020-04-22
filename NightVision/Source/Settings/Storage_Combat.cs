@@ -4,14 +4,10 @@
 // 
 // 24 10 2018
 
-using System;
-
 using HarmonyLib;
-
 using NightVision.Harmony;
-
 using RimWorld;
-
+using System;
 using Verse;
 using Verse.AI;
 
@@ -19,7 +15,6 @@ namespace NightVision
 {
     public class Storage_Combat
     {
-        /// <inheritdoc />
         public Storage_Combat()
         {
             LoadDefaultSettings();
@@ -112,7 +107,7 @@ namespace NightVision
                     AccessTools.Method(typeof(Verb_MeleeAttack), "GetNonMissChance"),
                     AccessTools.Method(typeof(Verb_MeleeAttack), "GetDodgeChance")
                 },
-                new[] {HarmonyPatchType.Postfix, HarmonyPatchType.Postfix},
+                new[] { HarmonyPatchType.Postfix, HarmonyPatchType.Postfix },
                 new[]
                 {
                     AccessTools.Method(typeof(VerbMeleeAttack_GetNonMissChance),
@@ -163,7 +158,7 @@ namespace NightVision
                 AccessTools.Method(
                     typeof(VerbProperties),
                     nameof(VerbProperties.AdjustedCooldown),
-                    new Type[] {typeof(Tool), typeof(Pawn), typeof(Thing)}
+                    new Type[] { typeof(Tool), typeof(Pawn), typeof(Thing) }
                 ),
                 HarmonyPatchType.Transpiler,
                 AccessTools.Method(typeof(VerbProperties_AdjustedCooldown),
@@ -194,7 +189,7 @@ namespace NightVision
         }
 
 
-        private static IntRange LinkedRangedCooldownMinAndMax => new IntRange((int) (100 / Settings.Store.MultiplierCaps.max),
-            (int) (100 / Settings.Store.MultiplierCaps.min));
+        private static IntRange LinkedRangedCooldownMinAndMax => new IntRange((int)(100 / Settings.Store.MultiplierCaps.max),
+            (int)(100 / Settings.Store.MultiplierCaps.min));
     }
 }

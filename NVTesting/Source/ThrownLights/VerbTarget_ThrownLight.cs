@@ -57,7 +57,7 @@ namespace NVExperiments.ThrownLights
             Targeter targeter = Find.Targeter;
             
             //TODO remove merging
-            if (verb.CasterIsPawn && targeter.targetingVerb != null && targeter.targetingVerb.verbProps == this.verb.verbProps)
+            if (verb.CasterIsPawn && targeter.targetingSource != null && targeter.targetingSource.GetVerb.verbProps == this.verb.verbProps)
             {
                 Log.Message($"Ba");
                 

@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 #if DEBUG
-using Verse;
 #endif
 namespace NightVision
 {
@@ -133,7 +132,7 @@ namespace NightVision
             }
             else
             {
-                result = new List<float> {(float) Math.Round(result[0] / 2, Constants.NUMBER_OF_DIGITS)};
+                result = new List<float> { (float)Math.Round(result[0] / 2, Constants.NUMBER_OF_DIGITS) };
             }
 
             return result;

@@ -1,13 +1,14 @@
 ﻿using HarmonyLib;
-using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace NightVision.Harmony {
+namespace NightVision.Harmony
+{
     [HarmonyPatch(typeof(Pawn_ApparelTracker), nameof(Pawn_ApparelTracker.Remove))]
-    public static class ApparelTracker_Remove {
+    public static class ApparelTracker_Remove
+    {
         public static void Postfix(
-            Apparel             ap,
+            Apparel ap,
             Pawn_ApparelTracker __instance
         )
         {

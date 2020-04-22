@@ -4,14 +4,6 @@
 // 
 // 16 10 2018
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using HarmonyLib;
-using RimWorld;
-using Verse;
-
 namespace NightVision
 {
     /// <summary>

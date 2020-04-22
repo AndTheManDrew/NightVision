@@ -90,7 +90,8 @@ namespace NightVision
                 {
                     LightModifiersBase.PSLightModifiers = new LightModifiersBase
                     {
-                        Offsets = Constants.PSDefaultOffsets.ToArray(), Initialised = true
+                        Offsets = Constants.PSDefaultOffsets.ToArray(),
+                        Initialised = true
                     };
                 }
 
@@ -98,7 +99,8 @@ namespace NightVision
                 {
                     LightModifiersBase.NVLightModifiers = new LightModifiersBase
                     {
-                        Offsets = Constants.NVDefaultOffsets.ToArray(), Initialised = true
+                        Offsets = Constants.NVDefaultOffsets.ToArray(),
+                        Initialised = true
                     };
                 }
             }
@@ -146,12 +148,12 @@ namespace NightVision
 
         public void SetMinMultiplierCap(float newMin)
         {
-            MultiplierCaps.min = (float) Math.Round(newMin / 100, Constants.NUMBER_OF_DIGITS);
+            MultiplierCaps.min = (float)Math.Round(newMin / 100, Constants.NUMBER_OF_DIGITS);
         }
 
         public void SetMaxMultiplierCap(float newMax)
         {
-            MultiplierCaps.max = (float) Math.Round(newMax / 100, Constants.NUMBER_OF_DIGITS);
+            MultiplierCaps.max = (float)Math.Round(newMax / 100, Constants.NUMBER_OF_DIGITS);
         }
 
         public float ClampToMultipliers(float val)

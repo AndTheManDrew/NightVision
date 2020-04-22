@@ -4,9 +4,9 @@
 // 
 // 06 12 2018
 
+using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
-using RimWorld;
 using Verse;
 
 namespace NightVision
@@ -24,7 +24,7 @@ namespace NightVision
             //  only one is required
             //  In both cases, we try and filter quite strictly
 
-            
+
 
             //Find all hediffs that effect sight
             var allSightAffectingHediffs = new HashSet<HediffDef>(
@@ -48,7 +48,7 @@ namespace NightVision
             //Recipes: only place where the target part is defined for bionic eyes, archotech eyes etc
             var allEyeHediffs = new HashSet<HediffDef>(
                 collection: DefDatabase<RecipeDef>.AllDefsListForReading.FindAll(
-                    match: recdef => recdef.addsHediff                 != null
+                    match: recdef => recdef.addsHediff != null
                                      && recdef.appliedOnFixedBodyParts != null
                                      && recdef.appliedOnFixedBodyParts.Exists(
                                          match: bpd => bpd.tags != null && bpd.tags.Contains(item: Defs_Rimworld.EyeTag)
@@ -68,11 +68,11 @@ namespace NightVision
                 )
             );
 
-            
+
             allEyeHediffs.RemoveWhere(match: hdD => !typeof(HediffWithComps).IsAssignableFrom(c: hdD.hediffClass));
 
             allSightAffectingHediffs.RemoveWhere(match: hdD => !typeof(HediffWithComps).IsAssignableFrom(c: hdD.hediffClass));
-            
+
             allSightAffectingHediffs.UnionWith(other: allEyeHediffs);
 
             Settings.Store.AllSightAffectingHediffs = allSightAffectingHediffs;
@@ -92,7 +92,7 @@ namespace NightVision
             var hediffLightMods = Settings.Store.HediffLightMods ?? new Dictionary<HediffDef, Hediff_LightModifiers>();
 
             var sightNotEyeHediffs = sightAffectingHediffs.Except(eyeHediffs);
-            
+
             //Check to see if any non eye hediffs have the right comp
             foreach (HediffDef hediffDef in sightNotEyeHediffs)
             {
@@ -120,14 +120,14 @@ namespace NightVision
                     if (hediffDef.CompPropsFor(compClass: typeof(HediffComp_NightVision)) is HediffCompProperties_NightVision)
                     {
                         hediffLightMods[key: hediffDef] = new Hediff_LightModifiers(hediffDef: hediffDef)
-                            {AffectsEye = true};
+                        { AffectsEye = true };
                     }
                     //bionic eyes and such are automatically assigned night vision, this can be individually overridden in the mod settings
                     else if (AutoQualifier.HediffCheck(hediffDef: hediffDef) is VisionType autoOptions)
                     {
                         hediffLightMods[key: hediffDef] =
                             new Hediff_LightModifiers(hediffDef: hediffDef)
-                                {AffectsEye = true, AutoAssigned = true, Setting = autoOptions};
+                            { AffectsEye = true, AutoAssigned = true, Setting = autoOptions };
                     }
                 }
                 else if (hediffDef.CompPropsFor(compClass: typeof(HediffComp_NightVision)) is HediffCompProperties_NightVision)
@@ -146,8 +146,8 @@ namespace NightVision
         }
 
 
-        
-        
-        
+
+
+
     }
 }

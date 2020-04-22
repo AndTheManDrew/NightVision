@@ -4,12 +4,12 @@
 // 
 // 16 10 2018
 
+using JetBrains.Annotations;
 using System;
 using System.Linq;
-using JetBrains.Annotations;
-using RimWorld;
 using UnityEngine;
 using Verse;
+using Debug = System.Diagnostics.Debug;
 
 namespace NightVision
 {
@@ -19,8 +19,8 @@ namespace NightVision
 
         public VisionType IntSetting = VisionType.NVNone;
 
-        public bool    ShouldShowInSettings = true;
-        private  float[] _defaultOffsets;
+        public bool ShouldShowInSettings = true;
+        private float[] _defaultOffsets;
 
         private int _eyeCount;
 
@@ -44,18 +44,18 @@ namespace NightVision
             {
                 switch (IntSetting)
                 {
-                    default:                            return 0f;
-                    case VisionType.NVNightVision:      return NVLightModifiers[index] / _eyeCount;
+                    default: return 0f;
+                    case VisionType.NVNightVision: return NVLightModifiers[index] / _eyeCount;
                     case VisionType.NVPhotosensitivity: return PSLightModifiers[index] / _eyeCount;
-                    case VisionType.NVCustom:           return Offsets[index]          / _eyeCount;
+                    case VisionType.NVCustom: return Offsets[index] / _eyeCount;
                 }
             }
             set
-                => Offsets[index] = (float) Math.Round(
+                => Offsets[index] = (float)Math.Round(
                     Mathf.Clamp(
                         value,
                         -0.99f + 0.2f * (1 - index),
-                        +1f    + 0.2f * (1 - index)
+                        +1f + 0.2f * (1 - index)
                     ),
                     2,
                     Constants.ROUNDING
@@ -72,11 +72,12 @@ namespace NightVision
                 {
                     switch (GetSetting(_nvCompProps))
                     {
-                        default:                            return new float[2];
-                        case VisionType.NVNightVision:      return NVLightModifiers.Offsets.ToArray();
+                        default: return new float[2];
+                        case VisionType.NVNightVision: return NVLightModifiers.Offsets.ToArray();
                         case VisionType.NVPhotosensitivity: return PSLightModifiers.Offsets.ToArray();
                         case VisionType.NVCustom:
 
+                            Debug.Assert(_nvCompProps != null, nameof(_nvCompProps) + " != null");
                             return new[]
                                    {
                                        _nvCompProps.ZeroLightMultiplier
@@ -180,8 +181,8 @@ namespace NightVision
 
             switch (IntSetting)
             {
-                default:                            return !_nvCompProps.IsDefault();
-                case VisionType.NVNightVision:      return !_nvCompProps.NaturalNightVision;
+                default: return !_nvCompProps.IsDefault();
+                case VisionType.NVNightVision: return !_nvCompProps.NaturalNightVision;
                 case VisionType.NVPhotosensitivity: return !_nvCompProps.NaturalPhotosensitivity;
                 case VisionType.NVCustom:
 
@@ -205,7 +206,7 @@ namespace NightVision
             if (_parentDef.GetCompProperties<CompProperties_NightVision>() is CompProperties_NightVision
                         compProps)
             {
-                _nvCompProps         = compProps;
+                _nvCompProps = compProps;
                 ShouldShowInSettings = _nvCompProps.ShouldShowInSettings;
 
                 if (Initialised)
@@ -215,14 +216,14 @@ namespace NightVision
 
                 IntSetting = GetSetting(_nvCompProps);
 
-                Offsets = new[] {_nvCompProps.ZeroLightMultiplier - Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER, _nvCompProps.FullLightMultiplier - Constants.DEFAULT_FULL_LIGHT_MULTIPLIER};
+                Offsets = new[] { _nvCompProps.ZeroLightMultiplier - Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER, _nvCompProps.FullLightMultiplier - Constants.DEFAULT_FULL_LIGHT_MULTIPLIER };
 
                 Initialised = true;
             }
             else
             {
                 _nvCompProps = null;
-                Initialised  = true;
+                Initialised = true;
                 _parentDef.comps.Add(new CompProperties_NightVision());
             }
         }
