@@ -95,8 +95,8 @@ namespace NightVision
                 stringBuilder.AppendLine(value: pawn.KindLabel + " - " + str);
             }
 
-            string letterLabel = GetLetterLabel(parms: parms);
-            string letterText  = GetLetterText(parms: parms, pawns: list);
+            TaggedString letterLabel = GetLetterLabel(parms: parms);
+            TaggedString letterText  = GetLetterText(parms: parms, pawns: list);
 
             PawnRelationUtility.Notify_PawnsSeenByPlayer_Letter(
                 seenPawns: list,
@@ -204,7 +204,7 @@ namespace NightVision
                    );
         }
 
-        protected override void ResolveRaidStrategy(IncidentParms parms, PawnGroupKindDef groupKind)
+        public override void ResolveRaidStrategy(IncidentParms parms, PawnGroupKindDef groupKind)
         {
             if (parms.raidStrategy != null)
             {

@@ -28,7 +28,7 @@ namespace NightVision
             return "";
         }
 
-        public override string GetStatDrawEntryLabel(StatDef statDef, float value, ToStringNumberSense numberSense, StatRequest optionalReq)
+        public override string GetStatDrawEntryLabel(StatDef statDef, float value, ToStringNumberSense numberSense, StatRequest optionalReq, bool finalized)
         {
             return "...";
         }

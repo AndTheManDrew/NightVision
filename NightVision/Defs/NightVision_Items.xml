@@ -6,7 +6,7 @@
   <ThingDef ParentName="BodyPartProstheticBase">
     <defName>NV_TapetumImplant</defName>
     <label>retro-reflector eye implant</label>
-    <description>An implant that enhances night vision but reduces effectiveness in bright light.</description>
+    <description>An organic implant that enhances night vision but reduces effectiveness in bright light.</description>
     <techLevel>Industrial</techLevel>
     <graphicData>
       <texPath>Things_Misc/HealthItem_TapetumImplant</texPath>

@@ -28,7 +28,7 @@ namespace NightVision
         
         // tabs
         private Tab  _tab;
-        private List<TabRecord> TabsList = new List<TabRecord>();
+        private readonly List<TabRecord> _tabsList = new List<TabRecord>();
         private GeneralTab _generalTab;
         private ApparelTab _apparelTab;
         private HediffTab _hediffTab;
@@ -73,17 +73,17 @@ namespace NightVision
                 Write();
             }
         }
-        
-        
-        public void InitialiseWindow(Rect inRect)
+
+
+        private void InitialiseWindow(Rect inRect)
         {
-            TabsList.Clear();
+            _tabsList.Clear();
 
             if (_generalTab == null)
             {
                 _generalTab = new GeneralTab();
             }
-            TabsList.Add(
+            _tabsList.Add(
                 new TabRecord(
                     "NVGeneralTab".Translate(),
                     delegate
@@ -100,7 +100,7 @@ namespace NightVision
                 _combatTab = new CombatTab();
                 
             }
-            TabsList.Add(
+            _tabsList.Add(
                 new TabRecord(
                     "NVCombat".Translate(),
                     delegate
@@ -115,7 +115,7 @@ namespace NightVision
             {
                 _raceTab = new RaceTab();
             }
-            TabsList.Add(
+            _tabsList.Add(
                 new TabRecord(
                     "NVRaces".Translate(),
                     delegate
@@ -131,7 +131,7 @@ namespace NightVision
             {
                 _apparelTab = new ApparelTab();
             }
-            TabsList.Add(
+            _tabsList.Add(
                 new TabRecord(
                     "NVApparel".Translate(),
                     delegate
@@ -146,7 +146,7 @@ namespace NightVision
             {
                 _hediffTab = new HediffTab();
             }
-            TabsList.Add(
+            _tabsList.Add(
                 new TabRecord(
                     "NVHediffs".Translate(),
                     delegate
@@ -163,7 +163,7 @@ namespace NightVision
                 {
                     _debugTab = new DebugTab();
                 }
-                TabsList.Add(
+                _tabsList.Add(
                     new TabRecord(
                         "NVDebugTab".Translate(),
                         delegate
@@ -184,7 +184,7 @@ namespace NightVision
             
         }
 
-        public /*static*/ void DoSettingsWindowContents(Rect inRect)
+        public void DoSettingsWindowContents(Rect inRect)
         {
             if (!_isWindowSetup || lastRect != inRect)
             {
@@ -194,7 +194,7 @@ namespace NightVision
             }
             
             Widgets.DrawMenuSection(menuRect);
-            TabDrawer.DrawTabs(menuRect, TabsList, 1);
+            TabDrawer.DrawTabs(menuRect, _tabsList, 1);
 
             GUI.BeginGroup(tabRect);
             var   font   = Text.Font;

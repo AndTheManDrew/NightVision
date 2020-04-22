@@ -4,7 +4,11 @@
   <name>NightVision</name>
   <author>drumad</author>
   <url>https://github.com/AndTheManDrew/NightVision/releases</url>
-  <supportedVersions><li>1.0</li></supportedVersions>
+  <supportedVersions>
+    <!--<li>1.0</li> TODO -->
+    <li>1.1</li>
+  </supportedVersions>
+  <packageId>drumad.nightvision</packageId>
   <description><![CDATA[
 -<b>Night vision:</b>
     No slow down in darkness (Apparel, Bionics, Races)

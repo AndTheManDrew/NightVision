@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Harmony;
+using HarmonyLib;
 using RimWorld;
 using Verse;
 
@@ -31,20 +31,21 @@ namespace NightVision.Harmony {
             {
                 yield return new StatDrawEntry(
                     Defs_Rimworld.BasicStats,
-                    "NVGrantsVisionType".Translate(),
-                    vt.ToString().Translate(),
-                    0,
-                    hlm.AffectsEye ? "NVHediffQualifier".Translate() : ""
+                    "NVGrantsVisionType".Translate().RawText,
+                    vt.ToString().Translate().RawText,
+                    
+                    hlm.AffectsEye ? "NVHediffQualifier".Translate().RawText : "",
+                    0
                 );
             }
             else
             {
                 yield return new StatDrawEntry(
                     Defs_Rimworld.BasicStats,
-                    "NVGrantsVisionType".Translate(),
+                    "NVGrantsVisionType".Translate().RawText,
                     vt.ToString(),
-                    0,
-                    hlm.AffectsEye ? "NVHediffQualifier".Translate() : ""
+                    hlm.AffectsEye ? "NVHediffQualifier".Translate().RawText : "",
+                    0
                 );
 
                 yield return new StatDrawEntry(

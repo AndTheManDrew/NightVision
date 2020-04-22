@@ -6,6 +6,7 @@
     <!-- Tapetum Lucidum officially -->
     <label>retro-reflector implant</label>
     <labelNoun>a retinal retro-reflector implant</labelNoun>
+    <description>An organic retro-reflector implanted behind the retina to aid in light capture</description>
     <comps>
       <li Class="NightVision.HediffCompProperties_NightVision">
         <GrantsPhotosensitivity>true</GrantsPhotosensitivity>

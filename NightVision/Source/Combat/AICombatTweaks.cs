@@ -14,7 +14,7 @@ namespace NightVision
         {
             if (radius.IsNonTrivial() && pawn != null)
             {
-                float glowFactor = GlowFor.FactorOrFallBack(pawn);
+                var glowFactor = GlowFor.FactorOrFallBack(pawn);
 
                 if (glowFactor.FactorIsNonTrivial())
                 {

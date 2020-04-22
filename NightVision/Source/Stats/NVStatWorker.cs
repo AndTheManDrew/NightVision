@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
 using System.Text;
-using Harmony;
+using HarmonyLib;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -57,15 +57,12 @@ namespace NightVision {
             return string.Empty;
         }
 
-        public override string GetStatDrawEntryLabel(
-            StatDef             statDef,
-            float               value,
-            ToStringNumberSense numberSense,
-            StatRequest         optionalReq
-        )
+        public override string GetStatDrawEntryLabel(StatDef stat, float value, ToStringNumberSense numberSense, StatRequest optionalReq,
+            bool finalized = true)
         {
             return $"x{GetValueUnfinalized(optionalReq).ToStringPercent()}";
         }
+
 
         public override float GetValueUnfinalized(
             StatRequest req,

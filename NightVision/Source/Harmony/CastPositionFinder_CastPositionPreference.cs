@@ -9,7 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using Harmony;
+using HarmonyLib;
 using Verse;
 using Verse.AI;
 

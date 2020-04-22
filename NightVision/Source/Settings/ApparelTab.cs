@@ -1,9 +1,13 @@
 using UnityEngine;
+
 using Verse;
 
-namespace NightVision {
-    public class ApparelTab {
+namespace NightVision
+{
+    public class ApparelTab
+    {
         private Vector2 _apparelScrollPosition = Vector2.zero;
+        private const float CheckboxSize = 20f;
 
         public void Clear()
         {
@@ -12,70 +16,69 @@ namespace NightVision {
 
         public void DrawTab(Rect inRect)
         {
-
             var nvApparel = Settings.Store.NVApparel;
             var cachedHeadgear = Settings.Cache.GetAllHeadgear;
-            
+
             Text.Anchor = TextAnchor.LowerCenter;
-            int apparelCount = cachedHeadgear.Count;
-            var  headerRect   = new Rect(24f, 0f, inRect.width - 64f, 36f);
-            Rect leftRect     = headerRect.LeftPart(0.4f);
-            Rect midRect      = headerRect.RightPart(0.6f).LeftHalf().RightPart(0.8f);
-            Rect rightRect    = headerRect.RightPart(0.6f).RightHalf().LeftPart(0.8f);
-            Widgets.Label(leftRect,  "NVApparel".Translate());
-            Widgets.Label(midRect,   "NVNullPS".Translate());
+            var apparelCount = cachedHeadgear.Count;
+            var headerRect = new Rect(24f, 0f, inRect.width - 64f, 36f);
+            var leftRect = headerRect.LeftPart(0.4f);
+            var midRect = headerRect.RightPart(0.6f).LeftHalf().RightPart(0.8f);
+            var rightRect = headerRect.RightPart(0.6f).RightHalf().LeftPart(0.8f);
+            Widgets.Label(leftRect, "NVApparel".Translate());
+            Widgets.Label(midRect, "NVNullPS".Translate());
             Widgets.Label(rightRect, "NVGiveNV".Translate());
 
             Widgets.DrawLineHorizontal(headerRect.x + 12f, headerRect.yMax + 4f, headerRect.xMax - 64f);
 
             Text.Anchor = TextAnchor.MiddleCenter;
-            var viewRect   = new Rect(32f, 48f, inRect.width - 64f, apparelCount * 48f);
+            var viewRect = new Rect(32f, 48f, inRect.width - 64f, apparelCount * 48f);
             var scrollRect = new Rect(12f, 48f, inRect.width - 12f, inRect.height - 48f);
 
-            var   checkboxSize = 20f;
-            float leftBoxX     = midRect.center.x   + checkboxSize;
-            float rightBoxX    = rightRect.center.x + checkboxSize;
-            var   leftBox      = new Rect(leftBoxX,  0f, checkboxSize, checkboxSize);
-            var   rightBox     = new Rect(rightBoxX, 0f, checkboxSize, checkboxSize);
+
+            var leftBoxX = midRect.center.x + CheckboxSize;
+            var rightBoxX = rightRect.center.x + CheckboxSize;
+            var leftBox = new Rect(leftBoxX, 0f, CheckboxSize, CheckboxSize);
+            var rightBox = new Rect(rightBoxX, 0f, CheckboxSize, CheckboxSize);
 
             var num = 48f;
             Widgets.BeginScrollView(scrollRect, ref _apparelScrollPosition, viewRect);
 
-            foreach (ThingDef appareldef in cachedHeadgear)
+            foreach (var apparelDef in cachedHeadgear)
             {
                 var rowRect = new Rect(scrollRect.x + 12f, num, scrollRect.width - 24f, 40);
                 Widgets.DrawAltRect(rowRect);
 
-                var  locGUIContent = new GUIContent(appareldef.LabelCap, appareldef.uiIcon);
-                Rect apparelRect   = rowRect.LeftPart(0.4f);
+                var locGUIContent = new GUIContent(apparelDef.LabelCap, apparelDef.uiIcon);
+                var apparelRect = rowRect.LeftPart(0.4f);
                 Widgets.Label(apparelRect, locGUIContent);
 
                 TooltipHandler.TipRegion(
                     apparelRect,
-                    new TipSignal(appareldef.DescriptionDetailed /*, apparelRect.GetHashCode()*/)
+                    new TipSignal(apparelDef.DescriptionDetailed /*, apparelRect.GetHashCode()*/)
                 );
 
-                var leftBoxPos  = new Vector2(leftBoxX,  rowRect.center.y - checkboxSize / 2);
-                var rightBoxPos = new Vector2(rightBoxX, rowRect.center.y - checkboxSize / 2);
-                leftBox.y  = leftBoxPos.y;
+                var leftBoxPos = new Vector2(leftBoxX, rowRect.center.y - CheckboxSize / 2);
+                var rightBoxPos = new Vector2(rightBoxX, rowRect.center.y - CheckboxSize / 2);
+                leftBox.y = leftBoxPos.y;
                 rightBox.y = leftBoxPos.y;
-                TooltipHandler.TipRegion(leftBox,  new TipSignal("PSApparelExplained".Translate()));
+                TooltipHandler.TipRegion(leftBox, new TipSignal("PSApparelExplained".Translate()));
                 TooltipHandler.TipRegion(rightBox, new TipSignal("NVApparelExplained".Translate()));
 
-                if (nvApparel.TryGetValue(appareldef, out ApparelVisionSetting apparelSetting))
+                if (nvApparel.TryGetValue(apparelDef, out var apparelSetting))
                 {
-                    Widgets.Checkbox(leftBoxPos,  ref apparelSetting.NullifiesPS, checkboxSize);
-                    Widgets.Checkbox(rightBoxPos, ref apparelSetting.GrantsNV,    checkboxSize);
+                    Widgets.Checkbox(leftBoxPos, ref apparelSetting.NullifiesPS, CheckboxSize);
+                    Widgets.Checkbox(rightBoxPos, ref apparelSetting.GrantsNV, CheckboxSize);
 
-                    if (!apparelSetting.Equals(nvApparel[appareldef]))
+                    if (!apparelSetting.Equals(nvApparel[apparelDef]))
                     {
                         if (apparelSetting.IsRedundant())
                         {
-                            nvApparel.Remove(appareldef);
+                            nvApparel.Remove(apparelDef);
                         }
                         else
                         {
-                            nvApparel[appareldef] = apparelSetting;
+                            nvApparel[apparelDef] = apparelSetting;
                         }
                     }
                 }
@@ -83,25 +86,25 @@ namespace NightVision {
                 {
                     var nullPs = false;
                     var giveNV = false;
-                    Widgets.Checkbox(leftBoxPos,  ref nullPs, checkboxSize);
-                    Widgets.Checkbox(rightBoxPos, ref giveNV, checkboxSize);
+                    Widgets.Checkbox(leftBoxPos, ref nullPs, CheckboxSize);
+                    Widgets.Checkbox(rightBoxPos, ref giveNV, CheckboxSize);
 
                     if (nullPs || giveNV)
                     {
-                        if (appareldef.GetCompProperties<CompProperties_NightVisionApparel>() is
-                                    CompProperties_NightVisionApparel compprops)
+                        if (apparelDef.GetCompProperties<CompProperties_NightVisionApparel>() is
+                            CompProperties_NightVisionApparel compprops)
                         {
                             apparelSetting = compprops.AppVisionSetting;
                         }
                         else
                         {
                             apparelSetting =
-                                        ApparelVisionSetting.CreateNewApparelVisionSetting(appareldef);
+                                ApparelVisionSetting.CreateNewApparelVisionSetting(apparelDef);
                         }
 
-                        apparelSetting.NullifiesPS    = nullPs;
-                        apparelSetting.GrantsNV       = giveNV;
-                        nvApparel[appareldef] = apparelSetting;
+                        apparelSetting.NullifiesPS = nullPs;
+                        apparelSetting.GrantsNV = giveNV;
+                        nvApparel[apparelDef] = apparelSetting;
                     }
                 }
 

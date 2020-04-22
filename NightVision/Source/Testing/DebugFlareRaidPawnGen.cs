@@ -16,8 +16,8 @@ namespace NightVision.Testing
     [HasDebugOutput]
     public class DebugFlareRaidPawnGen
     {
-        [DebugOutput]
-        [Category("NightVision")]
+        [DebugOutput("NightVision")]
+        //[Category()]
         public static void FlareRaidPawnGroupsMade()
         {
             Dialog_DebugOptionListLister.ShowSimpleDebugMenu(
@@ -148,7 +148,7 @@ namespace NightVision.Testing
                         sb.AppendLine();
                     };
 
-                    foreach (float num in Dialog_DebugActionsMenu.PointsOptions(extended: false))
+                    foreach (float num in /*Dialog_DebugActionsMenu*/DebugActionsUtility.PointsOptions(extended: false))
                     {
                         float obj = num;
                         action(obj: obj);

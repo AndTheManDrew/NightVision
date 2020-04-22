@@ -32,8 +32,7 @@ namespace NightVision.Testing
 
 
         public static pawnGenTrial CurrentTrial;
-        [DebugOutput]
-        [Category(name: "NightVision")]
+        [DebugOutput("Nightvision")]
         public static void FlareRaidPawnGroupsMadeToXml()
         {
             
@@ -83,7 +82,7 @@ namespace NightVision.Testing
                         trial.minPointsToGenCombatGroup = fac.def.MinPointsToGeneratePawnGroup(groupKind: PawnGroupKindDefOf.Combat);
 
 
-                        List<float> floats = Dialog_DebugActionsMenu.PointsOptions(extended: false).ToList();
+                        List<float> floats = DebugActionsUtility.PointsOptions(extended: false).ToList();
                         trial.groupGenerated = new pawnGenTrialTrialGroupGenerated[floats.Count];
 
                         for (var index = 0; index < floats.Count; index++)

@@ -519,6 +519,8 @@ namespace NightVision
             var nvZeroMod = 0f;
             var nvFullMod = 0f;
             int eyeCount = RaceSightParts.Count;
+            
+            var hediffLightMods = Settings.Store.HediffLightMods;
 
             foreach (List<HediffDef> value in PawnsNVHediffs.Values)
             {
@@ -527,7 +529,6 @@ namespace NightVision
                     continue;
                 }
 
-                var hediffLightMods = Settings.Store.HediffLightMods;
 
                 foreach (HediffDef hediffDef in value)
                 {
@@ -571,114 +572,36 @@ namespace NightVision
             ClearPsych();
         }
 
+        private float SumModifier(int index)
+        {
+            var nvMod = NvhediffMods[index];
+            var psMod = PshediffMods[index];
+            var hdMod = HediffMods[index];
+            switch (NaturalLightModifiers.IntSetting)
+            {
+                case VisionType.NVNightVision: //Nightvision
+                    nvMod += NaturalLightModifiers[index] * _numRemainingEyes;
+                    break;
+                case VisionType.NVPhotosensitivity: // Photosensitive
+                    psMod += NaturalLightModifiers[index] * _numRemainingEyes;
+                    break;
+                case VisionType.NVCustom: //Custom
+                    hdMod += NaturalLightModifiers[index] * _numRemainingEyes;
+                    break;
+            }
+            var mod = index == 0 ? Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER : Constants.DEFAULT_FULL_LIGHT_MULTIPLIER;
+            return NVMaths.ClampMods(mod, nvMod, psMod, hdMod, LightModifiersBase.NVLightModifiers[index],
+                LightModifiersBase.PSLightModifiers[index], CanCheat);
+        }
+        
         private float CalcZeroLightModifier()
         {
-            float mod = Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER;
-            var setting = (byte) NaturalLightModifiers.IntSetting;
-
-            switch (setting)
-            {
-                default:
-                    mod += Mathf.Clamp(NvhediffMods[0],
-                               Math.Min(0f, LightModifiersBase.NVLightModifiers[0]),
-                               Math.Max(0f, LightModifiersBase.NVLightModifiers[0]))
-                         + Mathf.Clamp(PshediffMods[0],
-                               Math.Min(0f, LightModifiersBase.PSLightModifiers[0]),
-                               Math.Max(0f, LightModifiersBase.PSLightModifiers[0])) + HediffMods[0];
-                    break;
-                case 1: //Nightvision
-                    mod += Mathf.Clamp(NvhediffMods[0] + NaturalLightModifiers[0] * _numRemainingEyes,
-                               Math.Min(0f, LightModifiersBase.NVLightModifiers[0]),
-                               Math.Max(0f, LightModifiersBase.NVLightModifiers[0]))
-                         + Mathf.Clamp(PshediffMods[0],
-                               Math.Min(0f, LightModifiersBase.PSLightModifiers[0]),
-                               Math.Max(0f, LightModifiersBase.PSLightModifiers[0])) + HediffMods[0];
-                    break;
-                case 2: // Photosensitive
-                    mod += Mathf.Clamp(NvhediffMods[0],
-                               Math.Min(0f, LightModifiersBase.NVLightModifiers[0]),
-                               Math.Max(0f, LightModifiersBase.NVLightModifiers[0])) + Mathf.Clamp(
-                               PshediffMods[0] + NaturalLightModifiers[0] * _numRemainingEyes,
-                               Math.Min(0f, LightModifiersBase.PSLightModifiers[0]),
-                               Math.Max(0f, LightModifiersBase.PSLightModifiers[0])) + HediffMods[0];
-                    break;
-                case 3: //Custom
-                    mod += Mathf.Clamp(NvhediffMods[0],
-                               Math.Min(0f, LightModifiersBase.NVLightModifiers[0]),
-                               Math.Max(0f, LightModifiersBase.NVLightModifiers[0]))
-                         + Mathf.Clamp(PshediffMods[0],
-                               Math.Min(0f, LightModifiersBase.PSLightModifiers[0]),
-                               Math.Max(0f, LightModifiersBase.PSLightModifiers[0])) + HediffMods[0]
-                         + NaturalLightModifiers[0] * _numRemainingEyes;
-                    break;
-            }
-
-            if (CanCheat)
-            {
-                return (float) Math.Round(mod - Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER,
-                    Constants.NUMBER_OF_DIGITS);
-            }
-
-            var caps = Settings.Store.MultiplierCaps;
-            return (float) Math.Round(
-                Mathf.Clamp(mod, caps.min, caps.max)
-              - Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER,
-                Constants.NUMBER_OF_DIGITS);
+            return SumModifier(0);
         }
 
         private float CalcFullLightModifier()
         {
-            float mod = Constants.DEFAULT_FULL_LIGHT_MULTIPLIER;
-            var setting = (byte) NaturalLightModifiers.IntSetting;
-
-            switch (setting)
-            {
-                default:
-                    mod += Mathf.Clamp(NvhediffMods[1],
-                               Math.Min(0f, LightModifiersBase.NVLightModifiers[1]),
-                               Math.Max(0f, LightModifiersBase.NVLightModifiers[1]))
-                         + Mathf.Clamp(PshediffMods[1],
-                               Math.Min(0f, LightModifiersBase.PSLightModifiers[1]),
-                               Math.Max(0f, LightModifiersBase.PSLightModifiers[1])) + HediffMods[1];
-                    break;
-                case 1: //Nightvision
-                    mod += Mathf.Clamp(NvhediffMods[1] + NaturalLightModifiers[1] * _numRemainingEyes,
-                               Math.Min(0f, LightModifiersBase.NVLightModifiers[1]),
-                               Math.Max(0f, LightModifiersBase.NVLightModifiers[1]))
-                         + Mathf.Clamp(PshediffMods[1],
-                               Math.Min(0f, LightModifiersBase.PSLightModifiers[1]),
-                               Math.Max(0f, LightModifiersBase.PSLightModifiers[1])) + HediffMods[1];
-                    break;
-                case 2: // Photosensitive
-                    mod += Mathf.Clamp(NvhediffMods[1],
-                               Math.Min(0f, LightModifiersBase.NVLightModifiers[1]),
-                               Math.Max(0f, LightModifiersBase.NVLightModifiers[1])) + Mathf.Clamp(
-                               PshediffMods[1] + NaturalLightModifiers[1] * _numRemainingEyes,
-                               Math.Min(0f, LightModifiersBase.PSLightModifiers[1]),
-                               Math.Max(0f, LightModifiersBase.PSLightModifiers[1])) + HediffMods[1];
-                    break;
-                case 3: //Custom
-                    mod += Mathf.Clamp(NvhediffMods[1],
-                               Math.Min(0f, LightModifiersBase.NVLightModifiers[1]),
-                               Math.Max(0f, LightModifiersBase.NVLightModifiers[1]))
-                         + Mathf.Clamp(PshediffMods[1],
-                               Math.Min(0f, LightModifiersBase.PSLightModifiers[1]),
-                               Math.Max(0f, LightModifiersBase.PSLightModifiers[1])) + HediffMods[1]
-                         + NaturalLightModifiers[1] * _numRemainingEyes;
-                    break;
-            }
-
-            if (CanCheat)
-            {
-                return (float) Math.Round(mod - Constants.DEFAULT_FULL_LIGHT_MULTIPLIER,
-                    Constants.NUMBER_OF_DIGITS);
-            }
-
-            var caps = Settings.Store.MultiplierCaps;
-            return (float) Math.Round(
-                Mathf.Clamp(mod, caps.min, caps.max)
-              - Constants.DEFAULT_FULL_LIGHT_MULTIPLIER,
-                Constants.NUMBER_OF_DIGITS);
+            return SumModifier(1);
         }
 
         /// <summary>

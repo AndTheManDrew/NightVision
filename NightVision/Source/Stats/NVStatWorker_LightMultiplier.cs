@@ -5,7 +5,7 @@
 // 24 10 2018
 
 using System.Reflection;
-using Harmony;
+using HarmonyLib;
 
 using JetBrains.Annotations;
 

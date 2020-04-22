@@ -61,7 +61,7 @@ public static class Str_Combat
     
     public static string SurpriseAtkCalcHeader()
     {
-        return "NightVisionOurLM".Translate().PadLeft(20, NumSpace) + "  |" + "NightVisionTargetLM".Translate().PadLeft(12, NumSpace) + "  |"+ "NightVisionSurpriseAtkSh".Translate().PadLeft(10, NumSpace);
+        return "NightVisionOurLM".Translate().RawText.PadLeft(20, NumSpace) + "  |" + "NightVisionTargetLM".Translate().RawText.PadLeft(12, NumSpace) + "  |"+ "NightVisionSurpriseAtkSh".Translate().RawText.PadLeft(10, NumSpace);
     }
 
     public static string SurpriseAtkCalcRow(float glow, float atkGlowF, float defGlowF, float chance)
@@ -77,7 +77,7 @@ public static class Str_Combat
     
     public static string DodgeCalcHeader()
     {
-        return "NightVisionOurLM".Translate().PadLeft(20, NumSpace) + "  |" + "NightVisionAtkLM".Translate().PadLeft(12, NumSpace) + "  |" + "NightVisionDodgeChanceShort".Translate().PadLeft(10, NumSpace);
+        return "NightVisionOurLM".Translate().RawText.PadLeft(20, NumSpace) + "  |" + "NightVisionAtkLM".Translate().RawText.PadLeft(12, NumSpace) + "  |" + "NightVisionDodgeChanceShort".Translate().RawText.PadLeft(10, NumSpace);
     }
 
     public static string DodgeCalcRow(float glow, float atkGlowF, float defGlowF, float dodge, float newDodge)

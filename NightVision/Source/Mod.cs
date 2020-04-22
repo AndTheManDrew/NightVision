@@ -63,7 +63,7 @@ namespace NightVision
             base.WriteSettings();
         }
 
-        private void InitSettings()
+        public void InitSettings()
         {
             GetSettings<Settings>();
             Settings.Initialise();

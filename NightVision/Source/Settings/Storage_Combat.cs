@@ -6,7 +6,7 @@
 
 using System;
 
-using Harmony;
+using HarmonyLib;
 
 using NightVision.Harmony;
 
@@ -23,9 +23,6 @@ namespace NightVision
         public Storage_Combat()
         {
             LoadDefaultSettings();
-#if DEBUG
-            ID = nextID++;
-#endif
         }
 
         public SettingOption<bool> CombatFeaturesEnabled;
@@ -44,13 +41,6 @@ namespace NightVision
         public SettingOption<int> HitCurviness;
 
         public SettingOption<int> DodgeCurviness;
-
-
-#if DEBUG
-        private static int nextID;
-        private int ID;
-
-#endif
 
         public void LoadSaveCommit()
         {
@@ -204,7 +194,7 @@ namespace NightVision
         }
 
 
-        private IntRange LinkedRangedCooldownMinAndMax => new IntRange((int) (100 / Settings.Store.MultiplierCaps.max),
+        private static IntRange LinkedRangedCooldownMinAndMax => new IntRange((int) (100 / Settings.Store.MultiplierCaps.max),
             (int) (100 / Settings.Store.MultiplierCaps.min));
     }
 }

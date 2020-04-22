@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Harmony;
+using HarmonyLib;
 using NightVision;
 using RimWorld;
 using RimWorld.BaseGen;
@@ -14,7 +15,7 @@ namespace NVExperiments
     {
         static NViHarmonyPatcher()
             {
-                var harmony = HarmonyInstance.Create("drumad.rimworld.mod.nvtesting");
+                var harmony = new Harmony("drumad.rimworld.mod.nvtesting");
                 harmony.PatchAll(Assembly.GetExecutingAssembly());
 
                 //TODO potentially throw error if nightvision is not present
@@ -25,7 +26,7 @@ namespace NVExperiments
                                              && mi.ReturnType == typeof(bool) && mi.GetParameters().Length == 1
                                              && mi.GetParameters()[0].ParameterType == typeof(PawnKindDef)),
                     null,
-                    new HarmonyMethod(typeof(NVHarmonyPatcher), nameof(MechanoidsFixerAncient)));
+                    new HarmonyMethod(typeof(NViHarmonyPatcher), nameof(MechanoidsFixerAncient)));
 
                 harmony.Patch(
                     typeof(CompSpawnerMechanoidsOnDamaged)

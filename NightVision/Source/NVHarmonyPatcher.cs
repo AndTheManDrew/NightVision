@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using Harmony;
+using HarmonyLib;
 using NightVision.Harmony.Manual;
 using RimWorld;
 using Verse;
@@ -26,14 +26,14 @@ namespace NightVision
     public static class NVHarmonyPatcher
     {
 
-        public static HarmonyInstance NVHarmony;
+        public static HarmonyLib.Harmony NVHarmony;
 
         static NVHarmonyPatcher()
         {
 #if DEBUG
                         HarmonyInstance.DEBUG = true;
 #endif
-            NVHarmony = HarmonyInstance.Create("drumad.rimworld.nightvision");
+            NVHarmony = new HarmonyLib.Harmony("drumad.rimworld.nightvision");
             
             MethodInfo addHediffMethod = AccessTools.Method(
                                                                     typeof(Pawn_HealthTracker),
