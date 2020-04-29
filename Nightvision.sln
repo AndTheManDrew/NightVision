@@ -79,29 +79,29 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Indicators", "Indicators", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Experiments", "Experiments", "{7AD5CCCA-384A-429C-930A-CFD2A7A9EBA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NVExperiments", "NVTesting\Source\NVExperiments.csproj", "{53AD9AD3-A8B8-45C4-B8EA-954E82193B32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NVExperiments", "NVExperiments\Source\NVExperiments.csproj", "{53AD9AD3-A8B8-45C4-B8EA-954E82193B32}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NightVision", "NightVision\Source\NightVision.csproj", "{EB253018-4E17-43AA-9868-16AC468F406A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "About", "About", "{BB0195D9-30FE-4410-BAB9-E5F721EBB5B2}"
 	ProjectSection(SolutionItems) = preProject
-		NVTesting\About\About.xml = NVTesting\About\About.xml
+		NVExperiments\About\About.xml = NVExperiments\About\About.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{769DBBD3-31AA-490E-9B95-BA3E6DD300FC}"
 	ProjectSection(SolutionItems) = preProject
-		NVTesting\Defs\BaseKinds.xml = NVTesting\Defs\BaseKinds.xml
-		NVTesting\Defs\Factions.xml = NVTesting\Defs\Factions.xml
-		NVTesting\Defs\Melee.xml = NVTesting\Defs\Melee.xml
-		NVTesting\Defs\Shoot.xml = NVTesting\Defs\Shoot.xml
-		NVTesting\Defs\Stalker.xml = NVTesting\Defs\Stalker.xml
-		NVTesting\Defs\Stalker_DutyDef.xml = NVTesting\Defs\Stalker_DutyDef.xml
-		NVTesting\Defs\TestHediffs.xml = NVTesting\Defs\TestHediffs.xml
-		NVTesting\Defs\TestingMap.xml = NVTesting\Defs\TestingMap.xml
-		NVTesting\Defs\ThinkTree_Stalker.xml = NVTesting\Defs\ThinkTree_Stalker.xml
-		NVTesting\Defs\Throw_Job.xml = NVTesting\Defs\Throw_Job.xml
-		NVTesting\Defs\ThrowLight_Equipment.xml = NVTesting\Defs\ThrowLight_Equipment.xml
-		NVTesting\Defs\ThrowLight_OnGround.xml = NVTesting\Defs\ThrowLight_OnGround.xml
+		NVExperiments\Defs\BaseKinds.xml = NVExperiments\Defs\BaseKinds.xml
+		NVExperiments\Defs\Factions.xml = NVExperiments\Defs\Factions.xml
+		NVExperiments\Defs\Melee.xml = NVExperiments\Defs\Melee.xml
+		NVExperiments\Defs\Shoot.xml = NVExperiments\Defs\Shoot.xml
+		NVExperiments\Defs\Stalker.xml = NVExperiments\Defs\Stalker.xml
+		NVExperiments\Defs\Stalker_DutyDef.xml = NVExperiments\Defs\Stalker_DutyDef.xml
+		NVExperiments\Defs\TestHediffs.xml = NVExperiments\Defs\TestHediffs.xml
+		NVExperiments\Defs\TestingMap.xml = NVExperiments\Defs\TestingMap.xml
+		NVExperiments\Defs\ThinkTree_Stalker.xml = NVExperiments\Defs\ThinkTree_Stalker.xml
+		NVExperiments\Defs\Throw_Job.xml = NVExperiments\Defs\Throw_Job.xml
+		NVExperiments\Defs\ThrowLight_Equipment.xml = NVExperiments\Defs\ThrowLight_Equipment.xml
+		NVExperiments\Defs\ThrowLight_OnGround.xml = NVExperiments\Defs\ThrowLight_OnGround.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Languages", "Languages", "{D895DC59-37A2-4A49-ABC7-52334D5B7691}"
@@ -110,7 +110,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Textures", "Textures", "{FC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{9ADDC20C-2280-4C47-9700-4521D7488B1B}"
 	ProjectSection(SolutionItems) = preProject
-		NVTesting\Patches\LongswordTag.xml = NVTesting\Patches\LongswordTag.xml
+		NVExperiments\Patches\LongswordTag.xml = NVExperiments\Patches\LongswordTag.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assemblies", "Assemblies", "{01BB6CC2-22B2-4BBB-BB21-A0951EEE386A}"
@@ -119,7 +119,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "English", "English", "{FAD2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{593F2E94-6428-4A64-A480-C2EE7E8DB7E5}"
 	ProjectSection(SolutionItems) = preProject
-		NVTesting\Languages\English\Keyed\NVTesting.xml = NVTesting\Languages\English\Keyed\NVTesting.xml
+		NVExperiments\Languages\English\Keyed\NVExperiments.xml = NVExperiments\Languages\English\Keyed\NVExperiments.xml
 	EndProjectSection
 EndProject
 Global
