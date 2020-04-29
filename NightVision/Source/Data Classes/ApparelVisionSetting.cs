@@ -19,9 +19,9 @@ namespace NightVision
         {
             Scribe_Values.Look(ref NullifiesPS, "nullifiesphotosens", CompNullifiesPS);
             Scribe_Values.Look(ref GrantsNV, "grantsnightvis", CompGrantsNV);
-        }
 
-        #region Fields
+            SetApparelFlags();
+        }
 
         //Current Settings
         public bool NullifiesPS;
@@ -31,14 +31,15 @@ namespace NightVision
         public bool CompNullifiesPS;
         public bool CompGrantsNV;
 
+        //Flags settings
+        private ApparelFlags SettingsFlags;
+
+
+
         //Corresponding ThingDef
 
         public ThingDef ParentDef;
         public CompProperties_NightVisionApparel CompProps;
-
-        #endregion
-
-        #region Constructors And comp attacher
 
         /// <summary>
         ///     Parameterless Constructor: necessary for RW scribe system
@@ -57,6 +58,19 @@ namespace NightVision
             AttachComp();
             NullifiesPS = CompNullifiesPS;
             GrantsNV = CompGrantsNV;
+            SetApparelFlags();
+
+        }
+
+        public bool HasEffect(ApparelFlags effectFlag)
+        {
+            return (SettingsFlags & effectFlag) != ApparelFlags.None;
+        }
+
+        private void SetApparelFlags()
+        {
+            SettingsFlags = (NullifiesPS ? ApparelFlags.NullifiesPS : ApparelFlags.None);
+            SettingsFlags |= (GrantsNV ? ApparelFlags.GrantsNV : ApparelFlags.None);
         }
 
         private void AttachComp()
@@ -117,10 +131,6 @@ namespace NightVision
             return newAppSetting;
         }
 
-        #endregion
-
-        #region Equality, Redundancy, and INVSaveCheck checks
-
         public bool Equals(
                         ApparelVisionSetting other
                     )
@@ -137,7 +147,5 @@ namespace NightVision
         /// </summary>
         /// <returns></returns>
         public bool ShouldBeSaved() => !(IsRedundant() || GrantsNV == CompGrantsNV && NullifiesPS == CompNullifiesPS);
-
-        #endregion
     }
 }

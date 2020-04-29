@@ -10,8 +10,6 @@ namespace NightVision
     [UsedImplicitly]
     public class NVStatWorker_Combat : NVStatWorker
     {
-        #region Overrides of NVStatWorker
-
         public override string GetExplanationUnfinalized(StatRequest req, ToStringNumberSense numberSense)
         {
 
@@ -49,15 +47,9 @@ namespace NightVision
             return base.ShouldShowFor(req) || !Settings.CombatStore.CombatFeaturesEnabled.Value;
         }
 
-        #endregion
-
-        #region Overrides of StatWorker
-
         public override void FinalizeValue(StatRequest req, ref float val, bool applyPostProcess)
         {
 
         }
-
-        #endregion
     }
 }

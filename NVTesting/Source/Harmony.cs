@@ -36,8 +36,6 @@ namespace NVExperiments
                 //    new HarmonyMethod(typeof(NVHarmonyPatcher), nameof(MechanoidsFixer)));
             }
 
-        
-        #region Mechanoid Spawner Patches from Androids
 
         //Stolen from Androids mod by Chjees; written by erdelf. My thanks to them both.
 
@@ -60,14 +58,6 @@ namespace NVExperiments
                         __result = false;
                     }
             }
-
-        #endregion
-
-        #region GetAvoidGridPatcher
-
-
-
-        #endregion
     }
 
     

@@ -8,10 +8,10 @@ namespace NightVision
     {
         public NVStatWorker_NightVision()
         {
-            Glow = 0f;
-            RelevantField = AccessTools.Field(typeof(ApparelVisionSetting), nameof(ApparelVisionSetting.GrantsNV));
-            DefaultStatValue = Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER;
-            Acronym = Str.NV;
+            this.Glow = 0f;
+            this.StatEffectMask = ApparelFlags.GrantsNV;
+            this.DefaultStatValue = Constants.DEFAULT_ZERO_LIGHT_MULTIPLIER;
+            this.Acronym = Str.NV;
         }
     }
 }

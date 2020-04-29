@@ -15,8 +15,6 @@ namespace NightVision
 {
     public class Race_LightModifiers : LightModifiersBase
     {
-        #region Fields
-
         public VisionType IntSetting = VisionType.NVNone;
 
         public bool ShouldShowInSettings = true;
@@ -28,10 +26,6 @@ namespace NightVision
         private CompProperties_NightVision _nvCompProps;
 
         private ThingDef _parentDef;
-
-        #endregion
-
-        #region  Properties & Indexers
 
         /// <summary>
         ///     Returns normalised modifiers
@@ -100,10 +94,6 @@ namespace NightVision
             set => IntSetting = value;
         }
 
-        #endregion
-
-        #region  Constructors
-
         [UsedImplicitly]
         public Race_LightModifiers() { }
 
@@ -113,10 +103,6 @@ namespace NightVision
             CountEyes();
             AttachCompProps();
         }
-
-        #endregion
-
-        #region  Members
 
         public static VisionType GetSetting(Race_LightModifiers modifiers)
         {
@@ -234,7 +220,5 @@ namespace NightVision
                         .FindAll(bpr => bpr.def.tags.Contains(Defs_Rimworld.EyeTag))
                         .Count;
         }
-
-        #endregion
     }
 }

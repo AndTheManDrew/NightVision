@@ -133,8 +133,6 @@ namespace NightVision
             return rangedCooldown;
         }
 
-        #region Ranged
-
         public static float GlowFactorForPawnAtTarget(Pawn pawn, LocalTargetInfo target, Comp_NightVision comp)
         {
             return comp.FactorFromGlow(glow: GlowFor.GlowAt(map: pawn.Map, pos: target.Cell));
@@ -189,10 +187,6 @@ namespace NightVision
             return 1;
         }
 
-        #endregion
-
-        #region Melee
-
         public static float SurpriseAttackChance(float atkGlowFactor, float defGlowFactor)
         {
             return SurpriseAttackChance(glowFactorDelta: atkGlowFactor - defGlowFactor);
@@ -224,7 +218,6 @@ namespace NightVision
             return 2 * orgDodge / (1 + (float)Math.Exp(d: DodgeXCoeff * glowFactorDelta));
         }
 
-        #endregion
         [NVSettingsDependentField]
         public static float _chanceOfSurpriseAttFactor = Settings.CombatStore.SurpriseAttackMultiplier.Value;
     }

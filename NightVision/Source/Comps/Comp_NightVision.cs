@@ -693,8 +693,6 @@ namespace NightVision
             ClearPsych();
         }
 
-        #region Thoughts
-
         /// <summary>
         ///     For ThoughtWorker_Dark patch
         /// </summary>
@@ -738,7 +736,5 @@ namespace NightVision
                        && BrightLightPsych == VisionType.NVPhotosensitivity;
             }
         }
-
-        #endregion
     }
 }

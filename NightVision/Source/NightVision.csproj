@@ -37,10 +37,10 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="0Harmony, Version=2.0.0.8, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\Harmony.2.0.0.8\Release\net35\0Harmony.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\..\..\lib\Harmony.2.0.0.8\Release\net472\0Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
@@ -103,6 +103,7 @@
     <Compile Include="Settings\ListingExtensions.cs" />
     <Compile Include="Settings\SettingOption.cs" />
     <Compile Include="Settings\Storage_Combat.cs" />
+    <Compile Include="Static variables\ApparelFlags.cs" />
     <Compile Include="Static variables\Str_Combat.cs" />
     <Compile Include="Static variables\Str_CombatSettings.cs" />
     <Compile Include="Stats\NVStatWorker_Combat.cs" />

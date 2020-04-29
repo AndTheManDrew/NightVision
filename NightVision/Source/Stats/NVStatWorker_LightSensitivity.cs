@@ -9,7 +9,7 @@ namespace NightVision
         public NVStatWorker_LightSensitivity()
         {
             Glow = 1f;
-            RelevantField = AccessTools.Field(typeof(ApparelVisionSetting), nameof(ApparelVisionSetting.NullifiesPS));
+            StatEffectMask = ApparelFlags.NullifiesPS;
             DefaultStatValue = Constants.DEFAULT_FULL_LIGHT_MULTIPLIER;
             Acronym = Str.PS;
         }

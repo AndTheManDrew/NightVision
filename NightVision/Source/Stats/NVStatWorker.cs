@@ -6,9 +6,9 @@ namespace NightVision
 {
     public class NVStatWorker : StatWorker
     {
-        public float _glow;
+        public float Glow;
 
-        public FieldInfo _relevantField;
+        public ApparelFlags StatEffectMask;
 
         public float DefaultStatValue;
 
@@ -16,29 +16,7 @@ namespace NightVision
 
         public StatDef Stat => stat;
 
-        public virtual float Glow
-        {
-            get
-            {
-                return _glow;
-            }
-            set
-            {
-                _glow = value;
-            }
-        }
 
-        public virtual FieldInfo RelevantField
-        {
-            get
-            {
-                return _relevantField;
-            }
-            set
-            {
-                _relevantField = value;
-            }
-        }
 
         public override string GetExplanationUnfinalized(
             StatRequest req,
@@ -48,7 +26,7 @@ namespace NightVision
             if (req.Thing is Pawn pawn
                 && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
-                return StatReportFor_NightVision.CompleteStatReport(Stat, RelevantField, comp, Glow);
+                return StatReportFor_NightVision.CompleteStatReport(Stat, StatEffectMask, comp, Glow);
             }
 
             return string.Empty;
@@ -86,8 +64,6 @@ namespace NightVision
         {
             return req.HasThing && !IsDisabledFor(req.Thing);
         }
-
-        #region Overrides of StatWorker
 
         public override string GetExplanationFinalizePart(StatRequest req, ToStringNumberSense numberSense, float finalVal)
         {
@@ -127,7 +103,5 @@ namespace NightVision
             //stringBuilder.Append("StatsReport_FinalValue".Translate() + ": " + this.stat.ValueToString(finalVal, this.stat.toStringNumberSense));
             //return stringBuilder.ToString();
         }
-
-        #endregion
     }
 }

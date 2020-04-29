@@ -22,8 +22,6 @@ namespace NVExperiments
     [HarmonyPatch(declaringType: typeof(Dialog_DebugActionsMenu), methodName: "DoListingItems_AllModePlayActions")]
     public static class PawnGeneratorNV
     {
-        #region  Fields
-
         public static string[] GlowHediffs = {"", "10Pct", "20Pct", "30Pct", "40Pct"};
 
         public static float[]      GlowLevels           = {0, 0.1f, 0.2f, 0.3f, 0.4f};
@@ -66,10 +64,6 @@ namespace NVExperiments
                                                };
 
         private static readonly AorB[] ABShoot = {A_Shoot, B_Shoot};
-
-        #endregion
-
-        #region  Members
 
         [HarmonyPostfix]
         public static void DebugActionPostfix(Dialog_DebugActionsMenu __instance)
@@ -528,39 +522,21 @@ namespace NVExperiments
             }
         }
 
-        #endregion
-
-        #region Nested type: AorB
-
         private class AorB
         {
-            #region  Fields
-
             public FactionDef   fac;
             public string       label;
             public PawnKindDef  pkd;
             public List<string> undesired;
-
-            #endregion
         }
-
-        #endregion
-
-        #region Nested type: GlowTeam
 
         public class GlowTeam
         {
-            #region  Fields
-
             public HediffDef GlowHediff;
 
             public  int    InitialRating;
             public  int    Skill;
             private string name;
-
-            #endregion
-
-            #region  Constructors
 
             public GlowTeam(string glowL, int skill, float rating)
             {
@@ -577,10 +553,6 @@ namespace NVExperiments
                 InitialRating = (int) rating;
             }
 
-            #endregion
-
-            #region  Properties And Indexers
-
             public string Name
             {
                 get
@@ -593,10 +565,6 @@ namespace NVExperiments
                     return name;
                 }
             }
-
-            #endregion
         }
-
-        #endregion
     }
 }

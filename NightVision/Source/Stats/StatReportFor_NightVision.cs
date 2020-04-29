@@ -16,15 +16,13 @@ namespace NightVision
 {
     public static class StatReportFor_NightVision
     {
-        #region  Members
-
-        public static string CompleteStatReport(StatDef stat, FieldInfo relevantField, Comp_NightVision comp, float relevantGlow)
+        public static string CompleteStatReport(StatDef stat, ApparelFlags effectMask, Comp_NightVision comp, float relevantGlow)
         {
             float factorFromGlow = comp.FactorFromGlow(glow: relevantGlow);
 
             return BasicExplanation(glow: relevantGlow, usedApparelSetting: out bool UsedApparel, comp: comp)
                    + FinalValue(stat: stat, value: factorFromGlow)
-                   + (relevantField != null && UsedApparel ? ApparelPart(relevantField: relevantField, comp: comp) : "");
+                   + (effectMask != ApparelFlags.None && UsedApparel ? ApparelPart(effectMask: effectMask, comp: comp) : "");
         }
 
         public static string ShortStatReport(float glow, Comp_NightVision comp)
@@ -33,7 +31,7 @@ namespace NightVision
         }
 
 
-        private static string ApparelPart(FieldInfo relevantField, Comp_NightVision comp)
+        private static string ApparelPart(ApparelFlags effectMask, Comp_NightVision comp)
         {
             var builder = new StringBuilder();
             builder.AppendLine(value: "StatsReport_RelevantGear".Translate());
@@ -41,7 +39,7 @@ namespace NightVision
             foreach (Apparel app in comp.PawnsNVApparel ?? Enumerable.Empty<Apparel>())
             {
                 if (nvApparel.TryGetValue(key: app.def, value: out ApparelVisionSetting setting)
-                    && (bool)relevantField.GetValue(obj: setting))
+                    && setting.HasEffect(effectMask))
                 {
                     builder.AppendLine(value: app.LabelCap);
                 }
@@ -93,8 +91,6 @@ namespace NightVision
 
             explanation.AppendLine();
 
-            #region Adding Default Values
-
             if (lowLight)
             {
                 basevalue = Constants.DEFAULT_FULL_LIGHT_MULTIPLIER
@@ -119,8 +115,6 @@ namespace NightVision
 
             explanation.AppendFormat(format: "  " + Str.MultiplierLine, arg0: "StatsReport_BaseValue".Translate(), arg1: basevalue).AppendLine()
                         .AppendLine();
-
-            #endregion
 
             string StringToAppend;
 
@@ -317,7 +311,5 @@ namespace NightVision
         {
             return "StatsReport_FinalValue".Translate() + ": " + stat.ValueToString(val: value, numberSense: stat.toStringNumberSense) + "\n\n";
         }
-
-        #endregion
     }
 }

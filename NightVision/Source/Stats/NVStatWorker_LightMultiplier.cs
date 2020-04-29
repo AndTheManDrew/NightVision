@@ -15,22 +15,20 @@ namespace NightVision
     [UsedImplicitly]
     public class NVStatWorker_LightMultiplier : NVStatWorker
     {
-        #region Overrides of NVStatWorker
-
-
-        public static FieldInfo RelevantFieldForGlow(float glow)
+        // TODO Rethink: probably better to use an enum with a corresponding conditional Get in ApparelVisionSetting
+        public static ApparelFlags GetEffectMaskForGlow(float glow)
         {
             if (glow.GlowIsBright())
             {
-                return AccessTools.Field(typeof(ApparelVisionSetting), nameof(ApparelVisionSetting.NullifiesPS));
+                return ApparelFlags.NullifiesPS;
             }
 
             if (glow.GlowIsDarkness())
             {
-                AccessTools.Field(typeof(ApparelVisionSetting), nameof(ApparelVisionSetting.GrantsNV));
+                return ApparelFlags.GrantsNV;
             }
 
-            return null;
+            return ApparelFlags.None;
         }
 
 
@@ -44,7 +42,7 @@ namespace NightVision
                 && pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
                 float glow = GlowFor.GlowAt(pawn);
-                return StatReportFor_NightVision.CompleteStatReport(Stat, RelevantFieldForGlow(glow), comp, glow);
+                return StatReportFor_NightVision.CompleteStatReport(Stat, GetEffectMaskForGlow(glow), comp, glow);
             }
 
             return string.Empty;
@@ -85,15 +83,9 @@ namespace NightVision
             return base.GetExplanationFinalizePart(req, numberSense, finalVal);
         }
 
-        #endregion
-
-        #region Overrides of StatWorker
-
         public override void FinalizeValue(StatRequest req, ref float val, bool applyPostProcess)
         {
             base.FinalizeValue(req, ref val, applyPostProcess);
         }
-
-        #endregion
     }
 }

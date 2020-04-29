@@ -18,8 +18,6 @@ namespace NightVision
     {
         public static readonly PawnsArrivalModeDef ForcedArriveMode = PawnsArrivalModeDefOf.CenterDrop;
 
-        #region Overrides of IncidentWorker_RaidEnemy
-
         protected override bool FactionCanBeGroupSource(Faction f, Map map, bool desperate = false)
         {
             return !f.IsPlayer
@@ -257,8 +255,6 @@ namespace NightVision
         {
             return "LetterRelatedPawnsRaidEnemy".Translate(arg1: Faction.OfPlayer.def.pawnsPlural, arg2: parms.faction.def.pawnsPlural);
         }
-
-        #endregion
 
         public static float ChanceForFlareRaid(Map target)
         {

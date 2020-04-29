@@ -41,7 +41,27 @@ namespace NightVision.Harmony
         // IL_0075: ldc.i4.1     
         // IL_0076: call         class Verse.AI.IAttackTarget Verse.AI.AttackTargetFinder::BestAttackTarget(class Verse.AI.IAttackTargetSearcher, valuetype Verse.AI.TargetScanFlags, class [mscorlib]System.Predicate`1<class Verse.Thing>, float32, float32, valuetype Verse.IntVec3, float32, bool, bool)
         // IL_007b: castclass    Verse.Thing
-        // IL_0080: ret       
+        // IL_0080: ret
+
+        //protected virtual Thing FindAttackTarget(Pawn pawn)
+        //{
+        //    TargetScanFlags targetScanFlags = TargetScanFlags.NeedLOSToPawns | TargetScanFlags.NeedReachableIfCantHitFromMyPos | TargetScanFlags.NeedThreat | TargetScanFlags.NeedAutoTargetable;
+        //    if (this.needLOSToAcquireNonPawnTargets)
+        //    {
+        //        targetScanFlags |= TargetScanFlags.NeedLOSToNonPawns;
+        //    }
+        //    if (this.PrimaryVerbIsIncendiary(pawn))
+        //    {
+        //        targetScanFlags |= TargetScanFlags.NeedNonBurning;
+        //    }
+        //    return (Thing)AttackTargetFinder.BestAttackTarget(pawn, targetScanFlags, (Thing x) => this.ExtraTargetValidator(pawn, x), 0f, >>>>> this.targetAcquireRadius <<<<<, this.GetFlagPosition(pawn), this.GetFlagRadius(pawn), false, true);
+        //}
+
+
+
+
+
+
         [UsedImplicitly]
         [HarmonyTranspiler]
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -56,10 +76,12 @@ namespace NightVision.Harmony
 
                 if (ldarg0 == null && instruction.opcode == OpCodes.Ldarg_0)
                 {
+                    // this
                     ldarg0 = instruction.Clone();
                 }
                 else if (ldfldPawn == null && instruction.opcode == OpCodes.Ldfld && instruction.operand is FieldInfo fi && fi.FieldType == typeof(Pawn))
                 {
+                    // .pawn
                     ldfldPawn = instruction.Clone();
                 }
                 else if (callNVModifyRadius != null
@@ -67,6 +89,7 @@ namespace NightVision.Harmony
                          && instruction.operand is FieldInfo fi2
                          && fi2.FieldType == typeof(float))
                 {
+                    // loading a field of type float = .targetAcquireRadius
                     yield return ldarg0;
                     yield return ldfldPawn;
                     yield return callNVModifyRadius;

@@ -17,7 +17,6 @@ namespace NightVision
     {
 
         public SkillDef DerivedFrom = Defs_Rimworld.ShootSkill;
-        #region Overrides of NVStatWorker
 
         public override string GetExplanationUnfinalized(StatRequest req, ToStringNumberSense numberSense)
         {
@@ -50,15 +49,11 @@ namespace NightVision
             return Constants.TRIVIAL_FACTOR;
         }
 
-        #region Overrides of StatWorker
-
         public override void FinalizeValue(StatRequest req, ref float val, bool applyPostProcess)
         {
 
             base.FinalizeValue(req, ref val, applyPostProcess);
         }
-
-        #endregion
 
         public override bool IsDisabledFor(Thing thing)
         {
@@ -69,8 +64,5 @@ namespace NightVision
         {
             return base.ShouldShowFor(req) || !Settings.CombatStore.RangedCooldownEffectsEnabled.Value;
         }
-
-        #endregion
-
     }
 }

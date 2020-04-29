@@ -21,8 +21,6 @@ namespace NightVision
 
         public SolarRaid_StoryWorker SolarRaidStoryWorker;
 
-        #region Overrides of GameComponent
-
         public override void GameComponentTick()
         {
             if (FlareRaidIsEnabled && SolarRaidStoryWorker == null)
@@ -60,9 +58,6 @@ namespace NightVision
             base.FinalizeInit();
         }
 
-
-
-        #endregion
 
         public static int Evilness => Find.Storyteller.difficulty.difficulty * 2;
 
