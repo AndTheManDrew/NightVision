@@ -4,6 +4,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using Verse;
 
@@ -55,8 +56,27 @@ namespace NightVision
             return PSHediffLightMods.RandomElementByWeight(lm => Math.Max(lm[0] * 20, 1)).ParentDef as HediffDef;
         }
 
+
+
         [NVSettingsDependentField]
         public static Dictionary<string, PawnKindDef> cachedConvertedPawnKindDefs;
+
+        public static void IterateFields(object source, object target, Action<Traverse, Traverse> action)
+        {
+            var sourceTrv = Traverse.Create(source);
+            var targetTrv = Traverse.Create(target);
+            AccessTools.GetFieldNames(source).ForEach(
+                f =>
+                {
+                    if (AccessTools.Field(source.GetType(), f) is FieldInfo fi && fi.IsLiteral && !fi.IsInitOnly)
+                    {
+                    }
+                    else
+                    {
+                        action(sourceTrv.Field(f), targetTrv.Field(f));
+                    }
+                });
+        }
 
         [NotNull]
         public static PawnKindDef ConvertDefAndStoreOld([NotNull] PawnKindDef original)
@@ -70,8 +90,15 @@ namespace NightVision
                 return storedPKD;
             }
 
+            //var result = AccessTools.MakeDeepCopy<PawnKindDef>(original);
+            
+            //var result = new PawnKindDef();
+            //Traverse.IterateFields(source: original, target: result, action: Traverse.CopyFields);
+
             var result = new PawnKindDef();
-            Traverse.IterateFields(source: original, target: result, action: Traverse.CopyFields);
+
+            IterateFields(original, result, Traverse.CopyFields);
+
             result.weaponTags.RemoveAll(match: str => !str.Contains(value: "Melee") && !str.Contains(value: "melee"));
 
             if (result.weaponTags.Count == 0)
