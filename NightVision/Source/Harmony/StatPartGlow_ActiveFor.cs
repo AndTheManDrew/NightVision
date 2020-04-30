@@ -4,7 +4,11 @@
 // 
 // 17 10 2018
 
+#if HARM12
+using Harmony;
+#else
 using HarmonyLib;
+#endif
 using RimWorld;
 using Verse;
 

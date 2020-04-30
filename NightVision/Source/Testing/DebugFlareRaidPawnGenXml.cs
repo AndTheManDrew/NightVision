@@ -14,6 +14,10 @@ using Verse;
 namespace NightVision.Testing
 {
     //[HasDebugOutput] obsolete as of 1.1
+
+#if RW10
+    // Don't see much point in supporting the 1.0 version of this
+#else
     public class DebugFlareRaidPawnGenXml
     {
         public static RaidStrategyDef GetSmart()
@@ -38,24 +42,24 @@ namespace NightVision.Testing
 
             Dialog_DebugOptionListLister.ShowSimpleDebugMenu(
                 elements: new List<int>
-                          {
-                              11,
-                              12,
-                              13,
-                              14,
-                              21,
-                              22,
-                              23,
-                              24,
-                              31,
-                              32,
-                              33,
-                              34,
-                              41,
-                              42,
-                              43,
-                              44
-                          },
+                {
+                    11,
+                    12,
+                    13,
+                    14,
+                    21,
+                    22,
+                    23,
+                    24,
+                    31,
+                    32,
+                    33,
+                    34,
+                    41,
+                    42,
+                    43,
+                    44
+                },
                 label: i => $"Points x{i / 10} | MaxPawn x{i % 10}",
                 chosen: delegate (int multi)
                 {
@@ -99,7 +103,7 @@ namespace NightVision.Testing
                     }
 
                     XmlSerializer mySerializer = new
-                                XmlSerializer(typeof(pawnGenTrial));
+                        XmlSerializer(typeof(pawnGenTrial));
 
                     using (var writer = new StreamWriter("pawnGenData" + Rand.Int + ".xml"))
                     {
@@ -145,18 +149,18 @@ namespace NightVision.Testing
 
 
             float maxPawnCost = SolarRaidGroupMaker.MaxPawnCostMultiplier * PawnGroupMakerUtility.MaxPawnCost(
-                faction: fac,
-                totalPoints: points,
-                raidStrategy: GetSmart(),
-                groupKind: PawnGroupKindDefOf.Combat
-            );
+                                    faction: fac,
+                                    totalPoints: points,
+                                    raidStrategy: GetSmart(),
+                                    groupKind: PawnGroupKindDefOf.Combat
+                                );
 
             groupGen.maxPawnCost = maxPawnCost;
 
 
             SolarRaidGroupMaker.TryGetRandomPawnGroupMaker(parms: pawnGroupMakerParms, pawnGroupMaker: out PawnGroupMaker groupMaker);
             var pawns = SolarRaid_PawnGenerator.GeneratePawns(parms: pawnGroupMakerParms, groupMaker: groupMaker, errorOnZeroResults: false)
-                        .OrderBy(keySelector: pa => pa.kindDef.combatPower).ToList();
+                .OrderBy(keySelector: pa => pa.kindDef.combatPower).ToList();
 
             int pawnCount = pawns.Count;
             groupGen.pawn = new pawnGenTrialTrialGroupGeneratedPawn[pawnCount];
@@ -215,4 +219,5 @@ namespace NightVision.Testing
             return groupGen;
         }
     }
+#endif
 }

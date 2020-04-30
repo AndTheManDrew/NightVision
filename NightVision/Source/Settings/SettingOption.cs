@@ -1,4 +1,8 @@
-﻿using HarmonyLib;
+﻿#if HARM12
+using Harmony;
+#else
+using HarmonyLib;
+#endif
 using System;
 using System.Reflection;
 using Verse;

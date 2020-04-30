@@ -32,11 +32,18 @@ namespace NightVision
             return string.Empty;
         }
 
+#if RW10
+        public override string GetStatDrawEntryLabel(StatDef pStat, float value, ToStringNumberSense numberSense, StatRequest optionalReq)
+        {
+            return $"x{GetValueUnfinalized(optionalReq).ToStringPercent()}";
+        }
+#else
         public override string GetStatDrawEntryLabel(StatDef pStat, float value, ToStringNumberSense numberSense, StatRequest optionalReq,
             bool finalized = true)
         {
             return $"x{GetValueUnfinalized(optionalReq).ToStringPercent()}";
         }
+#endif
 
 
         public override float GetValueUnfinalized(

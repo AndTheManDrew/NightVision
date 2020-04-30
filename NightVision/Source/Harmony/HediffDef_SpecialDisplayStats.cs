@@ -1,4 +1,8 @@
-﻿using HarmonyLib;
+﻿#if HARM12
+using Harmony;
+#else
+using HarmonyLib;
+#endif
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +35,15 @@ namespace NightVision.Harmony
 
             if (vt < VisionType.NVCustom)
             {
+#if RW10
+                yield return new StatDrawEntry(
+                    Defs_Rimworld.BasicStats,
+                    "NVGrantsVisionType".Translate(),
+                    vt.ToString().Translate(),
+                    0,
+                    hlm.AffectsEye ? "NVHediffQualifier".Translate() : ""
+                );
+#else
                 yield return new StatDrawEntry(
                     Defs_Rimworld.BasicStats,
                     "NVGrantsVisionType".Translate().RawText,
@@ -39,16 +52,27 @@ namespace NightVision.Harmony
                     hlm.AffectsEye ? "NVHediffQualifier".Translate().RawText : "",
                     0
                 );
+#endif
             }
             else
             {
+#if RW10
+                yield return new StatDrawEntry(
+                    Defs_Rimworld.BasicStats,
+                    "NVGrantsVisionType".Translate(),
+                    vt.ToString(),
+                    0,
+                    hlm.AffectsEye ? "NVHediffQualifier".Translate(): ""
+                );
+#else
                 yield return new StatDrawEntry(
                     Defs_Rimworld.BasicStats,
                     "NVGrantsVisionType".Translate().RawText,
                     vt.ToString(),
-                    hlm.AffectsEye ? "NVHediffQualifier".Translate().RawText : "",
+                    hlm.AffectsEye ? "NVHediffQualifier".Translate().RawText: "",
                     0
                 );
+#endif
 
                 yield return new StatDrawEntry(
                     Defs_Rimworld.BasicStats,

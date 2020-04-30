@@ -4,7 +4,12 @@
 // 
 // 21 07 2018
 
+#if HARM12
+using Harmony;
+#else
 using HarmonyLib;
+#endif
+
 using NightVision.Harmony.Manual;
 using RimWorld;
 using System.Reflection;
@@ -24,13 +29,20 @@ namespace NightVision
     [StaticConstructorOnStartup]
     public static class NVHarmonyPatcher
     {
-
+#if RW10
+        public static HarmonyInstance NVHarmony;
+#else
         public static HarmonyLib.Harmony NVHarmony;
+#endif
 
         static NVHarmonyPatcher()
         {
-
+#if RW10
+            NVHarmony = HarmonyInstance.Create("drumad.rimworld.nightvision");
+#else
             NVHarmony = new HarmonyLib.Harmony("drumad.rimworld.nightvision");
+
+#endif
 
             MethodInfo addHediffMethod = AccessTools.Method(
                                                                     typeof(Pawn_HealthTracker),

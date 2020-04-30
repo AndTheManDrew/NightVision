@@ -62,7 +62,11 @@ namespace NightVision
 
         public static string SurpriseAtkCalcHeader()
         {
-            return "NightVisionOurLM".Translate().RawText.PadLeft(20, NumSpace) + "  |" + "NightVisionTargetLM".Translate().RawText.PadLeft(12, NumSpace) + "  |" + "NightVisionSurpriseAtkSh".Translate().RawText.PadLeft(10, NumSpace);
+#if RW10
+            return "NightVisionOurLM".Translate().PadLeft(20, NumSpace) + "  |" + "NightVisionTargetLM".Translate().PadLeft(12, NumSpace) + "  |" + "NightVisionSurpriseAtkSh".Translate().PadLeft(10, NumSpace);
+#else
+return "NightVisionOurLM".Translate().RawText.PadLeft(20, NumSpace) + "  |" + "NightVisionTargetLM".Translate().RawText.PadLeft(12, NumSpace) + "  |" + "NightVisionSurpriseAtkSh".Translate().RawText.PadLeft(10, NumSpace);
+#endif
         }
 
         public static string SurpriseAtkCalcRow(float glow, float atkGlowF, float defGlowF, float chance)
@@ -78,7 +82,11 @@ namespace NightVision
 
         public static string DodgeCalcHeader()
         {
-            return "NightVisionOurLM".Translate().RawText.PadLeft(20, NumSpace) + "  |" + "NightVisionAtkLM".Translate().RawText.PadLeft(12, NumSpace) + "  |" + "NightVisionDodgeChanceShort".Translate().RawText.PadLeft(10, NumSpace);
+#if RW10
+            return "NightVisionOurLM".Translate().PadLeft(20, NumSpace) + "  |" + "NightVisionAtkLM".Translate().PadLeft(12, NumSpace) + "  |" + "NightVisionDodgeChanceShort".Translate().PadLeft(10, NumSpace);
+#else
+return "NightVisionOurLM".Translate().RawText.PadLeft(20, NumSpace) + "  |" + "NightVisionAtkLM".Translate().RawText.PadLeft(12, NumSpace) + "  |" + "NightVisionDodgeChanceShort".Translate().RawText.PadLeft(10, NumSpace);
+#endif
         }
 
         public static string DodgeCalcRow(float glow, float atkGlowF, float defGlowF, float dodge, float newDodge)

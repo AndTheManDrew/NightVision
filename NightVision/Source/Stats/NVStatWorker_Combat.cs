@@ -22,10 +22,17 @@ namespace NightVision
             return "";
         }
 
-        public override string GetStatDrawEntryLabel(StatDef statDef, float value, ToStringNumberSense numberSense, StatRequest optionalReq, bool finalized = true)
+#if RW10
+        public override string GetStatDrawEntryLabel(StatDef statDef, float value, ToStringNumberSense numberSense, StatRequest optionalReq)
         {
             return "...";
         }
+#else
+public override string GetStatDrawEntryLabel(StatDef statDef, float value, ToStringNumberSense numberSense, StatRequest optionalReq, bool finalized = true)
+        {
+            return "...";
+        }
+#endif
 
         public override float GetValueUnfinalized(StatRequest req, bool applyPostProcess = true)
         {

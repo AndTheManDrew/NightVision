@@ -1,4 +1,8 @@
-﻿using HarmonyLib;
+﻿#if HARM12
+using Harmony;
+#else
+using HarmonyLib;
+#endif
 using JetBrains.Annotations;
 using RimWorld;
 using System;
@@ -28,7 +32,11 @@ namespace NightVision.Harmony
                 var current = instructionsList[i];
 
                 yield return current;
+#if HARM12
+                if (current.opcode == OpCodes.Call && current.operand == signifyingMethod)
+#else
                 if (/*current.opcode == OpCodes.Call && current.operand == signifyingMethod*/current.Is(OpCodes.Call, signifyingMethod))
+#endif
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_2);
                     yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(CombatHelpers), nameof(CombatHelpers.AdjustCooldownForGlow)));

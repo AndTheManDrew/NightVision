@@ -7,63 +7,116 @@
     <ProjectGuid>{53AD9AD3-A8B8-45C4-B8EA-954E82193B32}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NVTesting</RootNamespace>
+    <RootNamespace>NVExperiments</RootNamespace>
     <AssemblyName>NVExperiments</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\RimWorld\Mods\NVTesting\Assemblies\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\NVExperiments\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="0Harmony, Version=2.0.0.10, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Lib.Harmony.2.0.0.10\lib\net472\0Harmony.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-RW1.0|AnyCPU' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-RW1.0|AnyCPU' " />
+  <Choose>
+    <When Condition=" '$(Configuration.StartsWith(Debug))'">
+      <PropertyGroup>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <Optimize>false</Optimize>
+      </PropertyGroup>
+    </When>
+    <When Condition=" '$(Configuration.StartsWith(Release))'">
+      <PropertyGroup>
+        <DefineConstants>TRACE</DefineConstants>
+        <Optimize>true</Optimize>
+      </PropertyGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition=" '$(Configuration.EndsWith(RW1.0))'">
+      <PropertyGroup>
+        <DefineConstants>RW10</DefineConstants>
+        <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+        <OutputPath>..\1.0\Assemblies\</OutputPath>
+      </PropertyGroup>
+      <!-- References for Rimworld 1.0 -->
+      <ItemGroup Condition=" '$(Configuration)' == 'Debug-RW1.0' Or '$(Configuration)' == 'Release-RW1.0'">
+        <Reference Include="Assembly-CSharp">
+          <HintPath>..\..\..\..\..\Games\Rimworld v1.0\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Xml.Linq" />
+        <Reference Include="System.Data.DataSetExtensions" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Xml" />
+        <Reference Include="UnityEngine">
+          <HintPath>..\..\..\..\..\Games\Rimworld v1.0\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UI">
+          <HintPath>..\..\..\..\..\Games\Rimworld v1.0\RimWorldWin64_Data\Managed\UnityEngine.UI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+      <ItemGroup>
+        <PackageReference Include="Lib.Harmony">
+          <Version>1.2.0.1</Version>
+        </PackageReference>
+      </ItemGroup>
+
+    </When>
+    <!-- Rimworld 1.1+ -->
+    <Otherwise>
+      <PropertyGroup>
+        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+        <OutputPath>..\1.1\Assemblies\</OutputPath>
+      </PropertyGroup>
+      <ItemGroup>
+        <Reference Include="Assembly-CSharp">
+          <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Xml.Linq" />
+        <Reference Include="System.Data.DataSetExtensions" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Xml" />
+        <Reference Include="UnityEngine">
+          <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule">
+          <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.IMGUIModule">
+          <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.TextRenderingModule">
+          <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UI">
+          <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+      <ItemGroup>
+        <PackageReference Include="Lib.Harmony">
+          <Version>2.0.0.10</Version>
+        </PackageReference>
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
   <ItemGroup>
     <Compile Include="GameCondition_Darkness.cs" />
     <Compile Include="Harmony.cs" />
@@ -101,9 +154,7 @@
       <Name>NightVision</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
+
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

@@ -4,7 +4,11 @@
 // 
 // 20 10 2018
 
+#if HARM12
+using Harmony;
+#else
 using HarmonyLib;
+#endif
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;

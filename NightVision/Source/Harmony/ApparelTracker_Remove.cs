@@ -1,4 +1,12 @@
-﻿using HarmonyLib;
+﻿#if HARM12
+using Harmony;
+#else
+#if HARM12
+using Harmony;
+#else
+using HarmonyLib;
+#endif
+#endif
 using RimWorld;
 using Verse;
 

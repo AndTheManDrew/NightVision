@@ -18,6 +18,11 @@ namespace NightVision
             public CombatStatStrHelper()
             {
 
+#if RW10
+
+                sb = new StringBuilder();
+
+#else
                 if (sb == null)
                 {
                     sb = new StringBuilder();
@@ -26,6 +31,7 @@ namespace NightVision
                 {
                     sb.Clear();
                 }
+#endif
             }
 
             public void NextLine()

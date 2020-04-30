@@ -13,11 +13,15 @@ using Verse;
 
 namespace NightVision.Testing
 {
+#if RW10
+    // don't see much point in supporting this for 1.0
+#else
     //[HasDebugOutput] - obsolete as of 1.1
     public class DebugFlareRaidPawnGen
     {
-        [DebugOutput("NightVision")]
-        //[Category()]
+
+[DebugOutput("NightVision")]
+
         public static void FlareRaidPawnGroupsMade()
         {
             Dialog_DebugOptionListLister.ShowSimpleDebugMenu(
@@ -164,4 +168,5 @@ namespace NightVision.Testing
             );
         }
     }
+#endif
 }

@@ -11,117 +11,132 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NightVision</RootNamespace>
     <AssemblyName>NightVision</AssemblyName>
+    <!--<TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>-->
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\1.1\Assemblies\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <LangVersion>latest</LangVersion>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\1.1\Assemblies\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>latest</LangVersion>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' " />
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-RW1.0|AnyCPU' " />
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-RW1.0|AnyCPU' " />
-  <Choose>
-    <When Condition=" '$(Configuration.StartsWith(Debug))'">
-      <PropertyGroup>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <Optimize>false</Optimize>
-      </PropertyGroup>
-    </When>
-    <When Condition=" '$(Configuration.StartsWith(Release))'">
-      <PropertyGroup>
-        <DefineConstants>TRACE</DefineConstants>
-        <Optimize>true</Optimize>
-      </PropertyGroup>
-    </When>
-  </Choose>
-  <Choose>
-      <!-- Rimworld 1.0, requires .NET3.5 and Harmony 1.2.0.1 -->
-    <When Condition=" '$(Configuration.EndsWith(RW1.0))'">
-      <PropertyGroup>
-        <DefineConstants>RW10;HARM12</DefineConstants>
-        <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-        <OutputPath>..\1.0\Assemblies\</OutputPath>
-        <CopyNuGetImplementations>true</CopyNuGetImplementations>
-      </PropertyGroup>
-      <ItemGroup Condition=" '$(Configuration)' == 'Debug-RW1.0' Or '$(Configuration)' == 'Release-RW1.0'">
-        <Reference Include="Assembly-CSharp">
-          <HintPath>..\..\..\..\..\Games\Rimworld v1.0\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Xml.Linq" />
-        <Reference Include="System.Data.DataSetExtensions" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Xml" />
-        <Reference Include="UnityEngine">
-          <HintPath>..\..\..\..\..\Games\Rimworld v1.0\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.UI">
-          <HintPath>..\..\..\..\..\Games\Rimworld v1.0\RimWorldWin64_Data\Managed\UnityEngine.UI.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-      <ItemGroup>
-        <PackageReference Include="Lib.Harmony">
-          <Version>1.2.0.1</Version>
-        </PackageReference>
-      </ItemGroup>
-    </When>
-
-    <!-- Rimworld 1.1+ -->
-    <Otherwise>
-      <PropertyGroup>
-        <DefineConstants>HARM20</DefineConstants>
-        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-        <OutputPath>..\1.1\Assemblies\</OutputPath>
-        <CopyNuGetImplementations>false</CopyNuGetImplementations>
-      </PropertyGroup>
-      <ItemGroup>
-        <Reference Include="Assembly-CSharp">
-          <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Xml.Linq" />
-        <Reference Include="System.Data.DataSetExtensions" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Xml" />
-        <Reference Include="UnityEngine">
-          <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.CoreModule">
-          <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.IMGUIModule">
-          <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.TextRenderingModule">
-          <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.UI">
-          <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UI.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-      <ItemGroup>
-        <PackageReference Include="Lib.Harmony">
-          <Version>2.0.0.10</Version>
-        </PackageReference>
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
+  
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-RW1.0|AnyCPU' ">
+    <OutputPath>..\1.0\Assemblies\</OutputPath>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-RW1.0|AnyCPU'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <OutputPath>..\1.0\Assemblies\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  
+  
+  
+  <!-- References for Rimworld 1.1 -->
+  <ItemGroup Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release'">
+      <Reference Include="0Harmony, Version=2.0.0.10, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lib.Harmony.2.0.0.10\lib\net472\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  
+  
+  
+  
+  <!-- References for Rimworld 1.0 -->
+  <ItemGroup Condition=" '$(Configuration)' == 'Debug-RW1.0' Or '$(Configuration)' == 'Release-RW1.0'">
+	 <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lib.Harmony.1.2.0.1\lib\net35\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\..\Games\Rimworld v1.0\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\Games\Rimworld v1.0\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\..\Games\Rimworld v1.0\RimWorldWin64_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  
+  
+  
+  
   <ItemGroup>
     <Compile Include="Combat\AICombatTweaks.cs" />
     <Compile Include="Combat\CurrentShot.cs" />
@@ -227,12 +242,16 @@
     <Compile Include="Misc Workers\ThoughtWorker_TooBright.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
   </ItemGroup>
+  
+  
+  
+  
   <ItemGroup>
+  <None Include="packages.config" />
     <None Include="Testing\pawnGenTrialSchema.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

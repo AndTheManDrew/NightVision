@@ -1,4 +1,8 @@
-﻿using HarmonyLib;
+﻿#if HARM12
+using Harmony;
+#else
+using HarmonyLib;
+#endif
 using JetBrains.Annotations;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,9 +41,14 @@ namespace NightVision.Harmony
             for (int i = 0; i < instructionsList.Count; i++)
             {
                 var current = instructionsList[i];
-
-                if (current.Is(OpCodes.Call, signifyingMethodInfo)/*current.opcode == OpCodes.Call && current.OperandIs(signifyingMethodInfo) *//*current.operand == signifyingMethodInfo*/)
+#if HARM12
+                if (current.opcode == OpCodes.Call && current.operand == signifyingMethodInfo)
                 {
+#else
+                    if (current.Is(OpCodes.Call, signifyingMethodInfo)/*current.opcode == OpCodes.Call && current.OperandIs(signifyingMethodInfo) *//*current.operand == signifyingMethodInfo*/)
+                {
+
+#endif
 
                     yield return current;
 

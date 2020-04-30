@@ -92,8 +92,13 @@ namespace NightVision
                 stringBuilder.AppendLine(value: pawn.KindLabel + " - " + str);
             }
 
-            TaggedString letterLabel = GetLetterLabel(parms: parms);
+#if RW10
+            string letterLabel = GetLetterLabel(parms: parms);
+            string letterText = GetLetterText(parms: parms, pawns: list);
+#else
+TaggedString letterLabel = GetLetterLabel(parms: parms);
             TaggedString letterText = GetLetterText(parms: parms, pawns: list);
+#endif
 
             PawnRelationUtility.Notify_PawnsSeenByPlayer_Letter(
                 seenPawns: list,
@@ -201,6 +206,26 @@ namespace NightVision
                    );
         }
 
+#if RW10
+        protected override void ResolveRaidStrategy(IncidentParms parms, PawnGroupKindDef groupKind)
+        {
+            if (parms.raidStrategy != null)
+            {
+                return;
+            }
+
+            var map = (Map)parms.target;
+
+            if (!(from d in DefDatabase<RaidStrategyDef>.AllDefs where d.Worker.CanUseWith(parms: parms, groupKind: groupKind) select d)
+                .TryRandomElementByWeight(
+                    weightSelector: d => d.Worker.SelectionWeight(map: map, basePoints: parms.points),
+                    result: out parms.raidStrategy
+                ))
+            {
+                parms.raidStrategy = RaidStrategyDefOf.ImmediateAttack;
+            }
+        }
+#else
         public override void ResolveRaidStrategy(IncidentParms parms, PawnGroupKindDef groupKind)
         {
             if (parms.raidStrategy != null)
@@ -219,6 +244,7 @@ namespace NightVision
                 parms.raidStrategy = RaidStrategyDefOf.ImmediateAttack;
             }
         }
+#endif
 
         protected override string GetLetterLabel(IncidentParms parms)
         {
