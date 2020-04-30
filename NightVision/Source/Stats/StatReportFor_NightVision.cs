@@ -107,7 +107,7 @@ namespace NightVision
             {
                 basevalue = Constants.DEFAULT_FULL_LIGHT_MULTIPLIER;
 
-                if (comp.ApparelNullsPS)
+                if (glow.GlowIsBright() && comp.ApparelNullsPS)
                 {
                     foundSomething = true;
                 }
@@ -165,6 +165,7 @@ namespace NightVision
                 {
                     continue;
                 }
+
 
                 var hediffLightMods = Settings.Store.HediffLightMods;
                 foreach (HediffDef hediffDef in value)

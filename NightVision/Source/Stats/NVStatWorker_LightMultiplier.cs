@@ -19,7 +19,6 @@ namespace NightVision
     [UsedImplicitly]
     public class NVStatWorker_LightMultiplier : NVStatWorker
     {
-        // TODO Rethink: probably better to use an enum with a corresponding conditional Get in ApparelVisionSetting
         public static ApparelFlags GetEffectMaskForGlow(float glow)
         {
             if (glow.GlowIsBright())
