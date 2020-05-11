@@ -13,7 +13,6 @@ namespace NightVision
     [NVHasSettingsDependentField]
     public static class CombatHelpers
     {
-
         public static FloatRange MultiplierCaps => Settings.Store.MultiplierCaps;
 
         [NVSettingsDependentField]
@@ -23,16 +22,10 @@ namespace NightVision
         {
             get
             {
-                if (_dodgeXCoeff < 0)
-                {
-                    _dodgeXCoeff = Settings.CombatStore.DodgeCurviness.Value / MultiplierCaps.Span;
-                }
+                if (_dodgeXCoeff < 0) _dodgeXCoeff = Settings.CombatStore.DodgeCurviness.Value / MultiplierCaps.Span;
                 return _dodgeXCoeff;
             }
-            set
-            {
-                _dodgeXCoeff = value;
-            }
+            set => _dodgeXCoeff = value;
         }
 
         public static float AttXCoeff
@@ -41,15 +34,13 @@ namespace NightVision
             {
                 if (_attXCoeff < -1)
                 {
-                    _attXCoeff = Settings.CombatStore.HitCurviness.Value / MultiplierCaps.Span; ;
+                    _attXCoeff = Settings.CombatStore.HitCurviness.Value / MultiplierCaps.Span;
+                    ;
                 }
 
                 return _attXCoeff;
             }
-            set
-            {
-                _attXCoeff = value;
-            }
+            set => _attXCoeff = value;
         }
 
         public static float ChanceOfSurpriseAttFactor
@@ -57,15 +48,10 @@ namespace NightVision
             get
             {
                 if (_chanceOfSurpriseAttFactor < -1)
-                {
                     _chanceOfSurpriseAttFactor = Settings.CombatStore.SurpriseAttackMultiplier.Value;
-                }
                 return _chanceOfSurpriseAttFactor;
             }
-            set
-            {
-                _chanceOfSurpriseAttFactor = value;
-            }
+            set => _chanceOfSurpriseAttFactor = value;
         }
 
         public static float RangedCooldownMultiplierBad
@@ -75,41 +61,30 @@ namespace NightVision
                 if (_rangedCooldownMultiplierBad < -1)
                 {
                     if (Settings.CombatStore.RangedCooldownLinkedToCaps.Value)
-                    {
                         _rangedCooldownMultiplierBad = 1 / MultiplierCaps.min;
-                    }
                     else
-                    {
                         _rangedCooldownMultiplierBad = Settings.CombatStore.RangedCooldownMinAndMax.Value.max / 100f;
-                    }
                 }
+
                 return _rangedCooldownMultiplierBad;
             }
-            set
-            {
-                _rangedCooldownMultiplierBad = value;
-            }
+            set => _rangedCooldownMultiplierBad = value;
         }
 
         public static float HitChanceGlowTransform(float hitChance, float attGlowFactor)
         {
-            if (hitChance + 0.001f > 1)
-            {
-                return hitChance;
-            }
-            return 1 / (1 + (1 / hitChance - 1) * (float)Math.Exp(d: -1 * AttXCoeff * (attGlowFactor - 1)));
+            if (hitChance + 0.001f > 1) return hitChance;
+            return 1 / (1 + (1 / hitChance - 1) * (float) Math.Exp(-1 * AttXCoeff * (attGlowFactor - 1)));
         }
 
         public static string NightVisionTooltipElement(Thing target)
         {
             var result = "";
 
-            if (CurrentShot.NoShot || CurrentShot.Verb.verbProps.forcedMissRadius > 0.5f || CurrentShot.GlowFactor.FactorIsTrivial())
-            {
-                return result;
-            }
+            if (CurrentShot.NoShot || CurrentShot.Verb.verbProps.forcedMissRadius > 0.5f ||
+                CurrentShot.GlowFactor.FactorIsTrivial()) return result;
 
-            result += "   " + Str_Combat.AimFactorFromLight(glowAtTarget: GlowFor.GlowAt(thing: target), result: CurrentShot.PseudoMultiplier());
+            result += "   " + Str_Combat.AimFactorFromLight(GlowFor.GlowAt(target), CurrentShot.PseudoMultiplier());
 
             return result;
         }
@@ -118,15 +93,15 @@ namespace NightVision
         {
             if (pawn.TryGetComp<Comp_NightVision>() is Comp_NightVision comp)
             {
-                float glow = pawn.Map.glowGrid.GameGlowAt(c: pawn.Position);
+                var glow = pawn.Map.glowGrid.GameGlowAt(pawn.Position);
 
                 if (glow.GlowIsDarkOrBright())
                 {
-                    float glF = comp.FactorFromGlow(glow: glow);
+                    var glF = comp.FactorFromGlow(glow);
 
-                    int skillLevel = pawn.skills.GetSkill(skillDef: Defs_Rimworld.ShootSkill).Level;
+                    var skillLevel = pawn.skills.GetSkill(Defs_Rimworld.ShootSkill).Level;
 
-                    return rangedCooldown * RangedCooldownMultiplier(skill: skillLevel, glowFactor: glF);
+                    return rangedCooldown * RangedCooldownMultiplier(skillLevel, glF);
                 }
             }
 
@@ -135,13 +110,11 @@ namespace NightVision
 
         public static float GlowFactorForPawnAtTarget(Pawn pawn, LocalTargetInfo target, Comp_NightVision comp)
         {
-            return comp.FactorFromGlow(glow: GlowFor.GlowAt(map: pawn.Map, pos: target.Cell));
+            return comp.FactorFromGlow(GlowFor.GlowAt(pawn.Map, target.Cell));
         }
 
-        [NVSettingsDependentField]
-        public static float _rangedCooldownMultiplierBad;
-        [NVSettingsDependentField]
-        public static float _rangedCooldownMultiplierGood;
+        [NVSettingsDependentField] public static float _rangedCooldownMultiplierBad;
+        [NVSettingsDependentField] public static float _rangedCooldownMultiplierGood;
 
         public static float RangedCooldownMultiplierGood
         {
@@ -150,13 +123,9 @@ namespace NightVision
                 if (_rangedCooldownMultiplierGood < -1)
                 {
                     if (Settings.CombatStore.RangedCooldownLinkedToCaps.Value)
-                    {
                         _rangedCooldownMultiplierGood = 1 / MultiplierCaps.max;
-                    }
                     else
-                    {
                         _rangedCooldownMultiplierGood = Settings.CombatStore.RangedCooldownMinAndMax.Value.min / 100f;
-                    }
                 }
 
                 return _rangedCooldownMultiplierGood;
@@ -175,21 +144,17 @@ namespace NightVision
         public static float RangedCooldownMultiplier(int skill, float glowFactor)
         {
             if (glowFactor < 1f - Constants.NV_EPSILON)
-            {
-                return 1 + (1 - glowFactor) * (RangedCooldownMultiplierBad) * (1 - (float)Math.Sqrt(d: 0.05f * skill));
-            }
+                return 1 + (1 - glowFactor) * RangedCooldownMultiplierBad * (1 - (float) Math.Sqrt(0.05f * skill));
 
             if (glowFactor > 1f + Constants.NV_EPSILON)
-            {
-                return 1 + (1 - glowFactor) * (RangedCooldownMultiplierGood) * (float)Math.Sqrt(d: 0.05f * skill);
-            }
+                return 1 + (1 - glowFactor) * RangedCooldownMultiplierGood * (float) Math.Sqrt(0.05f * skill);
 
             return 1;
         }
 
         public static float SurpriseAttackChance(float atkGlowFactor, float defGlowFactor)
         {
-            return SurpriseAttackChance(glowFactorDelta: atkGlowFactor - defGlowFactor);
+            return SurpriseAttackChance(atkGlowFactor - defGlowFactor);
         }
 
         /// <summary>
@@ -199,7 +164,7 @@ namespace NightVision
         /// <returns></returns>
         public static float SurpriseAttackChance(float glowFactorDelta)
         {
-            return Mathf.Clamp01(value: glowFactorDelta) * ChanceOfSurpriseAttFactor;
+            return Mathf.Clamp01(glowFactorDelta) * ChanceOfSurpriseAttFactor;
         }
 
         [NVSettingsDependentField]
@@ -211,11 +176,8 @@ namespace NightVision
         /// <returns></returns>
         public static float DodgeChanceFunction(float orgDodge, float glowFactorDelta)
         {
-            if (glowFactorDelta.IsTrivial())
-            {
-                return orgDodge;
-            }
-            return 2 * orgDodge / (1 + (float)Math.Exp(d: DodgeXCoeff * glowFactorDelta));
+            if (glowFactorDelta.IsTrivial()) return orgDodge;
+            return 2 * orgDodge / (1 + (float) Math.Exp(DodgeXCoeff * glowFactorDelta));
         }
 
         [NVSettingsDependentField]

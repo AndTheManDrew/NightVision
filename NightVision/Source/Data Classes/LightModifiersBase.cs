@@ -37,7 +37,9 @@ namespace NightVision
 
         public float[] Offsets = new float[2];
 
-        public LightModifiersBase() { }
+        public LightModifiersBase()
+        {
+        }
 
         [UsedImplicitly]
         public LightModifiersBase(
@@ -50,7 +52,6 @@ namespace NightVision
                 PSLightModifiers = this;
             }
             else if (isNightVisionLm)
-
             {
                 NVLightModifiers = this;
             }
@@ -123,7 +124,10 @@ namespace NightVision
             }
         }
 
-        public virtual bool ShouldBeSaved() => true;
+        public virtual bool ShouldBeSaved()
+        {
+            return true;
+        }
 
         public virtual float GetEffectAtGlow(
             float glow,
@@ -132,7 +136,7 @@ namespace NightVision
         {
             if (glow < 0.001)
             {
-                return (float)Math.Round(
+                return (float) Math.Round(
                     this[0] / numEyesNormalisedFor,
                     Constants.NUMBER_OF_DIGITS,
                     Constants.ROUNDING
@@ -141,7 +145,7 @@ namespace NightVision
 
             if (glow > 0.999)
             {
-                return (float)Math.Round(
+                return (float) Math.Round(
                     this[1] / numEyesNormalisedFor,
                     Constants.NUMBER_OF_DIGITS,
                     Constants.ROUNDING
@@ -150,7 +154,7 @@ namespace NightVision
 
             if (glow.GlowIsDarkness())
             {
-                return (float)Math.Round(
+                return (float) Math.Round(
                     this[0] / numEyesNormalisedFor * (0.3f - glow) / 0.3f,
                     Constants.NUMBER_OF_DIGITS,
                     Constants.ROUNDING
@@ -159,7 +163,7 @@ namespace NightVision
 
             if (glow.GlowIsBright())
             {
-                return (float)Math.Round(
+                return (float) Math.Round(
                     this[1] / numEyesNormalisedFor * (glow - 0.7f) / 0.3f,
                     Constants.NUMBER_OF_DIGITS,
                     Constants.ROUNDING
@@ -209,18 +213,27 @@ namespace NightVision
             return new[]
             {
                 (float) Math.Round(maxcap, Constants.NUMBER_OF_DIGITS, Constants.ROUNDING),
-                ((float) Math.Round(mincap, Constants.NUMBER_OF_DIGITS, Constants.ROUNDING)),
+                (float) Math.Round(mincap, Constants.NUMBER_OF_DIGITS, Constants.ROUNDING),
                 (float) Math.Round(nvcap, Constants.NUMBER_OF_DIGITS, Constants.ROUNDING),
                 (float) Math.Round(pscap, Constants.NUMBER_OF_DIGITS, Constants.ROUNDING)
             };
         }
 
-        public bool HasAnyModifier() => Math.Abs(this[0]) > 0.001 || Math.Abs(this[1]) > 0.001;
+        public bool HasAnyModifier()
+        {
+            return Math.Abs(this[0]) > 0.001 || Math.Abs(this[1]) > 0.001;
+        }
 
-        public bool HasAnyCustomModifier() => Math.Abs(Offsets[0]) > 0.001 || Math.Abs(Offsets[1]) > 0.001;
+        public bool HasAnyCustomModifier()
+        {
+            return Math.Abs(Offsets[0]) > 0.001 || Math.Abs(Offsets[1]) > 0.001;
+        }
 
 
-        public bool IsCustom() => Setting == VisionType.NVCustom;
+        public bool IsCustom()
+        {
+            return Setting == VisionType.NVCustom;
+        }
 
         public void ChangeSetting(
             VisionType newsetting
@@ -230,7 +243,7 @@ namespace NightVision
             {
                 if (newsetting == VisionType.NVCustom && !HasAnyCustomModifier())
                 {
-                    float[] defaultValues = DefaultOffsets;
+                    var defaultValues = DefaultOffsets;
 
                     if (Math.Abs(defaultValues[0]) > 0.001 && Math.Abs(defaultValues[1]) > 0.001)
                     {
