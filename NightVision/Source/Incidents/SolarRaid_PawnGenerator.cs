@@ -46,9 +46,11 @@ namespace NightVision
         {
             bool canBringFood = parms.raidStrategy?.pawnsCanBringFood ?? true;
 
+            // 15.08.2021 RW1.3 added total points parameter to .CanUsePawn
+            // For now just using parms.points however unsure if this will mess other things up
             Predicate<Pawn> postGear = parms.raidStrategy == null
                         ? null
-                        : new Predicate<Pawn>(p => parms.raidStrategy.Worker.CanUsePawn(p: p, otherPawns: outPawns));
+                        : new Predicate<Pawn>(p => parms.raidStrategy.Worker.CanUsePawn( parms.points ,p, otherPawns: outPawns));
 
             var madeOnePawnIncap = false;
             PawnGenUtility.cachedConvertedPawnKindDefs = new Dictionary<string, PawnKindDef>();
@@ -118,7 +120,7 @@ namespace NightVision
                 pawn.skills.GetSkill(skillDef: Defs_Rimworld.MeleeSkill).Level += Rand.RangeInclusive(min: 10 - meleeSkill, max: 10 - meleeSkill + 5);
             }
 
-            int[] choiceArray = { 10 - NVGameComponent.Evilness, 5 + NVGameComponent.Evilness, 5 + NVGameComponent.Evilness };
+            float[] choiceArray = { 10 - NVGameComponent.Evilness, 5 + NVGameComponent.Evilness, 5 + NVGameComponent.Evilness };
             var indexes = new[] { 0, 1, 2 };
 
             int choice = indexes.RandomElementByWeight(weightSelector: ind => choiceArray[ind]);

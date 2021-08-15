@@ -58,8 +58,11 @@ namespace NightVision
             base.FinalizeInit();
         }
 
-
-        public static int Evilness => Find.Storyteller.difficulty.difficulty * 2;
+        // 15.08.21 - RW1.3 made Difficulty.difficulty obsolete
+        // Evilness originally = difficulty * 2
+        // Rather than spend too long rethinking the entire value, simulate previous results using Difficulty.threatscale
+        // 
+        public static float Evilness => GenMath.LerpDouble( 0.1f, 2.2f, 0, 10, Find.Storyteller.difficulty.threatScale);
 
         public static bool FlareRaidIsEnabled = true;
     }
