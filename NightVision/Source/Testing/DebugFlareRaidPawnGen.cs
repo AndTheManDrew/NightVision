@@ -160,7 +160,7 @@ namespace NightVision.Testing
                         action(obj: obj);
                     }
 
-                    Log.Message(text: sb.ToString(), ignoreStopLoggingLimit: false);
+                    Log.Message(text: sb.ToString());
 #if DEBUG
                     GUIUtility.systemCopyBuffer = sb.ToString();
 #endif

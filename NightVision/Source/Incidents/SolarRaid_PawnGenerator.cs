@@ -24,7 +24,7 @@ namespace NightVision
             }
             catch (Exception arg)
             {
-                Log.Error(text: "Exception while generating pawn group: " + arg, ignoreStopLoggingLimit: false);
+                Log.Error(text: "Exception while generating pawn group: " + arg);
 
                 for (var i = 0; i < list.Count; i++)
                 {

@@ -24,8 +24,7 @@ namespace NightVision
             if (parms.faction.def.pawnGroupMakers.NullOrEmpty())
             {
                 Log.Error(
-                    text: string.Concat("Faction ", parms.faction, " of def ", parms.faction.def, " has no any PawnGroupMakers."),
-                    ignoreStopLoggingLimit: false
+                    text: string.Concat("Faction ", parms.faction, " of def ", parms.faction.def, " has no any PawnGroupMakers.")
                 );
             }
 
@@ -129,8 +128,7 @@ namespace NightVision
             if (bestOptions.Count == 1 && remTotal > pointsTotal / 2f)
             {
                 Log.Warning(
-                    text: string.Concat("Used only ", pointsTotal - remTotal, " / ", pointsTotal, " points generating for ", groupParms.faction),
-                    ignoreStopLoggingLimit: false
+                    text: string.Concat("Used only ", pointsTotal - remTotal, " / ", pointsTotal, " points generating for ", groupParms.faction)
                 );
             }
 
