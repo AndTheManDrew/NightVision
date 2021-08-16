@@ -150,8 +150,10 @@ namespace NightVision
         {
             if (pawnGenOption.kind.isFighter)
             {
+                // 16.08.2021 1.3 RW added required parameter to CanUsePawnGenOption for points
+                // Using groupParms.points though unsure of effects
                 if (groupParms.raidStrategy == null
-                    || groupParms.raidStrategy.Worker.CanUsePawnGenOption(g: pawnGenOption, chosenGroups: bestOptions))
+                    || groupParms.raidStrategy.Worker.CanUsePawnGenOption(groupParms.points, g: pawnGenOption, chosenGroups: bestOptions))
                 {
                     if (!groupParms.dontUseSingleUseRocketLaunchers || !pawnGenOption.kind.weaponTags.Contains(item: "GunHeavy"))
                     {

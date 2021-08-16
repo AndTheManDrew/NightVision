@@ -13,8 +13,9 @@ using Verse;
 namespace NightVision
 {
     [UsedImplicitly]
-    public class ExtractTapetum_RecipeWorker : Recipe_Surgery
+    public class ExtractTapetum_RecipeWorker : Recipe_RemoveBodyPart
     {
+        // 16.08.21 1.3RW - changed base class to Recipe_RemoveBodyPart (unsure why it wasn't)
         [NotNull]
         private static readonly ThingDef ExtractedTapetum = ThingDef.Named("NV_TapetumRaw");
 
@@ -26,6 +27,7 @@ namespace NightVision
                         Bill bill
                     )
         {
+            // 16.08.2021 1.3RW added some utility functions and changed layout
             if (billDoer != null)
             {
                 if (CheckSurgeryFail(billDoer, pawn, ingredients, part, bill))
@@ -37,33 +39,14 @@ namespace NightVision
                 GenSpawn.Spawn(ExtractTapetum_RecipeWorker.ExtractedTapetum, billDoer.Position, billDoer.Map);
             }
 
-            DamageDef surgicalCut = DamageDefOf.SurgicalCut;
-            var amount = 99999f;
-            var armorPenetration = 999f;
-
-            pawn.TakeDamage(
-                            new DamageInfo(
-                                           surgicalCut,
-                                           amount,
-                                           armorPenetration,
-                                           -1f,
-                                           null,
-                                           part
-                                          )
-                           );
-
-            if (pawn.Faction != null && billDoer?.Faction != null)
+        
+            DamagePart(pawn, part);
+            
+            if (IsViolationOnPawn(pawn, part, Faction.OfPlayer))
             {
-                Faction faction = pawn.Faction;
-                Faction faction2 = billDoer.Faction;
-                int goodwillChange = -15;
-
-                string reason =
-                            "GoodwillChangedReason_RemovedBodyPart".Translate(part.LabelShort);
-
-                Pawn lookTarget = pawn;
-                faction.TryAffectGoodwillWith(faction2, goodwillChange, true, true, reason, lookTarget);
+                ReportViolation(pawn, billDoer, pawn.HomeFaction, -70);
             }
+            
         }
 
         public override string GetLabelWhenUsedOn(

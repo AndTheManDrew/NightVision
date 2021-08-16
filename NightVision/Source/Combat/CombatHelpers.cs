@@ -80,8 +80,8 @@ namespace NightVision
         public static string NightVisionTooltipElement(Thing target)
         {
             var result = "";
-
-            if (CurrentShot.NoShot || CurrentShot.Verb.verbProps.forcedMissRadius > 0.5f ||
+            // 16.08.2021 RW1.3 replaced .forcedMissRadius with public property
+            if (CurrentShot.NoShot || CurrentShot.Verb.verbProps.ForcedMissRadius > 0.5f ||
                 CurrentShot.GlowFactor.FactorIsTrivial()) return result;
 
             result += "   " + Str_Combat.AimFactorFromLight(GlowFor.GlowAt(target), CurrentShot.PseudoMultiplier());
