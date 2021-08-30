@@ -14,7 +14,7 @@ namespace NightVision
         {
 
             Pawn pawn = req.Thing as Pawn;
-            if (GlowFor.CompFor(pawn) is Comp_NightVision comp)
+            if (GlowFor.CompFor(pawn) is Comp_NightVision comp && !IsDisabledFor(pawn))
             {
                 return StatReportFor_NightVision_Combat.CombatPart(pawn, comp);
             }

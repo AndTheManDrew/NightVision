@@ -6,6 +6,7 @@
 
 using JetBrains.Annotations;
 using Verse;
+using RimWorld;
 
 namespace NightVision
 {
@@ -62,7 +63,16 @@ namespace NightVision
         // Evilness originally = difficulty * 2
         // Rather than spend too long rethinking the entire value, simulate previous results using Difficulty.threatscale
         // 
-        public static float Evilness => GenMath.LerpDouble( 0.1f, 2.2f, 0, 10, Find.Storyteller.difficulty.threatScale);
+        public static float Evilness
+        {
+            get
+            {
+                //TODO fix
+                return 5;
+
+                //return GenMath.LerpDouble(0.1f, 2.2f, 0, 10, Find.Storyteller.difficulty?.threatScale ?? 1);
+            }
+        }
 
         public static bool FlareRaidIsEnabled = true;
     }
